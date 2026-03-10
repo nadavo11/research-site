@@ -1,0 +1,19 @@
+{
+  "val": {
+    "select_best_metric": "edge/AP",
+    "best_score": 0.5722821497577343,
+    "best_step": 100,
+    "last_score": 0.5432563818654219,
+    "last_step": 4000,
+    "all_metrics_last": {
+      "edge/AP": 0.5432563818654219,
+      "edge/ODS_threshold": 0.16,
+      "edge/ODS_recall": 0.6193792901853662,
+      "edge/ODS_precision": 0.7159101500605835,
+      "edge/ODS_f1": 0.6641555114812393,
+      "edge/OIS_recall": 0.6519872189015109,
+      "edge/OIS_precision": 0.717982017982018,
+      "edge/OIS_f1": 0.6833950522718027
+    }
+  }
+}

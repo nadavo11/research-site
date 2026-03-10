@@ -1,0 +1,56 @@
+run_name: 2026-03-10_edge_rwtd_diffedge_lorac_64shot
+title: RWTD synthetic domain - DiffEdge LoRA C 64-shot evaluation
+date: 2026-03-10
+author: nadavo11
+
+task:
+  family: edge_detection
+  subtype: lora_finetune_eval
+
+status:
+  stage: completed
+  verdict: milestone
+  publish: true
+
+dataset:
+  name: RWTD
+  split: val
+  source_type: synthetic
+
+model:
+  name: DiffusionEdge
+  base_checkpoint: diffedge_base
+  adaptation: lora
+  preset: C
+
+config:
+  seed: 0
+  overrides:
+    lora_shots: 64
+    source_domain: synthetic
+    target_dataset: RWTD
+    edge_eval_protocol: legacy
+    thresholds: 99
+    max_dist: 0.0075
+
+code:
+  git_commit: 7bdb4e9
+  repo: research-site
+
+evaluation:
+  primary_metric: edge/AP
+  metrics_file: metrics.json
+
+assets:
+  representative_count: 5
+  failure_count: 1
+  qc_count: 3
+
+tags:
+  - rwtd
+  - diffedge
+  - lora
+  - preset_c
+  - 64shot
+  - synthetic
+  - stage1

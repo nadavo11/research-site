@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RWTD DiffEdge LoRA C 64-shot</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --line: #cbd5e1;
+      --ok: #166534;
+      --warn: #92400e;
+    }
+    body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--ink); }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 20px 14px 28px; }
+    section { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+    h1, h2 { margin: 0 0 8px; }
+    .tag { display: inline-block; padding: 2px 10px; border-radius: 999px; border: 1px solid #86efac; background: #f0fdf4; color: var(--ok); font-weight: 600; font-size: 0.9rem; }
+    .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid var(--line); padding: 7px; text-align: left; }
+    th { background: #eef2ff; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+    .gallery figure, .diag figure { margin: 0; }
+    .gallery img, .diag img { width: 100%; border: 1px solid var(--line); border-radius: 6px; display: block; }
+    figcaption { margin-top: 6px; font-size: 0.88rem; color: var(--muted); }
+    .diag { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
+    .small { font-size: 0.9rem; color: var(--muted); }
+    .warn { color: var(--warn); font-weight: 600; }
+    code { background: #e2e8f0; padding: 1px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section>
+      <h1>1. Title block</h1>
+      <h2>RWTD synthetic domain - DiffEdge LoRA C 64-shot evaluation</h2>
+      <p><strong>Purpose:</strong> Validate that the standardized page format can represent a real completed run from <code>results_lightweight</code>.</p>
+      <span class="tag">reviewed</span>
+    </section>
+
+    <section>
+      <h2>2. Run identity / provenance</h2>
+      <div class="meta">
+        <div><strong>Date:</strong> 2026-03-10 (bundle creation)</div>
+        <div><strong>Git commit:</strong> <code>7bdb4e9</code></div>
+        <div><strong>Author:</strong> nadavo11</div>
+        <div><strong>Project/task:</strong> diffedge_rwtd_lora_stage1 / edge detection</div>
+        <div><strong>Dataset:</strong> RWTD (source_domain: synthetic)</div>
+        <div><strong>Model/checkpoint:</strong> DiffusionEdge + LoRA C / <code>lora-best_step3800.pt</code></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. Configuration</h2>
+      <div class="meta">
+        <div><strong>Preset:</strong> <code>C</code></div>
+        <div><strong>Overrides:</strong> <code>shots=64, source=synthetic, protocol=legacy</code></div>
+        <div><strong>Seed:</strong> <code>0</code> (not explicitly logged in lightweight bundle)</div>
+        <div><strong>Important hyperparameters:</strong> <code>thresholds=99, max_dist=0.0075, thinning=true, nms=true</code></div>
+        <div><strong>Repro config:</strong> <code>repro/config.yaml</code></div>
+        <div><strong>Repro command:</strong> <code>repro/command.txt</code></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. Headline metrics</h2>
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>Result</th><th>Baseline</th><th>Delta</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>edge/AP</td><td>0.484539</td><td>0.413314 (synthetic zero-shot)</td><td>+0.071225</td></tr>
+          <tr><td>edge/ODS_f1</td><td>0.654000</td><td>0.591961 (synthetic zero-shot)</td><td>+0.062039</td></tr>
+          <tr><td>edge/OIS_f1</td><td>0.654737</td><td>0.593976 (synthetic zero-shot)</td><td>+0.060761</td></tr>
+        </tbody>
+      </table>
+      <p class="small">Primary metric: <code>edge/AP</code>.</p>
+    </section>
+
+    <section>
+      <h2>5. Visual comparison gallery</h2>
+      <p class="small">Fixed sample list from bundle: <code>85, 441, 96, 244, 181</code>. Each preview is a fixed composite panel from the run.</p>
+      <div class="gallery">
+        <figure><img src="assets/gallery/sample_001_preview.png" alt="sample 85 preview" /><figcaption>sample_001 (id=85), fixed order 1/5</figcaption></figure>
+        <figure><img src="assets/gallery/sample_002_preview.png" alt="sample 441 preview" /><figcaption>sample_002 (id=441), fixed order 2/5</figcaption></figure>
+        <figure><img src="assets/gallery/sample_003_preview.png" alt="sample 96 preview" /><figcaption>sample_003 (id=96), fixed order 3/5</figcaption></figure>
+        <figure><img src="assets/gallery/sample_004_preview.png" alt="sample 244 preview" /><figcaption>sample_004 (id=244), fixed order 4/5</figcaption></figure>
+        <figure><img src="assets/gallery/sample_005_preview.png" alt="sample 181 preview" /><figcaption>sample_005 (id=181), fixed order 5/5</figcaption></figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>6. QC / diagnostics</h2>
+      <div class="diag">
+        <figure><img src="assets/qc/preview_grid.png" alt="synthetic preview grid" /><figcaption>Synthetic domain preview grid across compared runs.</figcaption></figure>
+        <figure><img src="assets/qc/pr_curve_synthetic.png" alt="PR curve synthetic" /><figcaption>Precision-recall curve trend by shot count.</figcaption></figure>
+        <figure><img src="assets/plots/delta_vs_zero_shot.png" alt="delta vs zero-shot" /><figcaption>Delta versus zero-shot baseline.</figcaption></figure>
+        <figure><img src="assets/qc/failure_case_244.png" alt="failure case sample 244" /><figcaption><span class="warn">Failure/suspicious case:</span> sample id 244 shows weaker thin-boundary continuity.</figcaption></figure>
+      </div>
+      <p class="small">Trust signal: metrics improve materially over zero-shot, but selected difficult previews still show boundary fragmentation risk.</p>
+    </section>
+
+    <section>
+      <h2>7. Interpretation</h2>
+      <ul>
+        <li>Improved: AP/ODS/OIS all increased versus synthetic zero-shot baseline.</li>
+        <li>Regressed: failure-case previews still expose weak thin-edge continuity.</li>
+        <li>Unclear: robustness on truly hard real-world textures is not proven by this synthetic-focused run.</li>
+        <li>Next: publish an aligned Wild-BSDS 64-shot run page with identical sample IDs and the same QC diagnostics.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>8. Artifact links</h2>
+      <ul>
+        <li>Full outputs: <code>results_lightweight/per_run/synthetic_diffedge_rwtd_loraC_64shot/</code></li>
+        <li>Logs: <code>results_lightweight/per_run/synthetic_diffedge_rwtd_loraC_64shot/performance_summary.json</code></li>
+        <li>Checkpoint/run folder: <code>/home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/synthetic_diffedge_rwtd_loraC_64shot/</code></li>
+        <li>External index: <code>results_lightweight/report.md</code></li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>

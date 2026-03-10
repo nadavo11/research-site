@@ -1,0 +1,10 @@
+{
+  "edge/AP": 0.4845389167287387,
+  "edge/ODS_threshold": 0.01,
+  "edge/ODS_recall": 0.5385257385922648,
+  "edge/ODS_precision": 0.8325140012445551,
+  "edge/ODS_f1": 0.6540003245449116,
+  "edge/OIS_recall": 0.5378564444758036,
+  "edge/OIS_precision": 0.8365210041945783,
+  "edge/OIS_f1": 0.6547374791120155
+}

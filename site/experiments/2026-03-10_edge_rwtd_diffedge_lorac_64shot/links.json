@@ -1,0 +1,8 @@
+{
+  "full_outputs": "results_lightweight/per_run/synthetic_diffedge_rwtd_loraC_64shot/",
+  "checkpoint": "/home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/synthetic_diffedge_rwtd_loraC_64shot/checkpoints/lora-best_step3800.pt",
+  "raw_logs": "results_lightweight/per_run/synthetic_diffedge_rwtd_loraC_64shot/performance_summary.json",
+  "external_bundle": "results_lightweight/",
+  "report_index": "results_lightweight/report.md",
+  "core_table": "results_lightweight/tables/core_results.csv"
+}

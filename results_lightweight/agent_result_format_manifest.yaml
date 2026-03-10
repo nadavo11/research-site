@@ -1,0 +1,88 @@
+version: 1
+name: rwtd_result_bundle_page_contract
+purpose: >
+  Canonical agent contract for converting lightweight run bundles into one-run static report pages.
+
+input_bundle:
+  required_root_files:
+    - manifest.json
+    - report.md
+    - tables/core_results.csv
+  required_run_files:
+    - per_run/<run_id>/metrics.json
+    - per_run/<run_id>/eval_results.json
+  required_qualitative:
+    - qualitative/selected_preview_ids.json
+    - qualitative/previews/<run_id>/*.png
+  required_qc_plots:
+    - plots/pr_curve_<domain>.png
+    - plots/delta_vs_zero_shot.png
+
+output_page:
+  path_pattern: site/experiments/<run_name>/
+  required_files:
+    - index.html
+    - manifest.yaml
+    - summary.md
+    - metrics.json
+    - links.json
+  required_dirs:
+    - assets/gallery
+    - assets/qc
+    - assets/plots
+    - assets/tables
+    - repro
+
+page_sections_in_order:
+  - title_block
+  - run_identity_provenance
+  - configuration
+  - headline_metrics
+  - visual_comparison_gallery
+  - qc_diagnostics
+  - interpretation
+  - artifact_links
+
+required_metadata:
+  - run_name
+  - title
+  - date
+  - author
+  - task.family
+  - dataset.name
+  - model.name
+  - model.preset
+  - config.overrides
+  - code.git_commit
+  - evaluation.primary_metric
+
+visual_rules:
+  sample_list_source: qualitative/selected_preview_ids.json
+  fixed_sample_order: true
+  min_gallery_examples: 4
+  captions_must_include:
+    - sample_id
+    - order_index
+    - run_id
+  cherry_pick_only: forbidden
+
+qc_rules:
+  required_count_min: 2
+  must_include:
+    - preview_grid
+    - pr_curve_or_distribution
+    - at_least_one_failure_or_suspicious_case
+
+publish_gates:
+  - no_missing_git_commit
+  - no_missing_preset_or_overrides
+  - no_missing_metrics
+  - no_missing_gallery
+  - no_missing_qc
+  - no_heavy_artifacts_copied
+
+agent_behavior:
+  if_metrics_missing: fail_with_reason
+  if_preview_ids_missing: fail_with_reason
+  if_run_status_not_done: mark_as_reviewed_not_final
+  if_checkpoint_path_missing: link_run_folder_and_flag_warning

@@ -1,0 +1,13 @@
+run_id: synthetic_diffedge_rwtd_loraC_64shot
+source_domain: synthetic
+target_dataset: RWTD
+lora:
+  preset: C
+  shots: 64
+evaluation:
+  protocol: legacy
+  ap_mode: bsds_interp
+  thresholds: 99
+  max_dist: 0.0075
+  apply_thinning: true
+  apply_nms: true

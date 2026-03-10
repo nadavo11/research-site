@@ -1,0 +1,90 @@
+{
+  "bsds_wild": {
+    "selected_preview_ids": [
+      "207",
+      "387",
+      "175",
+      "205",
+      "216"
+    ],
+    "runs": [
+      "wildbsds_diffedge_rwtd_zs",
+      "wildbsds_diffedge_rwtd_loraC_1shot",
+      "wildbsds_diffedge_rwtd_loraC_4shot",
+      "wildbsds_diffedge_rwtd_loraC_16shot"
+    ],
+    "copied_preview_files": [
+      "previews/wildbsds_diffedge_rwtd_loraC_16shot/175_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_16shot/205_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_16shot/207_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_16shot/216_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_16shot/387_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_1shot/175_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_1shot/205_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_1shot/207_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_1shot/216_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_1shot/387_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_4shot/175_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_4shot/205_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_4shot/207_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_4shot/216_preview.png",
+      "previews/wildbsds_diffedge_rwtd_loraC_4shot/387_preview.png",
+      "previews/wildbsds_diffedge_rwtd_zs/175_preview.png",
+      "previews/wildbsds_diffedge_rwtd_zs/205_preview.png",
+      "previews/wildbsds_diffedge_rwtd_zs/207_preview.png",
+      "previews/wildbsds_diffedge_rwtd_zs/216_preview.png",
+      "previews/wildbsds_diffedge_rwtd_zs/387_preview.png"
+    ],
+    "grid_image": "qualitative/bsds_wild_preview_grid.png"
+  },
+  "synthetic": {
+    "selected_preview_ids": [
+      "85",
+      "441",
+      "96",
+      "244",
+      "181"
+    ],
+    "runs": [
+      "synthetic_diffedge_rwtd_zs",
+      "synthetic_diffedge_rwtd_loraC_1shot",
+      "synthetic_diffedge_rwtd_loraC_4shot",
+      "synthetic_diffedge_rwtd_loraC_16shot",
+      "synthetic_diffedge_rwtd_loraC_32shot",
+      "synthetic_diffedge_rwtd_loraC_64shot"
+    ],
+    "copied_preview_files": [
+      "previews/synthetic_diffedge_rwtd_loraC_16shot/181_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_16shot/244_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_16shot/441_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_16shot/85_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_16shot/96_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_1shot/181_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_1shot/244_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_1shot/441_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_1shot/85_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_1shot/96_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_32shot/181_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_32shot/244_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_32shot/441_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_32shot/85_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_32shot/96_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_4shot/181_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_4shot/244_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_4shot/441_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_4shot/85_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_4shot/96_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_64shot/181_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_64shot/244_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_64shot/441_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_64shot/85_preview.png",
+      "previews/synthetic_diffedge_rwtd_loraC_64shot/96_preview.png",
+      "previews/synthetic_diffedge_rwtd_zs/181_preview.png",
+      "previews/synthetic_diffedge_rwtd_zs/244_preview.png",
+      "previews/synthetic_diffedge_rwtd_zs/441_preview.png",
+      "previews/synthetic_diffedge_rwtd_zs/85_preview.png",
+      "previews/synthetic_diffedge_rwtd_zs/96_preview.png"
+    ],
+    "grid_image": "qualitative/synthetic_preview_grid.png"
+  }
+}
