@@ -1,0 +1,62 @@
+{
+  "summary": {
+    "num_samples": 4,
+    "psnr_mean": 12.97896721568205,
+    "mae_mean": 43.77007865905762,
+    "psnr_baseline_mean": 13.497658192264465,
+    "mae_baseline_mean": 43.41794776916504,
+    "edge_delta_mean": -14.202678620815277,
+    "failure_sample": "sample_004",
+    "suspicious_sample": "sample_001"
+  },
+  "samples": [
+    {
+      "id": "sample_001",
+      "source_file": "prova_1",
+      "psnr": 13.824992845335558,
+      "mae": 39.476985931396484,
+      "psnr_baseline": 14.794586042094089,
+      "mae_baseline": 37.83720397949219,
+      "edge_delta": -12.663957118988037,
+      "input": "assets/gallery/sample_001_input.png",
+      "prediction": "assets/gallery/sample_001_prediction.png",
+      "error": "assets/gallery/sample_001_error.png"
+    },
+    {
+      "id": "sample_002",
+      "source_file": "prova_2",
+      "psnr": 13.552319365761251,
+      "mae": 40.093196868896484,
+      "psnr_baseline": 14.349133893105602,
+      "mae_baseline": 37.5103759765625,
+      "edge_delta": -12.790070056915283,
+      "input": "assets/gallery/sample_002_input.png",
+      "prediction": "assets/gallery/sample_002_prediction.png",
+      "error": "assets/gallery/sample_002_error.png"
+    },
+    {
+      "id": "sample_003",
+      "source_file": "prova_3",
+      "psnr": 12.6833662023315,
+      "mae": 45.196590423583984,
+      "psnr_baseline": 12.927718830965066,
+      "mae_baseline": 47.031192779541016,
+      "edge_delta": -16.371074438095093,
+      "input": "assets/gallery/sample_003_input.png",
+      "prediction": "assets/gallery/sample_003_prediction.png",
+      "error": "assets/gallery/sample_003_error.png"
+    },
+    {
+      "id": "sample_004",
+      "source_file": "prova_4",
+      "psnr": 11.855190449299899,
+      "mae": 50.313541412353516,
+      "psnr_baseline": 11.9191940028931,
+      "mae_baseline": 51.29301834106445,
+      "edge_delta": -14.985612869262695,
+      "input": "assets/gallery/sample_004_input.png",
+      "prediction": "assets/gallery/sample_004_prediction.png",
+      "error": "assets/gallery/sample_004_error.png"
+    }
+  ]
+}

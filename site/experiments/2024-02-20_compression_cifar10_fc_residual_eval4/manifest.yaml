@@ -1,0 +1,133 @@
+experiment_id: 2024-02-20_compression_cifar10_fc_residual_eval4
+title: CIFAR-10 patch compression evaluation (fc residual) - 4 fixed samples
+short_description: Manual pilot report for a completed CIFAR-10 compression run slice using stored decoded outputs.
+status: reviewed
+date: 2024-02-20
+author: nadavo11
+git_commit: 58867d69e17e31406f0dcad3f1b143c3c76c4831
+
+task:
+  project: variable-rate-image-inference-rnn
+  family: image_compression
+  subtype: reconstruction_quality
+
+datasets:
+  - name: CIFAR-10
+    split: test
+    shard: fixed sample list (prova_1..prova_4)
+
+model:
+  name: fc_res
+  variant: patch_rnn
+  adaptation: residual
+
+checkpoint:
+  label: run-folder-only (legacy outputs)
+  uri: https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/tree/58867d69e17e31406f0dcad3f1b143c3c76c4831/test_imgs
+
+preset: fc_residual_p8_b16_eval
+overrides:
+  patch_size: 8
+  batch_size: 16
+  coded_size: 4
+  num_passes: 16
+  num_samples: 4
+  sample_list_name: cifar10_test_fixed_prova_1_to_4
+seed: 0
+
+hyperparameters:
+  learning_rate: 0.001
+  momentum: 0.9
+
+repro_links:
+  config: https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/opts.py
+  command: https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/evaluation.py
+  environment: https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/requirements.txt
+
+metrics:
+  primary_metric: psnr_db
+  baseline_metric: mean_color_reconstruction
+  delta_metric: -0.52
+  rows:
+    - name: psnr_db_mean
+      value: 12.98
+      higher_is_better: true
+    - name: psnr_db_baseline_mean
+      value: 13.50
+      higher_is_better: true
+    - name: mae_mean
+      value: 43.77
+      higher_is_better: false
+    - name: mae_baseline_mean
+      value: 43.42
+      higher_is_better: false
+    - name: edge_density_delta_mean
+      value: -14.20
+      higher_is_better: false
+
+visual_standard:
+  sample_list_name: cifar10_test_fixed_prova_1_to_4
+  example_count: 4
+
+gallery_assets:
+  - sample_id: sample_001
+    order_index: 0
+    split: test
+    input: assets/gallery/sample_001_input.png
+    prediction: assets/gallery/sample_001_prediction.png
+    ground_truth: assets/gallery/sample_001_input.png
+    error_map: assets/gallery/sample_001_error.png
+    caption: sample_001 from prova_1 (fixed list index 1)
+  - sample_id: sample_002
+    order_index: 1
+    split: test
+    input: assets/gallery/sample_002_input.png
+    prediction: assets/gallery/sample_002_prediction.png
+    ground_truth: assets/gallery/sample_002_input.png
+    error_map: assets/gallery/sample_002_error.png
+    caption: sample_002 from prova_2 (fixed list index 2)
+  - sample_id: sample_003
+    order_index: 2
+    split: test
+    input: assets/gallery/sample_003_input.png
+    prediction: assets/gallery/sample_003_prediction.png
+    ground_truth: assets/gallery/sample_003_input.png
+    error_map: assets/gallery/sample_003_error.png
+    caption: sample_003 from prova_3 (fixed list index 3)
+  - sample_id: sample_004
+    order_index: 3
+    split: test
+    input: assets/gallery/sample_004_input.png
+    prediction: assets/gallery/sample_004_prediction.png
+    ground_truth: assets/gallery/sample_004_input.png
+    error_map: assets/gallery/sample_004_error.png
+    caption: sample_004 from prova_4 (fixed list index 4)
+
+qc_assets:
+  preview_grid: assets/qc/preview_grid.png
+  diagnostics:
+    - name: psnr by sample
+      uri: assets/plots/psnr_by_sample.png
+    - name: edge density delta by sample
+      uri: assets/plots/edge_density_delta.png
+    - name: mae by sample
+      uri: assets/plots/mae_by_sample.png
+  failure_cases:
+    - assets/qc/failure_case.png
+  warnings:
+    - strong edge-detail loss relative to input on all 4 fixed samples
+    - baseline mean-color comparator outperforms this run on mean PSNR
+
+interpretation:
+  - Reconstruction preserves coarse color blobs but loses fine spatial detail.
+  - Mean PSNR is lower than the simple baseline on this fixed slice.
+  - Edge density drops sharply, indicating over-smoothing.
+  - Variation across samples is large, with sample_004 as a clear failure case.
+  - Next run should test larger coded_size and conv/lstm variants on the same fixed list.
+
+artifact_links:
+  full_outputs: https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/tree/58867d69e17e31406f0dcad3f1b143c3c76c4831/test_imgs
+  checkpoint: C:/Users/nadav/PycharmProjects/Variable-Rate-Image-Inference-RNN/saved_models/
+  raw_logs: https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/train.py
+  dataset_shard: fixed sample list (prova_1..prova_4)
+  related_run: C:/Users/nadav/PycharmProjects/Variable-Rate-Image-Inference-RNN
