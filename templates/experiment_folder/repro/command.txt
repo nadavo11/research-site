@@ -1,0 +1,1 @@
+python train.py --config configs/rwtd/lora_c.yaml --seed 0

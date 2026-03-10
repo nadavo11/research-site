@@ -1,0 +1,304 @@
+schema_version: "1.0"
+type: object
+additionalProperties: false
+
+required:
+  - experiment_id
+  - title
+  - short_description
+  - status
+  - date
+  - author
+  - git_commit
+  - task
+  - datasets
+  - model
+  - checkpoint
+  - preset
+  - overrides
+  - seed
+  - metrics
+  - gallery_assets
+  - qc_assets
+  - artifact_links
+  - repro_links
+  - interpretation
+
+properties:
+  experiment_id:
+    type: string
+    description: "Canonical run id. Should match Step 2 run_name."
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}_[a-z0-9]+_[a-z0-9]+_[a-z0-9]+_[a-z0-9]+(?:_[a-z0-9]+)?$"
+
+  title:
+    type: string
+    minLength: 5
+
+  short_description:
+    type: string
+    minLength: 10
+    maxLength: 180
+
+  status:
+    type: string
+    enum: [draft, reviewed, final]
+
+  date:
+    type: string
+    format: date
+
+  author:
+    type: string
+    minLength: 1
+
+  git_commit:
+    type: string
+    pattern: "^[0-9a-f]{7,40}$"
+
+  task:
+    type: object
+    additionalProperties: false
+    required: [project, family, subtype]
+    properties:
+      project:
+        type: string
+      family:
+        type: string
+      subtype:
+        type: string
+
+  datasets:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [name, split]
+      properties:
+        name:
+          type: string
+        split:
+          type: string
+        shard:
+          type: string
+
+  model:
+    type: object
+    additionalProperties: false
+    required: [name, variant]
+    properties:
+      name:
+        type: string
+      variant:
+        type: string
+      adaptation:
+        type: string
+
+  checkpoint:
+    type: object
+    additionalProperties: false
+    required: [label, uri]
+    properties:
+      label:
+        type: string
+      uri:
+        type: string
+        minLength: 1
+
+  preset:
+    type: string
+    minLength: 1
+
+  overrides:
+    type: object
+    description: "Explicit override values relative to preset."
+
+  seed:
+    type: integer
+
+  hyperparameters:
+    type: object
+    description: "Optional compact subset shown in Configuration section."
+
+  repro_links:
+    type: object
+    additionalProperties: false
+    required: [config, command, environment]
+    properties:
+      config:
+        type: string
+      command:
+        type: string
+      environment:
+        type: string
+
+  metrics:
+    type: object
+    additionalProperties: false
+    required: [primary_metric, rows]
+    properties:
+      primary_metric:
+        type: string
+      baseline_metric:
+        type: string
+      delta_metric:
+        type: number
+      rows:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          additionalProperties: false
+          required: [name, value]
+          properties:
+            name:
+              type: string
+            value:
+              type: number
+            higher_is_better:
+              type: boolean
+
+  visual_standard:
+    type: object
+    additionalProperties: false
+    required: [sample_list_name, example_count]
+    properties:
+      sample_list_name:
+        type: string
+      example_count:
+        type: integer
+        minimum: 1
+
+  gallery_assets:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [sample_id, order_index, input, prediction, ground_truth]
+      properties:
+        sample_id:
+          type: string
+        order_index:
+          type: integer
+          minimum: 0
+        split:
+          type: string
+        input:
+          type: string
+        prediction:
+          type: string
+        ground_truth:
+          type: string
+        error_map:
+          type: string
+        caption:
+          type: string
+
+  qc_assets:
+    type: object
+    additionalProperties: false
+    required: [preview_grid, diagnostics, failure_cases]
+    properties:
+      preview_grid:
+        type: string
+      diagnostics:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          additionalProperties: false
+          required: [name, uri]
+          properties:
+            name:
+              type: string
+            uri:
+              type: string
+      failure_cases:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      warnings:
+        type: array
+        items:
+          type: string
+
+  interpretation:
+    type: array
+    minItems: 3
+    maxItems: 6
+    items:
+      type: string
+      minLength: 3
+
+  artifact_links:
+    type: object
+    additionalProperties: false
+    required: [full_outputs, checkpoint, raw_logs]
+    properties:
+      full_outputs:
+        type: string
+      checkpoint:
+        type: string
+      raw_logs:
+        type: string
+      dataset_shard:
+        type: string
+      hf:
+        type: string
+      notebook:
+        type: string
+      related_run:
+        type: string
+
+  notes:
+    type: string
+
+  generated:
+    type: object
+    readOnly: true
+    additionalProperties: false
+    properties:
+      rendered_at:
+        type: string
+      generator_version:
+        type: string
+      page_path:
+        type: string
+
+field_classes:
+  required_fields:
+    - experiment_id
+    - title
+    - short_description
+    - status
+    - date
+    - author
+    - git_commit
+    - task
+    - datasets
+    - model
+    - checkpoint
+    - preset
+    - overrides
+    - seed
+    - metrics
+    - gallery_assets
+    - qc_assets
+    - artifact_links
+    - interpretation
+  optional_fields:
+    - hyperparameters
+    - notes
+    - datasets.shard
+    - gallery_assets.error_map
+    - qc_assets.warnings
+    - artifact_links.dataset_shard
+    - artifact_links.hf
+    - artifact_links.notebook
+    - artifact_links.related_run
+  derived_generated_fields:
+    - generated.rendered_at
+    - generated.generator_version
+    - generated.page_path

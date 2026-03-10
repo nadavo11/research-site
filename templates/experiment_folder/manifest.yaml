@@ -1,0 +1,51 @@
+run_name: 2026-03-09_edge_rwtd_diffedge_lorac_bsdsft
+title: RWTD edge fine-tuning from BSDS-pretrained DiffusionEdge with LoRA preset C
+date: 2026-03-09
+author: nadav
+
+task:
+  family: edge_detection
+  subtype: fine_tuning
+
+status:
+  stage: completed
+  verdict: keep
+  publish: true
+
+dataset:
+  name: RWTD
+  split: val
+  source_type: real_world_texture
+
+model:
+  name: DiffusionEdge
+  base_checkpoint: my60k.pt
+  adaptation: lora
+  preset: C
+
+config:
+  seed: 0
+  overrides:
+    lr: 1e-4
+    rank: 16
+    alpha: 16
+
+code:
+  git_commit: abcdef123456
+  repo: texture-research
+
+evaluation:
+  primary_metric: ods_f1
+  metrics_file: metrics.json
+
+assets:
+  representative_count: 8
+  failure_count: 4
+  qc_count: 3
+
+tags:
+  - rwtd
+  - diffedge
+  - lora
+  - preset_c
+  - fine_tuning
