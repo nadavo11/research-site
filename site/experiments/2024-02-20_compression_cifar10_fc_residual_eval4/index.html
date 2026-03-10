@@ -3,244 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pilot Report - 2024-02-20 Compression Run</title>
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --ink: #0f172a;
-      --muted: #475569;
-      --line: #cbd5e1;
-      --ok: #166534;
-      --warn: #9a3412;
-    }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      color: var(--ink);
-      background: var(--bg);
-      line-height: 1.45;
-    }
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 24px 16px 40px;
-    }
-    section {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-    h1, h2 {
-      margin-top: 0;
-    }
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 8px 14px;
-    }
-    .tag {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-    .tag.reviewed {
-      color: var(--ok);
-      border-color: #86efac;
-      background: #f0fdf4;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-    }
-    th, td {
-      border: 1px solid var(--line);
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #f1f5f9;
-    }
-    .gallery-row {
-      display: grid;
-      grid-template-columns: 145px repeat(4, minmax(120px, 1fr));
-      gap: 8px;
-      align-items: start;
-      margin-bottom: 12px;
-    }
-    .gallery-row img {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      display: block;
-    }
-    .small {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-    .diag {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 10px;
-    }
-    .diag img {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      display: block;
-    }
-    ul {
-      margin-top: 8px;
-      margin-bottom: 8px;
-    }
-    a {
-      color: #1d4ed8;
-    }
-  </style>
+  <title>CIFAR-10 compression eval - fc residual</title>
+  <link rel="stylesheet" href="../../assets/site.css" />
 </head>
 <body>
-  <div class="wrap">
-    <section>
-      <h1>1. Title block</h1>
-      <h2>CIFAR-10 patch compression evaluation (fc residual), fixed 4-sample slice</h2>
-      <p><strong>Purpose:</strong> Validate the canonical reporting format on a real completed run using non-confidential legacy outputs.</p>
-      <p><span class="tag reviewed">reviewed</span></p>
+  <main>
+    <section class="hero">
+      <h1>CIFAR-10 compression eval (fc residual, 4 fixed samples)</h1>
+      <p>Goal: document a completed legacy run slice and test whether reported quality beats a simple baseline.</p>
+      <p style="margin-top:8px;"><span class="tag warn">reviewed baseline-quality</span><span class="tag">image compression</span></p>
     </section>
 
-    <section>
-      <h2>2. Run identity / provenance</h2>
+    <section class="section">
+      <h2>Executive Read</h2>
+      <div class="summary">
+        This run does not beat baseline-quality reconstruction: PSNR is lower and edges are consistently over-smoothed. Keep as reference, not as a target model.
+      </div>
+      <div class="metric-grid" style="margin-top:10px;">
+        <article class="metric">
+          <div class="k">Primary Metric</div>
+          <div class="v">12.98 dB PSNR</div>
+          <div class="delta-down">-0.52 vs baseline</div>
+        </article>
+        <article class="metric">
+          <div class="k">MAE</div>
+          <div class="v">43.77</div>
+          <div class="delta-down">+0.35 worse than baseline</div>
+        </article>
+        <article class="metric">
+          <div class="k">Edge Density Delta</div>
+          <div class="v">-14.20</div>
+          <div class="delta-down">Large detail loss</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>What Changed</h2>
       <div class="meta-grid">
-        <div><strong>Date:</strong> 2024-02-20</div>
-        <div><strong>Git commit:</strong> <code>58867d69e17e31406f0dcad3f1b143c3c76c4831</code></div>
-        <div><strong>Author:</strong> nadavo11</div>
-        <div><strong>Project/task:</strong> Variable-Rate-Image-Inference-RNN / image compression</div>
-        <div><strong>Dataset:</strong> CIFAR-10 test, fixed list <code>prova_1..prova_4</code></div>
-        <div><strong>Model/checkpoint:</strong> fc residual patch RNN / legacy run-folder outputs</div>
+        <div class="card"><p class="kv"><strong>Preset:</strong> fc_residual_p8_b16_eval</p><p class="kv"><strong>Samples:</strong> 4 fixed CIFAR-10 test examples</p></div>
+        <div class="card"><p class="kv"><strong>Overrides:</strong> patch_size=8, coded_size=4, passes=16</p><p class="kv"><strong>Seed:</strong> 0 (legacy default)</p></div>
+        <div class="card"><p class="kv"><strong>Important context:</strong> no new retraining was done in this report step; it standardizes existing legacy outputs.</p></div>
+      </div>
+      <div class="actions" style="margin-top:10px;">
+        <button data-toggle-target="legacyDetails">Show details</button>
+      </div>
+      <div class="details" id="legacyDetails">
+        <p class="kv"><strong>Date:</strong> 2024-02-20</p>
+        <p class="kv"><strong>Git commit:</strong> <code>58867d69e17e31406f0dcad3f1b143c3c76c4831</code></p>
+        <p class="kv"><strong>Author:</strong> nadavo11</p>
+        <p class="kv"><strong>Project/task:</strong> Variable-Rate-Remote-Image-Inference-RNN / image compression</p>
+        <p class="kv"><strong>Repro links:</strong> <a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/opts.py">opts.py</a>, <a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/evaluation.py">evaluation.py</a>, <a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/requirements.txt">requirements.txt</a></p>
       </div>
     </section>
 
-    <section>
-      <h2>3. Configuration</h2>
-      <div class="meta-grid">
-        <div><strong>Preset:</strong> <code>fc_residual_p8_b16_eval</code></div>
-        <div><strong>Overrides:</strong> <code>patch_size=8, batch_size=16, coded_size=4, num_passes=16, num_samples=4</code></div>
-        <div><strong>Seed:</strong> <code>0</code> (legacy default, not explicitly logged)</div>
-        <div><strong>Important hyperparameters:</strong> <code>lr=0.001, momentum=0.9</code></div>
-        <div><strong>Repro config:</strong> <a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/opts.py">opts.py</a></div>
-        <div><strong>Repro command:</strong> <a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/evaluation.py">evaluation.py</a></div>
+    <section class="section">
+      <h2>Visual Comparison (Fixed IDs)</h2>
+      <p class="kv">Fixed sample list: <code>cifar10_test_fixed_prova_1_to_4</code>. Click any panel to enlarge.</p>
+      <div class="gallery">
+        <figure><img src="assets/gallery/sample_001_prediction.png" alt="sample_001 prediction" data-zoom-src="assets/gallery/sample_001_prediction.png" /><figcaption>sample_001 prediction (source prova_1)</figcaption></figure>
+        <figure><img src="assets/gallery/sample_002_prediction.png" alt="sample_002 prediction" data-zoom-src="assets/gallery/sample_002_prediction.png" /><figcaption>sample_002 prediction (source prova_2)</figcaption></figure>
+        <figure><img src="assets/gallery/sample_003_prediction.png" alt="sample_003 prediction" data-zoom-src="assets/gallery/sample_003_prediction.png" /><figcaption>sample_003 prediction (source prova_3)</figcaption></figure>
+        <figure><img src="assets/gallery/sample_004_prediction.png" alt="sample_004 prediction" data-zoom-src="assets/gallery/sample_004_prediction.png" /><figcaption>sample_004 prediction (source prova_4, failure)</figcaption></figure>
+      </div>
+      <div class="actions" style="margin-top:10px;">
+        <button data-toggle-target="inputErrorPanels">Show details</button>
+      </div>
+      <div class="details" id="inputErrorPanels">
+        <div class="gallery">
+          <figure><img src="assets/gallery/sample_001_input.png" alt="sample_001 input" data-zoom-src="assets/gallery/sample_001_input.png" /><figcaption>sample_001 input</figcaption></figure>
+          <figure><img src="assets/gallery/sample_001_error.png" alt="sample_001 error" data-zoom-src="assets/gallery/sample_001_error.png" /><figcaption>sample_001 error map</figcaption></figure>
+          <figure><img src="assets/gallery/sample_004_input.png" alt="sample_004 input" data-zoom-src="assets/gallery/sample_004_input.png" /><figcaption>sample_004 input</figcaption></figure>
+          <figure><img src="assets/gallery/sample_004_error.png" alt="sample_004 error" data-zoom-src="assets/gallery/sample_004_error.png" /><figcaption>sample_004 error map</figcaption></figure>
+        </div>
       </div>
     </section>
 
-    <section>
-      <h2>4. Headline metrics</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Metric</th>
-            <th>Result</th>
-            <th>Baseline</th>
-            <th>Delta</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>PSNR mean (dB) - primary</td>
-            <td>12.98</td>
-            <td>13.50 (mean-color reconstruction)</td>
-            <td>-0.52</td>
-          </tr>
-          <tr>
-            <td>MAE mean (0-255, lower better)</td>
-            <td>43.77</td>
-            <td>43.42</td>
-            <td>+0.35 (worse)</td>
-          </tr>
-          <tr>
-            <td>Edge density delta (pred-input)</td>
-            <td>-14.20</td>
-            <td>0.00 target</td>
-            <td>-14.20 (detail loss)</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="small">Baseline is intentionally simple and included to force comparability in this pilot.</p>
-    </section>
-
-    <section>
-      <h2>5. Visual comparison gallery</h2>
-      <p class="small">Fixed sample list: <code>cifar10_test_fixed_prova_1_to_4</code>. Order is locked and unchanged across runs.</p>
-
-      <div class="gallery-row">
-        <div><strong>sample_001</strong><br /><span class="small">source: prova_1</span></div>
-        <div><img src="assets/gallery/sample_001_input.png" alt="sample_001 input" /></div>
-        <div><img src="assets/gallery/sample_001_prediction.png" alt="sample_001 prediction" /></div>
-        <div><img src="assets/gallery/sample_001_input.png" alt="sample_001 ground truth" /></div>
-        <div><img src="assets/gallery/sample_001_error.png" alt="sample_001 error map" /></div>
-      </div>
-
-      <div class="gallery-row">
-        <div><strong>sample_002</strong><br /><span class="small">source: prova_2</span></div>
-        <div><img src="assets/gallery/sample_002_input.png" alt="sample_002 input" /></div>
-        <div><img src="assets/gallery/sample_002_prediction.png" alt="sample_002 prediction" /></div>
-        <div><img src="assets/gallery/sample_002_input.png" alt="sample_002 ground truth" /></div>
-        <div><img src="assets/gallery/sample_002_error.png" alt="sample_002 error map" /></div>
-      </div>
-
-      <div class="gallery-row">
-        <div><strong>sample_003</strong><br /><span class="small">source: prova_3</span></div>
-        <div><img src="assets/gallery/sample_003_input.png" alt="sample_003 input" /></div>
-        <div><img src="assets/gallery/sample_003_prediction.png" alt="sample_003 prediction" /></div>
-        <div><img src="assets/gallery/sample_003_input.png" alt="sample_003 ground truth" /></div>
-        <div><img src="assets/gallery/sample_003_error.png" alt="sample_003 error map" /></div>
-      </div>
-
-      <div class="gallery-row">
-        <div><strong>sample_004</strong><br /><span class="small">source: prova_4</span></div>
-        <div><img src="assets/gallery/sample_004_input.png" alt="sample_004 input" /></div>
-        <div><img src="assets/gallery/sample_004_prediction.png" alt="sample_004 prediction" /></div>
-        <div><img src="assets/gallery/sample_004_input.png" alt="sample_004 ground truth" /></div>
-        <div><img src="assets/gallery/sample_004_error.png" alt="sample_004 error map" /></div>
+    <section class="section">
+      <h2>QC Diagnostics</h2>
+      <div class="gallery">
+        <figure><img src="assets/qc/preview_grid.png" alt="preview grid" data-zoom-src="assets/qc/preview_grid.png" /><figcaption>QC overview grid.</figcaption></figure>
+        <figure><img src="assets/plots/psnr_by_sample.png" alt="psnr by sample" data-zoom-src="assets/plots/psnr_by_sample.png" /><figcaption>PSNR variability across fixed samples.</figcaption></figure>
+        <figure><img src="assets/plots/mae_by_sample.png" alt="mae by sample" data-zoom-src="assets/plots/mae_by_sample.png" /><figcaption>MAE by sample.</figcaption></figure>
+        <figure><img src="assets/plots/edge_density_delta.png" alt="edge density delta" data-zoom-src="assets/plots/edge_density_delta.png" /><figcaption>Consistent edge-density drop versus input.</figcaption></figure>
+        <figure><img src="assets/qc/failure_case.png" alt="failure case" data-zoom-src="assets/qc/failure_case.png" /><figcaption>Failure case panel.</figcaption></figure>
+        <figure><img src="assets/qc/suspicious_case.png" alt="suspicious case" data-zoom-src="assets/qc/suspicious_case.png" /><figcaption>Suspicious case panel.</figcaption></figure>
       </div>
     </section>
 
-    <section>
-      <h2>6. QC / diagnostics</h2>
-      <div class="diag">
-        <div><img src="assets/qc/preview_grid.png" alt="preview grid" /></div>
-        <div><img src="assets/plots/psnr_by_sample.png" alt="psnr by sample" /></div>
-        <div><img src="assets/plots/mae_by_sample.png" alt="mae by sample" /></div>
-        <div><img src="assets/plots/edge_density_delta.png" alt="edge density delta by sample" /></div>
-        <div><img src="assets/qc/failure_case.png" alt="failure case panel" /></div>
-        <div><img src="assets/qc/suspicious_case.png" alt="suspicious case panel" /></div>
-      </div>
-      <p><strong>Trust signal:</strong> not trustworthy for deployment-level quality; diagnostics show consistent edge/detail collapse.</p>
-    </section>
-
-    <section>
-      <h2>7. Interpretation</h2>
+    <section class="section">
+      <h2>Interpretation</h2>
       <ul>
-        <li>What improved: coarse color region reconstruction remains stable across all four samples.</li>
-        <li>What regressed: mean PSNR is below baseline and MAE is slightly worse than baseline.</li>
-        <li>What remains unclear: exact checkpoint provenance for this legacy output set is incomplete.</li>
-        <li>What next: rerun on the same fixed list with explicit run-id logging and compare `fc`, `conv`, and `lstm` presets.</li>
+        <li>What improved: coarse region reconstruction remains stable.</li>
+        <li>What regressed: PSNR and MAE fail to beat the simple baseline on this slice.</li>
+        <li>What is suspicious: sharp edge attenuation appears across all fixed examples.</li>
+        <li>Next step: rerun on the same fixed list with explicit run-id logging and compare fc/conv/lstm presets.</li>
       </ul>
     </section>
 
-    <section>
-      <h2>8. Artifact links</h2>
-      <ul>
-        <li>Full outputs: <a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/tree/58867d69e17e31406f0dcad3f1b143c3c76c4831/test_imgs">test_imgs (source)</a></li>
-        <li>Logs: <a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/train.py">train.py (legacy logging path)</a></li>
-        <li>Checkpoint / run folder: <code>C:/Users/nadav/PycharmProjects/Variable-Rate-Image-Inference-RNN/saved_models/</code></li>
-        <li>Repo root: <a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/tree/58867d69e17e31406f0dcad3f1b143c3c76c4831">Variable-Rate-Remote-Image-Inference-RNN@58867d6</a></li>
-      </ul>
+    <section class="section">
+      <h2>Artifacts</h2>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><th>Full outputs</th><td><a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/tree/58867d69e17e31406f0dcad3f1b143c3c76c4831/test_imgs">test_imgs</a></td></tr>
+            <tr><th>Raw logs path</th><td><a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/blob/58867d69e17e31406f0dcad3f1b143c3c76c4831/train.py">train.py</a></td></tr>
+            <tr><th>Checkpoint folder</th><td><code>C:/Users/nadav/PycharmProjects/Variable-Rate-Image-Inference-RNN/saved_models/</code></td></tr>
+            <tr><th>Repo root</th><td><a href="https://github.com/nadavo11/Variable-Rate-Remote-Image-Inference-RNN/tree/58867d69e17e31406f0dcad3f1b143c3c76c4831">Variable-Rate-Remote-Image-Inference-RNN@58867d6</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:10px;"><a class="btn" href="../../index.html">Back to overview</a></p>
     </section>
-  </div>
+
+    <footer>Legacy run page refreshed for clarity and honest quality signaling on 2026-03-10.</footer>
+  </main>
+
+  <dialog class="image-dialog" id="imageDialog">
+    <img id="imageDialogImg" alt="Expanded preview" />
+  </dialog>
+  <script src="../../assets/site.js"></script>
 </body>
 </html>

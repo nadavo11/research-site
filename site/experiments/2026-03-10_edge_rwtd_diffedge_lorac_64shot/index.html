@@ -3,126 +3,297 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RWTD DiffEdge LoRA C 64-shot</title>
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --ink: #0f172a;
-      --muted: #475569;
-      --line: #cbd5e1;
-      --ok: #166534;
-      --warn: #92400e;
-    }
-    body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; background: var(--bg); color: var(--ink); }
-    .wrap { max-width: 1080px; margin: 0 auto; padding: 20px 14px 28px; }
-    section { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
-    h1, h2 { margin: 0 0 8px; }
-    .tag { display: inline-block; padding: 2px 10px; border-radius: 999px; border: 1px solid #86efac; background: #f0fdf4; color: var(--ok); font-weight: 600; font-size: 0.9rem; }
-    .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 12px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid var(--line); padding: 7px; text-align: left; }
-    th { background: #eef2ff; }
-    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
-    .gallery figure, .diag figure { margin: 0; }
-    .gallery img, .diag img { width: 100%; border: 1px solid var(--line); border-radius: 6px; display: block; }
-    figcaption { margin-top: 6px; font-size: 0.88rem; color: var(--muted); }
-    .diag { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
-    .small { font-size: 0.9rem; color: var(--muted); }
-    .warn { color: var(--warn); font-weight: 600; }
-    code { background: #e2e8f0; padding: 1px 4px; border-radius: 4px; }
-  </style>
+  <title>RWTD synthetic domain - DiffEdge LoRA C 64-shot</title>
+  <link rel="stylesheet" href="../../assets/site.css" />
 </head>
 <body>
-  <div class="wrap">
-    <section>
-      <h1>1. Title block</h1>
-      <h2>RWTD synthetic domain - DiffEdge LoRA C 64-shot evaluation</h2>
-      <p><strong>Purpose:</strong> Validate that the standardized page format can represent a real completed run from <code>results_lightweight</code>.</p>
-      <span class="tag">reviewed</span>
+  <main>
+    <section class="hero">
+      <h1>RWTD synthetic domain - DiffEdge LoRA C 64-shot</h1>
+      <p>Goal: test whether 64-shot LoRA adaptation improves RWTD synthetic edge detection over synthetic zero-shot.</p>
+      <p style="margin-top:8px;"><span class="tag good">reviewed</span><span class="tag">edge detection</span><span class="tag">synthetic source</span></p>
     </section>
 
-    <section>
-      <h2>2. Run identity / provenance</h2>
-      <div class="meta">
-        <div><strong>Date:</strong> 2026-03-10 (bundle creation)</div>
-        <div><strong>Git commit:</strong> <code>7bdb4e9</code></div>
-        <div><strong>Author:</strong> nadavo11</div>
-        <div><strong>Project/task:</strong> diffedge_rwtd_lora_stage1 / edge detection</div>
-        <div><strong>Dataset:</strong> RWTD (source_domain: synthetic)</div>
-        <div><strong>Model/checkpoint:</strong> DiffusionEdge + LoRA C / <code>lora-best_step3800.pt</code></div>
+    <section class="section">
+      <h2>Executive Read</h2>
+      <div class="summary">
+        <p class="kv"><strong>Run:</strong> <code>synthetic_diffedge_rwtd_loraC_64shot</code> (reported on 2026-03-10)</p>
+        <p class="kv"><strong>What was done:</strong> LoRA Preset C adaptation on RWTD synthetic data, then RWTD test evaluation against zero-shot and other shot counts.</p>
+        <p class="kv"><strong>Shots:</strong> 64-shot synthetic adaptation for this page; cross-shot comparisons below include 0/1/4/16/32/64 where available.</p>
+        <p class="kv"><strong>What changed:</strong> synthetic AP improved from <code>0.4133</code> (zero-shot) to <code>0.4845</code> (+0.0712), with ODS/OIS moving up in the same direction.</p>
+        <p class="kv"><strong>Where it fails:</strong> thin-boundary continuity still breaks on hard textures (example: sample id 244), and wild-BSDS high-shot runs are incomplete (32/64 pending).</p>
+      </div>
+      <div class="metric-grid" style="margin-top:10px;">
+        <article class="metric">
+          <div class="k">Primary Metric</div>
+          <div class="v">0.4845 AP</div>
+          <div class="delta-up">+0.0712 vs baseline</div>
+        </article>
+        <article class="metric">
+          <div class="k">ODS F1</div>
+          <div class="v">0.6540</div>
+          <div class="delta-up">+0.0620</div>
+        </article>
+        <article class="metric">
+          <div class="k">OIS F1</div>
+          <div class="v">0.6547</div>
+          <div class="delta-up">+0.0608</div>
+        </article>
       </div>
     </section>
 
-    <section>
-      <h2>3. Configuration</h2>
-      <div class="meta">
-        <div><strong>Preset:</strong> <code>C</code></div>
-        <div><strong>Overrides:</strong> <code>shots=64, source=synthetic, protocol=legacy</code></div>
-        <div><strong>Seed:</strong> <code>0</code> (not explicitly logged in lightweight bundle)</div>
-        <div><strong>Important hyperparameters:</strong> <code>thresholds=99, max_dist=0.0075, thinning=true, nms=true</code></div>
-        <div><strong>Repro config:</strong> <code>repro/config.yaml</code></div>
-        <div><strong>Repro command:</strong> <code>repro/command.txt</code></div>
+    <section class="section">
+      <h2>Metrics by Shots (No Cross-Domain Mixing)</h2>
+      <p class="kv">Each domain is reported against its own zero-shot baseline. Synthetic and Wild-BSDS are shown separately to avoid apples-to-oranges interpretation.</p>
+      <h3>Synthetic domain (RWTD)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Shots</th>
+              <th>Synthetic AP</th>
+              <th>Synthetic ODS</th>
+              <th>Synthetic OIS</th>
+              <th>Delta vs synthetic zero-shot AP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>0.4133</td><td>0.5920</td><td>0.5940</td><td>+0.0000</td></tr>
+            <tr><td>1</td><td>0.4212</td><td>0.5993</td><td>0.6005</td><td>+0.0078</td></tr>
+            <tr><td>4</td><td>0.4495</td><td>0.6151</td><td>0.6168</td><td>+0.0361</td></tr>
+            <tr><td>16</td><td>0.4772</td><td>0.6404</td><td>0.6426</td><td>+0.0639</td></tr>
+            <tr><td>32</td><td>0.4728</td><td>0.6429</td><td>0.6435</td><td>+0.0595</td></tr>
+            <tr><td>64</td><td><strong>0.4845</strong></td><td><strong>0.6540</strong></td><td><strong>0.6547</strong></td><td><strong>+0.0712</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 style="margin-top: 12px;">Wild-BSDS domain</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Shots</th>
+              <th>Wild-BSDS AP</th>
+              <th>Wild-BSDS ODS</th>
+              <th>Wild-BSDS OIS</th>
+              <th>Delta vs wild zero-shot AP</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>0.5653</td><td>0.6646</td><td>0.6903</td><td>+0.0000</td><td>done</td></tr>
+            <tr><td>1</td><td>0.5612</td><td>0.6650</td><td>0.6879</td><td>-0.0041</td><td>done</td></tr>
+            <tr><td>4</td><td>0.5567</td><td>0.6662</td><td>0.6916</td><td>-0.0085</td><td>done</td></tr>
+            <tr><td>16</td><td>0.5654</td><td>0.6742</td><td>0.6956</td><td>+0.0002</td><td>running</td></tr>
+            <tr><td>32</td><td>n/a</td><td>n/a</td><td>n/a</td><td>n/a</td><td>pending</td></tr>
+            <tr><td>64</td><td>n/a</td><td>n/a</td><td>n/a</td><td>n/a</td><td>pending</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <section>
-      <h2>4. Headline metrics</h2>
-      <table>
-        <thead>
-          <tr><th>Metric</th><th>Result</th><th>Baseline</th><th>Delta</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>edge/AP</td><td>0.484539</td><td>0.413314 (synthetic zero-shot)</td><td>+0.071225</td></tr>
-          <tr><td>edge/ODS_f1</td><td>0.654000</td><td>0.591961 (synthetic zero-shot)</td><td>+0.062039</td></tr>
-          <tr><td>edge/OIS_f1</td><td>0.654737</td><td>0.593976 (synthetic zero-shot)</td><td>+0.060761</td></tr>
-        </tbody>
-      </table>
-      <p class="small">Primary metric: <code>edge/AP</code>.</p>
+    <section class="section">
+      <h2>What Changed</h2>
+      <div class="actions" style="margin-top:10px;">
+        <button data-toggle-target="runDetails">Show details</button>
+      </div>
+      <div class="details" id="runDetails">
+        <div class="meta-grid">
+          <div class="card"><p class="kv"><strong>Preset:</strong> C</p><p class="kv"><strong>Shots:</strong> 64</p></div>
+          <div class="card"><p class="kv"><strong>Domain:</strong> synthetic - RWTD</p><p class="kv"><strong>Protocol:</strong> legacy edge eval</p></div>
+          <div class="card"><p class="kv"><strong>Key params:</strong> thresholds=99, max_dist=0.0075, thinning=true, nms=true</p></div>
+        </div>
+        <p class="kv"><strong>Date:</strong> 2026-03-10</p>
+        <p class="kv"><strong>Git commit:</strong> <code>7bdb4e9</code></p>
+        <p class="kv"><strong>Author:</strong> nadavo11</p>
+        <p class="kv"><strong>Task:</strong> diffedge_rwtd_lora_stage1 / edge detection</p>
+        <p class="kv"><strong>Model/checkpoint:</strong> DiffusionEdge + LoRA C / <code>lora-best_step3800.pt</code></p>
+        <p class="kv"><strong>Repro files:</strong> <code>repro/config.yaml</code>, <code>repro/command.txt</code>, <code>repro/env.txt</code></p>
+      </div>
     </section>
 
-    <section>
-      <h2>5. Visual comparison gallery</h2>
-      <p class="small">Fixed sample list from bundle: <code>85, 441, 96, 244, 181</code>. Each preview is a fixed composite panel from the run.</p>
+    <section class="section">
+      <h2>Shot Galleries (Scrollable)</h2>
+      <p class="kv">Main preview mode is gallery/carousel. Scroll horizontally to inspect all shots.</p>
+      <h3>Synthetic previews by shots (fixed id 244)</h3>
+      <div class="carousel-track">
+        <figure class="shot-card"><img src="assets/comparison/synthetic_zs_244.png" alt="synthetic zero-shot preview 244" data-zoom-src="assets/comparison/synthetic_zs_244.png" /><figcaption>0-shot</figcaption></figure>
+        <figure class="shot-card"><img src="assets/comparison/synthetic_1shot_244.png" alt="synthetic 1-shot preview 244" data-zoom-src="assets/comparison/synthetic_1shot_244.png" /><figcaption>1-shot</figcaption></figure>
+        <figure class="shot-card"><img src="assets/comparison/synthetic_4shot_244.png" alt="synthetic 4-shot preview 244" data-zoom-src="assets/comparison/synthetic_4shot_244.png" /><figcaption>4-shot</figcaption></figure>
+        <figure class="shot-card"><img src="assets/comparison/synthetic_16shot_244.png" alt="synthetic 16-shot preview 244" data-zoom-src="assets/comparison/synthetic_16shot_244.png" /><figcaption>16-shot</figcaption></figure>
+        <figure class="shot-card"><img src="assets/comparison/synthetic_32shot_244.png" alt="synthetic 32-shot preview 244" data-zoom-src="assets/comparison/synthetic_32shot_244.png" /><figcaption>32-shot</figcaption></figure>
+        <figure class="shot-card"><img src="assets/comparison/synthetic_64shot_244.png" alt="synthetic 64-shot preview 244" data-zoom-src="assets/comparison/synthetic_64shot_244.png" /><figcaption>64-shot</figcaption></figure>
+      </div>
+      <h3 style="margin-top: 12px;">Wild-BSDS previews by shots (fixed id 205)</h3>
+      <div class="carousel-track">
+        <figure class="shot-card"><img src="assets/comparison/wild_zs_205.png" alt="wild zero-shot preview 205" data-zoom-src="assets/comparison/wild_zs_205.png" /><figcaption>0-shot</figcaption></figure>
+        <figure class="shot-card"><img src="assets/comparison/wild_1shot_205.png" alt="wild 1-shot preview 205" data-zoom-src="assets/comparison/wild_1shot_205.png" /><figcaption>1-shot</figcaption></figure>
+        <figure class="shot-card"><img src="assets/comparison/wild_4shot_205.png" alt="wild 4-shot preview 205" data-zoom-src="assets/comparison/wild_4shot_205.png" /><figcaption>4-shot</figcaption></figure>
+        <figure class="shot-card"><img src="assets/comparison/wild_16shot_205.png" alt="wild 16-shot preview 205" data-zoom-src="assets/comparison/wild_16shot_205.png" /><figcaption>16-shot (running)</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>More Previews by Topic (Expand)</h2>
+      <p class="kv">All available previews are exposed below. Expand a topic to browse every image in that set.</p>
+
+      <div class="actions"><button data-toggle-target="topicSynZs">Show details: synthetic 0-shot</button></div>
+      <div class="details" id="topicSynZs">
+        <div class="gallery">
+          <figure><img src="assets/topics/synthetic_diffedge_rwtd_zs/85_preview.png" alt="synthetic zs 85" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_zs/85_preview.png" /><figcaption>id 85</figcaption></figure>
+          <figure><img src="assets/topics/synthetic_diffedge_rwtd_zs/96_preview.png" alt="synthetic zs 96" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_zs/96_preview.png" /><figcaption>id 96</figcaption></figure>
+          <figure><img src="assets/topics/synthetic_diffedge_rwtd_zs/181_preview.png" alt="synthetic zs 181" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_zs/181_preview.png" /><figcaption>id 181</figcaption></figure>
+          <figure><img src="assets/topics/synthetic_diffedge_rwtd_zs/244_preview.png" alt="synthetic zs 244" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_zs/244_preview.png" /><figcaption>id 244</figcaption></figure>
+          <figure><img src="assets/topics/synthetic_diffedge_rwtd_zs/441_preview.png" alt="synthetic zs 441" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_zs/441_preview.png" /><figcaption>id 441</figcaption></figure>
+        </div>
+      </div>
+
+      <div class="actions"><button data-toggle-target="topicSyn1">Show details: synthetic 1-shot</button></div>
+      <div class="details" id="topicSyn1"><div class="gallery">
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/85_preview.png" alt="synthetic 1 85" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/85_preview.png" /><figcaption>id 85</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/96_preview.png" alt="synthetic 1 96" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/96_preview.png" /><figcaption>id 96</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/181_preview.png" alt="synthetic 1 181" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/181_preview.png" /><figcaption>id 181</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/244_preview.png" alt="synthetic 1 244" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/244_preview.png" /><figcaption>id 244</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/441_preview.png" alt="synthetic 1 441" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_1shot/441_preview.png" /><figcaption>id 441</figcaption></figure>
+      </div></div>
+
+      <div class="actions"><button data-toggle-target="topicSyn4">Show details: synthetic 4-shot</button></div>
+      <div class="details" id="topicSyn4"><div class="gallery">
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/85_preview.png" alt="synthetic 4 85" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/85_preview.png" /><figcaption>id 85</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/96_preview.png" alt="synthetic 4 96" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/96_preview.png" /><figcaption>id 96</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/181_preview.png" alt="synthetic 4 181" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/181_preview.png" /><figcaption>id 181</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/244_preview.png" alt="synthetic 4 244" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/244_preview.png" /><figcaption>id 244</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/441_preview.png" alt="synthetic 4 441" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_4shot/441_preview.png" /><figcaption>id 441</figcaption></figure>
+      </div></div>
+
+      <div class="actions"><button data-toggle-target="topicSyn16">Show details: synthetic 16-shot</button></div>
+      <div class="details" id="topicSyn16"><div class="gallery">
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/85_preview.png" alt="synthetic 16 85" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/85_preview.png" /><figcaption>id 85</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/96_preview.png" alt="synthetic 16 96" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/96_preview.png" /><figcaption>id 96</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/181_preview.png" alt="synthetic 16 181" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/181_preview.png" /><figcaption>id 181</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/244_preview.png" alt="synthetic 16 244" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/244_preview.png" /><figcaption>id 244</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/441_preview.png" alt="synthetic 16 441" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_16shot/441_preview.png" /><figcaption>id 441</figcaption></figure>
+      </div></div>
+
+      <div class="actions"><button data-toggle-target="topicSyn32">Show details: synthetic 32-shot</button></div>
+      <div class="details" id="topicSyn32"><div class="gallery">
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/85_preview.png" alt="synthetic 32 85" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/85_preview.png" /><figcaption>id 85</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/96_preview.png" alt="synthetic 32 96" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/96_preview.png" /><figcaption>id 96</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/181_preview.png" alt="synthetic 32 181" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/181_preview.png" /><figcaption>id 181</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/244_preview.png" alt="synthetic 32 244" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/244_preview.png" /><figcaption>id 244</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/441_preview.png" alt="synthetic 32 441" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_32shot/441_preview.png" /><figcaption>id 441</figcaption></figure>
+      </div></div>
+
+      <div class="actions"><button data-toggle-target="topicSyn64">Show details: synthetic 64-shot</button></div>
+      <div class="details" id="topicSyn64"><div class="gallery">
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/85_preview.png" alt="synthetic 64 85" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/85_preview.png" /><figcaption>id 85</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/96_preview.png" alt="synthetic 64 96" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/96_preview.png" /><figcaption>id 96</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/181_preview.png" alt="synthetic 64 181" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/181_preview.png" /><figcaption>id 181</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/244_preview.png" alt="synthetic 64 244" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/244_preview.png" /><figcaption>id 244</figcaption></figure>
+        <figure><img src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/441_preview.png" alt="synthetic 64 441" data-zoom-src="assets/topics/synthetic_diffedge_rwtd_loraC_64shot/441_preview.png" /><figcaption>id 441</figcaption></figure>
+      </div></div>
+
+      <div class="actions"><button data-toggle-target="topicWildZs">Show details: wild-BSDS 0-shot</button></div>
+      <div class="details" id="topicWildZs"><div class="gallery">
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_zs/175_preview.png" alt="wild zs 175" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_zs/175_preview.png" /><figcaption>id 175</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_zs/205_preview.png" alt="wild zs 205" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_zs/205_preview.png" /><figcaption>id 205</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_zs/207_preview.png" alt="wild zs 207" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_zs/207_preview.png" /><figcaption>id 207</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_zs/216_preview.png" alt="wild zs 216" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_zs/216_preview.png" /><figcaption>id 216</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_zs/387_preview.png" alt="wild zs 387" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_zs/387_preview.png" /><figcaption>id 387</figcaption></figure>
+      </div></div>
+
+      <div class="actions"><button data-toggle-target="topicWild1">Show details: wild-BSDS 1-shot</button></div>
+      <div class="details" id="topicWild1"><div class="gallery">
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/175_preview.png" alt="wild 1 175" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/175_preview.png" /><figcaption>id 175</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/205_preview.png" alt="wild 1 205" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/205_preview.png" /><figcaption>id 205</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/207_preview.png" alt="wild 1 207" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/207_preview.png" /><figcaption>id 207</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/216_preview.png" alt="wild 1 216" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/216_preview.png" /><figcaption>id 216</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/387_preview.png" alt="wild 1 387" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_1shot/387_preview.png" /><figcaption>id 387</figcaption></figure>
+      </div></div>
+
+      <div class="actions"><button data-toggle-target="topicWild4">Show details: wild-BSDS 4-shot</button></div>
+      <div class="details" id="topicWild4"><div class="gallery">
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/175_preview.png" alt="wild 4 175" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/175_preview.png" /><figcaption>id 175</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/205_preview.png" alt="wild 4 205" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/205_preview.png" /><figcaption>id 205</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/207_preview.png" alt="wild 4 207" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/207_preview.png" /><figcaption>id 207</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/216_preview.png" alt="wild 4 216" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/216_preview.png" /><figcaption>id 216</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/387_preview.png" alt="wild 4 387" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_4shot/387_preview.png" /><figcaption>id 387</figcaption></figure>
+      </div></div>
+
+      <div class="actions"><button data-toggle-target="topicWild16">Show details: wild-BSDS 16-shot</button></div>
+      <div class="details" id="topicWild16"><div class="gallery">
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/175_preview.png" alt="wild 16 175" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/175_preview.png" /><figcaption>id 175</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/205_preview.png" alt="wild 16 205" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/205_preview.png" /><figcaption>id 205</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/207_preview.png" alt="wild 16 207" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/207_preview.png" /><figcaption>id 207</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/216_preview.png" alt="wild 16 216" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/216_preview.png" /><figcaption>id 216</figcaption></figure>
+        <figure><img src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/387_preview.png" alt="wild 16 387" data-zoom-src="assets/topics/wildbsds_diffedge_rwtd_loraC_16shot/387_preview.png" /><figcaption>id 387</figcaption></figure>
+      </div></div>
+    </section>
+
+    <section class="section">
+      <h2>Visual Comparison (Fixed IDs)</h2>
+      <p class="kv">Fixed sample list order: <code>85, 441, 96, 244, 181</code>. Click any image to enlarge.</p>
       <div class="gallery">
-        <figure><img src="assets/gallery/sample_001_preview.png" alt="sample 85 preview" /><figcaption>sample_001 (id=85), fixed order 1/5</figcaption></figure>
-        <figure><img src="assets/gallery/sample_002_preview.png" alt="sample 441 preview" /><figcaption>sample_002 (id=441), fixed order 2/5</figcaption></figure>
-        <figure><img src="assets/gallery/sample_003_preview.png" alt="sample 96 preview" /><figcaption>sample_003 (id=96), fixed order 3/5</figcaption></figure>
-        <figure><img src="assets/gallery/sample_004_preview.png" alt="sample 244 preview" /><figcaption>sample_004 (id=244), fixed order 4/5</figcaption></figure>
-        <figure><img src="assets/gallery/sample_005_preview.png" alt="sample 181 preview" /><figcaption>sample_005 (id=181), fixed order 5/5</figcaption></figure>
+        <figure><img src="assets/gallery/sample_001_preview.png" alt="sample 85 preview" data-zoom-src="assets/gallery/sample_001_preview.png" /><figcaption>sample_001 (id=85), order 1/5</figcaption></figure>
+        <figure><img src="assets/gallery/sample_002_preview.png" alt="sample 441 preview" data-zoom-src="assets/gallery/sample_002_preview.png" /><figcaption>sample_002 (id=441), order 2/5</figcaption></figure>
+        <figure><img src="assets/gallery/sample_003_preview.png" alt="sample 96 preview" data-zoom-src="assets/gallery/sample_003_preview.png" /><figcaption>sample_003 (id=96), order 3/5</figcaption></figure>
+        <figure><img src="assets/gallery/sample_004_preview.png" alt="sample 244 preview" data-zoom-src="assets/gallery/sample_004_preview.png" /><figcaption>sample_004 (id=244), order 4/5</figcaption></figure>
+        <figure><img src="assets/gallery/sample_005_preview.png" alt="sample 181 preview" data-zoom-src="assets/gallery/sample_005_preview.png" /><figcaption>sample_005 (id=181), order 5/5</figcaption></figure>
       </div>
     </section>
 
-    <section>
-      <h2>6. QC / diagnostics</h2>
-      <div class="diag">
-        <figure><img src="assets/qc/preview_grid.png" alt="synthetic preview grid" /><figcaption>Synthetic domain preview grid across compared runs.</figcaption></figure>
-        <figure><img src="assets/qc/pr_curve_synthetic.png" alt="PR curve synthetic" /><figcaption>Precision-recall curve trend by shot count.</figcaption></figure>
-        <figure><img src="assets/plots/delta_vs_zero_shot.png" alt="delta vs zero-shot" /><figcaption>Delta versus zero-shot baseline.</figcaption></figure>
-        <figure><img src="assets/qc/failure_case_244.png" alt="failure case sample 244" /><figcaption><span class="warn">Failure/suspicious case:</span> sample id 244 shows weaker thin-boundary continuity.</figcaption></figure>
+    <section class="section">
+      <h2>QC Diagnostics</h2>
+      <div class="gallery">
+        <figure><img src="assets/qc/synthetic_preview_grid.png" alt="synthetic preview grid" data-zoom-src="assets/qc/synthetic_preview_grid.png" /><figcaption>Synthetic cross-shot preview grid.</figcaption></figure>
+        <figure><img src="assets/qc/bsds_wild_preview_grid.png" alt="wild bsds preview grid" data-zoom-src="assets/qc/bsds_wild_preview_grid.png" /><figcaption>Wild-BSDS cross-shot preview grid.</figcaption></figure>
+        <figure><img src="assets/qc/pr_curve_synthetic.png" alt="PR curve synthetic" data-zoom-src="assets/qc/pr_curve_synthetic.png" /><figcaption>Synthetic PR curve by shot count.</figcaption></figure>
+        <figure><img src="assets/qc/pr_curve_bsds_wild.png" alt="PR curve wild bsds" data-zoom-src="assets/qc/pr_curve_bsds_wild.png" /><figcaption>Wild-BSDS PR curve by shot count.</figcaption></figure>
+        <figure><img src="assets/plots/ap_vs_shots.png" alt="ap vs shots" data-zoom-src="assets/plots/ap_vs_shots.png" /><figcaption>AP trend across shots.</figcaption></figure>
+        <figure><img src="assets/plots/f1_vs_shots.png" alt="f1 vs shots" data-zoom-src="assets/plots/f1_vs_shots.png" /><figcaption>ODS/OIS F1 trend across shots.</figcaption></figure>
+        <figure><img src="assets/plots/delta_vs_zero_shot.png" alt="delta vs zero-shot" data-zoom-src="assets/plots/delta_vs_zero_shot.png" /><figcaption>Metric deltas against zero-shot baseline.</figcaption></figure>
+        <figure><img src="assets/qc/status_overview.png" alt="status overview" data-zoom-src="assets/qc/status_overview.png" /><figcaption>Run status across domains.</figcaption></figure>
+        <figure><img src="assets/qc/failure_case_244.png" alt="failure case sample 244" data-zoom-src="assets/qc/failure_case_244.png" /><figcaption><strong>Failure case:</strong> sample 244 has broken thin-boundary continuity.</figcaption></figure>
       </div>
-      <p class="small">Trust signal: metrics improve materially over zero-shot, but selected difficult previews still show boundary fragmentation risk.</p>
+      <p class="summary" style="margin-top:10px;">Trust boundary: this run is strong for synthetic AP improvement, but not enough evidence yet for robust fine-edge continuity in difficult textures.</p>
     </section>
 
-    <section>
-      <h2>7. Interpretation</h2>
+    <section class="section">
+      <h2>Interpretation</h2>
       <ul>
-        <li>Improved: AP/ODS/OIS all increased versus synthetic zero-shot baseline.</li>
-        <li>Regressed: failure-case previews still expose weak thin-edge continuity.</li>
-        <li>Unclear: robustness on truly hard real-world textures is not proven by this synthetic-focused run.</li>
-        <li>Next: publish an aligned Wild-BSDS 64-shot run page with identical sample IDs and the same QC diagnostics.</li>
+        <li>What improved: AP, ODS F1, and OIS F1 all moved up materially vs zero-shot.</li>
+        <li>What failed: thin boundaries still fragment on at least one known hard sample.</li>
+        <li>What is unknown: transfer strength to real-texture domains is not established by this synthetic-focused run.</li>
+        <li>Next step: publish aligned Wild-BSDS 64-shot report with the same fixed IDs and QC set.</li>
       </ul>
     </section>
 
-    <section>
-      <h2>8. Artifact links</h2>
-      <ul>
-        <li>Full outputs: <code>results_lightweight/per_run/synthetic_diffedge_rwtd_loraC_64shot/</code></li>
-        <li>Logs: <code>results_lightweight/per_run/synthetic_diffedge_rwtd_loraC_64shot/performance_summary.json</code></li>
-        <li>Checkpoint/run folder: <code>/home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/synthetic_diffedge_rwtd_loraC_64shot/</code></li>
-        <li>External index: <code>results_lightweight/report.md</code></li>
-      </ul>
+    <section class="section">
+      <h2>Data and Repro (Details)</h2>
+      <div class="actions" style="margin-top:10px;">
+        <button data-toggle-target="reproDetails">Show details</button>
+      </div>
+      <div class="details" id="reproDetails">
+        <div class="table-wrap">
+          <table>
+            <tbody>
+              <tr><th>Full outputs</th><td><code>results_lightweight/per_run/synthetic_diffedge_rwtd_loraC_64shot/</code></td></tr>
+              <tr><th>Raw logs</th><td><code>results_lightweight/per_run/synthetic_diffedge_rwtd_loraC_64shot/performance_summary.json</code></td></tr>
+              <tr><th>Checkpoint</th><td><code>/home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/synthetic_diffedge_rwtd_loraC_64shot/checkpoints/lora-best_step3800.pt</code></td></tr>
+              <tr><th>Bundle index</th><td><code>results_lightweight/report.md</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p style="margin-top:10px;"><a class="btn" href="../../index.html">Back to overview</a></p>
     </section>
-  </div>
+
+    <footer>Report page refreshed for readability, hierarchy, and interaction on 2026-03-10.</footer>
+  </main>
+
+  <dialog class="image-dialog" id="imageDialog">
+    <img id="imageDialogImg" alt="Expanded preview" />
+  </dialog>
+  <script src="../../assets/site.js"></script>
 </body>
 </html>
