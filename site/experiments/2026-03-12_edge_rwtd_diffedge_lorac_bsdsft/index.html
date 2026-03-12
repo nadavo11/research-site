@@ -1,27 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RWTD edge — BSDS→SynthPerlin LoRA full EMA init</title>
   <link rel="stylesheet" href="../../assets/site.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
+
 <body>
   <main>
     <section class="hero">
       <h1>RWTD Edge Detection — BSDS→SynthPerlin LoRA Full EMA Init</h1>
-      <p>Full-data LoRA training from a BSDS EMA-initialized checkpoint on synthetic Perlin-stitched textures, evaluated on RWTD val.</p>
-      <p style="margin-top:8px;"><span class="tag good">milestone</span><span class="tag">edge detection</span><span class="tag">LoRA C</span><span class="tag">full train</span></p>
+      <p>Full-data LoRA training from a BSDS EMA-initialized checkpoint on synthetic Perlin-stitched textures, evaluated
+        on RWTD val.</p>
+      <p style="margin-top:8px;"><span class="tag good">milestone</span><span class="tag">edge detection</span><span
+          class="tag">LoRA C</span><span class="tag">full train</span></p>
     </section>
 
     <section class="section">
       <h2>Executive Read</h2>
       <div class="summary">
-        <p class="kv"><strong>Run:</strong> <code>bsds_to_synthperlin_lora_full_ema_init</code> (reported on 2026-03-12)</p>
-        <p class="kv"><strong>What was done:</strong> LoRA Preset C full-data adaptation on synthetic Perlin-stitched data from a BSDS EMA-unwrapped checkpoint, then RWTD val evaluation.</p>
-        <p class="kv"><strong>Key change:</strong> Full training (4000 steps, rank=128, alpha=128) instead of few-shot; EMA initialization instead of raw checkpoint.</p>
-        <p class="kv"><strong>What improved:</strong> AP jumped from <code>0.4845</code> (64-shot) to <code>0.5878</code> (+0.1033), with ODS/OIS following.</p>
-        <p class="kv"><strong>Where it fails:</strong> Some low-contrast texture boundaries remain noisy; precision/recall balance suggests room for threshold tuning.</p>
+        <p class="kv"><strong>Run:</strong> <code>bsds_to_synthperlin_lora_full_ema_init</code> (reported on 2026-03-12)
+        </p>
+        <p class="kv"><strong>What was done:</strong> LoRA Preset C full-data adaptation on synthetic Perlin-stitched
+          data from a BSDS EMA-unwrapped checkpoint, then RWTD val evaluation.</p>
+        <p class="kv"><strong>Key change:</strong> Full training (4000 steps, rank=128, alpha=128) instead of few-shot;
+          EMA initialization instead of raw checkpoint.</p>
+        <p class="kv"><strong>What improved:</strong> AP jumped from <code>0.4845</code> (64-shot) to
+          <code>0.5878</code> (+0.1033), with ODS/OIS following.</p>
+        <p class="kv"><strong>Where it fails:</strong> Some low-contrast texture boundaries remain noisy;
+          precision/recall balance suggests room for threshold tuning.</p>
       </div>
       <div class="metric-grid" style="margin-top:10px;">
         <article class="metric">
@@ -57,57 +67,114 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Zero-shot (synthetic baseline)</td><td>0.4133</td><td>0.5920</td><td>0.5940</td><td>+0.0000</td></tr>
-            <tr><td>64-shot LoRA C</td><td>0.4845</td><td>0.6540</td><td>0.6547</td><td>+0.0712</td></tr>
-            <tr style="font-weight:700;"><td>This run (full EMA init)</td><td>0.5878</td><td>0.6630</td><td>0.6920</td><td style="color:#1d7a3e;">+0.1745</td></tr>
+            <tr>
+              <td>Zero-shot (synthetic baseline)</td>
+              <td>0.4133</td>
+              <td>0.5920</td>
+              <td>0.5940</td>
+              <td>+0.0000</td>
+            </tr>
+            <tr>
+              <td>64-shot LoRA C</td>
+              <td>0.4845</td>
+              <td>0.6540</td>
+              <td>0.6547</td>
+              <td>+0.0712</td>
+            </tr>
+            <tr style="font-weight:700;">
+              <td>This run (full EMA init)</td>
+              <td>0.5878</td>
+              <td>0.6630</td>
+              <td>0.6920</td>
+              <td style="color:#1d7a3e;">+0.1745</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </section>
 
     <section class="section">
+      <h2>Learning Curves</h2>
+      <p class="kv">Training loss and eval metrics over 4000 steps (logged every 10 steps, eval every 100).</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
+        <div style="background:#fbfdff;border:1px solid var(--line);border-radius:10px;padding:10px;">
+          <canvas id="lossChart" height="200"></canvas>
+        </div>
+        <div style="background:#fbfdff;border:1px solid var(--line);border-radius:10px;padding:10px;">
+          <canvas id="apChart" height="200"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
       <h2>Visual Preview Gallery</h2>
-      <p class="kv">Representative samples from RWTD val. Use sort to reorder by performance proxy (sample ID). Click any image to enlarge.</p>
+      <p class="kv">Representative samples from RWTD val. Use sort to reorder by performance proxy (sample ID). Click
+        any image to enlarge.</p>
       <div class="gallery-controls" style="margin-bottom:10px;">
         <label for="gallerySort"><strong>Sort:</strong></label>
         <select id="gallerySort" data-sort-gallery="mainGallery">
           <option value="default">Default order</option>
-          <option value="asc">Sample ID ↑ (best first)</option>
-          <option value="desc">Sample ID ↓ (worst first)</option>
+          <option value="asc">F1 ↑ (worst first)</option>
+          <option value="desc">F1 ↓ (best first)</option>
         </select>
+        <a class="btn" href="gallery.html" style="margin-left:auto;">Open full gallery (246 images) →</a>
       </div>
       <div class="gallery" id="mainGallery">
-        <figure data-score="85">
-          <img src="assets/gallery/85_preview.png" alt="sample 85 preview" data-zoom-src="assets/gallery/85_preview.png" />
-          <figcaption><span class="pill">id=85</span><span class="pill">order 1/8</span><span class="pill">representative</span></figcaption>
+        <figure data-score="0.9007">
+          <img src="assets/gallery/85_preview.png" alt="sample 85 preview"
+            data-zoom-src="assets/gallery/85_preview.png" />
+          <figcaption><span class="pill">id=85</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.901</span><span class="pill">P=0.897
+              R=0.904</span></figcaption>
         </figure>
-        <figure data-score="96">
-          <img src="assets/gallery/96_preview.png" alt="sample 96 preview" data-zoom-src="assets/gallery/96_preview.png" />
-          <figcaption><span class="pill">id=96</span><span class="pill">order 2/8</span><span class="pill">representative</span></figcaption>
+        <figure data-score="0.4339">
+          <img src="assets/gallery/96_preview.png" alt="sample 96 preview"
+            data-zoom-src="assets/gallery/96_preview.png" />
+          <figcaption><span class="pill">id=96</span><span class="pill"
+              style="background:#fff7ec;border-color:#ffd29b;color:#9a4e02;">F1=0.434</span><span class="pill">P=0.671
+              R=0.321</span></figcaption>
         </figure>
-        <figure data-score="175">
-          <img src="assets/gallery/175_preview.png" alt="sample 175 preview" data-zoom-src="assets/gallery/175_preview.png" />
-          <figcaption><span class="pill">id=175</span><span class="pill">order 3/8</span><span class="pill">representative</span></figcaption>
+        <figure data-score="0.6981">
+          <img src="assets/gallery/175_preview.png" alt="sample 175 preview"
+            data-zoom-src="assets/gallery/175_preview.png" />
+          <figcaption><span class="pill">id=175</span><span class="pill"
+              style="background:#fff7ec;border-color:#ffd29b;color:#9a4e02;">F1=0.698</span><span class="pill">P=0.605
+              R=0.825</span></figcaption>
         </figure>
-        <figure data-score="181">
-          <img src="assets/gallery/181_preview.png" alt="sample 181 preview" data-zoom-src="assets/gallery/181_preview.png" />
-          <figcaption><span class="pill">id=181</span><span class="pill">order 4/8</span><span class="pill">representative</span></figcaption>
+        <figure data-score="0.9083">
+          <img src="assets/gallery/181_preview.png" alt="sample 181 preview"
+            data-zoom-src="assets/gallery/181_preview.png" />
+          <figcaption><span class="pill">id=181</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.908</span><span class="pill">P=0.864
+              R=0.958</span></figcaption>
         </figure>
-        <figure data-score="205">
-          <img src="assets/gallery/205_preview.png" alt="sample 205 preview" data-zoom-src="assets/gallery/205_preview.png" />
-          <figcaption><span class="pill">id=205</span><span class="pill">order 5/8</span><span class="pill">representative</span></figcaption>
+        <figure data-score="0.5787">
+          <img src="assets/gallery/205_preview.png" alt="sample 205 preview"
+            data-zoom-src="assets/gallery/205_preview.png" />
+          <figcaption><span class="pill">id=205</span><span class="pill"
+              style="background:#fff7ec;border-color:#ffd29b;color:#9a4e02;">F1=0.579</span><span class="pill">P=0.733
+              R=0.478</span></figcaption>
         </figure>
-        <figure data-score="207">
-          <img src="assets/gallery/207_preview.png" alt="sample 207 preview" data-zoom-src="assets/gallery/207_preview.png" />
-          <figcaption><span class="pill">id=207</span><span class="pill">order 6/8</span><span class="pill">representative</span></figcaption>
+        <figure data-score="0.9865">
+          <img src="assets/gallery/207_preview.png" alt="sample 207 preview"
+            data-zoom-src="assets/gallery/207_preview.png" />
+          <figcaption><span class="pill">id=207</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.986</span><span class="pill">P=0.973
+              R=1.000</span></figcaption>
         </figure>
-        <figure data-score="216">
-          <img src="assets/gallery/216_preview.png" alt="sample 216 preview" data-zoom-src="assets/gallery/216_preview.png" />
-          <figcaption><span class="pill">id=216</span><span class="pill">order 7/8</span><span class="pill">representative</span></figcaption>
+        <figure data-score="0.0000">
+          <img src="assets/gallery/216_preview.png" alt="sample 216 preview"
+            data-zoom-src="assets/gallery/216_preview.png" />
+          <figcaption><span class="pill">id=216</span><span class="pill"
+              style="background:#fce8e8;border-color:#e8a0a0;color:#9b2226;">F1=0.000</span><span class="pill">P=0.000
+              R=0.000</span></figcaption>
         </figure>
-        <figure data-score="441">
-          <img src="assets/gallery/441_preview.png" alt="sample 441 preview" data-zoom-src="assets/gallery/441_preview.png" />
-          <figcaption><span class="pill">id=441</span><span class="pill">order 8/8</span><span class="pill">representative</span></figcaption>
+        <figure data-score="0.7621">
+          <img src="assets/gallery/441_preview.png" alt="sample 441 preview"
+            data-zoom-src="assets/gallery/441_preview.png" />
+          <figcaption><span class="pill">id=441</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.762</span><span class="pill">P=0.673
+              R=0.879</span></figcaption>
         </figure>
       </div>
     </section>
@@ -121,11 +188,13 @@
           <p>Strong boundary detection on typical RWTD textures — clean contours with good precision.</p>
           <div class="stage-visual">
             <figure>
-              <img src="assets/gallery/85_preview.png" alt="sample 85 full preview" data-zoom-src="assets/gallery/85_preview.png" />
+              <img src="assets/gallery/85_preview.png" alt="sample 85 full preview"
+                data-zoom-src="assets/gallery/85_preview.png" />
               <figcaption>Full-train EMA init result</figcaption>
             </figure>
             <figure>
-              <img src="assets/gallery/96_preview.png" alt="sample 96 full preview" data-zoom-src="assets/gallery/96_preview.png" />
+              <img src="assets/gallery/96_preview.png" alt="sample 96 full preview"
+                data-zoom-src="assets/gallery/96_preview.png" />
               <figcaption>Sample 96 — complementary view</figcaption>
             </figure>
           </div>
@@ -141,11 +210,13 @@
           <p>Previews from diverse RWTD textures showing generalization quality.</p>
           <div class="stage-visual">
             <figure>
-              <img src="assets/gallery/175_preview.png" alt="sample 175 preview" data-zoom-src="assets/gallery/175_preview.png" />
+              <img src="assets/gallery/175_preview.png" alt="sample 175 preview"
+                data-zoom-src="assets/gallery/175_preview.png" />
               <figcaption>Sample 175</figcaption>
             </figure>
             <figure>
-              <img src="assets/gallery/207_preview.png" alt="sample 207 preview" data-zoom-src="assets/gallery/207_preview.png" />
+              <img src="assets/gallery/207_preview.png" alt="sample 207 preview"
+                data-zoom-src="assets/gallery/207_preview.png" />
               <figcaption>Sample 207</figcaption>
             </figure>
           </div>
@@ -160,11 +231,13 @@
           <p>Side-by-side of a clean result vs a borderline case for quality confidence.</p>
           <div class="split-two">
             <div class="mini-card">
-              <img src="assets/gallery/205_preview.png" alt="kept representative sample 205" data-zoom-src="assets/gallery/205_preview.png" />
+              <img src="assets/gallery/205_preview.png" alt="kept representative sample 205"
+                data-zoom-src="assets/gallery/205_preview.png" />
               <div class="cap">Representative keep — id 205</div>
             </div>
             <div class="mini-card">
-              <img src="assets/qc/failure_322_preview.png" alt="suspicious sample 322" data-zoom-src="assets/qc/failure_322_preview.png" />
+              <img src="assets/qc/failure_322_preview.png" alt="suspicious sample 322"
+                data-zoom-src="assets/qc/failure_322_preview.png" />
               <div class="cap">Failure/suspicious — id 322</div>
             </div>
           </div>
@@ -175,11 +248,13 @@
           <p>Samples where edge detection struggles with low-contrast or cluttered textures.</p>
           <div class="stage-visual">
             <figure>
-              <img src="assets/qc/failure_282_preview.png" alt="failure case sample 282" data-zoom-src="assets/qc/failure_282_preview.png" />
+              <img src="assets/qc/failure_282_preview.png" alt="failure case sample 282"
+                data-zoom-src="assets/qc/failure_282_preview.png" />
               <figcaption>Failure — id 282</figcaption>
             </figure>
             <figure>
-              <img src="assets/qc/failure_240_preview.png" alt="failure case sample 240" data-zoom-src="assets/qc/failure_240_preview.png" />
+              <img src="assets/qc/failure_240_preview.png" alt="failure case sample 240"
+                data-zoom-src="assets/qc/failure_240_preview.png" />
               <figcaption>Failure — id 240</figcaption>
             </figure>
           </div>
@@ -204,32 +279,44 @@
       </div>
       <div class="gallery" id="qcGallery">
         <figure data-score="240">
-          <img src="assets/qc/failure_240_preview.png" alt="failure case sample 240" data-zoom-src="assets/qc/failure_240_preview.png" />
-          <figcaption><span class="pill">id=240</span><span class="pill">failure</span> Low-contrast flat region — over-detection of spurious edges.</figcaption>
+          <img src="assets/qc/failure_240_preview.png" alt="failure case sample 240"
+            data-zoom-src="assets/qc/failure_240_preview.png" />
+          <figcaption><span class="pill">id=240</span><span class="pill">failure</span> Low-contrast flat region —
+            over-detection of spurious edges.</figcaption>
         </figure>
         <figure data-score="282">
-          <img src="assets/qc/failure_282_preview.png" alt="failure case sample 282" data-zoom-src="assets/qc/failure_282_preview.png" />
-          <figcaption><span class="pill">id=282</span><span class="pill">failure</span> Cluttered texture boundary — noisy edge map.</figcaption>
+          <img src="assets/qc/failure_282_preview.png" alt="failure case sample 282"
+            data-zoom-src="assets/qc/failure_282_preview.png" />
+          <figcaption><span class="pill">id=282</span><span class="pill">failure</span> Cluttered texture boundary —
+            noisy edge map.</figcaption>
         </figure>
         <figure data-score="322">
-          <img src="assets/qc/failure_322_preview.png" alt="failure case sample 322" data-zoom-src="assets/qc/failure_322_preview.png" />
-          <figcaption><span class="pill">id=322</span><span class="pill">suspicious</span> Thin boundary fragmentation on complex geometry.</figcaption>
+          <img src="assets/qc/failure_322_preview.png" alt="failure case sample 322"
+            data-zoom-src="assets/qc/failure_322_preview.png" />
+          <figcaption><span class="pill">id=322</span><span class="pill">suspicious</span> Thin boundary fragmentation
+            on complex geometry.</figcaption>
         </figure>
         <figure data-score="337">
-          <img src="assets/qc/failure_337_preview.png" alt="failure case sample 337" data-zoom-src="assets/qc/failure_337_preview.png" />
-          <figcaption><span class="pill">id=337</span><span class="pill">suspicious</span> False edge responses at texture gradients.</figcaption>
+          <img src="assets/qc/failure_337_preview.png" alt="failure case sample 337"
+            data-zoom-src="assets/qc/failure_337_preview.png" />
+          <figcaption><span class="pill">id=337</span><span class="pill">suspicious</span> False edge responses at
+            texture gradients.</figcaption>
         </figure>
       </div>
-      <p class="summary" style="margin-top:10px;">Trust boundary: AP improvement is strong (+0.1033 vs 64-shot), but precision–recall balance at individual-texture level needs per-sample review.</p>
+      <p class="summary" style="margin-top:10px;">Trust boundary: AP improvement is strong (+0.1033 vs 64-shot), but
+        precision–recall balance at individual-texture level needs per-sample review.</p>
     </section>
 
     <section class="section">
       <h2>Interpretation</h2>
       <ul>
-        <li>What improved: AP dramatically gained from full-data training + EMA init vs few-shot (0.5878 vs 0.4845).</li>
-        <li>OIS F1 (0.692) exceeds ODS F1 (0.663), suggesting threshold-adaptive benefit — optimal threshold varies per sample.</li>
+        <li>What improved: AP dramatically gained from full-data training + EMA init vs few-shot (0.5878 vs 0.4845).
+        </li>
+        <li>OIS F1 (0.692) exceeds ODS F1 (0.663), suggesting threshold-adaptive benefit — optimal threshold varies per
+          sample.</li>
         <li>ODS threshold at 0.17 (vs 0.01 for 64-shot) implies the model learned more confident predictions.</li>
-        <li>What failed: some low-contrast regions still produce false edges; cluttered textures remain challenging.</li>
+        <li>What failed: some low-contrast regions still produce false edges; cluttered textures remain challenging.
+        </li>
         <li>Next step: evaluate transfer to BSDS-wild domain and explore threshold calibration per texture type.</li>
       </ul>
     </section>
@@ -241,16 +328,26 @@
       </div>
       <div class="details" id="runDetails">
         <div class="meta-grid">
-          <div class="card"><p class="kv"><strong>Preset:</strong> C</p><p class="kv"><strong>LoRA config:</strong> rank=128, alpha=128</p></div>
-          <div class="card"><p class="kv"><strong>Source:</strong> BSDS EMA unwrapped</p><p class="kv"><strong>Target:</strong> SynthPerlin stitched</p></div>
-          <div class="card"><p class="kv"><strong>Steps:</strong> 4000</p><p class="kv"><strong>Protocol:</strong> legacy edge eval</p></div>
+          <div class="card">
+            <p class="kv"><strong>Preset:</strong> C</p>
+            <p class="kv"><strong>LoRA config:</strong> rank=128, alpha=128</p>
+          </div>
+          <div class="card">
+            <p class="kv"><strong>Source:</strong> BSDS EMA unwrapped</p>
+            <p class="kv"><strong>Target:</strong> SynthPerlin stitched</p>
+          </div>
+          <div class="card">
+            <p class="kv"><strong>Steps:</strong> 4000</p>
+            <p class="kv"><strong>Protocol:</strong> legacy edge eval</p>
+          </div>
         </div>
         <p class="kv"><strong>Date:</strong> 2026-03-12</p>
         <p class="kv"><strong>Git commit:</strong> <code>f306ae7</code></p>
         <p class="kv"><strong>Author:</strong> nadavo11</p>
         <p class="kv"><strong>Task:</strong> diffedge_bsds_to_synth_perlin_lora_stage1 / edge detection</p>
         <p class="kv"><strong>Model/checkpoint:</strong> DiffusionEdge + LoRA C / <code>bsds_ema_unwrapped.pt</code></p>
-        <p class="kv"><strong>Repro files:</strong> <code>repro/config.yaml</code>, <code>repro/command.txt</code>, <code>repro/env.txt</code></p>
+        <p class="kv"><strong>Repro files:</strong> <code>repro/config.yaml</code>, <code>repro/command.txt</code>,
+          <code>repro/env.txt</code></p>
       </div>
     </section>
 
@@ -263,10 +360,22 @@
         <div class="table-wrap">
           <table>
             <tbody>
-              <tr><th>Full outputs</th><td><code>experiments/bsds_to_synthperlin_lora_full_ema_init/eval/</code></td></tr>
-              <tr><th>Run config</th><td><code>experiments/bsds_to_synthperlin_lora_full_ema_init/run_config.yaml</code></td></tr>
-              <tr><th>Eval config</th><td><code>experiments/bsds_to_synthperlin_lora_full_ema_init/resolved_eval_cfg.yaml</code></td></tr>
-              <tr><th>Checkpoint</th><td><code>experiments/bsds_to_synthperlin_lora_full_ema_init/train_artifacts/</code></td></tr>
+              <tr>
+                <th>Full outputs</th>
+                <td><code>experiments/bsds_to_synthperlin_lora_full_ema_init/eval/</code></td>
+              </tr>
+              <tr>
+                <th>Run config</th>
+                <td><code>experiments/bsds_to_synthperlin_lora_full_ema_init/run_config.yaml</code></td>
+              </tr>
+              <tr>
+                <th>Eval config</th>
+                <td><code>experiments/bsds_to_synthperlin_lora_full_ema_init/resolved_eval_cfg.yaml</code></td>
+              </tr>
+              <tr>
+                <th>Checkpoint</th>
+                <td><code>experiments/bsds_to_synthperlin_lora_full_ema_init/train_artifacts/</code></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -281,5 +390,56 @@
     <img id="imageDialogImg" alt="Expanded preview" />
   </dialog>
   <script src="../../assets/site.js"></script>
+  <script>
+    (async () => {
+      const resp = await fetch('training_data.json');
+      const data = await resp.json();
+
+      // Subsample training loss (every 50 steps)
+      const lossSub = data.train_loss.filter(d => d.step % 50 === 0);
+
+      // Training Loss Chart
+      new Chart(document.getElementById('lossChart'), {
+        type: 'line',
+        data: {
+          labels: lossSub.map(d => d.step),
+          datasets: [{
+            label: 'Total Loss',
+            data: lossSub.map(d => d.loss),
+            borderColor: '#005f73',
+            backgroundColor: 'rgba(0,95,115,0.1)',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { title: { display: true, text: 'Training Loss' } },
+          scales: { x: { title: { display: true, text: 'Step' } }, y: { title: { display: true, text: 'Loss' }, min: 2, max: 6 } }
+        }
+      });
+
+      // AP Chart (val + rwtd)
+      new Chart(document.getElementById('apChart'), {
+        type: 'line',
+        data: {
+          labels: data.val_metrics.map(d => d.step),
+          datasets: [
+            { label: 'Val AP', data: data.val_metrics.map(d => d.AP), borderColor: '#005f73', tension: 0.3, pointRadius: 3 },
+            { label: 'RWTD AP', data: data.rwtd_metrics.map(d => d.AP), borderColor: '#ca6702', tension: 0.3, pointRadius: 3 },
+            { label: 'Val ODS F1', data: data.val_metrics.map(d => d.ODS_f1), borderColor: '#0f766e', borderDash: [5, 3], tension: 0.3, pointRadius: 2 },
+            { label: 'RWTD ODS F1', data: data.rwtd_metrics.map(d => d.ODS_f1), borderColor: '#9b2226', borderDash: [5, 3], tension: 0.3, pointRadius: 2 }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { title: { display: true, text: 'Eval Metrics Over Training' } },
+          scales: { x: { title: { display: true, text: 'Step' } }, y: { title: { display: true, text: 'Score' }, min: 0.3, max: 0.8 } }
+        }
+      });
+    })();
+  </script>
 </body>
+
 </html>

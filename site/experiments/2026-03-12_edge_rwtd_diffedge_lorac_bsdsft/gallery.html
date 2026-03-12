@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery — BSDS→SynthPerlin LoRA full EMA init</title>
+    <link rel="stylesheet" href="../../assets/site.css" />
+    <style>
+        .gallery-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            background: #f1f7fa;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+        }
+
+        .gallery-toolbar label {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--ink);
+        }
+
+        .gallery-toolbar select,
+        .gallery-toolbar input {
+            font: inherit;
+            border: 1px solid #7bb2c0;
+            background: #edf7fb;
+            color: #0d3b4c;
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-size: 0.86rem;
+        }
+
+        .gallery-toolbar input[type="range"] {
+            width: 120px;
+        }
+
+        .gallery-toolbar .count {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-left: auto;
+        }
+
+        #fullGallery {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        }
+
+        #fullGallery figure {
+            margin: 0;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fbfdff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #fullGallery figure img {
+            width: 100%;
+            display: block;
+            cursor: zoom-in;
+            border-radius: 10px 10px 0 0;
+        }
+
+        #fullGallery figure .metrics-bar {
+            padding: 6px 8px;
+            font-size: 0.78rem;
+            line-height: 1.5;
+            background: #f7fafd;
+            border-top: 1px solid var(--line);
+        }
+
+        .metrics-bar .metric-label {
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .metrics-bar .metric-good {
+            color: var(--good);
+            font-weight: 700;
+        }
+
+        .metrics-bar .metric-bad {
+            color: var(--bad);
+            font-weight: 700;
+        }
+
+        .metrics-bar .metric-mid {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .f1-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(0, 0, 0, 0.72);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <section class="hero">
+            <h1>Full Preview Gallery</h1>
+            <p>BSDS→SynthPerlin LoRA full EMA init — 246 RWTD val predictions with per-image metrics</p>
+            <p style="margin-top:8px;"><a class="btn" href="index.html"
+                    style="border-color:#8ecae6;background:#edf7fc;color:#0b4f6c;">← Back to report</a></p>
+        </section>
+
+        <section class="section">
+            <div class="gallery-toolbar">
+                <label for="sortBy">Sort:</label>
+                <select id="sortBy">
+                    <option value="f1_desc">F1 ↓ best first</option>
+                    <option value="f1_asc">F1 ↑ worst first</option>
+                    <option value="precision_desc">Precision ↓</option>
+                    <option value="recall_desc">Recall ↓</option>
+                    <option value="id_asc">Sample ID ↑</option>
+                    <option value="id_desc">Sample ID ↓</option>
+                </select>
+                <label for="filterF1">Min F1:</label>
+                <input type="range" id="filterF1" min="0" max="100" value="0" />
+                <span id="filterF1Val">0.00</span>
+                <label for="filterQuality">Quality:</label>
+                <select id="filterQuality">
+                    <option value="all">All</option>
+                    <option value="good">Good (F1 ≥ 0.7)</option>
+                    <option value="medium">Medium (0.4–0.7)</option>
+                    <option value="bad">Bad (F1 < 0.4)</option>
+                </select>
+                <span class="count" id="countLabel">246 / 246</span>
+            </div>
+            <div id="fullGallery"></div>
+        </section>
+
+        <footer>Full gallery generated from per-image evaluation data. 2026-03-12.</footer>
+    </main>
+
+    <dialog class="image-dialog" id="imageDialog">
+        <img id="imageDialogImg" alt="Expanded preview" />
+    </dialog>
+
+    <script>
+        (async () => {
+            const resp = await fetch('training_data.json');
+            const data = await resp.json();
+            const gallery = document.getElementById('fullGallery');
+            const sortSel = document.getElementById('sortBy');
+            const filterSlider = document.getElementById('filterF1');
+            const filterVal = document.getElementById('filterF1Val');
+            const filterQual = document.getElementById('filterQuality');
+            const countLabel = document.getElementById('countLabel');
+            const total = data.per_image.length;
+
+            function f1Class(f1) {
+                if (f1 >= 0.7) return 'metric-good';
+                if (f1 >= 0.4) return 'metric-mid';
+                return 'metric-bad';
+            }
+
+            function qualityLabel(f1) {
+                if (f1 >= 0.7) return 'good';
+                if (f1 >= 0.4) return 'medium';
+                return 'bad';
+            }
+
+            function render() {
+                const sortKey = sortSel.value;
+                const minF1 = parseFloat(filterSlider.value) / 100;
+                const qualFilter = filterQual.value;
+                filterVal.textContent = minF1.toFixed(2);
+
+                let items = data.per_image.filter(img => {
+                    if (img.f1 < minF1) return false;
+                    if (qualFilter !== 'all' && qualityLabel(img.f1) !== qualFilter) return false;
+                    return true;
+                });
+
+                const [field, dir] = sortKey.split('_');
+                items.sort((a, b) => {
+                    const va = a[field], vb = b[field];
+                    return dir === 'desc' ? vb - va : va - vb;
+                });
+
+                countLabel.textContent = items.length + ' / ' + total;
+
+                gallery.innerHTML = items.map((img, i) => {
+                    const cls = f1Class(img.f1);
+                    return '<figure>' +
+                        '<span class="f1-badge">F1 ' + img.f1.toFixed(3) + '</span>' +
+                        '<img src="assets/all_previews/' + img.id + '_preview.png" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.id + '_preview.png" />' +
+                        '<div class="metrics-bar">' +
+                        '<span class="pill">id=' + img.id + '</span>' +
+                        '<span class="pill">rank ' + (i + 1) + '/' + items.length + '</span><br/>' +
+                        '<span class="metric-label">F1:</span> <span class="' + cls + '">' + img.f1.toFixed(4) + '</span> · ' +
+                        '<span class="metric-label">P:</span> ' + img.precision.toFixed(4) + ' · ' +
+                        '<span class="metric-label">R:</span> ' + img.recall.toFixed(4) + ' · ' +
+                        '<span class="metric-label">θ:</span> ' + img.threshold.toFixed(3) +
+                        '</div>' +
+                        '</figure>';
+                }).join('');
+
+                // Rebind zoom
+                const dialog = document.getElementById('imageDialog');
+                const dialogImg = document.getElementById('imageDialogImg');
+                gallery.querySelectorAll('[data-zoom-src]').forEach(img => {
+                    img.addEventListener('click', () => {
+                        dialogImg.src = img.getAttribute('data-zoom-src');
+                        dialog.showModal();
+                    });
+                });
+            }
+
+            sortSel.addEventListener('change', render);
+            filterSlider.addEventListener('input', render);
+            filterQual.addEventListener('change', render);
+            render();
+
+            const dialog = document.getElementById('imageDialog');
+            dialog.addEventListener('click', (e) => {
+                const r = dialog.getBoundingClientRect();
+                if (e.clientY < r.top || e.clientY > r.bottom || e.clientX < r.left || e.clientX > r.right) dialog.close();
+            });
+        })();
+    </script>
+</body>
+
+</html>
