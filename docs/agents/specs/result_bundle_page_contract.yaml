@@ -11,9 +11,11 @@ input_bundle:
   required_run_files:
     - per_run/<run_id>/metrics.json
     - per_run/<run_id>/eval_results.json
+    - per_run/<run_id>/training_data.json
   required_qualitative:
     - qualitative/selected_preview_ids.json
     - qualitative/previews/<run_id>/*.png
+    - qualitative/all_previews/<run_id>/*.png
   required_qc_plots:
     - plots/pr_curve_<domain>.png
     - plots/delta_vs_zero_shot.png
@@ -26,8 +28,11 @@ output_page:
     - summary.md
     - metrics.json
     - links.json
+    - training_data.json
+    - gallery.html
   required_dirs:
     - assets/gallery
+    - assets/all_previews
     - assets/qc
     - assets/plots
     - assets/tables
@@ -38,7 +43,9 @@ page_sections_in_order:
   - run_identity_provenance
   - configuration
   - headline_metrics
+  - learning_curves
   - visual_comparison_gallery
+  - full_gallery_link
   - qc_diagnostics
   - interpretation
   - artifact_links
@@ -78,8 +85,13 @@ visual_rules:
     rounded_corners_required: true
     caption_frame_required: true
   metadata_pills_required: true
+  per_image_metrics_pills_required: true
   zoom_interaction_required: true
   cherry_pick_only: forbidden
+  full_gallery_rules:
+    sortable: true
+    filter_by_quality: true
+    show_all_samples: true
 
 qc_rules:
   required_count_min: 2

@@ -10,6 +10,7 @@ It intentionally excludes heavy artifacts such as full checkpoints and full pred
   - `core_results.csv|json`: compact table with the key report fields
 - `per_run/<run_id>/`
   - `metrics.json` / `eval_results.json` / `performance_summary.json` (if available)
+  - `training_data.json` (Parsed tensorboard logs and eval metrics for learning curves)
   - `edgeeval/eval_bdry*.txt` (PR/threshold/image-level curve data)
 - `plots/`
   - `ap_vs_shots.png`
@@ -21,6 +22,7 @@ It intentionally excludes heavy artifacts such as full checkpoints and full pred
   - `<domain>_preview_grid.png`: representative side-by-side qualitative comparisons
   - `selected_preview_ids.json`: chosen sample IDs and included runs
   - `previews/<run_id>/<id>_preview.png`: only selected preview images used in the report
+  - `all_previews/<run_id>/*.png`: complete exhaustive set of evaluation previews for the dedicated gallery
 - `report.md`: short report index and best-run summary
 - `manifest.json`: machine-readable inventory (generated timestamp, included files, bundle size)
 - `scripts/build_lightweight_results.py`: regeneration script

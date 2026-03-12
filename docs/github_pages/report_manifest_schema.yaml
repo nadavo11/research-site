@@ -21,6 +21,7 @@ required:
   - gallery_contract
   - gallery_assets
   - qc_assets
+  - full_gallery_assets
   - artifact_links
   - repro_links
   - interpretation
@@ -158,6 +159,9 @@ properties:
               type: number
             higher_is_better:
               type: boolean
+      learning_curves_data:
+        type: string
+        description: "URI to JSON file containing step-by-step training loss and validation metrics for Chart.js."
 
   visual_standard:
     type: object
@@ -179,6 +183,7 @@ properties:
       - caption_fields
       - zoom_enabled
       - metadata_pills
+      - per_image_metrics
     properties:
       layout_mode:
         type: string
@@ -205,6 +210,9 @@ properties:
         type: boolean
       metadata_pills:
         type: boolean
+      per_image_metrics:
+        type: boolean
+        description: "Whether caption pills should be decorated with color-coded true performance metrics (e.g. F1, Precision)."
 
   gallery_assets:
     type: array
@@ -231,6 +239,18 @@ properties:
           type: string
         caption:
           type: string
+
+  full_gallery_assets:
+    type: object
+    additionalProperties: false
+    required: [metrics_json, total_images]
+    properties:
+      metrics_json:
+        type: string
+        description: "JSON file with exhaustive list of sample metrics allowing client-side sorting/filtering."
+      total_images:
+        type: integer
+        minimum: 1
 
   qc_assets:
     type: object

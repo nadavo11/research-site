@@ -188,6 +188,9 @@
         "metrics_file": {
           "type": "string",
           "const": "metrics.json"
+        },
+        "learning_curves_data": {
+          "type": "string"
         }
       }
     },
@@ -209,6 +212,10 @@
           "minimum": 0
         },
         "qc_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "all_previews_count": {
           "type": "integer",
           "minimum": 0
         }
