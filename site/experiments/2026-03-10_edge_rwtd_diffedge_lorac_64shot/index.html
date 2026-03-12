@@ -93,6 +93,86 @@
     </section>
 
     <section class="section">
+      <h2>Staged Visual Walkthrough</h2>
+      <p class="kv">Reference-style gallery contract: paired cards, fixed heights, explicit captions, and metric pills.</p>
+      <div class="stage-grid">
+        <article class="stage-card">
+          <h3>Stage A: Baseline-to-64-shot Comparison (sample id 244)</h3>
+          <p>Side-by-side progression from zero-shot to tuned 64-shot on the same fixed sample.</p>
+          <div class="stage-visual">
+            <figure>
+              <img src="assets/comparison/synthetic_zs_244.png" alt="synthetic zero-shot sample 244" data-zoom-src="assets/comparison/synthetic_zs_244.png" />
+              <figcaption>Zero-shot (baseline)</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/comparison/synthetic_64shot_244.png" alt="synthetic 64-shot sample 244" data-zoom-src="assets/comparison/synthetic_64shot_244.png" />
+              <figcaption>64-shot (current run)</figcaption>
+            </figure>
+          </div>
+          <div class="stage-metrics">
+            <span class="pill">sample_id=244</span>
+            <span class="pill">domain=synthetic</span>
+            <span class="pill">delta_AP=+0.0712</span>
+          </div>
+        </article>
+
+        <article class="stage-card">
+          <h3>Stage B: QC Overlay Evidence</h3>
+          <p>Cross-shot preview grid and synthetic PR curve used for trust calibration.</p>
+          <div class="stage-visual">
+            <figure>
+              <img src="assets/qc/synthetic_preview_grid.png" alt="synthetic preview grid" data-zoom-src="assets/qc/synthetic_preview_grid.png" />
+              <figcaption>Synthetic preview grid</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/qc/pr_curve_synthetic.png" alt="synthetic precision recall curve" data-zoom-src="assets/qc/pr_curve_synthetic.png" />
+              <figcaption>PR curve (synthetic)</figcaption>
+            </figure>
+          </div>
+          <div class="stage-metrics">
+            <span class="pill">qc_block=required</span>
+            <span class="pill">fixed_sample_order=true</span>
+          </div>
+        </article>
+
+        <article class="stage-card">
+          <h3>Stage C: Keep vs Suspicious</h3>
+          <p>Two-card split to make quality confidence explicit for fast review.</p>
+          <div class="split-two">
+            <div class="mini-card">
+              <img src="assets/gallery/sample_001_preview.png" alt="kept representative sample 85" data-zoom-src="assets/gallery/sample_001_preview.png" />
+              <div class="cap">Representative keep - id 85</div>
+            </div>
+            <div class="mini-card">
+              <img src="assets/qc/failure_case_244.png" alt="suspicious failure sample 244" data-zoom-src="assets/qc/failure_case_244.png" />
+              <div class="cap">Failure/suspicious - id 244</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="stage-card">
+          <h3>Stage D: Domain Transfer Caution</h3>
+          <p>Synthetic gain is clear; Wild-BSDS evidence remains partial for high-shot settings.</p>
+          <div class="stage-visual">
+            <figure>
+              <img src="assets/qc/bsds_wild_preview_grid.png" alt="wild bsds preview grid" data-zoom-src="assets/qc/bsds_wild_preview_grid.png" />
+              <figcaption>Wild-BSDS preview grid</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/qc/status_overview.png" alt="status overview by run" data-zoom-src="assets/qc/status_overview.png" />
+              <figcaption>Status overview</figcaption>
+            </figure>
+          </div>
+          <div class="stage-metrics">
+            <span class="pill">wild_32=pending</span>
+            <span class="pill">wild_64=pending</span>
+            <span class="pill">decision=reviewed_not_final</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
       <h2>What Changed</h2>
       <div class="actions" style="margin-top:10px;">
         <button data-toggle-target="runDetails">Show details</button>

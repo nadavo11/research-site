@@ -67,6 +67,7 @@ Must contain:
 - fixed sample ordering from named sample list
 - per-sample views: input, prediction, ground truth, optional error map
 - captions with sample id and split
+- stage-oriented card composition (paired visuals + short metric/caption strip)
 
 ### 6) QC / diagnostics
 Must contain:
@@ -104,6 +105,25 @@ Field classes:
 - cherry-picking best-looking-only examples is forbidden
 - QC assets are mandatory
 
+## Gallery Look And Feel Contract
+Use a structured, paper-like gallery style:
+- primary gallery layout is card-based (`stage-card`, `mini-card`, `shot-card`) with consistent border, radius, and caption framing
+- image tiles use fixed heights per context:
+  - stage pair cards: `160-190px`
+  - detail gallery cards: `150-180px`
+  - carousel cards: fixed width card with horizontal scroll
+- paired comparison rows should prefer `2-column` split blocks when comparing keep/filter, pass/fail, or before/after examples
+- each caption line must include:
+  - sample id
+  - shot/order index
+  - decision/status marker where applicable
+- add compact metadata pills near visuals (id, decision, score snippets) for scanability
+- include click-to-zoom behavior for all gallery/QC images
+- maintain conservative visual language:
+  - white/light cards
+  - subtle borders
+  - no decorative effects that obscure interpretation
+
 ## Naming Conventions
 - `experiment_id` should match Step 2 run naming convention
 - asset filenames should be deterministic and sortable
@@ -126,3 +146,4 @@ A report page is valid only if:
 - metrics block is populated
 - provenance fields (commit, preset, overrides) are explicit
 - artifact links are present and resolvable
+- gallery follows the card/caption/pill contract above

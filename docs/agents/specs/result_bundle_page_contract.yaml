@@ -60,10 +60,25 @@ visual_rules:
   sample_list_source: qualitative/selected_preview_ids.json
   fixed_sample_order: true
   min_gallery_examples: 4
+  gallery_layout_mode: card_first
+  required_gallery_blocks:
+    - stage_cards
+    - comparison_strip_or_split
+    - expandable_topic_gallery
   captions_must_include:
     - sample_id
     - order_index
     - run_id
+    - status_or_decision
+  image_height_px:
+    stage_cards: [160, 190]
+    topic_cards: [150, 180]
+  card_style:
+    border_required: true
+    rounded_corners_required: true
+    caption_frame_required: true
+  metadata_pills_required: true
+  zoom_interaction_required: true
   cherry_pick_only: forbidden
 
 qc_rules:
