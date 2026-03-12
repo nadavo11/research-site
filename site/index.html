@@ -47,6 +47,14 @@
       </div>
       <div class="card-grid">
         <article class="card" data-exp-card data-domain="edge">
+          <p><span class="tag good">evaluation</span><span class="tag">sam3</span><span class="tag">foundation
+              model</span></p>
+          <h3>RWTD Segmentation — SAM 3 Oracle Points & Text</h3>
+          <p class="kv"><strong>Date:</strong> 2026-03-12</p>
+          <p class="kv"><strong>Primary metric:</strong> mIoU = 0.516 (Oracle Points)</p>
+          <a class="btn" href="experiments/sam3-rwtd-both-test-visuals/index.html">Open report</a>
+        </article>
+        <article class="card" data-exp-card data-domain="edge">
           <p><span class="tag good">milestone</span><span class="tag">edge detection</span><span class="tag">full
               train</span></p>
           <h3>RWTD edge — BSDS→SynthPerlin LoRA full EMA init</h3>
@@ -87,6 +95,14 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>sam3-rwtd-both-test-visuals</td>
+              <td>mIoU = 0.516</td>
+              <td>N/A (zero-shot)</td>
+              <td style="color:#000;"><strong>-</strong></td>
+              <td>Oracle points very effective; text descriptions often insufficient for distinguishing overlapping
+                textures.</td>
+            </tr>
             <tr>
               <td>2026-03-12_edge_rwtd_diffedge_lorac_bsdsft</td>
               <td>edge/AP = 0.5878</td>
