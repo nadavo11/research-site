@@ -69,6 +69,18 @@ visual_standard:
   sample_list_name: cifar10_test_fixed_prova_1_to_4
   example_count: 4
 
+gallery_contract:
+  layout_mode: hybrid
+  tile_heights:
+    stage_cards_px: 170
+    topic_cards_px: 160
+  caption_fields:
+    - sample_id
+    - order_index
+    - status_or_decision
+  zoom_enabled: true
+  metadata_pills: true
+
 gallery_assets:
   - sample_id: sample_001
     order_index: 0

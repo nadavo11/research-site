@@ -41,6 +41,22 @@ evaluation:
   primary_metric: edge/AP
   metrics_file: metrics.json
 
+visual_standard:
+  sample_list_name: synthetic_fixed_ids_85_441_96_244_181
+  example_count: 5
+
+gallery_contract:
+  layout_mode: hybrid
+  tile_heights:
+    stage_cards_px: 170
+    topic_cards_px: 160
+  caption_fields:
+    - sample_id
+    - order_index
+    - status_or_decision
+  zoom_enabled: true
+  metadata_pills: true
+
 assets:
   representative_count: 5
   failure_count: 1

@@ -80,6 +80,87 @@
     </section>
 
     <section class="section">
+      <h2>Staged Visual Walkthrough</h2>
+      <p class="kv">Reference-style gallery contract: paired cards, fixed tile heights, explicit captions, and quality pills.</p>
+      <div class="stage-grid">
+        <article class="stage-card">
+          <h3>Stage A: Reconstruction vs Input</h3>
+          <p>Direct side-by-side for a representative fixed sample from the locked list.</p>
+          <div class="stage-visual">
+            <figure>
+              <img src="assets/gallery/sample_001_input.png" alt="sample 001 input" data-zoom-src="assets/gallery/sample_001_input.png" />
+              <figcaption>Input (id=sample_001)</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/gallery/sample_001_prediction.png" alt="sample 001 prediction" data-zoom-src="assets/gallery/sample_001_prediction.png" />
+              <figcaption>Prediction (id=sample_001)</figcaption>
+            </figure>
+          </div>
+          <div class="stage-metrics">
+            <span class="pill">sample_id=sample_001</span>
+            <span class="pill">order=1/4</span>
+            <span class="pill">status=keep_for_reference</span>
+          </div>
+        </article>
+
+        <article class="stage-card">
+          <h3>Stage B: Error Evidence</h3>
+          <p>Error map and prediction for the known failure sample make degradation immediately visible.</p>
+          <div class="stage-visual">
+            <figure>
+              <img src="assets/gallery/sample_004_prediction.png" alt="sample 004 prediction" data-zoom-src="assets/gallery/sample_004_prediction.png" />
+              <figcaption>Prediction (id=sample_004)</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/gallery/sample_004_error.png" alt="sample 004 error map" data-zoom-src="assets/gallery/sample_004_error.png" />
+              <figcaption>Error map (id=sample_004)</figcaption>
+            </figure>
+          </div>
+          <div class="stage-metrics">
+            <span class="pill">sample_id=sample_004</span>
+            <span class="pill">decision=failure_case</span>
+            <span class="pill">mae=50.31</span>
+          </div>
+        </article>
+
+        <article class="stage-card">
+          <h3>Stage C: Keep vs Suspicious Split</h3>
+          <p>Explicit mini-card split for quick reviewer judgment.</p>
+          <div class="split-two">
+            <div class="mini-card">
+              <img src="assets/gallery/sample_002_prediction.png" alt="kept representative sample 002" data-zoom-src="assets/gallery/sample_002_prediction.png" />
+              <div class="cap">Representative keep - sample_002</div>
+            </div>
+            <div class="mini-card">
+              <img src="assets/qc/suspicious_case.png" alt="suspicious case panel" data-zoom-src="assets/qc/suspicious_case.png" />
+              <div class="cap">Suspicious - edge thinning pattern</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="stage-card">
+          <h3>Stage D: Diagnostics Pair</h3>
+          <p>QC diagnostics are paired in-card to keep trust signals near the visual evidence.</p>
+          <div class="stage-visual">
+            <figure>
+              <img src="assets/plots/psnr_by_sample.png" alt="psnr by sample" data-zoom-src="assets/plots/psnr_by_sample.png" />
+              <figcaption>PSNR by sample</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/plots/edge_density_delta.png" alt="edge density delta by sample" data-zoom-src="assets/plots/edge_density_delta.png" />
+              <figcaption>Edge-density delta</figcaption>
+            </figure>
+          </div>
+          <div class="stage-metrics">
+            <span class="pill">primary=psnr</span>
+            <span class="pill">delta=-0.52</span>
+            <span class="pill">trust=low</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
       <h2>QC Diagnostics</h2>
       <div class="gallery">
         <figure><img src="assets/qc/preview_grid.png" alt="preview grid" data-zoom-src="assets/qc/preview_grid.png" /><figcaption>QC overview grid.</figcaption></figure>
