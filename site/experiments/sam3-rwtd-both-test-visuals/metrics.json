@@ -1,0 +1,6 @@
+{
+  "mIoU": 0.516,
+  "ARI": 0.614,
+  "Boundary_Dice": 0.012,
+  "Macro_Dice": 0.567
+}

@@ -1,0 +1,13 @@
+title: "SAM 3 RWTD Both Protocols"
+model_id: "facebook/sam3"
+dataset_id: "aviadcohz/RWTD"
+split: "test"
+date: "2026-03-12"
+description: "Evaluation of SAM 3 on RWTD test split using both text and oracle points protocols."
+assets:
+  gallery_count: 8
+  qc_count: 4
+  all_previews_count: 454
+evaluation:
+  primary_metric: "mIoU"
+  metrics_file: "metrics.json"

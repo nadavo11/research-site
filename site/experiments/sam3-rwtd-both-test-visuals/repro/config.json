@@ -1,0 +1,41 @@
+{
+  "boundary_tolerance_px": 2,
+  "dataset_id": "aviadcohz/RWTD",
+  "device": "auto",
+  "discovered_features": [
+    "image",
+    "boundary_mask",
+    "texture_a_mask",
+    "texture_b_mask",
+    "texture_a",
+    "texture_b",
+    "original_texture_a",
+    "original_texture_b",
+    "crop_name",
+    "oracle_points_a",
+    "oracle_points_b"
+  ],
+  "discovered_split_size": 227,
+  "discovered_split_sizes": {
+    "test": 227,
+    "train": 253
+  },
+  "failure_policy": "abort",
+  "generated_at_utc": "2026-03-12T14:47:38Z",
+  "limit": null,
+  "mask_threshold": 0.5,
+  "model_id": "facebook/sam3",
+  "protocol": "both",
+  "save_visuals": true,
+  "score_threshold": 0.5,
+  "split": "test",
+  "versions": {
+    "Pillow": "12.1.1",
+    "datasets": "4.7.0",
+    "numpy": "1.26.4",
+    "torch": "2.10.0",
+    "transformers": "5.3.0",
+    "wandb": null
+  },
+  "wandb": false
+}

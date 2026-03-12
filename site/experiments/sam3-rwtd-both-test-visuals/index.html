@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RWTD — SAM 3 Both Protocols</title>
+  <link rel="stylesheet" href="../../assets/site.css" />
+</head>
+
+<body>
+  <main>
+    <section class="hero">
+      <h1>RWTD Segmentation — SAM 3 Oracle Points & Text</h1>
+      <p>Evaluation of the foundational SAM 3 model on the RWTD test split using both oracle points and text label prompting.</p>
+      <p style="margin-top:8px;"><span class="tag good">evaluation</span><span class="tag">sam3</span><span
+          class="tag">foundation model</span></p>
+    </section>
+
+    <section class="section">
+      <h2>Executive Read</h2>
+      <div class="summary">
+        <p class="kv"><strong>Run:</strong> <code>sam3-rwtd-both-test-visuals</code> (reported on 2026-03-12)</p>
+        <p class="kv"><strong>What was done:</strong> Zero-shot evaluation of facebook/sam3 using oracle points (2 per texture) and text descriptions.</p>
+        <p class="kv"><strong>What works:</strong> Points are highly effective at guiding the model to the dominant texture region.</p>
+        <p class="kv"><strong>Where it fails:</strong> The text descriptions alone are sometimes not sufficient to distinguish closely overlapping visual properties.</p>
+      </div>
+      <div class="metric-grid" style="margin-top:10px;">
+        <article class="metric">
+          <div class="k">Primary Metric (mIoU)</div>
+          <div class="v">0.516</div>
+        </article>
+        <article class="metric">
+          <div class="k">ARI</div>
+          <div class="v">0.614</div>
+        </article>
+        <article class="metric">
+          <div class="k">Macro Dice</div>
+          <div class="v">0.567</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Visual Preview Gallery</h2>
+      <p class="kv">Representative samples from RWTD test evaluated with oracle points. Click any image to enlarge.</p>
+      <div class="gallery-controls" style="margin-bottom:10px;">
+        <label for="gallerySort"><strong>Sort:</strong></label>
+        <select id="gallerySort" data-sort-gallery="mainGallery">
+          <option value="default">Default order</option>
+          <option value="asc">F1 ↑ (worst first)</option>
+          <option value="desc">F1 ↓ (best first)</option>
+        </select>
+        <a class="btn" href="gallery.html" style="margin-left:auto;">Open full gallery (454 images) →</a>
+      </div>
+      <div class="gallery" id="mainGallery">
+
+        <figure data-score="0.9845">
+          <img src="assets/gallery/oracle_points_207.png" alt="sample oracle_points_207 preview"
+            data-zoom-src="assets/gallery/oracle_points_207.png" />
+          <figcaption><span class="pill">id=oracle_points_207</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.985</span><span class="pill">P=1.000
+              R=0.970</span></figcaption>
+        </figure>
+        <figure data-score="0.9861">
+          <img src="assets/gallery/oracle_points_213.png" alt="sample oracle_points_213 preview"
+            data-zoom-src="assets/gallery/oracle_points_213.png" />
+          <figcaption><span class="pill">id=oracle_points_213</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.986</span><span class="pill">P=1.000
+              R=0.973</span></figcaption>
+        </figure>
+        <figure data-score="0.9901">
+          <img src="assets/gallery/oracle_points_246.png" alt="sample oracle_points_246 preview"
+            data-zoom-src="assets/gallery/oracle_points_246.png" />
+          <figcaption><span class="pill">id=oracle_points_246</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.990</span><span class="pill">P=0.999
+              R=0.982</span></figcaption>
+        </figure>
+        <figure data-score="0.9865">
+          <img src="assets/gallery/oracle_points_303.png" alt="sample oracle_points_303 preview"
+            data-zoom-src="assets/gallery/oracle_points_303.png" />
+          <figcaption><span class="pill">id=oracle_points_303</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.987</span><span class="pill">P=0.999
+              R=0.974</span></figcaption>
+        </figure>
+        <figure data-score="0.9792">
+          <img src="assets/gallery/oracle_points_394.png" alt="sample oracle_points_394 preview"
+            data-zoom-src="assets/gallery/oracle_points_394.png" />
+          <figcaption><span class="pill">id=oracle_points_394</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.979</span><span class="pill">P=0.997
+              R=0.963</span></figcaption>
+        </figure>
+        <figure data-score="0.9819">
+          <img src="assets/gallery/oracle_points_423.png" alt="sample oracle_points_423 preview"
+            data-zoom-src="assets/gallery/oracle_points_423.png" />
+          <figcaption><span class="pill">id=oracle_points_423</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.982</span><span class="pill">P=0.999
+              R=0.965</span></figcaption>
+        </figure>
+        <figure data-score="0.9813">
+          <img src="assets/gallery/oracle_points_448.png" alt="sample oracle_points_448 preview"
+            data-zoom-src="assets/gallery/oracle_points_448.png" />
+          <figcaption><span class="pill">id=oracle_points_448</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.981</span><span class="pill">P=0.994
+              R=0.969</span></figcaption>
+        </figure>
+        <figure data-score="0.9804">
+          <img src="assets/gallery/oracle_points_449.png" alt="sample oracle_points_449 preview"
+            data-zoom-src="assets/gallery/oracle_points_449.png" />
+          <figcaption><span class="pill">id=oracle_points_449</span><span class="pill"
+              style="background:#edf9f1;border-color:#a6dfb8;color:#1d7a3e;">F1=0.980</span><span class="pill">P=0.992
+              R=0.970</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>QC Diagnostics</h2>
+      <p class="kv">Failure cases and severe miss-predictions from the sample pool.</p>
+      <div class="gallery-controls" style="margin-bottom:10px;">
+        <label for="qcSort"><strong>Sort:</strong></label>
+        <select id="qcSort" data-sort-gallery="qcGallery">
+          <option value="default">Default order</option>
+          <option value="asc">Sample ID ↑ (best first)</option>
+          <option value="desc">Sample ID ↓ (worst first)</option>
+        </select>
+      </div>
+      <div class="gallery" id="qcGallery">
+
+        <figure data-score="181">
+          <img src="assets/qc/oracle_points_181.png" alt="failure case sample oracle_points_181"
+            data-zoom-src="assets/qc/oracle_points_181.png" />
+          <figcaption><span class="pill">id=oracle_points_181</span><span class="pill">failure</span> Hard failure or severe over-prediction.</figcaption>
+        </figure>
+        <figure data-score="256">
+          <img src="assets/qc/oracle_points_256.png" alt="failure case sample oracle_points_256"
+            data-zoom-src="assets/qc/oracle_points_256.png" />
+          <figcaption><span class="pill">id=oracle_points_256</span><span class="pill">failure</span> Hard failure or severe over-prediction.</figcaption>
+        </figure>
+        <figure data-score="408">
+          <img src="assets/qc/oracle_points_408.png" alt="failure case sample oracle_points_408"
+            data-zoom-src="assets/qc/oracle_points_408.png" />
+          <figcaption><span class="pill">id=oracle_points_408</span><span class="pill">failure</span> Hard failure or severe over-prediction.</figcaption>
+        </figure>
+        <figure data-score="45">
+          <img src="assets/qc/oracle_points_45.png" alt="failure case sample oracle_points_45"
+            data-zoom-src="assets/qc/oracle_points_45.png" />
+          <figcaption><span class="pill">id=oracle_points_45</span><span class="pill">failure</span> Hard failure or severe over-prediction.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Data and Repro (Details)</h2>
+      <div class="actions" style="margin-top:10px;">
+        <button data-toggle-target="reproDetails">Show details</button>
+      </div>
+      <div class="details" id="reproDetails">
+        <div class="table-wrap">
+          <table>
+            <tbody>
+              <tr>
+                <th>Repro Config</th>
+                <td><code>repro/config.json</code></td>
+              </tr>
+              <tr>
+                <th>Experiment Terms</th>
+                <td><code>repro/experiment_terms.md</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p style="margin-top:10px;"><a class="btn" href="../../index.html">Back to overview</a></p>
+    </section>
+
+    <footer>Report page generated on 2026-03-12.</footer>
+  </main>
+
+  <dialog class="image-dialog" id="imageDialog">
+    <img id="imageDialogImg" alt="Expanded preview" />
+  </dialog>
+  <script src="../../assets/site.js"></script>
+</body>
+</html>

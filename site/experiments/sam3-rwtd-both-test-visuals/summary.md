@@ -1,0 +1,1 @@
+This experiment evaluates `facebook/sam3` on the RWTD test set using two prompting protocols: `text` (natural language descriptions) and `oracle_points` (ground-truth sampled points). The page focuses on the `oracle_points` protocol for the main visual gallery.

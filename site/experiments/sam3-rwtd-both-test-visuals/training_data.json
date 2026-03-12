@@ -1,0 +1,3643 @@
+{
+  "learning_curves": {
+    "steps": [],
+    "train_loss": [],
+    "val_ap": [],
+    "rwtd_ap": [],
+    "ods_f1": []
+  },
+  "per_image": [
+    {
+      "id": "oracle_points_1",
+      "f1": 0.4911,
+      "precision": 0.9984,
+      "recall": 0.4814,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/1.png"
+    },
+    {
+      "id": "oracle_points_101",
+      "f1": 0.5015,
+      "precision": 0.9803,
+      "recall": 0.4884,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/101.png"
+    },
+    {
+      "id": "oracle_points_102",
+      "f1": 0.2608,
+      "precision": 0.9899,
+      "recall": 0.1699,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/102.png"
+    },
+    {
+      "id": "oracle_points_103",
+      "f1": 0.4978,
+      "precision": 0.945,
+      "recall": 0.4846,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/103.png"
+    },
+    {
+      "id": "oracle_points_104",
+      "f1": 0.8811,
+      "precision": 0.8605,
+      "recall": 0.9218,
+      "threshold": 0.0374,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/104.png"
+    },
+    {
+      "id": "oracle_points_106",
+      "f1": 0.4695,
+      "precision": 1.0,
+      "recall": 0.4324,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/106.png"
+    },
+    {
+      "id": "oracle_points_12",
+      "f1": 0.0414,
+      "precision": 0.9852,
+      "recall": 0.0212,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/12.png"
+    },
+    {
+      "id": "oracle_points_121",
+      "f1": 0.4988,
+      "precision": 0.9995,
+      "recall": 0.4679,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/121.png"
+    },
+    {
+      "id": "oracle_points_122",
+      "f1": 0.9601,
+      "precision": 0.9802,
+      "recall": 0.943,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/122.png"
+    },
+    {
+      "id": "oracle_points_125",
+      "f1": 0.4958,
+      "precision": 0.9966,
+      "recall": 0.4839,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/125.png"
+    },
+    {
+      "id": "oracle_points_128",
+      "f1": 0.4685,
+      "precision": 0.5063,
+      "recall": 0.4437,
+      "threshold": 0.0156,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/128.png"
+    },
+    {
+      "id": "oracle_points_129",
+      "f1": 0.9585,
+      "precision": 0.994,
+      "recall": 0.9267,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/129.png"
+    },
+    {
+      "id": "oracle_points_13",
+      "f1": 0.0388,
+      "precision": 1.0,
+      "recall": 0.02,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/13.png"
+    },
+    {
+      "id": "oracle_points_134",
+      "f1": 0.5432,
+      "precision": 0.9998,
+      "recall": 0.5145,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/134.png"
+    },
+    {
+      "id": "oracle_points_139",
+      "f1": 0.9554,
+      "precision": 0.9923,
+      "recall": 0.9214,
+      "threshold": 0.0038,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/139.png"
+    },
+    {
+      "id": "oracle_points_14",
+      "f1": 0.0052,
+      "precision": 1.0,
+      "recall": 0.0026,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/14.png"
+    },
+    {
+      "id": "oracle_points_142",
+      "f1": 0.9234,
+      "precision": 0.9641,
+      "recall": 0.8914,
+      "threshold": 0.0486,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/142.png"
+    },
+    {
+      "id": "oracle_points_149",
+      "f1": 0.9137,
+      "precision": 0.9699,
+      "recall": 0.8694,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/149.png"
+    },
+    {
+      "id": "oracle_points_15",
+      "f1": 0.9186,
+      "precision": 0.989,
+      "recall": 0.8654,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/15.png"
+    },
+    {
+      "id": "oracle_points_175",
+      "f1": 0.8472,
+      "precision": 0.9869,
+      "recall": 0.751,
+      "threshold": 0.017,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/175.png"
+    },
+    {
+      "id": "oracle_points_176",
+      "f1": 0.4988,
+      "precision": 0.9652,
+      "recall": 0.4504,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/176.png"
+    },
+    {
+      "id": "oracle_points_18",
+      "f1": 0.4217,
+      "precision": 0.9972,
+      "recall": 0.3511,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/18.png"
+    },
+    {
+      "id": "oracle_points_181",
+      "f1": 0.1555,
+      "precision": 1.0,
+      "recall": 0.0915,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/181.png"
+    },
+    {
+      "id": "oracle_points_182",
+      "f1": 0.957,
+      "precision": 0.9995,
+      "recall": 0.9196,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/182.png"
+    },
+    {
+      "id": "oracle_points_183",
+      "f1": 0.4956,
+      "precision": 1.0,
+      "recall": 0.4901,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/183.png"
+    },
+    {
+      "id": "oracle_points_184",
+      "f1": 0.5342,
+      "precision": 1.0,
+      "recall": 0.4985,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/184.png"
+    },
+    {
+      "id": "oracle_points_185",
+      "f1": 0.6444,
+      "precision": 1.0,
+      "recall": 0.5754,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/185.png"
+    },
+    {
+      "id": "oracle_points_186",
+      "f1": 0.0279,
+      "precision": 0.5,
+      "recall": 0.0144,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/186.png"
+    },
+    {
+      "id": "oracle_points_189",
+      "f1": 0.5208,
+      "precision": 1.0,
+      "recall": 0.4569,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/189.png"
+    },
+    {
+      "id": "oracle_points_194",
+      "f1": 0.0597,
+      "precision": 0.5,
+      "recall": 0.0317,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/194.png"
+    },
+    {
+      "id": "oracle_points_197",
+      "f1": 0.0714,
+      "precision": 1.0,
+      "recall": 0.038,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/197.png"
+    },
+    {
+      "id": "oracle_points_2",
+      "f1": 0.047,
+      "precision": 0.4862,
+      "recall": 0.0247,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/2.png"
+    },
+    {
+      "id": "oracle_points_200",
+      "f1": 0.067,
+      "precision": 1.0,
+      "recall": 0.0347,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/200.png"
+    },
+    {
+      "id": "oracle_points_201",
+      "f1": 0.3799,
+      "precision": 0.9989,
+      "recall": 0.27,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/201.png"
+    },
+    {
+      "id": "oracle_points_202",
+      "f1": 0.5799,
+      "precision": 0.9978,
+      "recall": 0.539,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/202.png"
+    },
+    {
+      "id": "oracle_points_205",
+      "f1": 0.9717,
+      "precision": 1.0,
+      "recall": 0.945,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/205.png"
+    },
+    {
+      "id": "oracle_points_207",
+      "f1": 0.9845,
+      "precision": 1.0,
+      "recall": 0.9695,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/207.png"
+    },
+    {
+      "id": "oracle_points_210",
+      "f1": 0.9567,
+      "precision": 0.9986,
+      "recall": 0.9183,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/210.png"
+    },
+    {
+      "id": "oracle_points_213",
+      "f1": 0.9861,
+      "precision": 1.0,
+      "recall": 0.9727,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/213.png"
+    },
+    {
+      "id": "oracle_points_214",
+      "f1": 0.7207,
+      "precision": 1.0,
+      "recall": 0.6368,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/214.png"
+    },
+    {
+      "id": "oracle_points_215",
+      "f1": 0.6589,
+      "precision": 1.0,
+      "recall": 0.5906,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/215.png"
+    },
+    {
+      "id": "oracle_points_216",
+      "f1": 0.0803,
+      "precision": 1.0,
+      "recall": 0.043,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/216.png"
+    },
+    {
+      "id": "oracle_points_219",
+      "f1": 0.6226,
+      "precision": 1.0,
+      "recall": 0.5377,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/219.png"
+    },
+    {
+      "id": "oracle_points_22",
+      "f1": 0.4926,
+      "precision": 0.9999,
+      "recall": 0.4705,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/22.png"
+    },
+    {
+      "id": "oracle_points_221",
+      "f1": 0.6202,
+      "precision": 1.0,
+      "recall": 0.5611,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/221.png"
+    },
+    {
+      "id": "oracle_points_222",
+      "f1": 0.9712,
+      "precision": 0.9978,
+      "recall": 0.9463,
+      "threshold": 0.015,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/222.png"
+    },
+    {
+      "id": "oracle_points_224",
+      "f1": 0.5534,
+      "precision": 1.0,
+      "recall": 0.5226,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/224.png"
+    },
+    {
+      "id": "oracle_points_229",
+      "f1": 0.6625,
+      "precision": 0.9989,
+      "recall": 0.5958,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/229.png"
+    },
+    {
+      "id": "oracle_points_237",
+      "f1": 0.972,
+      "precision": 0.9999,
+      "recall": 0.9457,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/237.png"
+    },
+    {
+      "id": "oracle_points_24",
+      "f1": 0.9742,
+      "precision": 0.9926,
+      "recall": 0.9566,
+      "threshold": 0.0188,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/24.png"
+    },
+    {
+      "id": "oracle_points_240",
+      "f1": 0.4675,
+      "precision": 1.0,
+      "recall": 0.386,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/240.png"
+    },
+    {
+      "id": "oracle_points_244",
+      "f1": 0.5761,
+      "precision": 1.0,
+      "recall": 0.4433,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/244.png"
+    },
+    {
+      "id": "oracle_points_245",
+      "f1": 0.0717,
+      "precision": 1.0,
+      "recall": 0.0376,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/245.png"
+    },
+    {
+      "id": "oracle_points_246",
+      "f1": 0.9901,
+      "precision": 0.999,
+      "recall": 0.9816,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/246.png"
+    },
+    {
+      "id": "oracle_points_247",
+      "f1": 0.441,
+      "precision": 1.0,
+      "recall": 0.3754,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/247.png"
+    },
+    {
+      "id": "oracle_points_25",
+      "f1": 0.5046,
+      "precision": 0.9988,
+      "recall": 0.4895,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/25.png"
+    },
+    {
+      "id": "oracle_points_250",
+      "f1": 0.5346,
+      "precision": 0.9925,
+      "recall": 0.4865,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/250.png"
+    },
+    {
+      "id": "oracle_points_251",
+      "f1": 0.5351,
+      "precision": 1.0,
+      "recall": 0.4891,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/251.png"
+    },
+    {
+      "id": "oracle_points_253",
+      "f1": 0.9092,
+      "precision": 0.9998,
+      "recall": 0.8349,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/253.png"
+    },
+    {
+      "id": "oracle_points_254",
+      "f1": 0.4931,
+      "precision": 1.0,
+      "recall": 0.4776,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/254.png"
+    },
+    {
+      "id": "oracle_points_256",
+      "f1": 0.1797,
+      "precision": 1.0,
+      "recall": 0.0987,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/256.png"
+    },
+    {
+      "id": "oracle_points_257",
+      "f1": 0.0986,
+      "precision": 1.0,
+      "recall": 0.0534,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/257.png"
+    },
+    {
+      "id": "oracle_points_258",
+      "f1": 0.3201,
+      "precision": 1.0,
+      "recall": 0.1934,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/258.png"
+    },
+    {
+      "id": "oracle_points_259",
+      "f1": 0.0978,
+      "precision": 1.0,
+      "recall": 0.0517,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/259.png"
+    },
+    {
+      "id": "oracle_points_260",
+      "f1": 0.2126,
+      "precision": 1.0,
+      "recall": 0.1346,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/260.png"
+    },
+    {
+      "id": "oracle_points_261",
+      "f1": 0.825,
+      "precision": 1.0,
+      "recall": 0.7291,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/261.png"
+    },
+    {
+      "id": "oracle_points_262",
+      "f1": 0.5286,
+      "precision": 0.9999,
+      "recall": 0.5119,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/262.png"
+    },
+    {
+      "id": "oracle_points_263",
+      "f1": 0.2551,
+      "precision": 1.0,
+      "recall": 0.165,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/263.png"
+    },
+    {
+      "id": "oracle_points_265",
+      "f1": 0.7702,
+      "precision": 0.9905,
+      "recall": 0.667,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/265.png"
+    },
+    {
+      "id": "oracle_points_268",
+      "f1": 0.4284,
+      "precision": 1.0,
+      "recall": 0.3728,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/268.png"
+    },
+    {
+      "id": "oracle_points_269",
+      "f1": 0.2465,
+      "precision": 1.0,
+      "recall": 0.1541,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/269.png"
+    },
+    {
+      "id": "oracle_points_27",
+      "f1": 0.2242,
+      "precision": 0.9945,
+      "recall": 0.1412,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/27.png"
+    },
+    {
+      "id": "oracle_points_270",
+      "f1": 0.5654,
+      "precision": 0.9903,
+      "recall": 0.5338,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/270.png"
+    },
+    {
+      "id": "oracle_points_274",
+      "f1": 0.4496,
+      "precision": 0.5,
+      "recall": 0.4084,
+      "threshold": 0.0058,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/274.png"
+    },
+    {
+      "id": "oracle_points_276",
+      "f1": 0.4727,
+      "precision": 0.9859,
+      "recall": 0.3465,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/276.png"
+    },
+    {
+      "id": "oracle_points_28",
+      "f1": 0.0204,
+      "precision": 0.5,
+      "recall": 0.0104,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/28.png"
+    },
+    {
+      "id": "oracle_points_280",
+      "f1": 0.4945,
+      "precision": 0.9969,
+      "recall": 0.4726,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/280.png"
+    },
+    {
+      "id": "oracle_points_281",
+      "f1": 0.8916,
+      "precision": 0.9942,
+      "recall": 0.816,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/281.png"
+    },
+    {
+      "id": "oracle_points_282",
+      "f1": 0.5383,
+      "precision": 0.9981,
+      "recall": 0.5133,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/282.png"
+    },
+    {
+      "id": "oracle_points_288",
+      "f1": 0.5069,
+      "precision": 0.9943,
+      "recall": 0.5001,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/288.png"
+    },
+    {
+      "id": "oracle_points_293",
+      "f1": 0.3436,
+      "precision": 0.9962,
+      "recall": 0.2616,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/293.png"
+    },
+    {
+      "id": "oracle_points_294",
+      "f1": 0.4097,
+      "precision": 0.9994,
+      "recall": 0.3412,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/294.png"
+    },
+    {
+      "id": "oracle_points_299",
+      "f1": 0.0181,
+      "precision": 0.5,
+      "recall": 0.0092,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/299.png"
+    },
+    {
+      "id": "oracle_points_3",
+      "f1": 0.0951,
+      "precision": 0.5,
+      "recall": 0.0526,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/3.png"
+    },
+    {
+      "id": "oracle_points_30",
+      "f1": 0.5176,
+      "precision": 0.9978,
+      "recall": 0.4936,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/30.png"
+    },
+    {
+      "id": "oracle_points_300",
+      "f1": 0.548,
+      "precision": 1.0,
+      "recall": 0.5156,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/300.png"
+    },
+    {
+      "id": "oracle_points_302",
+      "f1": 0.5121,
+      "precision": 1.0,
+      "recall": 0.4807,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/302.png"
+    },
+    {
+      "id": "oracle_points_303",
+      "f1": 0.9865,
+      "precision": 0.9993,
+      "recall": 0.974,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/303.png"
+    },
+    {
+      "id": "oracle_points_304",
+      "f1": 0.0536,
+      "precision": 0.5,
+      "recall": 0.0283,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/304.png"
+    },
+    {
+      "id": "oracle_points_308",
+      "f1": 0.9196,
+      "precision": 0.998,
+      "recall": 0.8544,
+      "threshold": 0.0041,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/308.png"
+    },
+    {
+      "id": "oracle_points_310",
+      "f1": 0.9747,
+      "precision": 0.997,
+      "recall": 0.9536,
+      "threshold": 0.0366,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/310.png"
+    },
+    {
+      "id": "oracle_points_311",
+      "f1": 0.0426,
+      "precision": 0.9372,
+      "recall": 0.0219,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/311.png"
+    },
+    {
+      "id": "oracle_points_315",
+      "f1": 0.4817,
+      "precision": 0.4995,
+      "recall": 0.465,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/315.png"
+    },
+    {
+      "id": "oracle_points_318",
+      "f1": 0.587,
+      "precision": 0.9996,
+      "recall": 0.5401,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/318.png"
+    },
+    {
+      "id": "oracle_points_319",
+      "f1": 0.7922,
+      "precision": 0.9985,
+      "recall": 0.699,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/319.png"
+    },
+    {
+      "id": "oracle_points_322",
+      "f1": 0.9531,
+      "precision": 0.9973,
+      "recall": 0.9136,
+      "threshold": 0.2335,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/322.png"
+    },
+    {
+      "id": "oracle_points_323",
+      "f1": 0.4984,
+      "precision": 0.5128,
+      "recall": 0.4847,
+      "threshold": 0.0314,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/323.png"
+    },
+    {
+      "id": "oracle_points_324",
+      "f1": 0.4497,
+      "precision": 0.9879,
+      "recall": 0.3849,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/324.png"
+    },
+    {
+      "id": "oracle_points_325",
+      "f1": 0.288,
+      "precision": 0.9783,
+      "recall": 0.2004,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/325.png"
+    },
+    {
+      "id": "oracle_points_327",
+      "f1": 0.9674,
+      "precision": 0.9994,
+      "recall": 0.9376,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/327.png"
+    },
+    {
+      "id": "oracle_points_328",
+      "f1": 0.5083,
+      "precision": 0.9986,
+      "recall": 0.4796,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/328.png"
+    },
+    {
+      "id": "oracle_points_329",
+      "f1": 0.4937,
+      "precision": 0.9658,
+      "recall": 0.5006,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/329.png"
+    },
+    {
+      "id": "oracle_points_33",
+      "f1": 0.4973,
+      "precision": 0.9983,
+      "recall": 0.4915,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/33.png"
+    },
+    {
+      "id": "oracle_points_330",
+      "f1": 0.3653,
+      "precision": 0.9978,
+      "recall": 0.2773,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/330.png"
+    },
+    {
+      "id": "oracle_points_331",
+      "f1": 0.5402,
+      "precision": 0.9766,
+      "recall": 0.5069,
+      "threshold": 0.0474,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/331.png"
+    },
+    {
+      "id": "oracle_points_332",
+      "f1": 0.9063,
+      "precision": 0.9943,
+      "recall": 0.8434,
+      "threshold": 0.0054,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/332.png"
+    },
+    {
+      "id": "oracle_points_334",
+      "f1": 0.9437,
+      "precision": 0.9966,
+      "recall": 0.8965,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/334.png"
+    },
+    {
+      "id": "oracle_points_337",
+      "f1": 0.979,
+      "precision": 0.9992,
+      "recall": 0.9598,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/337.png"
+    },
+    {
+      "id": "oracle_points_34",
+      "f1": 0.4526,
+      "precision": 0.5,
+      "recall": 0.4135,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/34.png"
+    },
+    {
+      "id": "oracle_points_342",
+      "f1": 0.8418,
+      "precision": 0.9988,
+      "recall": 0.7538,
+      "threshold": 0.0337,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/342.png"
+    },
+    {
+      "id": "oracle_points_343",
+      "f1": 0.4977,
+      "precision": 0.9999,
+      "recall": 0.4734,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/343.png"
+    },
+    {
+      "id": "oracle_points_344",
+      "f1": 0.4873,
+      "precision": 0.501,
+      "recall": 0.4753,
+      "threshold": 0.0133,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/344.png"
+    },
+    {
+      "id": "oracle_points_345",
+      "f1": 0.5541,
+      "precision": 1.0,
+      "recall": 0.5004,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/345.png"
+    },
+    {
+      "id": "oracle_points_346",
+      "f1": 0.0504,
+      "precision": 0.8424,
+      "recall": 0.0265,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/346.png"
+    },
+    {
+      "id": "oracle_points_347",
+      "f1": 0.0137,
+      "precision": 1.0,
+      "recall": 0.0069,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/347.png"
+    },
+    {
+      "id": "oracle_points_349",
+      "f1": 0.9563,
+      "precision": 0.9952,
+      "recall": 0.9223,
+      "threshold": 0.0058,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/349.png"
+    },
+    {
+      "id": "oracle_points_350",
+      "f1": 0.9429,
+      "precision": 0.9993,
+      "recall": 0.8934,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/350.png"
+    },
+    {
+      "id": "oracle_points_351",
+      "f1": 0.9741,
+      "precision": 0.9999,
+      "recall": 0.9503,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/351.png"
+    },
+    {
+      "id": "oracle_points_352",
+      "f1": 0.4828,
+      "precision": 0.9775,
+      "recall": 0.4818,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/352.png"
+    },
+    {
+      "id": "oracle_points_357",
+      "f1": 0.7107,
+      "precision": 0.9966,
+      "recall": 0.6316,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/357.png"
+    },
+    {
+      "id": "oracle_points_358",
+      "f1": 0.5804,
+      "precision": 0.9438,
+      "recall": 0.4265,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/358.png"
+    },
+    {
+      "id": "oracle_points_359",
+      "f1": 0.3507,
+      "precision": 0.9871,
+      "recall": 0.2535,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/359.png"
+    },
+    {
+      "id": "oracle_points_36",
+      "f1": 0.5281,
+      "precision": 0.9998,
+      "recall": 0.5029,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/36.png"
+    },
+    {
+      "id": "oracle_points_362",
+      "f1": 0.5845,
+      "precision": 0.992,
+      "recall": 0.5319,
+      "threshold": 0.0178,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/362.png"
+    },
+    {
+      "id": "oracle_points_364",
+      "f1": 0.9658,
+      "precision": 0.9977,
+      "recall": 0.9363,
+      "threshold": 0.0511,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/364.png"
+    },
+    {
+      "id": "oracle_points_365",
+      "f1": 0.5484,
+      "precision": 0.9756,
+      "recall": 0.5096,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/365.png"
+    },
+    {
+      "id": "oracle_points_366",
+      "f1": 0.4939,
+      "precision": 0.9955,
+      "recall": 0.4466,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/366.png"
+    },
+    {
+      "id": "oracle_points_371",
+      "f1": 0.9753,
+      "precision": 0.9898,
+      "recall": 0.9614,
+      "threshold": 0.0288,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/371.png"
+    },
+    {
+      "id": "oracle_points_373",
+      "f1": 0.8174,
+      "precision": 0.9973,
+      "recall": 0.7149,
+      "threshold": 0.013,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/373.png"
+    },
+    {
+      "id": "oracle_points_374",
+      "f1": 0.5078,
+      "precision": 0.9479,
+      "recall": 0.4974,
+      "threshold": 0.3213,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/374.png"
+    },
+    {
+      "id": "oracle_points_376",
+      "f1": 0.2342,
+      "precision": 0.9961,
+      "recall": 0.1374,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/376.png"
+    },
+    {
+      "id": "oracle_points_377",
+      "f1": 0.3232,
+      "precision": 1.0,
+      "recall": 0.2005,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/377.png"
+    },
+    {
+      "id": "oracle_points_378",
+      "f1": 0.9439,
+      "precision": 0.9768,
+      "recall": 0.9139,
+      "threshold": 0.0614,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/378.png"
+    },
+    {
+      "id": "oracle_points_380",
+      "f1": 0.4974,
+      "precision": 0.9754,
+      "recall": 0.4913,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/380.png"
+    },
+    {
+      "id": "oracle_points_383",
+      "f1": 0.5035,
+      "precision": 0.9795,
+      "recall": 0.474,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/383.png"
+    },
+    {
+      "id": "oracle_points_387",
+      "f1": 0.7453,
+      "precision": 1.0,
+      "recall": 0.6535,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/387.png"
+    },
+    {
+      "id": "oracle_points_389",
+      "f1": 0.9537,
+      "precision": 0.9959,
+      "recall": 0.9158,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/389.png"
+    },
+    {
+      "id": "oracle_points_39",
+      "f1": 0.8721,
+      "precision": 0.9453,
+      "recall": 0.8211,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/39.png"
+    },
+    {
+      "id": "oracle_points_391",
+      "f1": 0.9637,
+      "precision": 0.9936,
+      "recall": 0.9357,
+      "threshold": 0.0038,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/391.png"
+    },
+    {
+      "id": "oracle_points_392",
+      "f1": 0.9665,
+      "precision": 0.9901,
+      "recall": 0.9445,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/392.png"
+    },
+    {
+      "id": "oracle_points_393",
+      "f1": 0.9754,
+      "precision": 0.9927,
+      "recall": 0.9588,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/393.png"
+    },
+    {
+      "id": "oracle_points_394",
+      "f1": 0.9792,
+      "precision": 0.9965,
+      "recall": 0.9625,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/394.png"
+    },
+    {
+      "id": "oracle_points_395",
+      "f1": 0.9746,
+      "precision": 0.9945,
+      "recall": 0.9555,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/395.png"
+    },
+    {
+      "id": "oracle_points_398",
+      "f1": 0.2714,
+      "precision": 0.9787,
+      "recall": 0.1786,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/398.png"
+    },
+    {
+      "id": "oracle_points_4",
+      "f1": 0.6498,
+      "precision": 0.9985,
+      "recall": 0.5756,
+      "threshold": 0.0058,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/4.png"
+    },
+    {
+      "id": "oracle_points_40",
+      "f1": 0.4221,
+      "precision": 0.4986,
+      "recall": 0.3675,
+      "threshold": 0.0778,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/40.png"
+    },
+    {
+      "id": "oracle_points_400",
+      "f1": 0.4883,
+      "precision": 0.9984,
+      "recall": 0.4724,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/400.png"
+    },
+    {
+      "id": "oracle_points_403",
+      "f1": 0.5974,
+      "precision": 1.0,
+      "recall": 0.5443,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/403.png"
+    },
+    {
+      "id": "oracle_points_408",
+      "f1": 0.1052,
+      "precision": 0.9964,
+      "recall": 0.0571,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/408.png"
+    },
+    {
+      "id": "oracle_points_41",
+      "f1": 0.379,
+      "precision": 0.488,
+      "recall": 0.3099,
+      "threshold": 0.0558,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/41.png"
+    },
+    {
+      "id": "oracle_points_410",
+      "f1": 0.4983,
+      "precision": 0.997,
+      "recall": 0.4326,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/410.png"
+    },
+    {
+      "id": "oracle_points_411",
+      "f1": 0.9676,
+      "precision": 0.998,
+      "recall": 0.9391,
+      "threshold": 0.0232,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/411.png"
+    },
+    {
+      "id": "oracle_points_412",
+      "f1": 0.9731,
+      "precision": 0.9983,
+      "recall": 0.9492,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/412.png"
+    },
+    {
+      "id": "oracle_points_414",
+      "f1": 0.6837,
+      "precision": 0.9983,
+      "recall": 0.5451,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/414.png"
+    },
+    {
+      "id": "oracle_points_416",
+      "f1": 0.9636,
+      "precision": 0.9979,
+      "recall": 0.9325,
+      "threshold": 0.0315,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/416.png"
+    },
+    {
+      "id": "oracle_points_417",
+      "f1": 0.5973,
+      "precision": 0.9981,
+      "recall": 0.5349,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/417.png"
+    },
+    {
+      "id": "oracle_points_418",
+      "f1": 0.2221,
+      "precision": 1.0,
+      "recall": 0.142,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/418.png"
+    },
+    {
+      "id": "oracle_points_422",
+      "f1": 0.5069,
+      "precision": 0.9982,
+      "recall": 0.5021,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/422.png"
+    },
+    {
+      "id": "oracle_points_423",
+      "f1": 0.9819,
+      "precision": 0.9991,
+      "recall": 0.9653,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/423.png"
+    },
+    {
+      "id": "oracle_points_424",
+      "f1": 0.4891,
+      "precision": 0.5,
+      "recall": 0.4787,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/424.png"
+    },
+    {
+      "id": "oracle_points_425",
+      "f1": 0.489,
+      "precision": 0.5079,
+      "recall": 0.4725,
+      "threshold": 0.1043,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/425.png"
+    },
+    {
+      "id": "oracle_points_426",
+      "f1": 0.4909,
+      "precision": 0.981,
+      "recall": 0.4799,
+      "threshold": 0.1939,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/426.png"
+    },
+    {
+      "id": "oracle_points_428",
+      "f1": 0.9788,
+      "precision": 0.9944,
+      "recall": 0.9637,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/428.png"
+    },
+    {
+      "id": "oracle_points_429",
+      "f1": 0.8128,
+      "precision": 0.9996,
+      "recall": 0.7114,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/429.png"
+    },
+    {
+      "id": "oracle_points_431",
+      "f1": 0.9768,
+      "precision": 0.9934,
+      "recall": 0.9608,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/431.png"
+    },
+    {
+      "id": "oracle_points_432",
+      "f1": 0.6667,
+      "precision": 0.9876,
+      "recall": 0.5377,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/432.png"
+    },
+    {
+      "id": "oracle_points_434",
+      "f1": 0.4129,
+      "precision": 0.999,
+      "recall": 0.3032,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/434.png"
+    },
+    {
+      "id": "oracle_points_44",
+      "f1": 0.3386,
+      "precision": 0.7433,
+      "recall": 0.4883,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/44.png"
+    },
+    {
+      "id": "oracle_points_440",
+      "f1": 0.087,
+      "precision": 0.9994,
+      "recall": 0.0476,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/440.png"
+    },
+    {
+      "id": "oracle_points_441",
+      "f1": 0.9788,
+      "precision": 0.9958,
+      "recall": 0.9624,
+      "threshold": 0.011,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/441.png"
+    },
+    {
+      "id": "oracle_points_442",
+      "f1": 0.5124,
+      "precision": 0.9889,
+      "recall": 0.4932,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/442.png"
+    },
+    {
+      "id": "oracle_points_443",
+      "f1": 0.4694,
+      "precision": 0.9976,
+      "recall": 0.4251,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/443.png"
+    },
+    {
+      "id": "oracle_points_444",
+      "f1": 0.9761,
+      "precision": 0.9982,
+      "recall": 0.955,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/444.png"
+    },
+    {
+      "id": "oracle_points_447",
+      "f1": 0.4795,
+      "precision": 0.9958,
+      "recall": 0.4616,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/447.png"
+    },
+    {
+      "id": "oracle_points_448",
+      "f1": 0.9813,
+      "precision": 0.9944,
+      "recall": 0.9686,
+      "threshold": 0.0801,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/448.png"
+    },
+    {
+      "id": "oracle_points_449",
+      "f1": 0.9804,
+      "precision": 0.9915,
+      "recall": 0.9699,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/449.png"
+    },
+    {
+      "id": "oracle_points_45",
+      "f1": 0.1081,
+      "precision": 0.5024,
+      "recall": 0.0606,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/45.png"
+    },
+    {
+      "id": "oracle_points_450",
+      "f1": 0.073,
+      "precision": 0.9787,
+      "recall": 0.0386,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/450.png"
+    },
+    {
+      "id": "oracle_points_451",
+      "f1": 0.9289,
+      "precision": 0.9998,
+      "recall": 0.8705,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/451.png"
+    },
+    {
+      "id": "oracle_points_452",
+      "f1": 0.476,
+      "precision": 0.9993,
+      "recall": 0.4504,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/452.png"
+    },
+    {
+      "id": "oracle_points_453",
+      "f1": 0.6212,
+      "precision": 0.9532,
+      "recall": 0.5126,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/453.png"
+    },
+    {
+      "id": "oracle_points_455",
+      "f1": 0.4739,
+      "precision": 0.9908,
+      "recall": 0.4268,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/455.png"
+    },
+    {
+      "id": "oracle_points_456",
+      "f1": 0.9386,
+      "precision": 0.981,
+      "recall": 0.9045,
+      "threshold": 0.0956,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/456.png"
+    },
+    {
+      "id": "oracle_points_457",
+      "f1": 0.7862,
+      "precision": 0.9926,
+      "recall": 0.6966,
+      "threshold": 0.0451,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/457.png"
+    },
+    {
+      "id": "oracle_points_461",
+      "f1": 0.9007,
+      "precision": 0.9966,
+      "recall": 0.8316,
+      "threshold": 0.0052,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/461.png"
+    },
+    {
+      "id": "oracle_points_463",
+      "f1": 0.4973,
+      "precision": 0.989,
+      "recall": 0.4155,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/463.png"
+    },
+    {
+      "id": "oracle_points_464",
+      "f1": 0.5012,
+      "precision": 0.9999,
+      "recall": 0.4824,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/464.png"
+    },
+    {
+      "id": "oracle_points_465",
+      "f1": 0.5102,
+      "precision": 1.0,
+      "recall": 0.4332,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/465.png"
+    },
+    {
+      "id": "oracle_points_466",
+      "f1": 0.4799,
+      "precision": 0.9445,
+      "recall": 0.4947,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/466.png"
+    },
+    {
+      "id": "oracle_points_467",
+      "f1": 0.0603,
+      "precision": 1.0,
+      "recall": 0.032,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/467.png"
+    },
+    {
+      "id": "oracle_points_468",
+      "f1": 0.958,
+      "precision": 0.9981,
+      "recall": 0.9211,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/468.png"
+    },
+    {
+      "id": "oracle_points_469",
+      "f1": 0.7113,
+      "precision": 0.9946,
+      "recall": 0.6307,
+      "threshold": 0.1161,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/469.png"
+    },
+    {
+      "id": "oracle_points_47",
+      "f1": 0.6269,
+      "precision": 1.0,
+      "recall": 0.49,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/47.png"
+    },
+    {
+      "id": "oracle_points_471",
+      "f1": 0.832,
+      "precision": 0.9915,
+      "recall": 0.7348,
+      "threshold": 0.0039,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/471.png"
+    },
+    {
+      "id": "oracle_points_472",
+      "f1": 0.5723,
+      "precision": 0.9967,
+      "recall": 0.4512,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/472.png"
+    },
+    {
+      "id": "oracle_points_473",
+      "f1": 0.2112,
+      "precision": 0.906,
+      "recall": 0.1209,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/473.png"
+    },
+    {
+      "id": "oracle_points_474",
+      "f1": 0.2722,
+      "precision": 0.4986,
+      "recall": 0.1891,
+      "threshold": 0.0795,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/474.png"
+    },
+    {
+      "id": "oracle_points_476",
+      "f1": 0.4545,
+      "precision": 0.9897,
+      "recall": 0.4203,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/476.png"
+    },
+    {
+      "id": "oracle_points_478",
+      "f1": 0.9719,
+      "precision": 0.9977,
+      "recall": 0.9476,
+      "threshold": 0.0357,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/478.png"
+    },
+    {
+      "id": "oracle_points_479",
+      "f1": 0.4886,
+      "precision": 0.9991,
+      "recall": 0.4647,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/479.png"
+    },
+    {
+      "id": "oracle_points_48",
+      "f1": 0.5375,
+      "precision": 0.9858,
+      "recall": 0.4934,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/48.png"
+    },
+    {
+      "id": "oracle_points_485",
+      "f1": 0.8368,
+      "precision": 0.9951,
+      "recall": 0.7535,
+      "threshold": 0.0258,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/485.png"
+    },
+    {
+      "id": "oracle_points_492",
+      "f1": 0.5043,
+      "precision": 0.9989,
+      "recall": 0.4936,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/492.png"
+    },
+    {
+      "id": "oracle_points_5",
+      "f1": 0.5163,
+      "precision": 0.9837,
+      "recall": 0.4913,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/5.png"
+    },
+    {
+      "id": "oracle_points_51",
+      "f1": 0.6641,
+      "precision": 1.0,
+      "recall": 0.5909,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/51.png"
+    },
+    {
+      "id": "oracle_points_56",
+      "f1": 0.5909,
+      "precision": 0.9953,
+      "recall": 0.5204,
+      "threshold": 0.0033,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/56.png"
+    },
+    {
+      "id": "oracle_points_58",
+      "f1": 0.4415,
+      "precision": 1.0,
+      "recall": 0.3799,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/58.png"
+    },
+    {
+      "id": "oracle_points_59",
+      "f1": 0.0711,
+      "precision": 0.9874,
+      "recall": 0.0377,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/59.png"
+    },
+    {
+      "id": "oracle_points_60",
+      "f1": 0.2363,
+      "precision": 1.0,
+      "recall": 0.134,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/60.png"
+    },
+    {
+      "id": "oracle_points_63",
+      "f1": 0.5715,
+      "precision": 0.9995,
+      "recall": 0.5235,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/63.png"
+    },
+    {
+      "id": "oracle_points_67",
+      "f1": 0.4817,
+      "precision": 0.8634,
+      "recall": 0.445,
+      "threshold": 0.1868,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/67.png"
+    },
+    {
+      "id": "oracle_points_69",
+      "f1": 0.3621,
+      "precision": 0.9969,
+      "recall": 0.2221,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/69.png"
+    },
+    {
+      "id": "oracle_points_70",
+      "f1": 0.027,
+      "precision": 1.0,
+      "recall": 0.0138,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/70.png"
+    },
+    {
+      "id": "oracle_points_71",
+      "f1": 0.949,
+      "precision": 0.9996,
+      "recall": 0.906,
+      "threshold": 0.3094,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/71.png"
+    },
+    {
+      "id": "oracle_points_73",
+      "f1": 0.5284,
+      "precision": 1.0,
+      "recall": 0.4444,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/73.png"
+    },
+    {
+      "id": "oracle_points_74",
+      "f1": 0.3423,
+      "precision": 0.9957,
+      "recall": 0.2353,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/74.png"
+    },
+    {
+      "id": "oracle_points_76",
+      "f1": 0.0188,
+      "precision": 1.0,
+      "recall": 0.0095,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/76.png"
+    },
+    {
+      "id": "oracle_points_77",
+      "f1": 0.0438,
+      "precision": 0.967,
+      "recall": 0.0227,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/77.png"
+    },
+    {
+      "id": "oracle_points_78",
+      "f1": 0.4977,
+      "precision": 0.9998,
+      "recall": 0.4774,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/78.png"
+    },
+    {
+      "id": "oracle_points_79",
+      "f1": 0.9426,
+      "precision": 0.9563,
+      "recall": 0.9321,
+      "threshold": 0.011,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/79.png"
+    },
+    {
+      "id": "oracle_points_8",
+      "f1": 0.4824,
+      "precision": 0.9985,
+      "recall": 0.4511,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/8.png"
+    },
+    {
+      "id": "oracle_points_84",
+      "f1": 0.613,
+      "precision": 0.999,
+      "recall": 0.5328,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/84.png"
+    },
+    {
+      "id": "oracle_points_85",
+      "f1": 0.4976,
+      "precision": 1.0,
+      "recall": 0.473,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/85.png"
+    },
+    {
+      "id": "oracle_points_86",
+      "f1": 0.9596,
+      "precision": 0.9796,
+      "recall": 0.9417,
+      "threshold": 0.163,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/86.png"
+    },
+    {
+      "id": "oracle_points_88",
+      "f1": 0.9502,
+      "precision": 0.9974,
+      "recall": 0.9078,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/88.png"
+    },
+    {
+      "id": "oracle_points_95",
+      "f1": 0.7925,
+      "precision": 0.9981,
+      "recall": 0.6997,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/95.png"
+    },
+    {
+      "id": "oracle_points_96",
+      "f1": 0.5169,
+      "precision": 1.0,
+      "recall": 0.5012,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/oracle_points/visuals/96.png"
+    },
+    {
+      "id": "text_1",
+      "f1": 0.9756,
+      "precision": 0.9957,
+      "recall": 0.9565,
+      "threshold": 0.0094,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/1.png"
+    },
+    {
+      "id": "text_101",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/101.png"
+    },
+    {
+      "id": "text_102",
+      "f1": 0.937,
+      "precision": 0.9963,
+      "recall": 0.8849,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/102.png"
+    },
+    {
+      "id": "text_103",
+      "f1": 0.9664,
+      "precision": 0.9779,
+      "recall": 0.9552,
+      "threshold": 0.4747,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/103.png"
+    },
+    {
+      "id": "text_104",
+      "f1": 0.4881,
+      "precision": 0.5,
+      "recall": 0.4767,
+      "threshold": 0.0151,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/104.png"
+    },
+    {
+      "id": "text_106",
+      "f1": 0.4598,
+      "precision": 0.4272,
+      "recall": 0.4977,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/106.png"
+    },
+    {
+      "id": "text_12",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/12.png"
+    },
+    {
+      "id": "text_121",
+      "f1": 0.96,
+      "precision": 0.9992,
+      "recall": 0.9238,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/121.png"
+    },
+    {
+      "id": "text_122",
+      "f1": 0.967,
+      "precision": 0.9812,
+      "recall": 0.9545,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/122.png"
+    },
+    {
+      "id": "text_125",
+      "f1": 0.494,
+      "precision": 0.4962,
+      "recall": 0.4918,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/125.png"
+    },
+    {
+      "id": "text_128",
+      "f1": 0.318,
+      "precision": 0.5,
+      "recall": 0.2331,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/128.png"
+    },
+    {
+      "id": "text_129",
+      "f1": 0.9599,
+      "precision": 0.9936,
+      "recall": 0.9298,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/129.png"
+    },
+    {
+      "id": "text_13",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/13.png"
+    },
+    {
+      "id": "text_134",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/134.png"
+    },
+    {
+      "id": "text_139",
+      "f1": 0.962,
+      "precision": 0.9877,
+      "recall": 0.9377,
+      "threshold": 0.0112,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/139.png"
+    },
+    {
+      "id": "text_14",
+      "f1": 0.9873,
+      "precision": 0.9998,
+      "recall": 0.9751,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/14.png"
+    },
+    {
+      "id": "text_142",
+      "f1": 0.4399,
+      "precision": 0.5,
+      "recall": 0.3929,
+      "threshold": 0.015,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/142.png"
+    },
+    {
+      "id": "text_149",
+      "f1": 0.926,
+      "precision": 0.965,
+      "recall": 0.8946,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/149.png"
+    },
+    {
+      "id": "text_15",
+      "f1": 0.0096,
+      "precision": 0.0127,
+      "recall": 0.0077,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/15.png"
+    },
+    {
+      "id": "text_175",
+      "f1": 0.8589,
+      "precision": 0.9883,
+      "recall": 0.7644,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/175.png"
+    },
+    {
+      "id": "text_176",
+      "f1": 0.8141,
+      "precision": 0.9721,
+      "recall": 0.7117,
+      "threshold": 0.0083,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/176.png"
+    },
+    {
+      "id": "text_18",
+      "f1": 0.8717,
+      "precision": 0.9966,
+      "recall": 0.7923,
+      "threshold": 0.1567,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/18.png"
+    },
+    {
+      "id": "text_181",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/181.png"
+    },
+    {
+      "id": "text_182",
+      "f1": 0.9662,
+      "precision": 0.9994,
+      "recall": 0.9361,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/182.png"
+    },
+    {
+      "id": "text_183",
+      "f1": 0.4963,
+      "precision": 0.5,
+      "recall": 0.4927,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/183.png"
+    },
+    {
+      "id": "text_184",
+      "f1": 0.3423,
+      "precision": 0.2636,
+      "recall": 0.4881,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/184.png"
+    },
+    {
+      "id": "text_185",
+      "f1": 0.4955,
+      "precision": 0.5,
+      "recall": 0.4912,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/185.png"
+    },
+    {
+      "id": "text_186",
+      "f1": 0.8189,
+      "precision": 1.0,
+      "recall": 0.6933,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/186.png"
+    },
+    {
+      "id": "text_189",
+      "f1": 0.9745,
+      "precision": 0.9747,
+      "recall": 0.9753,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/189.png"
+    },
+    {
+      "id": "text_194",
+      "f1": 0.4965,
+      "precision": 0.5,
+      "recall": 0.4931,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/194.png"
+    },
+    {
+      "id": "text_197",
+      "f1": 0.7751,
+      "precision": 0.6984,
+      "recall": 0.9745,
+      "threshold": 0.0238,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/197.png"
+    },
+    {
+      "id": "text_2",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/2.png"
+    },
+    {
+      "id": "text_200",
+      "f1": 0.9487,
+      "precision": 0.999,
+      "recall": 0.9063,
+      "threshold": 0.0341,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/200.png"
+    },
+    {
+      "id": "text_201",
+      "f1": 0.4946,
+      "precision": 0.4995,
+      "recall": 0.4897,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/201.png"
+    },
+    {
+      "id": "text_202",
+      "f1": 0.9908,
+      "precision": 0.9963,
+      "recall": 0.9854,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/202.png"
+    },
+    {
+      "id": "text_205",
+      "f1": 0.9662,
+      "precision": 1.0,
+      "recall": 0.9355,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/205.png"
+    },
+    {
+      "id": "text_207",
+      "f1": 0.9901,
+      "precision": 1.0,
+      "recall": 0.9804,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/207.png"
+    },
+    {
+      "id": "text_210",
+      "f1": 0.4817,
+      "precision": 0.4987,
+      "recall": 0.4657,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/210.png"
+    },
+    {
+      "id": "text_213",
+      "f1": 0.497,
+      "precision": 0.5,
+      "recall": 0.4941,
+      "threshold": 0.0187,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/213.png"
+    },
+    {
+      "id": "text_214",
+      "f1": 0.4971,
+      "precision": 0.5,
+      "recall": 0.4943,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/214.png"
+    },
+    {
+      "id": "text_215",
+      "f1": 0.4973,
+      "precision": 0.4999,
+      "recall": 0.4947,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/215.png"
+    },
+    {
+      "id": "text_216",
+      "f1": 0.0516,
+      "precision": 0.1358,
+      "recall": 0.0318,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/216.png"
+    },
+    {
+      "id": "text_219",
+      "f1": 0.9922,
+      "precision": 0.9964,
+      "recall": 0.9882,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/219.png"
+    },
+    {
+      "id": "text_22",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/22.png"
+    },
+    {
+      "id": "text_221",
+      "f1": 0.9951,
+      "precision": 0.9999,
+      "recall": 0.9903,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/221.png"
+    },
+    {
+      "id": "text_222",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/222.png"
+    },
+    {
+      "id": "text_224",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/224.png"
+    },
+    {
+      "id": "text_229",
+      "f1": 0.4985,
+      "precision": 0.4985,
+      "recall": 0.4986,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/229.png"
+    },
+    {
+      "id": "text_237",
+      "f1": 0.8317,
+      "precision": 0.7591,
+      "recall": 0.9727,
+      "threshold": 0.0139,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/237.png"
+    },
+    {
+      "id": "text_24",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/24.png"
+    },
+    {
+      "id": "text_240",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/240.png"
+    },
+    {
+      "id": "text_244",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/244.png"
+    },
+    {
+      "id": "text_245",
+      "f1": 0.9511,
+      "precision": 0.9959,
+      "recall": 0.9137,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/245.png"
+    },
+    {
+      "id": "text_246",
+      "f1": 0.8386,
+      "precision": 0.7596,
+      "recall": 0.9868,
+      "threshold": 0.0166,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/246.png"
+    },
+    {
+      "id": "text_247",
+      "f1": 0.4938,
+      "precision": 0.5,
+      "recall": 0.4877,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/247.png"
+    },
+    {
+      "id": "text_25",
+      "f1": 0.0022,
+      "precision": 0.0027,
+      "recall": 0.002,
+      "threshold": 0.0787,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/25.png"
+    },
+    {
+      "id": "text_250",
+      "f1": 0.976,
+      "precision": 0.9903,
+      "recall": 0.9624,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/250.png"
+    },
+    {
+      "id": "text_251",
+      "f1": 0.9927,
+      "precision": 0.9998,
+      "recall": 0.9857,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/251.png"
+    },
+    {
+      "id": "text_253",
+      "f1": 0.9302,
+      "precision": 0.9997,
+      "recall": 0.8729,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/253.png"
+    },
+    {
+      "id": "text_254",
+      "f1": 0.9888,
+      "precision": 0.9951,
+      "recall": 0.9828,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/254.png"
+    },
+    {
+      "id": "text_256",
+      "f1": 0.9892,
+      "precision": 0.9996,
+      "recall": 0.979,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/256.png"
+    },
+    {
+      "id": "text_257",
+      "f1": 0.0006,
+      "precision": 0.0008,
+      "recall": 0.0005,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/257.png"
+    },
+    {
+      "id": "text_258",
+      "f1": 0.4868,
+      "precision": 0.5,
+      "recall": 0.4742,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/258.png"
+    },
+    {
+      "id": "text_259",
+      "f1": 0.4867,
+      "precision": 0.4999,
+      "recall": 0.4741,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/259.png"
+    },
+    {
+      "id": "text_260",
+      "f1": 0.9905,
+      "precision": 1.0,
+      "recall": 0.9812,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/260.png"
+    },
+    {
+      "id": "text_261",
+      "f1": 0.4982,
+      "precision": 0.4966,
+      "recall": 0.4997,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/261.png"
+    },
+    {
+      "id": "text_262",
+      "f1": 0.4989,
+      "precision": 0.4997,
+      "recall": 0.4981,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/262.png"
+    },
+    {
+      "id": "text_263",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/263.png"
+    },
+    {
+      "id": "text_265",
+      "f1": 0.4809,
+      "precision": 0.4637,
+      "recall": 0.4994,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/265.png"
+    },
+    {
+      "id": "text_268",
+      "f1": 0.9937,
+      "precision": 0.9987,
+      "recall": 0.9888,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/268.png"
+    },
+    {
+      "id": "text_269",
+      "f1": 0.9405,
+      "precision": 0.9997,
+      "recall": 0.8898,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/269.png"
+    },
+    {
+      "id": "text_27",
+      "f1": 0.0067,
+      "precision": 0.0092,
+      "recall": 0.0053,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/27.png"
+    },
+    {
+      "id": "text_270",
+      "f1": 0.9749,
+      "precision": 0.9886,
+      "recall": 0.9626,
+      "threshold": 0.1735,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/270.png"
+    },
+    {
+      "id": "text_274",
+      "f1": 0.9571,
+      "precision": 1.0,
+      "recall": 0.9186,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/274.png"
+    },
+    {
+      "id": "text_276",
+      "f1": 0.8845,
+      "precision": 0.8193,
+      "recall": 0.9751,
+      "threshold": 0.054,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/276.png"
+    },
+    {
+      "id": "text_28",
+      "f1": 0.1808,
+      "precision": 0.1676,
+      "recall": 0.1963,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/28.png"
+    },
+    {
+      "id": "text_280",
+      "f1": 0.9263,
+      "precision": 0.9949,
+      "recall": 0.8691,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/280.png"
+    },
+    {
+      "id": "text_281",
+      "f1": 0.695,
+      "precision": 0.5343,
+      "recall": 0.9939,
+      "threshold": 0.0158,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/281.png"
+    },
+    {
+      "id": "text_282",
+      "f1": 0.496,
+      "precision": 0.497,
+      "recall": 0.4951,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/282.png"
+    },
+    {
+      "id": "text_288",
+      "f1": 0.4946,
+      "precision": 0.4932,
+      "recall": 0.496,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/288.png"
+    },
+    {
+      "id": "text_293",
+      "f1": 0.4964,
+      "precision": 0.4968,
+      "recall": 0.496,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/293.png"
+    },
+    {
+      "id": "text_294",
+      "f1": 0.9915,
+      "precision": 0.9992,
+      "recall": 0.9838,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/294.png"
+    },
+    {
+      "id": "text_299",
+      "f1": 0.9203,
+      "precision": 0.9977,
+      "recall": 0.8586,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/299.png"
+    },
+    {
+      "id": "text_3",
+      "f1": 0.3913,
+      "precision": 0.3729,
+      "recall": 0.4116,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/3.png"
+    },
+    {
+      "id": "text_30",
+      "f1": 0.9651,
+      "precision": 0.9937,
+      "recall": 0.9383,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/30.png"
+    },
+    {
+      "id": "text_300",
+      "f1": 0.9937,
+      "precision": 1.0,
+      "recall": 0.9874,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/300.png"
+    },
+    {
+      "id": "text_302",
+      "f1": 0.001,
+      "precision": 0.0011,
+      "recall": 0.0009,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/302.png"
+    },
+    {
+      "id": "text_303",
+      "f1": 0.9918,
+      "precision": 0.9991,
+      "recall": 0.9847,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/303.png"
+    },
+    {
+      "id": "text_304",
+      "f1": 0.7719,
+      "precision": 0.8197,
+      "recall": 0.7786,
+      "threshold": 0.048,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/304.png"
+    },
+    {
+      "id": "text_308",
+      "f1": 0.4459,
+      "precision": 0.4991,
+      "recall": 0.403,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/308.png"
+    },
+    {
+      "id": "text_310",
+      "f1": 0.0002,
+      "precision": 0.0001,
+      "recall": 0.0011,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/310.png"
+    },
+    {
+      "id": "text_311",
+      "f1": 0.969,
+      "precision": 0.9974,
+      "recall": 0.9423,
+      "threshold": 0.0058,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/311.png"
+    },
+    {
+      "id": "text_315",
+      "f1": 0.4968,
+      "precision": 0.4995,
+      "recall": 0.494,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/315.png"
+    },
+    {
+      "id": "text_318",
+      "f1": 0.9835,
+      "precision": 0.9983,
+      "recall": 0.9692,
+      "threshold": 0.0074,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/318.png"
+    },
+    {
+      "id": "text_319",
+      "f1": 0.491,
+      "precision": 0.5,
+      "recall": 0.4824,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/319.png"
+    },
+    {
+      "id": "text_322",
+      "f1": 0.4891,
+      "precision": 0.5,
+      "recall": 0.4786,
+      "threshold": 0.0396,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/322.png"
+    },
+    {
+      "id": "text_323",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/323.png"
+    },
+    {
+      "id": "text_324",
+      "f1": 0.4876,
+      "precision": 0.5,
+      "recall": 0.4758,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/324.png"
+    },
+    {
+      "id": "text_325",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/325.png"
+    },
+    {
+      "id": "text_327",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/327.png"
+    },
+    {
+      "id": "text_328",
+      "f1": 0.4875,
+      "precision": 0.4988,
+      "recall": 0.4767,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/328.png"
+    },
+    {
+      "id": "text_329",
+      "f1": 0.4834,
+      "precision": 0.4732,
+      "recall": 0.4941,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/329.png"
+    },
+    {
+      "id": "text_33",
+      "f1": 0.4927,
+      "precision": 0.499,
+      "recall": 0.4865,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/33.png"
+    },
+    {
+      "id": "text_330",
+      "f1": 0.3517,
+      "precision": 0.4972,
+      "recall": 0.2721,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/330.png"
+    },
+    {
+      "id": "text_331",
+      "f1": 0.8966,
+      "precision": 0.989,
+      "recall": 0.8267,
+      "threshold": 0.0041,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/331.png"
+    },
+    {
+      "id": "text_332",
+      "f1": 0.9722,
+      "precision": 0.9943,
+      "recall": 0.9515,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/332.png"
+    },
+    {
+      "id": "text_334",
+      "f1": 0.9548,
+      "precision": 0.9912,
+      "recall": 0.9214,
+      "threshold": 0.0238,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/334.png"
+    },
+    {
+      "id": "text_337",
+      "f1": 0.9847,
+      "precision": 0.9971,
+      "recall": 0.9726,
+      "threshold": 0.0077,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/337.png"
+    },
+    {
+      "id": "text_34",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/34.png"
+    },
+    {
+      "id": "text_342",
+      "f1": 0.406,
+      "precision": 0.4993,
+      "recall": 0.3421,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/342.png"
+    },
+    {
+      "id": "text_343",
+      "f1": 0.4835,
+      "precision": 0.4998,
+      "recall": 0.4682,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/343.png"
+    },
+    {
+      "id": "text_344",
+      "f1": 0.4948,
+      "precision": 0.4975,
+      "recall": 0.4921,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/344.png"
+    },
+    {
+      "id": "text_345",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/345.png"
+    },
+    {
+      "id": "text_346",
+      "f1": 0.4802,
+      "precision": 0.5,
+      "recall": 0.462,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/346.png"
+    },
+    {
+      "id": "text_347",
+      "f1": 0.4781,
+      "precision": 0.4997,
+      "recall": 0.4583,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/347.png"
+    },
+    {
+      "id": "text_349",
+      "f1": 0.7181,
+      "precision": 0.6396,
+      "recall": 0.9757,
+      "threshold": 0.0289,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/349.png"
+    },
+    {
+      "id": "text_350",
+      "f1": 0.4934,
+      "precision": 0.5,
+      "recall": 0.4869,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/350.png"
+    },
+    {
+      "id": "text_351",
+      "f1": 0.0005,
+      "precision": 0.0005,
+      "recall": 0.0006,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/351.png"
+    },
+    {
+      "id": "text_352",
+      "f1": 0.9675,
+      "precision": 0.9758,
+      "recall": 0.9597,
+      "threshold": 0.0043,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/352.png"
+    },
+    {
+      "id": "text_357",
+      "f1": 0.4961,
+      "precision": 0.495,
+      "recall": 0.4973,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/357.png"
+    },
+    {
+      "id": "text_358",
+      "f1": 0.596,
+      "precision": 0.5596,
+      "recall": 0.9635,
+      "threshold": 0.0091,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/358.png"
+    },
+    {
+      "id": "text_359",
+      "f1": 0.4863,
+      "precision": 0.5,
+      "recall": 0.4733,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/359.png"
+    },
+    {
+      "id": "text_36",
+      "f1": 0.9819,
+      "precision": 0.9902,
+      "recall": 0.974,
+      "threshold": 0.0053,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/36.png"
+    },
+    {
+      "id": "text_362",
+      "f1": 0.8522,
+      "precision": 0.9934,
+      "recall": 0.768,
+      "threshold": 0.0571,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/362.png"
+    },
+    {
+      "id": "text_364",
+      "f1": 0.0016,
+      "precision": 0.0011,
+      "recall": 0.0026,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/364.png"
+    },
+    {
+      "id": "text_365",
+      "f1": 0.4803,
+      "precision": 0.4778,
+      "recall": 0.483,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/365.png"
+    },
+    {
+      "id": "text_366",
+      "f1": 0.4678,
+      "precision": 0.4978,
+      "recall": 0.4412,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/366.png"
+    },
+    {
+      "id": "text_371",
+      "f1": 0.976,
+      "precision": 0.99,
+      "recall": 0.9624,
+      "threshold": 0.0941,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/371.png"
+    },
+    {
+      "id": "text_373",
+      "f1": 0.8194,
+      "precision": 0.9975,
+      "recall": 0.7183,
+      "threshold": 0.0065,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/373.png"
+    },
+    {
+      "id": "text_374",
+      "f1": 0.9619,
+      "precision": 0.9798,
+      "recall": 0.945,
+      "threshold": 0.0376,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/374.png"
+    },
+    {
+      "id": "text_376",
+      "f1": 0.5679,
+      "precision": 0.973,
+      "recall": 0.5287,
+      "threshold": 0.0286,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/376.png"
+    },
+    {
+      "id": "text_377",
+      "f1": 0.7185,
+      "precision": 0.9999,
+      "recall": 0.6118,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/377.png"
+    },
+    {
+      "id": "text_378",
+      "f1": 0.455,
+      "precision": 0.4805,
+      "recall": 0.4321,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/378.png"
+    },
+    {
+      "id": "text_380",
+      "f1": 0.4799,
+      "precision": 0.4725,
+      "recall": 0.4875,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/380.png"
+    },
+    {
+      "id": "text_383",
+      "f1": 0.9485,
+      "precision": 0.9904,
+      "recall": 0.9108,
+      "threshold": 0.0385,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/383.png"
+    },
+    {
+      "id": "text_387",
+      "f1": 0.705,
+      "precision": 0.9903,
+      "recall": 0.6229,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/387.png"
+    },
+    {
+      "id": "text_389",
+      "f1": 0.4839,
+      "precision": 0.4953,
+      "recall": 0.473,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/389.png"
+    },
+    {
+      "id": "text_39",
+      "f1": 0.4156,
+      "precision": 0.4972,
+      "recall": 0.3571,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/39.png"
+    },
+    {
+      "id": "text_391",
+      "f1": 0.9663,
+      "precision": 0.9928,
+      "recall": 0.9414,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/391.png"
+    },
+    {
+      "id": "text_392",
+      "f1": 0.0008,
+      "precision": 0.0008,
+      "recall": 0.0008,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/392.png"
+    },
+    {
+      "id": "text_393",
+      "f1": 0.4889,
+      "precision": 0.4916,
+      "recall": 0.4863,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/393.png"
+    },
+    {
+      "id": "text_394",
+      "f1": 0.9833,
+      "precision": 0.9964,
+      "recall": 0.9704,
+      "threshold": 0.005,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/394.png"
+    },
+    {
+      "id": "text_395",
+      "f1": 0.9807,
+      "precision": 0.9935,
+      "recall": 0.9682,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/395.png"
+    },
+    {
+      "id": "text_398",
+      "f1": 0.4838,
+      "precision": 0.4861,
+      "recall": 0.4814,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/398.png"
+    },
+    {
+      "id": "text_4",
+      "f1": 0.9833,
+      "precision": 0.9911,
+      "recall": 0.9756,
+      "threshold": 0.0174,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/4.png"
+    },
+    {
+      "id": "text_40",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/40.png"
+    },
+    {
+      "id": "text_400",
+      "f1": 0.201,
+      "precision": 0.4965,
+      "recall": 0.126,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/400.png"
+    },
+    {
+      "id": "text_403",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/403.png"
+    },
+    {
+      "id": "text_408",
+      "f1": 0.9564,
+      "precision": 0.9839,
+      "recall": 0.9304,
+      "threshold": 0.0246,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/408.png"
+    },
+    {
+      "id": "text_41",
+      "f1": 0.8492,
+      "precision": 0.9321,
+      "recall": 0.7863,
+      "threshold": 0.2169,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/41.png"
+    },
+    {
+      "id": "text_410",
+      "f1": 0.4934,
+      "precision": 0.5,
+      "recall": 0.487,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/410.png"
+    },
+    {
+      "id": "text_411",
+      "f1": 0.971,
+      "precision": 0.9974,
+      "recall": 0.946,
+      "threshold": 0.0155,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/411.png"
+    },
+    {
+      "id": "text_412",
+      "f1": 0.9756,
+      "precision": 0.9979,
+      "recall": 0.9543,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/412.png"
+    },
+    {
+      "id": "text_414",
+      "f1": 0.9431,
+      "precision": 0.9988,
+      "recall": 0.8953,
+      "threshold": 0.0059,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/414.png"
+    },
+    {
+      "id": "text_416",
+      "f1": 0.4934,
+      "precision": 0.5,
+      "recall": 0.4869,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/416.png"
+    },
+    {
+      "id": "text_417",
+      "f1": 0.9656,
+      "precision": 0.9909,
+      "recall": 0.9415,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/417.png"
+    },
+    {
+      "id": "text_418",
+      "f1": 0.4732,
+      "precision": 0.4864,
+      "recall": 0.4606,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/418.png"
+    },
+    {
+      "id": "text_422",
+      "f1": 0.9925,
+      "precision": 0.9977,
+      "recall": 0.9873,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/422.png"
+    },
+    {
+      "id": "text_423",
+      "f1": 0.2571,
+      "precision": 0.1744,
+      "recall": 0.4891,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/423.png"
+    },
+    {
+      "id": "text_424",
+      "f1": 0.9863,
+      "precision": 0.9979,
+      "recall": 0.9751,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/424.png"
+    },
+    {
+      "id": "text_425",
+      "f1": 0.9523,
+      "precision": 0.9711,
+      "recall": 0.9349,
+      "threshold": 0.0283,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/425.png"
+    },
+    {
+      "id": "text_426",
+      "f1": 0.0026,
+      "precision": 0.0022,
+      "recall": 0.0034,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/426.png"
+    },
+    {
+      "id": "text_428",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/428.png"
+    },
+    {
+      "id": "text_429",
+      "f1": 0.4903,
+      "precision": 0.499,
+      "recall": 0.4818,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/429.png"
+    },
+    {
+      "id": "text_431",
+      "f1": 0.9806,
+      "precision": 0.9935,
+      "recall": 0.968,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/431.png"
+    },
+    {
+      "id": "text_432",
+      "f1": 0.9134,
+      "precision": 0.9881,
+      "recall": 0.8526,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/432.png"
+    },
+    {
+      "id": "text_434",
+      "f1": 0.812,
+      "precision": 0.9977,
+      "recall": 0.6944,
+      "threshold": 0.0382,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/434.png"
+    },
+    {
+      "id": "text_44",
+      "f1": 0.3387,
+      "precision": 0.5,
+      "recall": 0.2585,
+      "threshold": 0.0408,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/44.png"
+    },
+    {
+      "id": "text_440",
+      "f1": 0.0016,
+      "precision": 0.0061,
+      "recall": 0.0009,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/440.png"
+    },
+    {
+      "id": "text_441",
+      "f1": 0.9823,
+      "precision": 0.9923,
+      "recall": 0.9725,
+      "threshold": 0.0538,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/441.png"
+    },
+    {
+      "id": "text_442",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/442.png"
+    },
+    {
+      "id": "text_443",
+      "f1": 0.9129,
+      "precision": 0.9707,
+      "recall": 0.8629,
+      "threshold": 0.0035,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/443.png"
+    },
+    {
+      "id": "text_444",
+      "f1": 0.9765,
+      "precision": 0.9969,
+      "recall": 0.9569,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/444.png"
+    },
+    {
+      "id": "text_447",
+      "f1": 0.4897,
+      "precision": 0.5001,
+      "recall": 0.4799,
+      "threshold": 0.0249,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/447.png"
+    },
+    {
+      "id": "text_448",
+      "f1": 0.9829,
+      "precision": 0.9937,
+      "recall": 0.9724,
+      "threshold": 0.1157,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/448.png"
+    },
+    {
+      "id": "text_449",
+      "f1": 0.981,
+      "precision": 0.9915,
+      "recall": 0.9709,
+      "threshold": 0.022,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/449.png"
+    },
+    {
+      "id": "text_45",
+      "f1": 0.4977,
+      "precision": 0.4988,
+      "recall": 0.4967,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/45.png"
+    },
+    {
+      "id": "text_450",
+      "f1": 0.4876,
+      "precision": 0.4915,
+      "recall": 0.4838,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/450.png"
+    },
+    {
+      "id": "text_451",
+      "f1": 0.9727,
+      "precision": 0.9995,
+      "recall": 0.9473,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/451.png"
+    },
+    {
+      "id": "text_452",
+      "f1": 0.4922,
+      "precision": 0.4992,
+      "recall": 0.4853,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/452.png"
+    },
+    {
+      "id": "text_453",
+      "f1": 0.3123,
+      "precision": 0.5,
+      "recall": 0.227,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/453.png"
+    },
+    {
+      "id": "text_455",
+      "f1": 0.4645,
+      "precision": 0.5,
+      "recall": 0.4337,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/455.png"
+    },
+    {
+      "id": "text_456",
+      "f1": 0.9448,
+      "precision": 0.9795,
+      "recall": 0.9162,
+      "threshold": 0.0258,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/456.png"
+    },
+    {
+      "id": "text_457",
+      "f1": 0.485,
+      "precision": 0.5,
+      "recall": 0.4709,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/457.png"
+    },
+    {
+      "id": "text_461",
+      "f1": 0.0027,
+      "precision": 0.0035,
+      "recall": 0.0023,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/461.png"
+    },
+    {
+      "id": "text_463",
+      "f1": 0.9676,
+      "precision": 0.9829,
+      "recall": 0.9541,
+      "threshold": 0.0678,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/463.png"
+    },
+    {
+      "id": "text_464",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/464.png"
+    },
+    {
+      "id": "text_465",
+      "f1": 0.4823,
+      "precision": 1.0,
+      "recall": 0.3904,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/465.png"
+    },
+    {
+      "id": "text_466",
+      "f1": 0.456,
+      "precision": 0.5,
+      "recall": 0.419,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/466.png"
+    },
+    {
+      "id": "text_467",
+      "f1": 0.4571,
+      "precision": 0.4579,
+      "recall": 0.4563,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/467.png"
+    },
+    {
+      "id": "text_468",
+      "f1": 0.9732,
+      "precision": 0.9985,
+      "recall": 0.9493,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/468.png"
+    },
+    {
+      "id": "text_469",
+      "f1": 0.9726,
+      "precision": 0.9974,
+      "recall": 0.9492,
+      "threshold": 0.0095,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/469.png"
+    },
+    {
+      "id": "text_47",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/47.png"
+    },
+    {
+      "id": "text_471",
+      "f1": 0.0104,
+      "precision": 0.0084,
+      "recall": 0.0136,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/471.png"
+    },
+    {
+      "id": "text_472",
+      "f1": 0.4717,
+      "precision": 0.4958,
+      "recall": 0.4499,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/472.png"
+    },
+    {
+      "id": "text_473",
+      "f1": 0.8952,
+      "precision": 0.9806,
+      "recall": 0.8235,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/473.png"
+    },
+    {
+      "id": "text_474",
+      "f1": 0.3296,
+      "precision": 0.4966,
+      "recall": 0.2479,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/474.png"
+    },
+    {
+      "id": "text_476",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/476.png"
+    },
+    {
+      "id": "text_478",
+      "f1": 0.9731,
+      "precision": 0.9981,
+      "recall": 0.9496,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/478.png"
+    },
+    {
+      "id": "text_479",
+      "f1": 0.4843,
+      "precision": 0.5001,
+      "recall": 0.4704,
+      "threshold": 0.0779,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/479.png"
+    },
+    {
+      "id": "text_48",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/48.png"
+    },
+    {
+      "id": "text_485",
+      "f1": 0.9777,
+      "precision": 0.9962,
+      "recall": 0.9602,
+      "threshold": 0.0065,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/485.png"
+    },
+    {
+      "id": "text_492",
+      "f1": 0.9893,
+      "precision": 0.9968,
+      "recall": 0.982,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/492.png"
+    },
+    {
+      "id": "text_5",
+      "f1": 0.0005,
+      "precision": 0.0026,
+      "recall": 0.0003,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/5.png"
+    },
+    {
+      "id": "text_51",
+      "f1": 0.9944,
+      "precision": 0.9981,
+      "recall": 0.9907,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/51.png"
+    },
+    {
+      "id": "text_56",
+      "f1": 0.9656,
+      "precision": 0.9979,
+      "recall": 0.9356,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/56.png"
+    },
+    {
+      "id": "text_58",
+      "f1": 0.9262,
+      "precision": 0.9946,
+      "recall": 0.8751,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/58.png"
+    },
+    {
+      "id": "text_59",
+      "f1": 0.9604,
+      "precision": 0.9958,
+      "recall": 0.9275,
+      "threshold": 0.1839,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/59.png"
+    },
+    {
+      "id": "text_60",
+      "f1": 0.9911,
+      "precision": 0.9974,
+      "recall": 0.9849,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/60.png"
+    },
+    {
+      "id": "text_63",
+      "f1": 0.383,
+      "precision": 0.4996,
+      "recall": 0.3105,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/63.png"
+    },
+    {
+      "id": "text_67",
+      "f1": 0.0053,
+      "precision": 0.0073,
+      "recall": 0.0041,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/67.png"
+    },
+    {
+      "id": "text_69",
+      "f1": 0.648,
+      "precision": 0.4973,
+      "recall": 0.9321,
+      "threshold": 0.0132,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/69.png"
+    },
+    {
+      "id": "text_70",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/70.png"
+    },
+    {
+      "id": "text_71",
+      "f1": 0.9519,
+      "precision": 0.9983,
+      "recall": 0.9128,
+      "threshold": 0.9086,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/71.png"
+    },
+    {
+      "id": "text_73",
+      "f1": 0.8109,
+      "precision": 0.747,
+      "recall": 0.9344,
+      "threshold": 0.0268,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/73.png"
+    },
+    {
+      "id": "text_74",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/74.png"
+    },
+    {
+      "id": "text_76",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/76.png"
+    },
+    {
+      "id": "text_77",
+      "f1": 0.4235,
+      "precision": 0.486,
+      "recall": 0.3752,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/77.png"
+    },
+    {
+      "id": "text_78",
+      "f1": 0.9785,
+      "precision": 0.9987,
+      "recall": 0.9591,
+      "threshold": 0.0204,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/78.png"
+    },
+    {
+      "id": "text_79",
+      "f1": 0.9404,
+      "precision": 0.9573,
+      "recall": 0.9259,
+      "threshold": 0.0028,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/79.png"
+    },
+    {
+      "id": "text_8",
+      "f1": 0.4731,
+      "precision": 0.4979,
+      "recall": 0.4507,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/8.png"
+    },
+    {
+      "id": "text_84",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/84.png"
+    },
+    {
+      "id": "text_85",
+      "f1": 0.9842,
+      "precision": 0.9998,
+      "recall": 0.9695,
+      "threshold": 0.0145,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/85.png"
+    },
+    {
+      "id": "text_86",
+      "f1": 0.4782,
+      "precision": 0.5,
+      "recall": 0.4583,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/86.png"
+    },
+    {
+      "id": "text_88",
+      "f1": 0.4824,
+      "precision": 0.4979,
+      "recall": 0.4679,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/88.png"
+    },
+    {
+      "id": "text_95",
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.0,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/95.png"
+    },
+    {
+      "id": "text_96",
+      "f1": 0.756,
+      "precision": 0.7426,
+      "recall": 0.8723,
+      "threshold": 0.0143,
+      "original_path": "/home/nada/PycharmProjects/research-site/experiments/sam3-rwtd-both-test-visuals/text/visuals/96.png"
+    }
+  ]
+}
