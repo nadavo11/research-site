@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Research Runs - Overview</title>
   <link rel="stylesheet" href="assets/site.css" />
 </head>
+
 <body>
   <main>
     <section class="hero">
       <h1>Research Runs</h1>
-      <p>One page per run. Start here for what changed, what improved, where quality failed, and which artifacts can reproduce the result.</p>
+      <p>One page per run. Start here for what changed, what improved, where quality failed, and which artifacts can
+        reproduce the result.</p>
       <p style="margin-top: 12px;"><a class="btn" href="/admin/index.html">Edit Site</a></p>
     </section>
 
@@ -44,6 +47,15 @@
       </div>
       <div class="card-grid">
         <article class="card" data-exp-card data-domain="edge">
+          <p><span class="tag good">milestone</span><span class="tag">edge detection</span><span class="tag">full
+              train</span></p>
+          <h3>RWTD edge — BSDS→SynthPerlin LoRA full EMA init</h3>
+          <p class="kv"><strong>Date:</strong> 2026-03-12</p>
+          <p class="kv"><strong>Primary metric:</strong> edge/AP = 0.5878, delta +0.1745 vs zero-shot.</p>
+          <a class="btn" href="experiments/2026-03-12_edge_rwtd_diffedge_lorac_bsdsft/index.html">Open report</a>
+        </article>
+
+        <article class="card" data-exp-card data-domain="edge">
           <p><span class="tag good">reviewed</span><span class="tag">edge detection</span></p>
           <h3>RWTD synthetic domain - DiffEdge LoRA C 64-shot</h3>
           <p class="kv"><strong>Date:</strong> 2026-03-10</p>
@@ -76,6 +88,13 @@
           </thead>
           <tbody>
             <tr>
+              <td>2026-03-12_edge_rwtd_diffedge_lorac_bsdsft</td>
+              <td>edge/AP = 0.5878</td>
+              <td>0.4133 (synthetic zero-shot)</td>
+              <td style="color:#1d7a3e;"><strong>+0.1745</strong></td>
+              <td>Best AP — full-data EMA init training substantially outperforms few-shot variants.</td>
+            </tr>
+            <tr>
               <td>2026-03-10_edge_rwtd_diffedge_lorac_64shot</td>
               <td>edge/AP = 0.4845</td>
               <td>0.4133 (synthetic zero-shot)</td>
@@ -94,8 +113,9 @@
       </div>
     </section>
 
-    <footer>Updated for readability and navigation: 2026-03-10.</footer>
+    <footer>Updated for readability and navigation: 2026-03-12.</footer>
   </main>
   <script src="assets/site.js"></script>
 </body>
+
 </html>

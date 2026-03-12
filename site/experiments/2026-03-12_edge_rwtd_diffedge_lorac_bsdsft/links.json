@@ -1,0 +1,8 @@
+{
+    "full_outputs": "experiments/bsds_to_synthperlin_lora_full_ema_init/eval/",
+    "checkpoint": "experiments/bsds_to_synthperlin_lora_full_ema_init/train_artifacts/",
+    "raw_logs": "experiments/bsds_to_synthperlin_lora_full_ema_init/eval/eval_results.json",
+    "external_bundle": "experiments/bsds_to_synthperlin_lora_full_ema_init/",
+    "run_config": "experiments/bsds_to_synthperlin_lora_full_ema_init/run_config.yaml",
+    "eval_config": "experiments/bsds_to_synthperlin_lora_full_ema_init/resolved_eval_cfg.yaml"
+}

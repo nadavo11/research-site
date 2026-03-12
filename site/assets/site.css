@@ -288,3 +288,20 @@ code {
 @media (max-width: 980px) {
   .stage-grid { grid-template-columns: 1fr; }
 }
+
+.gallery-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gallery-controls select {
+  font: inherit;
+  border: 1px solid #7bb2c0;
+  background: #edf7fb;
+  color: #0d3b4c;
+  border-radius: 999px;
+  padding: 5px 12px;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+.gallery-controls select:hover { background: #dff0f7; }

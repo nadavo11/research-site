@@ -1,0 +1,75 @@
+run_name: 2026-03-12_edge_rwtd_diffedge_lorac_bsdsft
+title: RWTD edge detection — BSDS to SynthPerlin LoRA full EMA init
+date: 2026-03-12
+author: nadavo11
+
+task:
+  family: edge_detection
+  subtype: lora_finetune_eval
+
+status:
+  stage: completed
+  verdict: milestone
+  publish: true
+
+dataset:
+  name: RWTD
+  split: val
+  source_type: synthetic_perlin_stitched
+
+model:
+  name: DiffusionEdge
+  base_checkpoint: bsds.pt
+  adaptation: lora
+  preset: C
+
+config:
+  seed: 0
+  overrides:
+    lr: 1e-4
+    rank: 128
+    alpha: 128
+    dropout: 0.05
+    lora_preset: relation_qkvo_plus_initconv
+    train_num_steps: 4000
+    source_domain: bsds_wild
+    target_dataset: synthetic_texture_perlin
+
+code:
+  git_commit: f306ae7
+  repo: research-site
+
+evaluation:
+  primary_metric: edge/AP
+  metrics_file: metrics.json
+
+visual_standard:
+  sample_list_name: rwtd_val_fixed_ids_85_96_181_244_441
+  example_count: 8
+
+gallery_contract:
+  layout_mode: hybrid
+  tile_heights:
+    stage_cards_px: 170
+    topic_cards_px: 160
+  caption_fields:
+    - sample_id
+    - order_index
+    - status_or_decision
+  zoom_enabled: true
+  metadata_pills: true
+
+assets:
+  representative_count: 8
+  failure_count: 4
+  qc_count: 3
+
+tags:
+  - rwtd
+  - diffedge
+  - lora
+  - preset_c
+  - bsds_init
+  - ema
+  - synthperlin
+  - full_train

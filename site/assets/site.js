@@ -37,4 +37,24 @@
       });
     });
   }
+
+  /* Gallery sort by data-score */
+  document.querySelectorAll('[data-sort-gallery]').forEach((sel) => {
+    const galleryId = sel.getAttribute('data-sort-gallery');
+    const gallery = document.getElementById(galleryId);
+    if (!gallery) return;
+    const original = Array.from(gallery.children);
+    sel.addEventListener('change', () => {
+      const items = Array.from(gallery.children);
+      let sorted;
+      if (sel.value === 'asc') {
+        sorted = items.slice().sort((a, b) => (parseFloat(a.dataset.score) || 0) - (parseFloat(b.dataset.score) || 0));
+      } else if (sel.value === 'desc') {
+        sorted = items.slice().sort((a, b) => (parseFloat(b.dataset.score) || 0) - (parseFloat(a.dataset.score) || 0));
+      } else {
+        sorted = original;
+      }
+      sorted.forEach((el) => gallery.appendChild(el));
+    });
+  });
 })();
