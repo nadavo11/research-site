@@ -135,7 +135,7 @@
                     <option value="all">All Methods</option>
                     <option value="oracle_points">Oracle Points</option>
                     <option value="text">Text Prompts</option>
-                    <option value="baseline" disabled>Baseline (No visuals saved)</option>
+                    <option value="baseline">Unprompted Baseline</option>
                 </select>
                 <label for="filterF1">Min F1:</label>
                 <input type="range" id="filterF1" min="0" max="100" value="0" />
@@ -210,7 +210,7 @@
                     const cls = f1Class(img.f1);
                     return '<figure>' +
                         '<span class="f1-badge">F1 ' + img.f1.toFixed(3) + '</span>' +
-                        '<img src="assets/all_previews/' + img.id + '.png" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.id + '.png" />' +
+                        '<img src="assets/all_previews/' + img.file_path + '" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
                         '<div class="metrics-bar">' +
                         '<span class="pill">id=' + img.id.split('_').slice(-1)[0] + '</span>' +
                         '<span class="pill">rank ' + (i + 1) + '/' + items.length + '</span><br/>' +

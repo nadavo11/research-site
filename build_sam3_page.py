@@ -9,9 +9,10 @@ dest_dir = Path('/home/nada/PycharmProjects/research-site/site/experiments/sam3-
 # Create directories
 os.makedirs(dest_dir, exist_ok=True)
 os.makedirs(dest_dir / 'repro', exist_ok=True)
-os.makedirs(dest_dir / 'assets/gallery', exist_ok=True)
-os.makedirs(dest_dir / 'assets/qc', exist_ok=True)
-os.makedirs(dest_dir / 'assets/all_previews', exist_ok=True)
+for sub in ['oracle_points', 'text', 'baseline']:
+    os.makedirs(dest_dir / 'assets/gallery' / sub, exist_ok=True)
+    os.makedirs(dest_dir / 'assets/qc' / sub, exist_ok=True)
+    os.makedirs(dest_dir / 'assets/all_previews' / sub, exist_ok=True)
 
 # 1. Coping config and terms
 shutil.copy(source_dir / 'config.json', dest_dir / 'repro/config.json')
@@ -66,6 +67,7 @@ with open(dest_dir / 'links.json', 'w') as f:
     json.dump({}, f)
 
 # 5. Process visuals and build training_data.json
+import pandas as pd
 training_data = {
     "learning_curves": {
         "steps": [],
@@ -79,55 +81,95 @@ training_data = {
 
 all_samples = []
 
-protocols = ['oracle_points', 'text']
-for protocol in protocols:
-    manifest_path = source_dir / protocol / 'visuals_manifest.jsonl'
-    vis_dir = source_dir / protocol / 'visuals'
-    
-    with open(manifest_path, 'r') as f:
-        for line in f:
-            data = json.loads(line.strip())
-            file_name_orig = data['visual_path'].split('/')[-1]
-            new_file_name = f"{protocol}_{file_name_orig}"
-            
-            # Map metrics to standard names for gallery
-            f1 = data['sample_macro_dice']
-            precision = data['sample_macro_precision']
-            recall = data['sample_macro_recall']
-            threshold = data['boundary_dice']
-            
-            training_data["per_image"].append({
-                "id": new_file_name.replace('.png', ''),
-                "f1": round(f1, 4),
-                "precision": round(precision, 4),
-                "recall": round(recall, 4),
-                "threshold": round(threshold, 4),
-                "original_path": str(vis_dir / file_name_orig)
-            })
-            
-            all_samples.append({
-                "name": new_file_name,
-                "f1": f1,
-                "path": vis_dir / file_name_orig
-            })
+# Load baseline CSV for baseline metrics
+baseline_csv = Path('/home/nada/PycharmProjects/research-site/experiments/full_all/dense/per_sample_metrics.csv')
+baseline_df = pd.read_csv(baseline_csv)
+baseline_metrics_map = {}
+for _, row in baseline_df.iterrows():
+    c_name = str(row['crop_name']).replace('.jpg', '').replace('.png', '')
+    baseline_metrics_map[c_name + '.png'] = row['miou_agg']
 
-            # Copy to all_previews
-            shutil.copy(vis_dir / file_name_orig, dest_dir / 'assets/all_previews' / new_file_name)
+protocols_config = [
+    ('oracle_points', source_dir / 'oracle_points'),
+    ('text', source_dir / 'text'),
+    ('baseline', Path('/home/nada/PycharmProjects/research-site/experiments/test_dense'))
+]
+
+for protocol, p_dir in protocols_config:
+    manifest_path = p_dir / 'visuals_manifest.jsonl'
+    vis_dir = p_dir / 'visuals'
+    
+    if protocol != 'baseline':
+        if not manifest_path.exists(): continue
+        with open(manifest_path, 'r') as f:
+            for line in f:
+                data = json.loads(line.strip())
+                file_name_orig = data['visual_path'].split('/')[-1]
+                img_id = f"{protocol}_{file_name_orig.replace('.png', '')}"
+                
+                f1 = data['sample_macro_dice']
+                precision = data['sample_macro_precision']
+                recall = data['sample_macro_recall']
+                threshold = data['boundary_dice']
+                
+                rel_path = f"{protocol}/{file_name_orig}"
+                training_data["per_image"].append({
+                    "id": img_id,
+                    "f1": round(f1, 4),
+                    "precision": round(precision, 4),
+                    "recall": round(recall, 4),
+                    "threshold": round(threshold, 4),
+                    "file_path": rel_path
+                })
+                all_samples.append({
+                    "name": file_name_orig,
+                    "protocol": protocol,
+                    "f1": f1,
+                    "src_path": vis_dir / file_name_orig,
+                    "dest_rel": rel_path
+                })
+                # Copy to all_previews/{protocol}
+                shutil.copy(vis_dir / file_name_orig, dest_dir / 'assets/all_previews' / protocol / file_name_orig)
+    else:
+        # Baseline uses the loose visuals from test_dense and CSV for metrics
+        if not vis_dir.exists(): continue
+        for img_path in vis_dir.glob('*.png'):
+            file_name_orig = img_path.name
+            img_id = f"{protocol}_{file_name_orig.replace('.png', '')}"
+            
+            f1 = baseline_metrics_map.get(file_name_orig, 0)
+            rel_path = f"{protocol}/{file_name_orig}"
+            training_data["per_image"].append({
+                "id": img_id,
+                "f1": round(f1, 4),
+                "precision": 0,
+                "recall": 0,
+                "threshold": 0,
+                "file_path": rel_path
+            })
+            all_samples.append({
+                "name": file_name_orig,
+                "protocol": protocol,
+                "f1": f1,
+                "src_path": img_path,
+                "dest_rel": rel_path
+            })
+            shutil.copy(img_path, dest_dir / 'assets/all_previews' / protocol / file_name_orig)
 
 # Sort by F1 to pick top 8 for gallery and bottom 4 for QC
 all_samples.sort(key=lambda x: x['f1'], reverse=True)
 
 # Pick top 8 representing oracle_points if possible
-gallery_samples = [s for s in all_samples if s['name'].startswith('oracle_points')][:8]
-qc_samples = [s for s in all_samples if s['name'].startswith('oracle_points') and s['f1'] < 0.2][:4]
+gallery_samples = [s for s in all_samples if s['protocol'] == 'oracle_points'][:8]
+qc_samples = [s for s in all_samples if s['protocol'] == 'oracle_points' and s['f1'] < 0.2][:4]
 if len(qc_samples) < 4:
-    qc_samples = all_samples[-4:]
+    qc_samples = [s for s in all_samples if s['protocol'] == 'oracle_points'][-4:]
 
 for s in gallery_samples:
-    shutil.copy(s['path'], dest_dir / 'assets/gallery' / s['name'])
+    shutil.copy(s['src_path'], dest_dir / 'assets/gallery' / s['protocol'] / s['name'])
     
 for s in qc_samples:
-    shutil.copy(s['path'], dest_dir / 'assets/qc' / s['name'])
+    shutil.copy(s['src_path'], dest_dir / 'assets/qc' / s['protocol'] / s['name'])
 
 dest_json = dest_dir / 'training_data.json'
 with open(dest_json, 'w') as f:

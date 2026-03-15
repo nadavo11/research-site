@@ -1,0 +1,49 @@
+{
+  "dataset_id": "aviadcohz/RWTD",
+  "device": "cuda",
+  "discovered_features": [
+    "image",
+    "boundary_mask",
+    "texture_a_mask",
+    "texture_b_mask",
+    "texture_a",
+    "texture_b",
+    "original_texture_a",
+    "original_texture_b",
+    "crop_name",
+    "oracle_points_a",
+    "oracle_points_b"
+  ],
+  "discovered_split_size": 227,
+  "discovered_split_sizes": {
+    "test": 227,
+    "train": 253
+  },
+  "failure_policy": "abort",
+  "generated_at_utc": "2026-03-15T13:11:19Z",
+  "limit": null,
+  "model_id": "facebook/sam3",
+  "primary_metric_name": "miou_agg",
+  "save_visuals": true,
+  "split": "test",
+  "variant": "dense",
+  "variant_presets": {
+    "default": {
+      "points_per_crop": 32,
+      "stability_score_thresh": 0.95
+    },
+    "dense": {
+      "points_per_crop": 64,
+      "stability_score_thresh": 0.2
+    }
+  },
+  "versions": {
+    "Pillow": "12.1.1",
+    "datasets": "4.7.0",
+    "numpy": "1.26.4",
+    "torch": "2.10.0",
+    "transformers": "5.3.0",
+    "wandb": null
+  },
+  "wandb": false
+}
