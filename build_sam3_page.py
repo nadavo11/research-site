@@ -9,7 +9,7 @@ dest_dir = Path('/home/nada/PycharmProjects/research-site/site/experiments/sam3-
 # Create directories
 os.makedirs(dest_dir, exist_ok=True)
 os.makedirs(dest_dir / 'repro', exist_ok=True)
-for sub in ['oracle_points', 'text', 'baseline']:
+for sub in ['oracle_points', 'text', 'baseline', 'feature_cluster_global']:
     os.makedirs(dest_dir / 'assets/gallery' / sub, exist_ok=True)
     os.makedirs(dest_dir / 'assets/qc' / sub, exist_ok=True)
     os.makedirs(dest_dir / 'assets/all_previews' / sub, exist_ok=True)
@@ -36,6 +36,13 @@ with open('/home/nada/PycharmProjects/research-site/experiments/full_all/summary
 dense_baseline = summ_baseline['variants']['dense']['mean_metrics']
 metrics["Baseline_mIoU"] = round(dense_baseline['miou_agg'], 3)
 metrics["Baseline_ARI"] = round(dense_baseline['ari'], 3)
+
+# Extract feature clustering metrics
+with open('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_global/summary.json', 'r') as f:
+    summ_fc = json.load(f)
+fc_metrics = summ_fc['mean_metrics']
+metrics["FC_mIoU"] = round(fc_metrics['miou'], 3)
+metrics["FC_ARI"] = round(fc_metrics['ari'], 3)
 
 with open(dest_dir / 'metrics.json', 'w') as f:
     json.dump(metrics, f, indent=2)
@@ -92,7 +99,8 @@ for _, row in baseline_df.iterrows():
 protocols_config = [
     ('oracle_points', source_dir / 'oracle_points'),
     ('text', source_dir / 'text'),
-    ('baseline', Path('/home/nada/PycharmProjects/research-site/experiments/test_dense'))
+    ('baseline', Path('/home/nada/PycharmProjects/research-site/experiments/test_dense')),
+    ('feature_cluster_global', Path('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_global'))
 ]
 
 for protocol, p_dir in protocols_config:
@@ -106,15 +114,25 @@ for protocol, p_dir in protocols_config:
                 data = json.loads(line.strip())
                 file_name_orig = data['visual_path'].split('/')[-1]
                 img_id = f"{protocol}_{file_name_orig.replace('.png', '')}"
+                numeric_id = "".join(filter(str.isdigit, file_name_orig.replace('.png', '')))
                 
-                f1 = data['sample_macro_dice']
-                precision = data['sample_macro_precision']
-                recall = data['sample_macro_recall']
-                threshold = data['boundary_dice']
+                # Feature clustering uses different keys
+                if protocol == 'feature_cluster_global':
+                    f1 = data.get('miou', 0)
+                    precision = data.get('mask_score_mean', 0) # Fallback
+                    recall = 0
+                    threshold = 0
+                else:
+                    f1 = data.get('sample_macro_dice', 0)
+                    precision = data.get('sample_macro_precision', 0)
+                    recall = data.get('sample_macro_recall', 0)
+                    threshold = data.get('boundary_dice', 0)
                 
                 rel_path = f"{protocol}/{file_name_orig}"
                 training_data["per_image"].append({
                     "id": img_id,
+                    "sample_id": int(numeric_id) if numeric_id else 0,
+                    "protocol": protocol,
                     "f1": round(f1, 4),
                     "precision": round(precision, 4),
                     "recall": round(recall, 4),
@@ -136,11 +154,14 @@ for protocol, p_dir in protocols_config:
         for img_path in vis_dir.glob('*.png'):
             file_name_orig = img_path.name
             img_id = f"{protocol}_{file_name_orig.replace('.png', '')}"
+            numeric_id = "".join(filter(str.isdigit, file_name_orig.replace('.png', '')))
             
             f1 = baseline_metrics_map.get(file_name_orig, 0)
             rel_path = f"{protocol}/{file_name_orig}"
             training_data["per_image"].append({
                 "id": img_id,
+                "sample_id": int(numeric_id) if numeric_id else 0,
+                "protocol": protocol,
                 "f1": round(f1, 4),
                 "precision": 0,
                 "recall": 0,

@@ -1,0 +1,68 @@
+{
+  "dataset_id": "aviadcohz/RWTD",
+  "device": "auto",
+  "discovered_features": [
+    "image",
+    "boundary_mask",
+    "texture_a_mask",
+    "texture_b_mask",
+    "texture_a",
+    "texture_b",
+    "original_texture_a",
+    "original_texture_b",
+    "crop_name",
+    "oracle_points_a",
+    "oracle_points_b"
+  ],
+  "discovered_split_size": 227,
+  "discovered_split_sizes": {
+    "test": 227,
+    "train": 253
+  },
+  "failure_policy": "abort",
+  "feature_cluster_global_settings": {
+    "feature_source": "highest_resolution_backbone_fpn",
+    "kmeans_convergence_tolerance": 0.0001,
+    "kmeans_max_iterations": 25,
+    "refine_confidence_threshold": 0.0
+  },
+  "feature_mask_settings": {
+    "base_variant": "dense",
+    "local_dilation_radius": 8,
+    "margin_threshold": 0.05,
+    "min_boundary_contact": 16,
+    "min_prototype_pixels": 32,
+    "min_region_pixels": 128,
+    "preferred_region_pixels": 1024,
+    "prototype_erosion_radius": 2,
+    "refine_confidence_threshold": 0.0,
+    "single_mask_outer_dilation_radius": 24
+  },
+  "generated_at_utc": "2026-03-15T18:00:32Z",
+  "limit": null,
+  "model_id": "facebook/sam3",
+  "official_checkpoint_path": null,
+  "primary_metric_name": "miou_agg",
+  "save_visuals": true,
+  "split": "test",
+  "variant": "feature_cluster_global",
+  "variant_presets": {
+    "default": {
+      "points_per_crop": 32,
+      "stability_score_thresh": 0.95
+    },
+    "dense": {
+      "points_per_crop": 64,
+      "stability_score_thresh": 0.2
+    }
+  },
+  "versions": {
+    "Pillow": "12.1.1",
+    "datasets": "4.7.0",
+    "numpy": "1.26.4",
+    "torch": "2.10.0",
+    "transformers": "5.3.0",
+    "wandb": null
+  },
+  "wandb": false
+}

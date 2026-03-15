@@ -4,5 +4,7 @@
   "Boundary_Dice": 0.012,
   "Macro_Dice": 0.567,
   "Baseline_mIoU": 0.537,
-  "Baseline_ARI": 0.693
+  "Baseline_ARI": 0.693,
+  "FC_mIoU": 0.671,
+  "FC_ARI": 0.614
 }

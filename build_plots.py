@@ -19,18 +19,15 @@ with open(base_dir / 'training_data.json') as f:
 samples = {}
 for img in data['per_image']:
     parts = img['id'].split('_') # e.g., oracle_points_123 or text_123
-    if 'oracle' in img['id']:
-        mode = 'oracle_points'
-        sample_id = int(parts[-1])
-    elif 'text' in img['id']:
-        mode = 'text'
-        sample_id = int(parts[-1])
-    else:
+    protocol = img.get('protocol')
+    sample_id = img.get('sample_id')
+    
+    if not protocol or not sample_id:
         continue
     
     if sample_id not in samples:
         samples[sample_id] = {}
-    samples[sample_id][mode] = img['f1']
+    samples[sample_id][protocol] = img['f1']
 
 # Load baseline from CSV
 baseline_path = Path('/home/nada/PycharmProjects/research-site/experiments/full_all/dense/per_sample_metrics.csv')
@@ -44,12 +41,15 @@ for _, row in baseline_df.iterrows():
     except ValueError:
         pass
 
-# Filter only those that have all three
-valid_samples = {k: v for k, v in samples.items() if 'oracle_points' in v and 'text' in v and 'baseline' in v}
+# Filter only those that have the core protocols + clustering
+# Baseline might be in 'samples' already from the per_image loop if it was in training_data.json
+# (Actually training_data.json has baseline now too)
 
-oracle_f1 = [v['oracle_points'] for v in valid_samples.values()]
-text_f1 = [v['text'] for v in valid_samples.values()]
-baseline_f1 = [v['baseline'] for v in valid_samples.values()]
+# Recalculate lists for plotting
+oracle_f1 = [v['oracle_points'] for v in samples.values() if 'oracle_points' in v]
+text_f1 = [v['text'] for v in samples.values() if 'text' in v]
+baseline_f1 = [v['baseline'] for v in samples.values() if 'baseline' in v]
+fc_f1 = [v['feature_cluster_global'] for v in samples.values() if 'feature_cluster_global' in v]
 
 sns.set_theme(style="whitegrid")
 
@@ -58,6 +58,7 @@ plt.figure(figsize=(8, 5))
 sns.histplot(baseline_f1, color='green', label='Unprompted Baseline', kde=True, stat="density", linewidth=0, alpha=0.3)
 sns.histplot(text_f1, color='orange', label='Text Descriptions', kde=True, stat="density", linewidth=0, alpha=0.5)
 sns.histplot(oracle_f1, color='blue', label='Oracle Points', kde=True, stat="density", linewidth=0, alpha=0.5)
+sns.histplot(fc_f1, color='purple', label='Feature Clustering', kde=True, stat="density", linewidth=0, alpha=0.5)
 plt.title('Distribution of mIoU (F1) Scores by Protocol')
 plt.xlabel('mIoU')
 plt.ylabel('Density')
@@ -85,12 +86,15 @@ plt.savefig(plots_dir / 'miou_scatter.png', dpi=300)
 plt.close()
 
 # 3. Boxplot Comparison
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(10, 6))
 plot_data = pd.DataFrame({
-    'Protocol': ['1. Unprompted Baseline']*len(baseline_f1) + ['2. Text Descriptions']*len(text_f1) + ['3. Oracle Points']*len(oracle_f1),
-    'mIoU': baseline_f1 + text_f1 + oracle_f1
+    'Protocol': (['1. Baseline']*len(baseline_f1) + 
+                 ['2. Text']*len(text_f1) + 
+                 ['3. Oracle']*len(oracle_f1) + 
+                 ['4. Feature Clustering']*len(fc_f1)),
+    'mIoU': baseline_f1 + text_f1 + oracle_f1 + fc_f1
 })
-sns.boxplot(x='Protocol', y='mIoU', data=plot_data, palette=['#2ca02c', '#ff7f0e', '#1f77b4'])
+sns.boxplot(x='Protocol', y='mIoU', data=plot_data, palette=['#2ca02c', '#ff7f0e', '#1f77b4', '#9467bd'], hue='Protocol', legend=False)
 plt.title('mIoU Performance Spread by Protocol')
 plt.ylabel('mIoU')
 plt.tight_layout()
@@ -113,4 +117,4 @@ plt.tight_layout()
 plt.savefig(plots_dir / 'miou_delta.png', dpi=300)
 plt.close()
 
-print(f"Generated plots for {len(valid_samples)} overlapping samples.")
+print(f"Generated plots for {len(samples)} samples.")

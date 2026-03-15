@@ -46,13 +46,13 @@
             margin-left: auto;
         }
 
-        #fullGallery {
+        .gallery {
             display: grid;
-            gap: 10px;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
         }
 
-        #fullGallery figure {
+        .gallery figure {
             margin: 0;
             border: 1px solid var(--line);
             border-radius: 10px;
@@ -61,14 +61,14 @@
             position: relative;
         }
 
-        #fullGallery figure img {
+        .gallery figure img {
             width: 100%;
             display: block;
             cursor: zoom-in;
             border-radius: 10px 10px 0 0;
         }
 
-        #fullGallery figure .metrics-bar {
+        .gallery figure .metrics-bar {
             padding: 6px 8px;
             font-size: 0.78rem;
             line-height: 1.5;
@@ -76,24 +76,51 @@
             border-top: 1px solid var(--line);
         }
 
-        .metrics-bar .metric-label {
-            font-weight: 700;
+        .gallery-compare {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .compare-row {
+            border-bottom: 2px solid var(--line);
+            padding-bottom: 20px;
+        }
+
+        .compare-row h3 {
+            margin-bottom: 15px;
             color: var(--ink);
         }
 
-        .metrics-bar .metric-good {
-            color: var(--good);
-            font-weight: 700;
+        .compare-strip {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
         }
 
-        .metrics-bar .metric-bad {
-            color: var(--bad);
-            font-weight: 700;
+        .compare-card {
+            flex: 0 0 300px;
+            background: #fbfdff;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 8px;
+            position: relative;
         }
 
-        .metrics-bar .metric-mid {
-            color: var(--accent);
-            font-weight: 700;
+        .compare-card img {
+            width: 100%;
+            border-radius: 4px;
+            cursor: zoom-in;
+        }
+
+        .mini-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--muted);
+            text-transform: uppercase;
         }
 
         .f1-badge {
@@ -106,6 +133,36 @@
             font-weight: 700;
             padding: 2px 8px;
             border-radius: 999px;
+            z-index: 10;
+        }
+
+        .pill {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: #eee;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .metric-good {
+            background: #edf9f1;
+            border-color: #a6dfb8;
+            color: #1d7a3e;
+        }
+
+        .metric-mid {
+            background: #fff9e6;
+            border-color: #ffe08a;
+            color: #856404;
+        }
+
+        .metric-bad {
+            background: #fdf2f2;
+            border-color: #f8b4b4;
+            color: #9b1c1c;
         }
     </style>
 </head>
@@ -114,7 +171,7 @@
     <main>
         <section class="hero">
             <h1>Full Preview Gallery</h1>
-            <p>SAM 3 RWTD Both Protocols — 454 predictions with per-image metrics</p>
+            <p>SAM 3 RWTD Both Protocols — Multiple experiments with per-image metrics</p>
             <p style="margin-top:8px;"><a class="btn" href="index.html"
                     style="border-color:#8ecae6;background:#edf7fc;color:#0b4f6c;">← Back to report</a></p>
         </section>
@@ -125,8 +182,6 @@
                 <select id="sortBy">
                     <option value="f1_desc">F1 ↓ best first</option>
                     <option value="f1_asc">F1 ↑ worst first</option>
-                    <option value="precision_desc">Precision ↓</option>
-                    <option value="recall_desc">Recall ↓</option>
                     <option value="id_asc">Sample ID ↑</option>
                     <option value="id_desc">Sample ID ↓</option>
                 </select>
@@ -136,6 +191,13 @@
                     <option value="oracle_points">Oracle Points</option>
                     <option value="text">Text Prompts</option>
                     <option value="baseline">Unprompted Baseline</option>
+                    <option value="feature_cluster_global">Feature Clustering</option>
+                </select>
+                <label for="viewMode">View Mode:</label>
+                <select id="viewMode"
+                    style="background:var(--accent); color:white; border:none; padding:4px 12px; border-radius:999px;">
+                    <option value="grid">Grid (Masonry)</option>
+                    <option value="compare">1-to-1 Comparison</option>
                 </select>
                 <label for="filterF1">Min F1:</label>
                 <input type="range" id="filterF1" min="0" max="100" value="0" />
@@ -147,12 +209,12 @@
                     <option value="medium">Medium (0.4–0.7)</option>
                     <option value="bad">Bad (F1 < 0.4)</option>
                 </select>
-                <span class="count" id="countLabel">454 / 454</span>
+                <span class="count" id="countLabel">Loading...</span>
             </div>
             <div id="fullGallery"></div>
         </section>
 
-        <footer>Full gallery generated from per-image evaluation data. 2026-03-12.</footer>
+        <footer>Full gallery generated from per-image evaluation data. 2026-03-15.</footer>
     </main>
 
     <dialog class="image-dialog" id="imageDialog">
@@ -169,6 +231,7 @@
             const filterVal = document.getElementById('filterF1Val');
             const filterQual = document.getElementById('filterQuality');
             const filterProtocol = document.getElementById('filterProtocol');
+            const viewMode = document.getElementById('viewMode');
             const countLabel = document.getElementById('countLabel');
             const total = data.per_image.length;
 
@@ -189,42 +252,72 @@
                 const minF1 = parseFloat(filterSlider.value) / 100;
                 const qualFilter = filterQual.value;
                 const protoFilter = filterProtocol.value;
+                const mode = viewMode.value;
                 filterVal.textContent = minF1.toFixed(2);
 
                 let items = data.per_image.filter(img => {
                     if (img.f1 < minF1) return false;
                     if (qualFilter !== 'all' && qualityLabel(img.f1) !== qualFilter) return false;
-                    if (protoFilter !== 'all' && img.id.indexOf(protoFilter) < 0) return false;
+                    if (protoFilter !== 'all' && img.protocol !== protoFilter) return false;
                     return true;
                 });
 
-                const [field, dir] = sortKey.split('_');
                 items.sort((a, b) => {
-                    const va = a[field], vb = b[field];
-                    return dir === 'desc' ? vb - va : va - vb;
+                    if (sortKey === 'f1_desc') return b.f1 - a.f1;
+                    if (sortKey === 'f1_asc') return a.f1 - b.f1;
+                    if (sortKey === 'id_asc') return a.sample_id - b.sample_id || a.id.localeCompare(b.id);
+                    if (sortKey === 'id_desc') return b.sample_id - a.sample_id || b.id.localeCompare(a.id);
+                    return 0;
                 });
 
-                countLabel.textContent = items.length + ' / ' + total;
+                if (mode === 'grid') {
+                    gallery.className = 'gallery';
+                    gallery.innerHTML = items.map((img, i) => {
+                        const cls = f1Class(img.f1);
+                        return '<figure>' +
+                            '<span class="f1-badge">F1 ' + img.f1.toFixed(3) + '</span>' +
+                            '<img src="assets/all_previews/' + img.file_path + '" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
+                            '<div class="metrics-bar">' +
+                            '<span class="pill">id=' + (img.sample_id || img.id) + '</span>' +
+                            '<span class="pill">rank ' + (i + 1) + '/' + items.length + '</span><br/>' +
+                            '<span class="pill ' + cls + '">' + img.protocol + '</span>' +
+                            '</div>' +
+                            '</figure>';
+                    }).join('');
+                } else {
+                    gallery.className = 'gallery-compare';
+                    const groups = {};
+                    items.forEach(img => {
+                        if (!groups[img.sample_id]) groups[img.sample_id] = [];
+                        groups[img.sample_id].push(img);
+                    });
 
-                gallery.innerHTML = items.map((img, i) => {
-                    const cls = f1Class(img.f1);
-                    return '<figure>' +
-                        '<span class="f1-badge">F1 ' + img.f1.toFixed(3) + '</span>' +
-                        '<img src="assets/all_previews/' + img.file_path + '" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
-                        '<div class="metrics-bar">' +
-                        '<span class="pill">id=' + img.id.split('_').slice(-1)[0] + '</span>' +
-                        '<span class="pill">rank ' + (i + 1) + '/' + items.length + '</span><br/>' +
-                        '<span class="metric-label">Mode:</span> <span class="metric-mid">' + img.id.split('_')[0] + '</span><br/>' +
-                        '<span class="metric-label">F1 (mIoU):</span> <span class="' + cls + '">' + img.f1.toFixed(3) + '</span> · ' +
-                        '<span class="metric-label">P:</span> ' + img.precision.toFixed(3) + ' · ' +
-                        '<span class="metric-label">R:</span> ' + img.recall.toFixed(3) +
-                        '</div>' +
-                        '</figure>';
-                }).join('');
+                    let html = '';
+                    Object.keys(groups).sort((a, b) => parseInt(a) - parseInt(b)).forEach(sid => {
+                        html += '<div class="compare-row">' +
+                            '<h3>Sample ' + sid + '</h3>' +
+                            '<div class="compare-strip">';
+                        groups[sid].forEach(img => {
+                            const cls = f1Class(img.f1);
+                            html += '<div class="compare-card">' +
+                                '<span class="mini-label">' + img.protocol + '</span>' +
+                                '<span class="pill ' + cls + '" style="position:absolute; top:28px; right:8px;">F1 ' + img.f1.toFixed(3) + '</span>' +
+                                '<img src="assets/all_previews/' + img.file_path + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
+                                '</div>';
+                        });
+                        html += '</div></div>';
+                    });
+                    gallery.innerHTML = html;
+                }
 
-                // Rebind zoom
-                const dialog = document.getElementById('imageDialog');
-                const dialogImg = document.getElementById('imageDialogImg');
+                countLabel.textContent = 'Showing ' + items.length + ' of ' + total + ' samples';
+                bindZoom();
+            }
+
+            const dialog = document.getElementById('imageDialog');
+            const dialogImg = document.getElementById('imageDialogImg');
+
+            function bindZoom() {
                 gallery.querySelectorAll('[data-zoom-src]').forEach(img => {
                     img.addEventListener('click', () => {
                         dialogImg.src = img.getAttribute('data-zoom-src');
@@ -237,9 +330,10 @@
             filterSlider.addEventListener('input', render);
             filterQual.addEventListener('change', render);
             filterProtocol.addEventListener('change', render);
+            viewMode.addEventListener('change', render);
+
             render();
 
-            const dialog = document.getElementById('imageDialog');
             dialog.addEventListener('click', (e) => {
                 const r = dialog.getBoundingClientRect();
                 if (e.clientY < r.top || e.clientY > r.bottom || e.clientX < r.left || e.clientX > r.right) dialog.close();
