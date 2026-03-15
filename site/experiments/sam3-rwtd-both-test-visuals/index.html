@@ -32,23 +32,38 @@
         <p class="kv"><strong>Where it fails:</strong> The text descriptions alone are sometimes not sufficient to
           distinguish closely overlapping visual properties.</p>
       </div>
-      <div class="metric-grid" style="margin-top:10px;">
-        <article class="metric">
-          <div class="k">Primary Metric (mIoU)</div>
-          <div class="v">0.516</div>
-        </article>
-        <article class="metric">
-          <div class="k">Baseline mIoU (Dense)</div>
-          <div class="v">0.537</div>
-        </article>
-        <article class="metric">
-          <div class="k">Baseline ARI</div>
-          <div class="v">0.693</div>
-        </article>
-        <article class="metric">
-          <div class="k">Macro Dice</div>
-          <div class="v">0.567</div>
-        </article>
+      <h3 style="margin-top:20px; font-size:1.1rem;">Overall Results Table</h3>
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Approach</th>
+              <th>mIoU</th>
+              <th>ARI</th>
+              <th>Macro Dice</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Unprompted Baseline (Dense)</strong></td>
+              <td><strong>0.537</strong></td>
+              <td><strong>0.693</strong></td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><strong>Text Prompts</strong></td>
+              <td>0.548</td>
+              <td>0.686</td>
+              <td>0.577</td>
+            </tr>
+            <tr>
+              <td><strong>Oracle Points (2 per texture)</strong></td>
+              <td>0.516</td>
+              <td>0.614</td>
+              <td>0.567</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
