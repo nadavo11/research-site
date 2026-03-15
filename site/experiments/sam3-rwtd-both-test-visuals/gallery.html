@@ -130,6 +130,13 @@
                     <option value="id_asc">Sample ID ↑</option>
                     <option value="id_desc">Sample ID ↓</option>
                 </select>
+                <label for="filterProtocol">Protocol:</label>
+                <select id="filterProtocol" style="font-weight:bold; color:#0b4f6c;">
+                    <option value="all">All Methods</option>
+                    <option value="oracle_points">Oracle Points</option>
+                    <option value="text">Text Prompts</option>
+                    <option value="baseline" disabled>Baseline (No visuals saved)</option>
+                </select>
                 <label for="filterF1">Min F1:</label>
                 <input type="range" id="filterF1" min="0" max="100" value="0" />
                 <span id="filterF1Val">0.00</span>
@@ -161,6 +168,7 @@
             const filterSlider = document.getElementById('filterF1');
             const filterVal = document.getElementById('filterF1Val');
             const filterQual = document.getElementById('filterQuality');
+            const filterProtocol = document.getElementById('filterProtocol');
             const countLabel = document.getElementById('countLabel');
             const total = data.per_image.length;
 
@@ -180,11 +188,13 @@
                 const sortKey = sortSel.value;
                 const minF1 = parseFloat(filterSlider.value) / 100;
                 const qualFilter = filterQual.value;
+                const protoFilter = filterProtocol.value;
                 filterVal.textContent = minF1.toFixed(2);
 
                 let items = data.per_image.filter(img => {
                     if (img.f1 < minF1) return false;
                     if (qualFilter !== 'all' && qualityLabel(img.f1) !== qualFilter) return false;
+                    if (protoFilter !== 'all' && img.id.indexOf(protoFilter) < 0) return false;
                     return true;
                 });
 
@@ -226,6 +236,7 @@
             sortSel.addEventListener('change', render);
             filterSlider.addEventListener('input', render);
             filterQual.addEventListener('change', render);
+            filterProtocol.addEventListener('change', render);
             render();
 
             const dialog = document.getElementById('imageDialog');
@@ -236,4 +247,5 @@
         })();
     </script>
 </body>
+
 </html>
