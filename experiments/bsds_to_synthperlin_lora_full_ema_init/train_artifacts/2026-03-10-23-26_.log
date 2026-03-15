@@ -1,0 +1,129 @@
+2026-03-10 23:26:34,031 data:
+  augment_horizontal_flip: True
+  batch_size: 2
+  crop_type: rand_resize_crop
+  eval_split: val
+  img_folder: /home/nada/PycharmProjects/DiffusionEdge/synthetic_texture_perlin_stitched
+  max_train_samples: 0
+  name: edge
+  num_workers: 0
+  strict_split: False
+  train_split: train
+lora:
+  alpha: 128.0
+  base_ckpt_ref: /home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/bsds_to_synthperlin_lora_full_ema_init/checkpoints/bsds_ema_unwrapped.pt
+  ckpt_path: None
+  dropout: 0.05
+  enabled: True
+  preset: relation_qkvo_plus_initconv
+  r: 128
+  save_lora_only: True
+  targets: q_lin,k_lin,v_lin,o_lin,init_conv
+model:
+  ckpt_path: /home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/bsds_to_synthperlin_lora_full_ema_init/checkpoints/bsds_ema_unwrapped.pt
+  default_scale: True
+  eps: 0.0001
+  first_stage:
+    ckpt_path: ./checkpoints/first_stage_total_320.pt
+    ddconfig:
+      attn_resolutions: []
+      ch: 128
+      ch_mult: [1, 2, 4]
+      double_z: True
+      dropout: 0.0
+      in_channels: 1
+      num_res_blocks: 2
+      out_ch: 1
+      resolution: [320, 320]
+      z_channels: 3
+    embed_dim: 3
+    lossconfig:
+      disc_in_channels: 1
+      disc_start: 50001
+      disc_weight: 0.5
+      kl_weight: 1e-06
+  ignore_keys: []
+  image_size: [320, 320]
+  input_keys: ['image', 'cond']
+  loss_type: l2
+  model_name: cond_unet
+  model_type: const_sde
+  objective: pred_KC
+  only_model: False
+  perceptual_weight: 0
+  sampling_timesteps: 1
+  scale_by_softsign: False
+  scale_by_std: True
+  scale_factor: 0.3
+  start_dist: normal
+  timesteps: 1000
+  train_sample: -1
+  unet:
+    channels: 3
+    cond_dim: 128
+    cond_dim_mults: [2, 4]
+    cond_feature_size: [80, 80]
+    cond_in_dim: 3
+    cond_net: swin
+    cond_pe: False
+    dim: 128
+    dim_mults: [1, 2, 4, 4]
+    fix_bb: False
+    fourier_scale: 16
+    input_size: [80, 80]
+    num_pos_feats: 128
+    out_mul: 1
+    window_sizes1: [[8, 8], [4, 4], [2, 2], [1, 1]]
+    window_sizes2: [[8, 8], [4, 4], [2, 2], [1, 1]]
+  use_disloss: True
+  weighting_loss: True
+trainer:
+  amp: False
+  checkpoint_folder: /home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/bsds_to_synthperlin_lora_full_ema_init/checkpoints
+  ema_update_after_step: 5000
+  ema_update_every: 10
+  enable_resume: False
+  eval:
+    apply_nms: True
+    apply_thinning: True
+    batch_size: 16
+    enabled: True
+    every_steps: 100
+    max_dist: 0.0075
+    mode: edge
+    nproc: 4
+    num_batches: 16
+    num_workers: 0
+    preview_limit: 8
+    run_at_step0: True
+    rwtd:
+      apply_nms: True
+      apply_thinning: True
+      batch_size: 16
+      data_root: RWTD
+      enabled: True
+      log_prefix: rwtd
+      max_dist: 0.0075
+      mode: edge
+      nproc: 4
+      num_batches: 16
+      num_workers: 0
+      preview_limit: 16
+      select_best_metric: rwtd/edge/AP
+      split: val
+      strict_split: True
+      thresholds: 99
+    select_best_metric: rwtd/edge/AP
+    split: val
+    strict_split: False
+    thresholds: 99
+  fp16: False
+  gradient_accumulate_every: 4
+  log_freq: 10
+  lr: 5e-06
+  min_lr: 5e-07
+  results_folder: /home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/bsds_to_synthperlin_lora_full_ema_init/train_artifacts
+  resume_milestone: 0
+  save_and_sample_every: 100
+  test_before: True
+  train_num_steps: 4000

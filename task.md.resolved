@@ -1,0 +1,12 @@
+# Add SAM3 RWTD Experiment Page
+
+## Tasks
+- [x] Investigate `oracle_points` and `text` subdirectories for visuals and metrics.
+- [x] Create `site/experiments/sam3-rwtd-both-test-visuals/` directory.
+- [x] Create metadata files (`manifest.yaml`, `summary.md`, `metrics.json`, `links.json`).
+- [x] Process properties and generate `training_data.json` or equivalent to power learning curves / gallery.
+- [x] Copy preview images to `assets/all_previews` and select representative ones for `assets/gallery` and `assets/qc`.
+- [x] Generate `index.html` per new golden standard (learning curves skipped if no training data, but full gallery is required).
+- [x] Generate `gallery.html` using the newly standardized full gallery rules.
+- [x] Update `site/index.html` to link to the new experiment page.
+- [x] Update documentation (walkthrough) and publish.

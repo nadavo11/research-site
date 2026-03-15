@@ -1,0 +1,659 @@
+2026-03-10 23:34:40,100 data:
+  augment_horizontal_flip: True
+  batch_size: 2
+  crop_type: rand_resize_crop
+  eval_split: val
+  img_folder: /home/nada/PycharmProjects/DiffusionEdge/synthetic_texture_perlin_stitched
+  max_train_samples: 0
+  name: edge
+  num_workers: 0
+  strict_split: False
+  train_split: train
+lora:
+  alpha: 128.0
+  base_ckpt_ref: /home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/bsds_to_synthperlin_lora_full_ema_init/checkpoints/bsds_ema_unwrapped.pt
+  ckpt_path: None
+  dropout: 0.05
+  enabled: True
+  preset: relation_qkvo_plus_initconv
+  r: 128
+  save_lora_only: True
+  targets: q_lin,k_lin,v_lin,o_lin,init_conv
+model:
+  ckpt_path: /home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/bsds_to_synthperlin_lora_full_ema_init/checkpoints/bsds_ema_unwrapped.pt
+  default_scale: True
+  eps: 0.0001
+  first_stage:
+    ckpt_path: ./checkpoints/first_stage_total_320.pt
+    ddconfig:
+      attn_resolutions: []
+      ch: 128
+      ch_mult: [1, 2, 4]
+      double_z: True
+      dropout: 0.0
+      in_channels: 1
+      num_res_blocks: 2
+      out_ch: 1
+      resolution: [320, 320]
+      z_channels: 3
+    embed_dim: 3
+    lossconfig:
+      disc_in_channels: 1
+      disc_start: 50001
+      disc_weight: 0.5
+      kl_weight: 1e-06
+  ignore_keys: []
+  image_size: [320, 320]
+  input_keys: ['image', 'cond']
+  loss_type: l2
+  model_name: cond_unet
+  model_type: const_sde
+  objective: pred_KC
+  only_model: False
+  perceptual_weight: 0
+  sampling_timesteps: 1
+  scale_by_softsign: False
+  scale_by_std: True
+  scale_factor: 0.3
+  start_dist: normal
+  timesteps: 1000
+  train_sample: -1
+  unet:
+    channels: 3
+    cond_dim: 128
+    cond_dim_mults: [2, 4]
+    cond_feature_size: [80, 80]
+    cond_in_dim: 3
+    cond_net: swin
+    cond_pe: False
+    dim: 128
+    dim_mults: [1, 2, 4, 4]
+    fix_bb: False
+    fourier_scale: 16
+    input_size: [80, 80]
+    num_pos_feats: 128
+    out_mul: 1
+    window_sizes1: [[8, 8], [4, 4], [2, 2], [1, 1]]
+    window_sizes2: [[8, 8], [4, 4], [2, 2], [1, 1]]
+  use_disloss: True
+  weighting_loss: True
+trainer:
+  amp: False
+  checkpoint_folder: /home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/bsds_to_synthperlin_lora_full_ema_init/checkpoints
+  ema_update_after_step: 5000
+  ema_update_every: 10
+  enable_resume: False
+  eval:
+    apply_nms: True
+    apply_thinning: True
+    batch_size: 16
+    enabled: True
+    every_steps: 100
+    max_dist: 0.0075
+    mode: edge
+    nproc: 4
+    num_batches: 16
+    num_workers: 0
+    preview_limit: 8
+    run_at_step0: True
+    rwtd:
+      apply_nms: True
+      apply_thinning: True
+      batch_size: 16
+      data_root: RWTD
+      enabled: True
+      log_prefix: rwtd
+      max_dist: 0.0075
+      mode: edge
+      nproc: 4
+      num_batches: 16
+      num_workers: 0
+      preview_limit: 16
+      select_best_metric: rwtd/edge/AP
+      split: val
+      strict_split: True
+      thresholds: 99
+    select_best_metric: rwtd/edge/AP
+    split: val
+    strict_split: False
+    thresholds: 99
+  fp16: False
+  gradient_accumulate_every: 4
+  log_freq: 10
+  lr: 5e-06
+  min_lr: 5e-07
+  results_folder: /home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/bsds_to_synthperlin_lora_full_ema_init/train_artifacts
+  resume_milestone: 0
+  save_and_sample_every: 100
+  test_before: True
+  train_num_steps: 4000
+2026-03-10 23:38:46,961 [Eval:val] New best edge/AP: -inf -> 0.65998 (not the best-checkpoint target, skipping save)
+2026-03-10 23:38:48,299 [Eval:val] step=0 reason=step0 edge/AP=0.6600 edge/ODS_threshold=0.3553 edge/ODS_recall=0.7576 edge/ODS_precision=0.6241 edge/ODS_f1=0.6844 edge/OIS_recall=0.8200 edge/OIS_precision=0.6512 edge/OIS_f1=0.7259 | best(edge/AP)=0.6600 last(edge/AP)=0.6600
+2026-03-10 23:40:15,004 [Eval:rwtd] New best rwtd/edge/AP: -inf -> 0.57726. Saving model-best.pt
+2026-03-10 23:40:15,414 [Eval:rwtd] step=0 reason=step0 edge/AP=0.5773 edge/ODS_threshold=0.2200 edge/ODS_recall=0.6164 edge/ODS_precision=0.6897 edge/ODS_f1=0.6510 edge/OIS_recall=0.6930 edge/OIS_precision=0.6616 edge/OIS_f1=0.6769 | best(rwtd/edge/AP)=0.5773 last(rwtd/edge/AP)=0.5773
+2026-03-10 23:40:16,846 [Train Step] 0/4000: loss_simple: 0.92761, loss_vlb: 1.05199, total_loss: 4.83940, lr: 0.00001, 
+2026-03-10 23:40:29,649 [Train Step] 10/4000: loss_simple: 0.37344, loss_vlb: 1.03316, total_loss: 3.49827, lr: 0.00000, 
+2026-03-10 23:40:42,563 [Train Step] 20/4000: loss_simple: 0.38691, loss_vlb: 1.03922, total_loss: 3.56595, lr: 0.00000, 
+2026-03-10 23:40:55,665 [Train Step] 30/4000: loss_simple: 0.38480, loss_vlb: 1.05029, total_loss: 3.62688, lr: 0.00000, 
+2026-03-10 23:41:08,774 [Train Step] 40/4000: loss_simple: 0.48386, loss_vlb: 1.05030, total_loss: 3.91086, lr: 0.00000, 
+2026-03-10 23:41:21,873 [Train Step] 50/4000: loss_simple: 0.46934, loss_vlb: 1.05287, total_loss: 3.70906, lr: 0.00000, 
+2026-03-10 23:41:35,008 [Train Step] 60/4000: loss_simple: 6.75739, loss_vlb: 1.05226, total_loss: 22.96972, lr: 0.00000, 
+2026-03-10 23:41:48,195 [Train Step] 70/4000: loss_simple: 0.44627, loss_vlb: 1.03096, total_loss: 3.73443, lr: 0.00000, 
+2026-03-10 23:42:01,347 [Train Step] 80/4000: loss_simple: 0.42928, loss_vlb: 1.03703, total_loss: 3.64519, lr: 0.00000, 
+2026-03-10 23:42:14,466 [Train Step] 90/4000: loss_simple: 0.30699, loss_vlb: 1.03020, total_loss: 3.30158, lr: 0.00000, 
+2026-03-10 23:42:26,390 Saved model-last.pt (step=100, loss=1.42360)
+2026-03-10 23:46:27,194 [Eval:val] New best edge/AP: 0.65998 -> 0.67082 (not the best-checkpoint target, skipping save)
+2026-03-10 23:46:27,965 [Eval:val] step=100 reason=periodic edge/AP=0.6708 edge/ODS_threshold=0.3569 edge/ODS_recall=0.7653 edge/ODS_precision=0.6250 edge/ODS_f1=0.6881 edge/OIS_recall=0.8239 edge/OIS_precision=0.6508 edge/OIS_f1=0.7272 | best(edge/AP)=0.6708 last(edge/AP)=0.6708
+2026-03-10 23:47:54,775 [Eval:rwtd] New best rwtd/edge/AP: 0.57726 -> 0.58111. Saving model-best.pt
+2026-03-10 23:47:55,188 [Eval:rwtd] step=100 reason=periodic edge/AP=0.5811 edge/ODS_threshold=0.2152 edge/ODS_recall=0.6258 edge/ODS_precision=0.6780 edge/ODS_f1=0.6509 edge/OIS_recall=0.6875 edge/OIS_precision=0.6663 edge/OIS_f1=0.6767 | best(rwtd/edge/AP)=0.5811 last(rwtd/edge/AP)=0.5811
+2026-03-10 23:47:56,644 [Train Step] 100/4000: loss_simple: 0.30930, loss_vlb: 1.02309, total_loss: 3.34595, lr: 0.00000, 
+2026-03-10 23:48:09,476 [Train Step] 110/4000: loss_simple: 0.38119, loss_vlb: 1.04967, total_loss: 3.49241, lr: 0.00000, 
+2026-03-10 23:48:22,408 [Train Step] 120/4000: loss_simple: 0.34612, loss_vlb: 1.03666, total_loss: 3.48892, lr: 0.00000, 
+2026-03-10 23:48:35,556 [Train Step] 130/4000: loss_simple: 0.35519, loss_vlb: 1.04043, total_loss: 3.55819, lr: 0.00000, 
+2026-03-10 23:48:48,680 [Train Step] 140/4000: loss_simple: 0.35157, loss_vlb: 1.03371, total_loss: 3.34233, lr: 0.00000, 
+2026-03-10 23:49:01,769 [Train Step] 150/4000: loss_simple: 0.32115, loss_vlb: 1.03774, total_loss: 3.40919, lr: 0.00000, 
+2026-03-10 23:49:14,978 [Train Step] 160/4000: loss_simple: 0.70592, loss_vlb: 1.04696, total_loss: 4.54018, lr: 0.00000, 
+2026-03-10 23:49:28,137 [Train Step] 170/4000: loss_simple: 0.33333, loss_vlb: 1.04300, total_loss: 3.43060, lr: 0.00000, 
+2026-03-10 23:49:41,302 [Train Step] 180/4000: loss_simple: 0.34955, loss_vlb: 1.02926, total_loss: 3.58664, lr: 0.00000, 
+2026-03-10 23:49:54,452 [Train Step] 190/4000: loss_simple: 0.39476, loss_vlb: 1.03809, total_loss: 3.70154, lr: 0.00000, 
+2026-03-10 23:50:06,484 Saved model-last.pt (step=200, loss=1.39934)
+2026-03-10 23:54:03,409 [Eval:val] New best edge/AP: 0.67082 -> 0.69052 (not the best-checkpoint target, skipping save)
+2026-03-10 23:54:04,171 [Eval:val] step=200 reason=periodic edge/AP=0.6905 edge/ODS_threshold=0.3300 edge/ODS_recall=0.7820 edge/ODS_precision=0.6478 edge/ODS_f1=0.7086 edge/OIS_recall=0.8302 edge/OIS_precision=0.6713 edge/OIS_f1=0.7423 | best(edge/AP)=0.6905 last(edge/AP)=0.6905
+2026-03-10 23:55:28,475 [Eval:rwtd] New best rwtd/edge/AP: 0.58111 -> 0.58872. Saving model-best.pt
+2026-03-10 23:55:28,877 [Eval:rwtd] step=200 reason=periodic edge/AP=0.5887 edge/ODS_threshold=0.1909 edge/ODS_recall=0.6329 edge/ODS_precision=0.6849 edge/ODS_f1=0.6579 edge/OIS_recall=0.6828 edge/OIS_precision=0.6928 edge/OIS_f1=0.6878 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.5887
+2026-03-10 23:55:30,324 [Train Step] 200/4000: loss_simple: 0.41146, loss_vlb: 1.03572, total_loss: 3.52934, lr: 0.00000, 
+2026-03-10 23:55:43,190 [Train Step] 210/4000: loss_simple: 0.35113, loss_vlb: 1.03209, total_loss: 3.50269, lr: 0.00000, 
+2026-03-10 23:55:56,168 [Train Step] 220/4000: loss_simple: 0.49839, loss_vlb: 1.04533, total_loss: 4.03931, lr: 0.00000, 
+2026-03-10 23:56:09,286 [Train Step] 230/4000: loss_simple: 0.43457, loss_vlb: 1.04183, total_loss: 3.84029, lr: 0.00000, 
+2026-03-10 23:56:22,431 [Train Step] 240/4000: loss_simple: 0.32366, loss_vlb: 1.03281, total_loss: 3.47450, lr: 0.00000, 
+2026-03-10 23:56:35,586 [Train Step] 250/4000: loss_simple: 0.29330, loss_vlb: 1.01872, total_loss: 3.28665, lr: 0.00000, 
+2026-03-10 23:56:48,800 [Train Step] 260/4000: loss_simple: 0.44723, loss_vlb: 1.05111, total_loss: 3.62532, lr: 0.00000, 
+2026-03-10 23:57:01,960 [Train Step] 270/4000: loss_simple: 0.30003, loss_vlb: 1.02401, total_loss: 3.27429, lr: 0.00000, 
+2026-03-10 23:57:15,153 [Train Step] 280/4000: loss_simple: 0.32234, loss_vlb: 1.04320, total_loss: 3.41729, lr: 0.00000, 
+2026-03-10 23:57:28,389 [Train Step] 290/4000: loss_simple: 0.29076, loss_vlb: 1.03575, total_loss: 3.31277, lr: 0.00000, 
+2026-03-10 23:57:40,346 Saved model-last.pt (step=300, loss=1.34841)
+2026-03-11 00:01:28,681 [Eval:val] New best edge/AP: 0.69052 -> 0.71078 (not the best-checkpoint target, skipping save)
+2026-03-11 00:01:29,424 [Eval:val] step=300 reason=periodic edge/AP=0.7108 edge/ODS_threshold=0.3100 edge/ODS_recall=0.7813 edge/ODS_precision=0.6796 edge/ODS_f1=0.7269 edge/OIS_recall=0.8294 edge/OIS_precision=0.7024 edge/OIS_f1=0.7606 | best(edge/AP)=0.7108 last(edge/AP)=0.7108
+2026-03-11 00:02:50,741 [Eval:rwtd] step=300 reason=periodic edge/AP=0.5873 edge/ODS_threshold=0.1688 edge/ODS_recall=0.6221 edge/ODS_precision=0.7090 edge/ODS_f1=0.6627 edge/OIS_recall=0.6719 edge/OIS_precision=0.7122 edge/OIS_f1=0.6914 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.5873
+2026-03-11 00:02:52,178 [Train Step] 300/4000: loss_simple: 0.33193, loss_vlb: 1.03526, total_loss: 3.31814, lr: 0.00000, 
+2026-03-11 00:03:05,026 [Train Step] 310/4000: loss_simple: 0.86807, loss_vlb: 1.04606, total_loss: 4.48221, lr: 0.00000, 
+2026-03-11 00:03:18,042 [Train Step] 320/4000: loss_simple: 0.37314, loss_vlb: 1.04818, total_loss: 3.56991, lr: 0.00000, 
+2026-03-11 00:03:31,120 [Train Step] 330/4000: loss_simple: 0.51055, loss_vlb: 1.01999, total_loss: 3.41198, lr: 0.00000, 
+2026-03-11 00:03:44,221 [Train Step] 340/4000: loss_simple: 0.26987, loss_vlb: 1.02201, total_loss: 3.24824, lr: 0.00000, 
+2026-03-11 00:03:57,350 [Train Step] 350/4000: loss_simple: 0.69998, loss_vlb: 1.02980, total_loss: 4.57533, lr: 0.00000, 
+2026-03-11 00:04:10,557 [Train Step] 360/4000: loss_simple: 0.38838, loss_vlb: 1.03788, total_loss: 3.56678, lr: 0.00000, 
+2026-03-11 00:04:23,732 [Train Step] 370/4000: loss_simple: 0.69772, loss_vlb: 1.04447, total_loss: 4.12169, lr: 0.00000, 
+2026-03-11 00:04:36,871 [Train Step] 380/4000: loss_simple: 0.40093, loss_vlb: 1.04791, total_loss: 3.53655, lr: 0.00000, 
+2026-03-11 00:04:50,060 [Train Step] 390/4000: loss_simple: 0.28363, loss_vlb: 1.03981, total_loss: 3.28909, lr: 0.00000, 
+2026-03-11 00:05:02,031 Saved model-last.pt (step=400, loss=1.27195)
+2026-03-11 00:08:39,658 [Eval:val] New best edge/AP: 0.71078 -> 0.71699 (not the best-checkpoint target, skipping save)
+2026-03-11 00:08:40,394 [Eval:val] step=400 reason=periodic edge/AP=0.7170 edge/ODS_threshold=0.2800 edge/ODS_recall=0.7677 edge/ODS_precision=0.7116 edge/ODS_f1=0.7386 edge/OIS_recall=0.8218 edge/OIS_precision=0.7257 edge/OIS_f1=0.7708 | best(edge/AP)=0.7170 last(edge/AP)=0.7170
+2026-03-11 00:09:54,148 [Eval:rwtd] step=400 reason=periodic edge/AP=0.5513 edge/ODS_threshold=0.1182 edge/ODS_recall=0.5989 edge/ODS_precision=0.7102 edge/ODS_f1=0.6498 edge/OIS_recall=0.6279 edge/OIS_precision=0.7346 edge/OIS_f1=0.6771 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.5513
+2026-03-11 00:09:55,596 [Train Step] 400/4000: loss_simple: 0.26863, loss_vlb: 1.03549, total_loss: 3.23989, lr: 0.00000, 
+2026-03-11 00:10:08,442 [Train Step] 410/4000: loss_simple: 0.34402, loss_vlb: 1.03991, total_loss: 3.48312, lr: 0.00000, 
+2026-03-11 00:10:21,520 [Train Step] 420/4000: loss_simple: 0.29864, loss_vlb: 1.02865, total_loss: 3.34714, lr: 0.00000, 
+2026-03-11 00:10:34,575 [Train Step] 430/4000: loss_simple: 0.27867, loss_vlb: 1.02854, total_loss: 3.27486, lr: 0.00000, 
+2026-03-11 00:10:47,704 [Train Step] 440/4000: loss_simple: 0.28493, loss_vlb: 1.03035, total_loss: 3.26099, lr: 0.00000, 
+2026-03-11 00:11:00,915 [Train Step] 450/4000: loss_simple: 0.24029, loss_vlb: 1.01545, total_loss: 3.13753, lr: 0.00000, 
+2026-03-11 00:11:14,109 [Train Step] 460/4000: loss_simple: 0.31104, loss_vlb: 1.02963, total_loss: 3.30022, lr: 0.00000, 
+2026-03-11 00:11:27,328 [Train Step] 470/4000: loss_simple: 0.41891, loss_vlb: 1.04183, total_loss: 3.79323, lr: 0.00000, 
+2026-03-11 00:11:40,494 [Train Step] 480/4000: loss_simple: 0.24082, loss_vlb: 1.02095, total_loss: 3.18486, lr: 0.00000, 
+2026-03-11 00:11:53,751 [Train Step] 490/4000: loss_simple: 0.23650, loss_vlb: 1.01517, total_loss: 3.13059, lr: 0.00000, 
+2026-03-11 00:12:05,646 Saved model-last.pt (step=500, loss=1.29329)
+2026-03-11 00:15:35,066 [Eval:val] step=500 reason=periodic edge/AP=0.6901 edge/ODS_threshold=0.2400 edge/ODS_recall=0.7481 edge/ODS_precision=0.7228 edge/ODS_f1=0.7352 edge/OIS_recall=0.7855 edge/OIS_precision=0.7364 edge/OIS_f1=0.7602 | best(edge/AP)=0.7170 last(edge/AP)=0.6901
+2026-03-11 00:16:43,510 [Eval:rwtd] step=500 reason=periodic edge/AP=0.4988 edge/ODS_threshold=0.0780 edge/ODS_recall=0.5493 edge/ODS_precision=0.7137 edge/ODS_f1=0.6208 edge/OIS_recall=0.5693 edge/OIS_precision=0.7461 edge/OIS_f1=0.6458 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4988
+2026-03-11 00:16:44,950 [Train Step] 500/4000: loss_simple: 0.25444, loss_vlb: 1.03001, total_loss: 3.24607, lr: 0.00000, 
+2026-03-11 00:16:57,806 [Train Step] 510/4000: loss_simple: 0.42789, loss_vlb: 1.03274, total_loss: 3.40173, lr: 0.00000, 
+2026-03-11 00:17:10,871 [Train Step] 520/4000: loss_simple: 0.23191, loss_vlb: 1.02785, total_loss: 3.16692, lr: 0.00000, 
+2026-03-11 00:17:23,898 [Train Step] 530/4000: loss_simple: 0.32061, loss_vlb: 1.03862, total_loss: 3.37208, lr: 0.00000, 
+2026-03-11 00:17:36,991 [Train Step] 540/4000: loss_simple: 0.25738, loss_vlb: 1.03048, total_loss: 3.23586, lr: 0.00000, 
+2026-03-11 00:17:50,139 [Train Step] 550/4000: loss_simple: 0.27529, loss_vlb: 1.02866, total_loss: 3.36885, lr: 0.00000, 
+2026-03-11 00:18:03,263 [Train Step] 560/4000: loss_simple: 0.26648, loss_vlb: 1.01908, total_loss: 3.17511, lr: 0.00000, 
+2026-03-11 00:18:16,422 [Train Step] 570/4000: loss_simple: 0.21258, loss_vlb: 1.01039, total_loss: 3.03033, lr: 0.00000, 
+2026-03-11 00:18:29,593 [Train Step] 580/4000: loss_simple: 0.40987, loss_vlb: 1.03417, total_loss: 3.83534, lr: 0.00000, 
+2026-03-11 00:18:42,836 [Train Step] 590/4000: loss_simple: 0.40874, loss_vlb: 1.03843, total_loss: 3.77850, lr: 0.00000, 
+2026-03-11 00:18:54,776 Saved model-last.pt (step=600, loss=1.28000)
+2026-03-11 00:22:16,370 [Eval:val] step=600 reason=periodic edge/AP=0.6465 edge/ODS_threshold=0.2100 edge/ODS_recall=0.6917 edge/ODS_precision=0.7222 edge/ODS_f1=0.7066 edge/OIS_recall=0.7349 edge/OIS_precision=0.7418 edge/OIS_f1=0.7383 | best(edge/AP)=0.7170 last(edge/AP)=0.6465
+2026-03-11 00:23:20,258 [Eval:rwtd] step=600 reason=periodic edge/AP=0.4521 edge/ODS_threshold=0.0400 edge/ODS_recall=0.5080 edge/ODS_precision=0.7055 edge/ODS_f1=0.5907 edge/OIS_recall=0.5151 edge/OIS_precision=0.7448 edge/OIS_f1=0.6090 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4521
+2026-03-11 00:23:21,705 [Train Step] 600/4000: loss_simple: 0.28624, loss_vlb: 1.03068, total_loss: 3.37453, lr: 0.00000, 
+2026-03-11 00:23:34,674 [Train Step] 610/4000: loss_simple: 0.23759, loss_vlb: 1.02449, total_loss: 3.12889, lr: 0.00000, 
+2026-03-11 00:23:47,833 [Train Step] 620/4000: loss_simple: 0.34827, loss_vlb: 1.02032, total_loss: 3.34657, lr: 0.00000, 
+2026-03-11 00:24:00,991 [Train Step] 630/4000: loss_simple: 0.21177, loss_vlb: 1.01128, total_loss: 3.05120, lr: 0.00000, 
+2026-03-11 00:24:14,165 [Train Step] 640/4000: loss_simple: 0.29084, loss_vlb: 1.03047, total_loss: 3.29633, lr: 0.00000, 
+2026-03-11 00:24:27,429 [Train Step] 650/4000: loss_simple: 0.39168, loss_vlb: 1.03258, total_loss: 3.71804, lr: 0.00000, 
+2026-03-11 00:24:40,632 [Train Step] 660/4000: loss_simple: 0.47625, loss_vlb: 1.03106, total_loss: 4.11409, lr: 0.00000, 
+2026-03-11 00:24:53,861 [Train Step] 670/4000: loss_simple: 0.19906, loss_vlb: 1.01460, total_loss: 3.02882, lr: 0.00000, 
+2026-03-11 00:25:07,125 [Train Step] 680/4000: loss_simple: 0.21653, loss_vlb: 1.02358, total_loss: 3.15019, lr: 0.00000, 
+2026-03-11 00:25:20,315 [Train Step] 690/4000: loss_simple: 0.21932, loss_vlb: 1.02474, total_loss: 3.12704, lr: 0.00000, 
+2026-03-11 00:25:32,329 Saved model-last.pt (step=700, loss=1.20465)
+2026-03-11 00:28:41,981 [Eval:val] step=700 reason=periodic edge/AP=0.6125 edge/ODS_threshold=0.1821 edge/ODS_recall=0.6602 edge/ODS_precision=0.7265 edge/ODS_f1=0.6918 edge/OIS_recall=0.6953 edge/OIS_precision=0.7476 edge/OIS_f1=0.7205 | best(edge/AP)=0.7170 last(edge/AP)=0.6125
+2026-03-11 00:29:42,070 [Eval:rwtd] step=700 reason=periodic edge/AP=0.4211 edge/ODS_threshold=0.0200 edge/ODS_recall=0.4817 edge/ODS_precision=0.7012 edge/ODS_f1=0.5711 edge/OIS_recall=0.4819 edge/OIS_precision=0.7436 edge/OIS_f1=0.5848 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4211
+2026-03-11 00:29:43,506 [Train Step] 700/4000: loss_simple: 0.28138, loss_vlb: 1.03124, total_loss: 3.28603, lr: 0.00000, 
+2026-03-11 00:29:56,460 [Train Step] 710/4000: loss_simple: 0.23991, loss_vlb: 1.02840, total_loss: 3.18087, lr: 0.00000, 
+2026-03-11 00:30:09,414 [Train Step] 720/4000: loss_simple: 0.20146, loss_vlb: 1.02310, total_loss: 3.07857, lr: 0.00000, 
+2026-03-11 00:30:22,380 [Train Step] 730/4000: loss_simple: 0.25075, loss_vlb: 1.03323, total_loss: 3.21074, lr: 0.00000, 
+2026-03-11 00:30:35,441 [Train Step] 740/4000: loss_simple: 0.60555, loss_vlb: 1.03195, total_loss: 4.52195, lr: 0.00000, 
+2026-03-11 00:30:48,629 [Train Step] 750/4000: loss_simple: 0.30067, loss_vlb: 1.02868, total_loss: 3.47058, lr: 0.00000, 
+2026-03-11 00:31:01,768 [Train Step] 760/4000: loss_simple: 0.21210, loss_vlb: 1.02288, total_loss: 3.05568, lr: 0.00000, 
+2026-03-11 00:31:14,916 [Train Step] 770/4000: loss_simple: 0.15835, loss_vlb: 1.00335, total_loss: 2.90890, lr: 0.00000, 
+2026-03-11 00:31:28,145 [Train Step] 780/4000: loss_simple: 0.32010, loss_vlb: 1.03154, total_loss: 3.38744, lr: 0.00000, 
+2026-03-11 00:31:41,335 [Train Step] 790/4000: loss_simple: 0.18057, loss_vlb: 1.01907, total_loss: 2.99194, lr: 0.00000, 
+2026-03-11 00:31:53,222 Saved model-last.pt (step=800, loss=1.24952)
+2026-03-11 00:35:03,293 [Eval:val] step=800 reason=periodic edge/AP=0.6203 edge/ODS_threshold=0.1800 edge/ODS_recall=0.6566 edge/ODS_precision=0.7324 edge/ODS_f1=0.6924 edge/OIS_recall=0.6963 edge/OIS_precision=0.7418 edge/OIS_f1=0.7183 | best(edge/AP)=0.7170 last(edge/AP)=0.6203
+2026-03-11 00:36:02,773 [Eval:rwtd] step=800 reason=periodic edge/AP=0.4198 edge/ODS_threshold=0.0188 edge/ODS_recall=0.4787 edge/ODS_precision=0.6990 edge/ODS_f1=0.5683 edge/OIS_recall=0.4798 edge/OIS_precision=0.7418 edge/OIS_f1=0.5827 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4198
+2026-03-11 00:36:04,204 [Train Step] 800/4000: loss_simple: 0.51887, loss_vlb: 1.02919, total_loss: 3.87344, lr: 0.00000, 
+2026-03-11 00:36:17,109 [Train Step] 810/4000: loss_simple: 0.30785, loss_vlb: 1.02016, total_loss: 3.11191, lr: 0.00000, 
+2026-03-11 00:36:30,043 [Train Step] 820/4000: loss_simple: 0.22302, loss_vlb: 1.02404, total_loss: 3.17119, lr: 0.00000, 
+2026-03-11 00:36:43,035 [Train Step] 830/4000: loss_simple: 0.34950, loss_vlb: 1.02238, total_loss: 3.68519, lr: 0.00000, 
+2026-03-11 00:36:56,091 [Train Step] 840/4000: loss_simple: 0.29000, loss_vlb: 1.02986, total_loss: 3.16010, lr: 0.00000, 
+2026-03-11 00:37:09,259 [Train Step] 850/4000: loss_simple: 0.69551, loss_vlb: 1.03531, total_loss: 4.73832, lr: 0.00000, 
+2026-03-11 00:37:22,415 [Train Step] 860/4000: loss_simple: 0.38005, loss_vlb: 1.02963, total_loss: 3.52363, lr: 0.00000, 
+2026-03-11 00:37:35,562 [Train Step] 870/4000: loss_simple: 0.19408, loss_vlb: 1.02576, total_loss: 3.05015, lr: 0.00000, 
+2026-03-11 00:37:48,815 [Train Step] 880/4000: loss_simple: 0.27343, loss_vlb: 1.02986, total_loss: 3.23742, lr: 0.00000, 
+2026-03-11 00:38:02,003 [Train Step] 890/4000: loss_simple: 0.16381, loss_vlb: 1.01275, total_loss: 2.95514, lr: 0.00000, 
+2026-03-11 00:38:13,895 Saved model-last.pt (step=900, loss=1.21612)
+2026-03-11 00:41:26,991 [Eval:val] step=900 reason=periodic edge/AP=0.6354 edge/ODS_threshold=0.1800 edge/ODS_recall=0.6652 edge/ODS_precision=0.7379 edge/ODS_f1=0.6997 edge/OIS_recall=0.7066 edge/OIS_precision=0.7466 edge/OIS_f1=0.7261 | best(edge/AP)=0.7170 last(edge/AP)=0.6354
+2026-03-11 00:42:25,902 [Eval:rwtd] step=900 reason=periodic edge/AP=0.4257 edge/ODS_threshold=0.0131 edge/ODS_recall=0.4917 edge/ODS_precision=0.6849 edge/ODS_f1=0.5724 edge/OIS_recall=0.4875 edge/OIS_precision=0.7397 edge/OIS_f1=0.5877 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4257
+2026-03-11 00:42:27,448 [Train Step] 900/4000: loss_simple: 0.27892, loss_vlb: 1.01991, total_loss: 3.20359, lr: 0.00000, 
+2026-03-11 00:42:40,407 [Train Step] 910/4000: loss_simple: 0.21226, loss_vlb: 1.02738, total_loss: 3.13341, lr: 0.00000, 
+2026-03-11 00:42:53,343 [Train Step] 920/4000: loss_simple: 0.19730, loss_vlb: 1.02318, total_loss: 3.09372, lr: 0.00000, 
+2026-03-11 00:43:06,339 [Train Step] 930/4000: loss_simple: 0.18039, loss_vlb: 1.01449, total_loss: 2.98302, lr: 0.00000, 
+2026-03-11 00:43:19,478 [Train Step] 940/4000: loss_simple: 0.22921, loss_vlb: 1.02949, total_loss: 3.12545, lr: 0.00000, 
+2026-03-11 00:43:32,569 [Train Step] 950/4000: loss_simple: 0.28329, loss_vlb: 1.02832, total_loss: 3.26529, lr: 0.00000, 
+2026-03-11 00:43:45,696 [Train Step] 960/4000: loss_simple: 0.35553, loss_vlb: 1.02857, total_loss: 3.67441, lr: 0.00000, 
+2026-03-11 00:43:58,842 [Train Step] 970/4000: loss_simple: 0.33423, loss_vlb: 1.03326, total_loss: 3.55554, lr: 0.00000, 
+2026-03-11 00:44:12,066 [Train Step] 980/4000: loss_simple: 0.17139, loss_vlb: 1.01903, total_loss: 2.98768, lr: 0.00000, 
+2026-03-11 00:44:25,223 [Train Step] 990/4000: loss_simple: 0.23088, loss_vlb: 1.01873, total_loss: 3.12411, lr: 0.00000, 
+2026-03-11 00:44:37,171 Saved model-last.pt (step=1000, loss=1.18869)
+2026-03-11 00:47:46,630 [Eval:val] step=1000 reason=periodic edge/AP=0.6230 edge/ODS_threshold=0.1800 edge/ODS_recall=0.6457 edge/ODS_precision=0.7420 edge/ODS_f1=0.6905 edge/OIS_recall=0.6981 edge/OIS_precision=0.7388 edge/OIS_f1=0.7179 | best(edge/AP)=0.7170 last(edge/AP)=0.6230
+2026-03-11 00:48:43,755 [Eval:rwtd] step=1000 reason=periodic edge/AP=0.4166 edge/ODS_threshold=0.0183 edge/ODS_recall=0.4790 edge/ODS_precision=0.6918 edge/ODS_f1=0.5661 edge/OIS_recall=0.4804 edge/OIS_precision=0.7320 edge/OIS_f1=0.5801 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4166
+2026-03-11 00:48:45,268 [Train Step] 1000/4000: loss_simple: 0.17246, loss_vlb: 1.02301, total_loss: 2.98026, lr: 0.00000, 
+2026-03-11 00:48:58,185 [Train Step] 1010/4000: loss_simple: 0.42340, loss_vlb: 1.03054, total_loss: 3.86398, lr: 0.00000, 
+2026-03-11 00:49:11,114 [Train Step] 1020/4000: loss_simple: 0.18136, loss_vlb: 1.01811, total_loss: 3.02410, lr: 0.00000, 
+2026-03-11 00:49:24,113 [Train Step] 1030/4000: loss_simple: 0.69102, loss_vlb: 1.02434, total_loss: 4.76371, lr: 0.00000, 
+2026-03-11 00:49:37,225 [Train Step] 1040/4000: loss_simple: 0.14655, loss_vlb: 1.01025, total_loss: 2.87671, lr: 0.00000, 
+2026-03-11 00:49:50,350 [Train Step] 1050/4000: loss_simple: 0.25795, loss_vlb: 1.01261, total_loss: 2.97943, lr: 0.00000, 
+2026-03-11 00:50:03,482 [Train Step] 1060/4000: loss_simple: 0.18351, loss_vlb: 1.01908, total_loss: 2.98830, lr: 0.00000, 
+2026-03-11 00:50:16,696 [Train Step] 1070/4000: loss_simple: 0.17400, loss_vlb: 1.01551, total_loss: 2.99565, lr: 0.00000, 
+2026-03-11 00:50:29,866 [Train Step] 1080/4000: loss_simple: 0.17489, loss_vlb: 1.01861, total_loss: 2.99489, lr: 0.00000, 
+2026-03-11 00:50:43,030 [Train Step] 1090/4000: loss_simple: 0.42745, loss_vlb: 1.03046, total_loss: 3.51606, lr: 0.00000, 
+2026-03-11 00:50:54,975 Saved model-last.pt (step=1100, loss=1.24236)
+2026-03-11 00:54:04,025 [Eval:val] step=1100 reason=periodic edge/AP=0.6405 edge/ODS_threshold=0.1693 edge/ODS_recall=0.6667 edge/ODS_precision=0.7358 edge/ODS_f1=0.6995 edge/OIS_recall=0.7101 edge/OIS_precision=0.7405 edge/OIS_f1=0.7250 | best(edge/AP)=0.7170 last(edge/AP)=0.6405
+2026-03-11 00:55:01,719 [Eval:rwtd] step=1100 reason=periodic edge/AP=0.4240 edge/ODS_threshold=0.0193 edge/ODS_recall=0.4890 edge/ODS_precision=0.6954 edge/ODS_f1=0.5742 edge/OIS_recall=0.4910 edge/OIS_precision=0.7333 edge/OIS_f1=0.5882 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4240
+2026-03-11 00:55:03,148 [Train Step] 1100/4000: loss_simple: 0.24192, loss_vlb: 1.02798, total_loss: 3.10179, lr: 0.00000, 
+2026-03-11 00:55:16,008 [Train Step] 1110/4000: loss_simple: 0.20140, loss_vlb: 1.01578, total_loss: 2.97509, lr: 0.00000, 
+2026-03-11 00:55:28,922 [Train Step] 1120/4000: loss_simple: 0.18893, loss_vlb: 1.02130, total_loss: 3.07775, lr: 0.00000, 
+2026-03-11 00:55:41,893 [Train Step] 1130/4000: loss_simple: 0.40900, loss_vlb: 1.02660, total_loss: 3.83335, lr: 0.00000, 
+2026-03-11 00:55:55,020 [Train Step] 1140/4000: loss_simple: 0.17421, loss_vlb: 1.02112, total_loss: 2.99757, lr: 0.00000, 
+2026-03-11 00:56:08,119 [Train Step] 1150/4000: loss_simple: 0.16793, loss_vlb: 1.01595, total_loss: 2.98930, lr: 0.00000, 
+2026-03-11 00:56:21,246 [Train Step] 1160/4000: loss_simple: 0.30685, loss_vlb: 1.02161, total_loss: 3.09060, lr: 0.00000, 
+2026-03-11 00:56:34,426 [Train Step] 1170/4000: loss_simple: 0.18736, loss_vlb: 1.02142, total_loss: 3.03915, lr: 0.00000, 
+2026-03-11 00:56:47,570 [Train Step] 1180/4000: loss_simple: 0.26668, loss_vlb: 1.02835, total_loss: 3.18972, lr: 0.00000, 
+2026-03-11 00:57:00,684 [Train Step] 1190/4000: loss_simple: 0.16532, loss_vlb: 1.01492, total_loss: 2.92346, lr: 0.00000, 
+2026-03-11 00:57:12,639 Saved model-last.pt (step=1200, loss=1.77958)
+2026-03-11 01:00:19,337 [Eval:val] step=1200 reason=periodic edge/AP=0.6480 edge/ODS_threshold=0.1674 edge/ODS_recall=0.6753 edge/ODS_precision=0.7361 edge/ODS_f1=0.7044 edge/OIS_recall=0.7189 edge/OIS_precision=0.7427 edge/OIS_f1=0.7306 | best(edge/AP)=0.7170 last(edge/AP)=0.6480
+2026-03-11 01:01:17,296 [Eval:rwtd] step=1200 reason=periodic edge/AP=0.4320 edge/ODS_threshold=0.0200 edge/ODS_recall=0.4988 edge/ODS_precision=0.6918 edge/ODS_f1=0.5797 edge/OIS_recall=0.4987 edge/OIS_precision=0.7328 edge/OIS_f1=0.5935 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4320
+2026-03-11 01:01:18,825 [Train Step] 1200/4000: loss_simple: 0.36789, loss_vlb: 1.02521, total_loss: 3.64563, lr: 0.00000, 
+2026-03-11 01:01:31,678 [Train Step] 1210/4000: loss_simple: 0.31960, loss_vlb: 1.03208, total_loss: 3.53162, lr: 0.00000, 
+2026-03-11 01:01:44,635 [Train Step] 1220/4000: loss_simple: 0.30980, loss_vlb: 1.02330, total_loss: 3.40887, lr: 0.00000, 
+2026-03-11 01:01:57,687 [Train Step] 1230/4000: loss_simple: 0.17912, loss_vlb: 1.02184, total_loss: 3.00512, lr: 0.00000, 
+2026-03-11 01:02:10,814 [Train Step] 1240/4000: loss_simple: 0.14276, loss_vlb: 1.01428, total_loss: 2.90354, lr: 0.00000, 
+2026-03-11 01:02:23,887 [Train Step] 1250/4000: loss_simple: 0.46835, loss_vlb: 1.02815, total_loss: 4.21922, lr: 0.00000, 
+2026-03-11 01:02:36,866 [Train Step] 1260/4000: loss_simple: 0.14023, loss_vlb: 1.01404, total_loss: 2.88463, lr: 0.00000, 
+2026-03-11 01:02:49,914 [Train Step] 1270/4000: loss_simple: 0.13616, loss_vlb: 1.01118, total_loss: 2.86398, lr: 0.00000, 
+2026-03-11 01:03:02,958 [Train Step] 1280/4000: loss_simple: 0.17782, loss_vlb: 1.01977, total_loss: 2.99259, lr: 0.00000, 
+2026-03-11 01:03:15,984 [Train Step] 1290/4000: loss_simple: 0.18448, loss_vlb: 1.01970, total_loss: 3.01668, lr: 0.00000, 
+2026-03-11 01:03:27,834 Saved model-last.pt (step=1300, loss=1.14600)
+2026-03-11 01:06:29,265 [Eval:val] step=1300 reason=periodic edge/AP=0.6416 edge/ODS_threshold=0.1552 edge/ODS_recall=0.6732 edge/ODS_precision=0.7337 edge/ODS_f1=0.7021 edge/OIS_recall=0.7146 edge/OIS_precision=0.7390 edge/OIS_f1=0.7266 | best(edge/AP)=0.7170 last(edge/AP)=0.6416
+2026-03-11 01:07:24,342 [Eval:rwtd] step=1300 reason=periodic edge/AP=0.4292 edge/ODS_threshold=0.0117 edge/ODS_recall=0.5024 edge/ODS_precision=0.6772 edge/ODS_f1=0.5769 edge/OIS_recall=0.4953 edge/OIS_precision=0.7334 edge/OIS_f1=0.5913 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4292
+2026-03-11 01:07:25,891 [Train Step] 1300/4000: loss_simple: 0.18814, loss_vlb: 1.01938, total_loss: 3.05379, lr: 0.00000, 
+2026-03-11 01:07:38,615 [Train Step] 1310/4000: loss_simple: 0.18716, loss_vlb: 1.02089, total_loss: 2.97640, lr: 0.00000, 
+2026-03-11 01:07:51,425 [Train Step] 1320/4000: loss_simple: 0.31242, loss_vlb: 1.02486, total_loss: 3.23983, lr: 0.00000, 
+2026-03-11 01:08:04,447 [Train Step] 1330/4000: loss_simple: 0.43365, loss_vlb: 1.01707, total_loss: 3.64789, lr: 0.00000, 
+2026-03-11 01:08:17,392 [Train Step] 1340/4000: loss_simple: 0.19037, loss_vlb: 1.01599, total_loss: 2.93734, lr: 0.00000, 
+2026-03-11 01:08:30,395 [Train Step] 1350/4000: loss_simple: 0.59538, loss_vlb: 1.02596, total_loss: 3.49320, lr: 0.00000, 
+2026-03-11 01:08:43,437 [Train Step] 1360/4000: loss_simple: 0.19506, loss_vlb: 1.02353, total_loss: 3.03090, lr: 0.00000, 
+2026-03-11 01:08:56,557 [Train Step] 1370/4000: loss_simple: 0.17017, loss_vlb: 1.01711, total_loss: 3.00283, lr: 0.00000, 
+2026-03-11 01:09:09,556 [Train Step] 1380/4000: loss_simple: 0.27672, loss_vlb: 1.02516, total_loss: 3.22111, lr: 0.00000, 
+2026-03-11 01:09:22,554 [Train Step] 1390/4000: loss_simple: 0.19943, loss_vlb: 1.01742, total_loss: 2.96624, lr: 0.00000, 
+2026-03-11 01:09:34,393 Saved model-last.pt (step=1400, loss=1.21549)
+2026-03-11 01:12:34,123 [Eval:val] step=1400 reason=periodic edge/AP=0.6534 edge/ODS_threshold=0.1437 edge/ODS_recall=0.6936 edge/ODS_precision=0.7280 edge/ODS_f1=0.7104 edge/OIS_recall=0.7291 edge/OIS_precision=0.7410 edge/OIS_f1=0.7350 | best(edge/AP)=0.7170 last(edge/AP)=0.6534
+2026-03-11 01:13:30,081 [Eval:rwtd] step=1400 reason=periodic edge/AP=0.4405 edge/ODS_threshold=0.0144 edge/ODS_recall=0.5126 edge/ODS_precision=0.6912 edge/ODS_f1=0.5886 edge/OIS_recall=0.5090 edge/OIS_precision=0.7411 edge/OIS_f1=0.6035 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4405
+2026-03-11 01:13:31,604 [Train Step] 1400/4000: loss_simple: 0.16274, loss_vlb: 1.01632, total_loss: 2.94385, lr: 0.00000, 
+2026-03-11 01:13:44,253 [Train Step] 1410/4000: loss_simple: 0.53213, loss_vlb: 1.02429, total_loss: 3.49975, lr: 0.00000, 
+2026-03-11 01:13:57,056 [Train Step] 1420/4000: loss_simple: 0.15429, loss_vlb: 1.01530, total_loss: 2.91521, lr: 0.00000, 
+2026-03-11 01:14:09,983 [Train Step] 1430/4000: loss_simple: 0.14569, loss_vlb: 1.01615, total_loss: 2.87569, lr: 0.00000, 
+2026-03-11 01:14:22,931 [Train Step] 1440/4000: loss_simple: 0.16418, loss_vlb: 1.01505, total_loss: 2.90825, lr: 0.00000, 
+2026-03-11 01:14:35,988 [Train Step] 1450/4000: loss_simple: 0.24116, loss_vlb: 1.02140, total_loss: 3.26475, lr: 0.00000, 
+2026-03-11 01:14:49,066 [Train Step] 1460/4000: loss_simple: 0.19137, loss_vlb: 1.02208, total_loss: 3.09015, lr: 0.00000, 
+2026-03-11 01:15:02,064 [Train Step] 1470/4000: loss_simple: 0.23026, loss_vlb: 1.02098, total_loss: 3.14171, lr: 0.00000, 
+2026-03-11 01:15:15,086 [Train Step] 1480/4000: loss_simple: 0.39155, loss_vlb: 1.02766, total_loss: 3.70281, lr: 0.00000, 
+2026-03-11 01:15:28,154 [Train Step] 1490/4000: loss_simple: 0.28811, loss_vlb: 1.01858, total_loss: 3.06948, lr: 0.00000, 
+2026-03-11 01:15:40,079 Saved model-last.pt (step=1500, loss=1.16961)
+2026-03-11 01:18:36,091 [Eval:val] step=1500 reason=periodic edge/AP=0.6597 edge/ODS_threshold=0.1500 edge/ODS_recall=0.6891 edge/ODS_precision=0.7370 edge/ODS_f1=0.7123 edge/OIS_recall=0.7346 edge/OIS_precision=0.7328 edge/OIS_f1=0.7337 | best(edge/AP)=0.7170 last(edge/AP)=0.6597
+2026-03-11 01:19:29,596 [Eval:rwtd] step=1500 reason=periodic edge/AP=0.4472 edge/ODS_threshold=0.0200 edge/ODS_recall=0.5110 edge/ODS_precision=0.6978 edge/ODS_f1=0.5899 edge/OIS_recall=0.5133 edge/OIS_precision=0.7345 edge/OIS_f1=0.6043 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4472
+2026-03-11 01:19:31,124 [Train Step] 1500/4000: loss_simple: 0.15902, loss_vlb: 1.01909, total_loss: 2.93767, lr: 0.00000, 
+2026-03-11 01:19:43,856 [Train Step] 1510/4000: loss_simple: 0.15236, loss_vlb: 1.01284, total_loss: 2.89007, lr: 0.00000, 
+2026-03-11 01:19:56,696 [Train Step] 1520/4000: loss_simple: 0.20942, loss_vlb: 1.01401, total_loss: 3.11478, lr: 0.00000, 
+2026-03-11 01:20:09,730 [Train Step] 1530/4000: loss_simple: 0.27074, loss_vlb: 1.01751, total_loss: 3.20665, lr: 0.00000, 
+2026-03-11 01:20:22,782 [Train Step] 1540/4000: loss_simple: 0.26549, loss_vlb: 1.02154, total_loss: 3.40874, lr: 0.00000, 
+2026-03-11 01:20:35,813 [Train Step] 1550/4000: loss_simple: 0.17265, loss_vlb: 1.01584, total_loss: 2.94757, lr: 0.00000, 
+2026-03-11 01:20:48,913 [Train Step] 1560/4000: loss_simple: 0.16927, loss_vlb: 1.01249, total_loss: 2.86050, lr: 0.00000, 
+2026-03-11 01:21:01,956 [Train Step] 1570/4000: loss_simple: 0.19711, loss_vlb: 1.02050, total_loss: 2.98417, lr: 0.00000, 
+2026-03-11 01:21:14,992 [Train Step] 1580/4000: loss_simple: 0.18569, loss_vlb: 1.01853, total_loss: 3.09452, lr: 0.00000, 
+2026-03-11 01:21:28,048 [Train Step] 1590/4000: loss_simple: 0.15572, loss_vlb: 1.01717, total_loss: 2.92434, lr: 0.00000, 
+2026-03-11 01:21:39,955 Saved model-last.pt (step=1600, loss=2.07681)
+2026-03-11 01:24:40,272 [Eval:val] step=1600 reason=periodic edge/AP=0.6626 edge/ODS_threshold=0.1500 edge/ODS_recall=0.6937 edge/ODS_precision=0.7350 edge/ODS_f1=0.7137 edge/OIS_recall=0.7351 edge/OIS_precision=0.7389 edge/OIS_f1=0.7370 | best(edge/AP)=0.7170 last(edge/AP)=0.6626
+2026-03-11 01:25:36,211 [Eval:rwtd] step=1600 reason=periodic edge/AP=0.4472 edge/ODS_threshold=0.0200 edge/ODS_recall=0.5129 edge/ODS_precision=0.6907 edge/ODS_f1=0.5886 edge/OIS_recall=0.5133 edge/OIS_precision=0.7288 edge/OIS_f1=0.6024 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4472
+2026-03-11 01:25:37,750 [Train Step] 1600/4000: loss_simple: 0.16587, loss_vlb: 1.01778, total_loss: 3.01385, lr: 0.00000, 
+2026-03-11 01:25:50,546 [Train Step] 1610/4000: loss_simple: 0.24509, loss_vlb: 1.01645, total_loss: 3.13437, lr: 0.00000, 
+2026-03-11 01:26:03,423 [Train Step] 1620/4000: loss_simple: 0.31326, loss_vlb: 1.02531, total_loss: 3.32821, lr: 0.00000, 
+2026-03-11 01:26:16,470 [Train Step] 1630/4000: loss_simple: 0.20862, loss_vlb: 1.02256, total_loss: 3.01200, lr: 0.00000, 
+2026-03-11 01:26:29,493 [Train Step] 1640/4000: loss_simple: 0.12047, loss_vlb: 1.01274, total_loss: 2.82828, lr: 0.00000, 
+2026-03-11 01:26:42,473 [Train Step] 1650/4000: loss_simple: 0.11454, loss_vlb: 1.00683, total_loss: 2.80050, lr: 0.00000, 
+2026-03-11 01:26:55,559 [Train Step] 1660/4000: loss_simple: 0.81661, loss_vlb: 1.02142, total_loss: 4.28688, lr: 0.00000, 
+2026-03-11 01:27:08,611 [Train Step] 1670/4000: loss_simple: 0.15228, loss_vlb: 1.01248, total_loss: 2.93351, lr: 0.00000, 
+2026-03-11 01:27:21,691 [Train Step] 1680/4000: loss_simple: 0.20668, loss_vlb: 1.01882, total_loss: 3.03408, lr: 0.00000, 
+2026-03-11 01:27:34,793 [Train Step] 1690/4000: loss_simple: 0.13052, loss_vlb: 1.01113, total_loss: 2.85961, lr: 0.00000, 
+2026-03-11 01:27:46,625 Saved model-last.pt (step=1700, loss=1.15002)
+2026-03-11 01:30:44,249 [Eval:val] step=1700 reason=periodic edge/AP=0.6592 edge/ODS_threshold=0.1439 edge/ODS_recall=0.6931 edge/ODS_precision=0.7317 edge/ODS_f1=0.7119 edge/OIS_recall=0.7349 edge/OIS_precision=0.7354 edge/OIS_f1=0.7351 | best(edge/AP)=0.7170 last(edge/AP)=0.6592
+2026-03-11 01:31:37,563 [Eval:rwtd] step=1700 reason=periodic edge/AP=0.4471 edge/ODS_threshold=0.0200 edge/ODS_recall=0.5141 edge/ODS_precision=0.6913 edge/ODS_f1=0.5897 edge/OIS_recall=0.5158 edge/OIS_precision=0.7292 edge/OIS_f1=0.6042 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4471
+2026-03-11 01:31:39,088 [Train Step] 1700/4000: loss_simple: 0.13446, loss_vlb: 1.01422, total_loss: 2.86385, lr: 0.00000, 
+2026-03-11 01:31:51,823 [Train Step] 1710/4000: loss_simple: 0.14699, loss_vlb: 1.01112, total_loss: 2.88995, lr: 0.00000, 
+2026-03-11 01:32:04,772 [Train Step] 1720/4000: loss_simple: 0.16388, loss_vlb: 1.01787, total_loss: 2.98082, lr: 0.00000, 
+2026-03-11 01:32:17,708 [Train Step] 1730/4000: loss_simple: 0.40209, loss_vlb: 1.02095, total_loss: 3.45673, lr: 0.00000, 
+2026-03-11 01:32:30,656 [Train Step] 1740/4000: loss_simple: 0.22609, loss_vlb: 1.02437, total_loss: 3.12723, lr: 0.00000, 
+2026-03-11 01:32:43,647 [Train Step] 1750/4000: loss_simple: 0.47687, loss_vlb: 1.02754, total_loss: 3.93283, lr: 0.00000, 
+2026-03-11 01:32:56,800 [Train Step] 1760/4000: loss_simple: 0.15686, loss_vlb: 1.01549, total_loss: 2.89786, lr: 0.00000, 
+2026-03-11 01:33:09,863 [Train Step] 1770/4000: loss_simple: 0.14963, loss_vlb: 1.01706, total_loss: 2.93256, lr: 0.00000, 
+2026-03-11 01:33:22,988 [Train Step] 1780/4000: loss_simple: 0.17662, loss_vlb: 1.01861, total_loss: 3.02175, lr: 0.00000, 
+2026-03-11 01:33:36,145 [Train Step] 1790/4000: loss_simple: 0.13276, loss_vlb: 1.01180, total_loss: 2.84260, lr: 0.00000, 
+2026-03-11 01:33:47,993 Saved model-last.pt (step=1800, loss=1.12693)
+2026-03-11 01:36:39,961 [Eval:val] step=1800 reason=periodic edge/AP=0.6609 edge/ODS_threshold=0.1400 edge/ODS_recall=0.6895 edge/ODS_precision=0.7401 edge/ODS_f1=0.7139 edge/OIS_recall=0.7382 edge/OIS_precision=0.7360 edge/OIS_f1=0.7371 | best(edge/AP)=0.7170 last(edge/AP)=0.6609
+2026-03-11 01:37:32,832 [Eval:rwtd] step=1800 reason=periodic edge/AP=0.4396 edge/ODS_threshold=0.0135 edge/ODS_recall=0.5152 edge/ODS_precision=0.6855 edge/ODS_f1=0.5883 edge/OIS_recall=0.5110 edge/OIS_precision=0.7336 edge/OIS_f1=0.6024 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4396
+2026-03-11 01:37:34,343 [Train Step] 1800/4000: loss_simple: 0.45822, loss_vlb: 1.02519, total_loss: 3.35417, lr: 0.00000, 
+2026-03-11 01:37:47,098 [Train Step] 1810/4000: loss_simple: 0.25909, loss_vlb: 1.02000, total_loss: 3.11504, lr: 0.00000, 
+2026-03-11 01:38:00,044 [Train Step] 1820/4000: loss_simple: 0.24830, loss_vlb: 1.02179, total_loss: 3.31188, lr: 0.00000, 
+2026-03-11 01:38:13,031 [Train Step] 1830/4000: loss_simple: 0.17569, loss_vlb: 1.02180, total_loss: 2.98154, lr: 0.00000, 
+2026-03-11 01:38:25,984 [Train Step] 1840/4000: loss_simple: 0.14563, loss_vlb: 1.01788, total_loss: 2.93337, lr: 0.00000, 
+2026-03-11 01:38:39,021 [Train Step] 1850/4000: loss_simple: 0.16177, loss_vlb: 1.01878, total_loss: 2.87025, lr: 0.00000, 
+2026-03-11 01:38:52,120 [Train Step] 1860/4000: loss_simple: 0.21635, loss_vlb: 1.01732, total_loss: 3.06256, lr: 0.00000, 
+2026-03-11 01:39:05,189 [Train Step] 1870/4000: loss_simple: 0.18155, loss_vlb: 1.02035, total_loss: 2.98134, lr: 0.00000, 
+2026-03-11 01:39:18,301 [Train Step] 1880/4000: loss_simple: 0.16839, loss_vlb: 1.01791, total_loss: 2.90066, lr: 0.00000, 
+2026-03-11 01:39:31,457 [Train Step] 1890/4000: loss_simple: 0.18348, loss_vlb: 1.01861, total_loss: 2.97523, lr: 0.00000, 
+2026-03-11 01:39:43,324 Saved model-last.pt (step=1900, loss=1.12821)
+2026-03-11 01:42:35,830 [Eval:val] step=1900 reason=periodic edge/AP=0.6562 edge/ODS_threshold=0.1365 edge/ODS_recall=0.6903 edge/ODS_precision=0.7362 edge/ODS_f1=0.7125 edge/OIS_recall=0.7321 edge/OIS_precision=0.7394 edge/OIS_f1=0.7357 | best(edge/AP)=0.7170 last(edge/AP)=0.6562
+2026-03-11 01:43:29,196 [Eval:rwtd] step=1900 reason=periodic edge/AP=0.4398 edge/ODS_threshold=0.0200 edge/ODS_recall=0.5074 edge/ODS_precision=0.6963 edge/ODS_f1=0.5870 edge/OIS_recall=0.5099 edge/OIS_precision=0.7284 edge/OIS_f1=0.5999 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4398
+2026-03-11 01:43:30,732 [Train Step] 1900/4000: loss_simple: 0.19427, loss_vlb: 1.01857, total_loss: 3.01802, lr: 0.00000, 
+2026-03-11 01:43:43,460 [Train Step] 1910/4000: loss_simple: 0.15424, loss_vlb: 1.01471, total_loss: 2.95551, lr: 0.00000, 
+2026-03-11 01:43:56,356 [Train Step] 1920/4000: loss_simple: 0.18270, loss_vlb: 1.01781, total_loss: 3.00432, lr: 0.00000, 
+2026-03-11 01:44:09,304 [Train Step] 1930/4000: loss_simple: 0.13348, loss_vlb: 1.01113, total_loss: 2.84021, lr: 0.00000, 
+2026-03-11 01:44:22,301 [Train Step] 1940/4000: loss_simple: 0.15600, loss_vlb: 1.02108, total_loss: 2.91902, lr: 0.00000, 
+2026-03-11 01:44:35,395 [Train Step] 1950/4000: loss_simple: 0.34549, loss_vlb: 1.02221, total_loss: 3.70807, lr: 0.00000, 
+2026-03-11 01:44:48,478 [Train Step] 1960/4000: loss_simple: 0.12314, loss_vlb: 1.01219, total_loss: 2.85061, lr: 0.00000, 
+2026-03-11 01:45:01,485 [Train Step] 1970/4000: loss_simple: 0.31883, loss_vlb: 1.02066, total_loss: 3.62041, lr: 0.00000, 
+2026-03-11 01:45:14,568 [Train Step] 1980/4000: loss_simple: 0.59172, loss_vlb: 1.02290, total_loss: 3.69620, lr: 0.00000, 
+2026-03-11 01:45:27,704 [Train Step] 1990/4000: loss_simple: 0.32098, loss_vlb: 1.02170, total_loss: 3.24256, lr: 0.00000, 
+2026-03-11 01:45:39,521 Saved model-last.pt (step=2000, loss=1.28117)
+2026-03-11 01:48:28,204 [Eval:val] step=2000 reason=periodic edge/AP=0.6641 edge/ODS_threshold=0.1213 edge/ODS_recall=0.7039 edge/ODS_precision=0.7232 edge/ODS_f1=0.7134 edge/OIS_recall=0.7377 edge/OIS_precision=0.7343 edge/OIS_f1=0.7360 | best(edge/AP)=0.7170 last(edge/AP)=0.6641
+2026-03-11 01:49:19,645 [Eval:rwtd] step=2000 reason=periodic edge/AP=0.4382 edge/ODS_threshold=0.0190 edge/ODS_recall=0.5075 edge/ODS_precision=0.6939 edge/ODS_f1=0.5863 edge/OIS_recall=0.5098 edge/OIS_precision=0.7271 edge/OIS_f1=0.5993 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4382
+2026-03-11 01:49:21,198 [Train Step] 2000/4000: loss_simple: 0.27820, loss_vlb: 1.01795, total_loss: 3.12809, lr: 0.00000, 
+2026-03-11 01:49:34,010 [Train Step] 2010/4000: loss_simple: 0.54859, loss_vlb: 1.01908, total_loss: 4.15036, lr: 0.00000, 
+2026-03-11 01:49:46,996 [Train Step] 2020/4000: loss_simple: 0.38974, loss_vlb: 1.02474, total_loss: 3.57670, lr: 0.00000, 
+2026-03-11 01:49:59,898 [Train Step] 2030/4000: loss_simple: 0.13310, loss_vlb: 1.01361, total_loss: 2.88974, lr: 0.00000, 
+2026-03-11 01:50:12,888 [Train Step] 2040/4000: loss_simple: 0.14262, loss_vlb: 1.01097, total_loss: 2.89634, lr: 0.00000, 
+2026-03-11 01:50:25,993 [Train Step] 2050/4000: loss_simple: 0.22786, loss_vlb: 1.02036, total_loss: 3.22154, lr: 0.00000, 
+2026-03-11 01:50:39,003 [Train Step] 2060/4000: loss_simple: 0.24181, loss_vlb: 1.01560, total_loss: 3.33899, lr: 0.00000, 
+2026-03-11 01:50:51,999 [Train Step] 2070/4000: loss_simple: 0.15930, loss_vlb: 1.01683, total_loss: 2.95357, lr: 0.00000, 
+2026-03-11 01:51:05,152 [Train Step] 2080/4000: loss_simple: 0.22423, loss_vlb: 1.02110, total_loss: 3.11539, lr: 0.00000, 
+2026-03-11 01:51:18,247 [Train Step] 2090/4000: loss_simple: 0.21937, loss_vlb: 1.02184, total_loss: 3.17707, lr: 0.00000, 
+2026-03-11 01:51:30,027 Saved model-last.pt (step=2100, loss=1.32002)
+2026-03-11 01:54:21,627 [Eval:val] step=2100 reason=periodic edge/AP=0.6637 edge/ODS_threshold=0.1300 edge/ODS_recall=0.7051 edge/ODS_precision=0.7295 edge/ODS_f1=0.7171 edge/OIS_recall=0.7421 edge/OIS_precision=0.7373 edge/OIS_f1=0.7397 | best(edge/AP)=0.7170 last(edge/AP)=0.6637
+2026-03-11 01:55:14,027 [Eval:rwtd] step=2100 reason=periodic edge/AP=0.4452 edge/ODS_threshold=0.0187 edge/ODS_recall=0.5133 edge/ODS_precision=0.6931 edge/ODS_f1=0.5898 edge/OIS_recall=0.5142 edge/OIS_precision=0.7295 edge/OIS_f1=0.6032 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4452
+2026-03-11 01:55:15,443 [Train Step] 2100/4000: loss_simple: 0.13500, loss_vlb: 1.01157, total_loss: 2.88295, lr: 0.00000, 
+2026-03-11 01:55:28,222 [Train Step] 2110/4000: loss_simple: 0.11338, loss_vlb: 1.00987, total_loss: 2.78371, lr: 0.00000, 
+2026-03-11 01:55:41,182 [Train Step] 2120/4000: loss_simple: 0.12558, loss_vlb: 1.00972, total_loss: 2.83894, lr: 0.00000, 
+2026-03-11 01:55:54,106 [Train Step] 2130/4000: loss_simple: 0.17193, loss_vlb: 1.00908, total_loss: 2.91744, lr: 0.00000, 
+2026-03-11 01:56:07,065 [Train Step] 2140/4000: loss_simple: 0.17052, loss_vlb: 1.01468, total_loss: 3.06100, lr: 0.00000, 
+2026-03-11 01:56:20,196 [Train Step] 2150/4000: loss_simple: 0.13281, loss_vlb: 1.01282, total_loss: 2.89159, lr: 0.00000, 
+2026-03-11 01:56:33,283 [Train Step] 2160/4000: loss_simple: 0.14365, loss_vlb: 1.01653, total_loss: 2.86417, lr: 0.00000, 
+2026-03-11 01:56:46,358 [Train Step] 2170/4000: loss_simple: 10.43860, loss_vlb: 1.01478, total_loss: 33.78748, lr: 0.00000, 
+2026-03-11 01:56:59,504 [Train Step] 2180/4000: loss_simple: 0.11060, loss_vlb: 1.00916, total_loss: 2.80581, lr: 0.00000, 
+2026-03-11 01:57:12,563 [Train Step] 2190/4000: loss_simple: 0.12943, loss_vlb: 1.01096, total_loss: 2.86686, lr: 0.00000, 
+2026-03-11 01:57:24,372 Saved model-last.pt (step=2200, loss=2.04173)
+2026-03-11 02:00:12,788 [Eval:val] step=2200 reason=periodic edge/AP=0.6626 edge/ODS_threshold=0.1228 edge/ODS_recall=0.7045 edge/ODS_precision=0.7298 edge/ODS_f1=0.7169 edge/OIS_recall=0.7443 edge/OIS_precision=0.7326 edge/OIS_f1=0.7384 | best(edge/AP)=0.7170 last(edge/AP)=0.6626
+2026-03-11 02:01:04,046 [Eval:rwtd] step=2200 reason=periodic edge/AP=0.4441 edge/ODS_threshold=0.0139 edge/ODS_recall=0.5156 edge/ODS_precision=0.6810 edge/ODS_f1=0.5868 edge/OIS_recall=0.5111 edge/OIS_precision=0.7264 edge/OIS_f1=0.6000 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4441
+2026-03-11 02:01:05,487 [Train Step] 2200/4000: loss_simple: 0.27171, loss_vlb: 1.01845, total_loss: 3.42705, lr: 0.00000, 
+2026-03-11 02:01:18,331 [Train Step] 2210/4000: loss_simple: 0.17946, loss_vlb: 1.01779, total_loss: 3.08001, lr: 0.00000, 
+2026-03-11 02:01:31,148 [Train Step] 2220/4000: loss_simple: 0.18977, loss_vlb: 1.01578, total_loss: 2.98225, lr: 0.00000, 
+2026-03-11 02:01:44,047 [Train Step] 2230/4000: loss_simple: 0.17786, loss_vlb: 1.01871, total_loss: 2.94636, lr: 0.00000, 
+2026-03-11 02:01:57,008 [Train Step] 2240/4000: loss_simple: 0.25671, loss_vlb: 1.02733, total_loss: 3.24656, lr: 0.00000, 
+2026-03-11 02:02:10,047 [Train Step] 2250/4000: loss_simple: 0.94044, loss_vlb: 1.02731, total_loss: 3.96650, lr: 0.00000, 
+2026-03-11 02:02:23,029 [Train Step] 2260/4000: loss_simple: 0.14449, loss_vlb: 1.01583, total_loss: 2.93110, lr: 0.00000, 
+2026-03-11 02:02:36,070 [Train Step] 2270/4000: loss_simple: 0.16530, loss_vlb: 1.02039, total_loss: 2.99138, lr: 0.00000, 
+2026-03-11 02:02:49,154 [Train Step] 2280/4000: loss_simple: 0.10881, loss_vlb: 1.00893, total_loss: 2.78402, lr: 0.00000, 
+2026-03-11 02:03:02,208 [Train Step] 2290/4000: loss_simple: 0.13742, loss_vlb: 1.01208, total_loss: 2.92049, lr: 0.00000, 
+2026-03-11 02:03:14,022 Saved model-last.pt (step=2300, loss=1.12179)
+2026-03-11 02:06:07,125 [Eval:val] step=2300 reason=periodic edge/AP=0.6769 edge/ODS_threshold=0.1300 edge/ODS_recall=0.7119 edge/ODS_precision=0.7303 edge/ODS_f1=0.7210 edge/OIS_recall=0.7534 edge/OIS_precision=0.7326 edge/OIS_f1=0.7429 | best(edge/AP)=0.7170 last(edge/AP)=0.6769
+2026-03-11 02:06:59,100 [Eval:rwtd] step=2300 reason=periodic edge/AP=0.4495 edge/ODS_threshold=0.0200 edge/ODS_recall=0.5186 edge/ODS_precision=0.6868 edge/ODS_f1=0.5910 edge/OIS_recall=0.5201 edge/OIS_precision=0.7237 edge/OIS_f1=0.6052 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4495
+2026-03-11 02:07:00,598 [Train Step] 2300/4000: loss_simple: 0.19841, loss_vlb: 1.02162, total_loss: 3.01254, lr: 0.00000, 
+2026-03-11 02:07:13,409 [Train Step] 2310/4000: loss_simple: 0.12367, loss_vlb: 1.01321, total_loss: 2.85648, lr: 0.00000, 
+2026-03-11 02:07:26,270 [Train Step] 2320/4000: loss_simple: 0.11300, loss_vlb: 1.01048, total_loss: 2.80237, lr: 0.00000, 
+2026-03-11 02:07:39,168 [Train Step] 2330/4000: loss_simple: 0.19068, loss_vlb: 1.02116, total_loss: 3.04840, lr: 0.00000, 
+2026-03-11 02:07:52,187 [Train Step] 2340/4000: loss_simple: 0.32119, loss_vlb: 1.01767, total_loss: 3.48026, lr: 0.00000, 
+2026-03-11 02:08:05,132 [Train Step] 2350/4000: loss_simple: 0.35661, loss_vlb: 1.01741, total_loss: 3.75487, lr: 0.00000, 
+2026-03-11 02:08:18,180 [Train Step] 2360/4000: loss_simple: 0.12700, loss_vlb: 1.01128, total_loss: 2.82309, lr: 0.00000, 
+2026-03-11 02:08:31,205 [Train Step] 2370/4000: loss_simple: 0.14450, loss_vlb: 1.01733, total_loss: 2.88963, lr: 0.00000, 
+2026-03-11 02:08:44,359 [Train Step] 2380/4000: loss_simple: 0.16491, loss_vlb: 1.01440, total_loss: 2.90388, lr: 0.00000, 
+2026-03-11 02:08:57,414 [Train Step] 2390/4000: loss_simple: 0.13705, loss_vlb: 1.01224, total_loss: 2.90536, lr: 0.00000, 
+2026-03-11 02:09:09,200 Saved model-last.pt (step=2400, loss=1.12770)
+2026-03-11 02:11:54,774 [Eval:val] step=2400 reason=periodic edge/AP=0.6609 edge/ODS_threshold=0.1200 edge/ODS_recall=0.7045 edge/ODS_precision=0.7256 edge/ODS_f1=0.7149 edge/OIS_recall=0.7428 edge/OIS_precision=0.7338 edge/OIS_f1=0.7383 | best(edge/AP)=0.7170 last(edge/AP)=0.6609
+2026-03-11 02:12:45,927 [Eval:rwtd] step=2400 reason=periodic edge/AP=0.4415 edge/ODS_threshold=0.0118 edge/ODS_recall=0.5201 edge/ODS_precision=0.6737 edge/ODS_f1=0.5870 edge/OIS_recall=0.5132 edge/OIS_precision=0.7222 edge/OIS_f1=0.6000 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4415
+2026-03-11 02:12:47,465 [Train Step] 2400/4000: loss_simple: 0.19375, loss_vlb: 1.01945, total_loss: 3.00301, lr: 0.00000, 
+2026-03-11 02:13:00,344 [Train Step] 2410/4000: loss_simple: 0.29061, loss_vlb: 1.01777, total_loss: 3.04399, lr: 0.00000, 
+2026-03-11 02:13:13,162 [Train Step] 2420/4000: loss_simple: 0.12247, loss_vlb: 1.01131, total_loss: 2.81338, lr: 0.00000, 
+2026-03-11 02:13:26,030 [Train Step] 2430/4000: loss_simple: 0.17426, loss_vlb: 1.01192, total_loss: 2.86682, lr: 0.00000, 
+2026-03-11 02:13:39,015 [Train Step] 2440/4000: loss_simple: 0.37971, loss_vlb: 1.02139, total_loss: 3.63733, lr: 0.00000, 
+2026-03-11 02:13:52,028 [Train Step] 2450/4000: loss_simple: 0.12449, loss_vlb: 1.01358, total_loss: 2.84728, lr: 0.00000, 
+2026-03-11 02:14:05,078 [Train Step] 2460/4000: loss_simple: 0.19954, loss_vlb: 1.01989, total_loss: 2.98316, lr: 0.00000, 
+2026-03-11 02:14:18,210 [Train Step] 2470/4000: loss_simple: 0.14360, loss_vlb: 1.01462, total_loss: 2.85792, lr: 0.00000, 
+2026-03-11 02:14:31,272 [Train Step] 2480/4000: loss_simple: 0.13434, loss_vlb: 1.01144, total_loss: 2.82523, lr: 0.00000, 
+2026-03-11 02:14:44,345 [Train Step] 2490/4000: loss_simple: 0.13414, loss_vlb: 1.00855, total_loss: 2.87503, lr: 0.00000, 
+2026-03-11 02:14:56,156 Saved model-last.pt (step=2500, loss=1.56604)
+2026-03-11 02:17:47,804 [Eval:val] step=2500 reason=periodic edge/AP=0.6695 edge/ODS_threshold=0.1246 edge/ODS_recall=0.7099 edge/ODS_precision=0.7291 edge/ODS_f1=0.7194 edge/OIS_recall=0.7457 edge/OIS_precision=0.7387 edge/OIS_f1=0.7422 | best(edge/AP)=0.7170 last(edge/AP)=0.6695
+2026-03-11 02:18:39,815 [Eval:rwtd] step=2500 reason=periodic edge/AP=0.4437 edge/ODS_threshold=0.0110 edge/ODS_recall=0.5238 edge/ODS_precision=0.6713 edge/ODS_f1=0.5884 edge/OIS_recall=0.5162 edge/OIS_precision=0.7215 edge/OIS_f1=0.6018 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4437
+2026-03-11 02:18:41,341 [Train Step] 2500/4000: loss_simple: 0.25190, loss_vlb: 1.02417, total_loss: 3.30216, lr: 0.00000, 
+2026-03-11 02:18:53,904 [Train Step] 2510/4000: loss_simple: 0.11189, loss_vlb: 1.00940, total_loss: 2.80149, lr: 0.00000, 
+2026-03-11 02:19:06,506 [Train Step] 2520/4000: loss_simple: 3.18799, loss_vlb: 1.02061, total_loss: 11.91723, lr: 0.00000, 
+2026-03-11 02:19:19,191 [Train Step] 2530/4000: loss_simple: 0.31917, loss_vlb: 1.01623, total_loss: 3.55507, lr: 0.00000, 
+2026-03-11 02:19:32,000 [Train Step] 2540/4000: loss_simple: 0.17483, loss_vlb: 1.01494, total_loss: 2.94153, lr: 0.00000, 
+2026-03-11 02:19:44,773 [Train Step] 2550/4000: loss_simple: 0.18865, loss_vlb: 1.01615, total_loss: 2.99530, lr: 0.00000, 
+2026-03-11 02:19:57,566 [Train Step] 2560/4000: loss_simple: 0.27016, loss_vlb: 1.02293, total_loss: 3.14519, lr: 0.00000, 
+2026-03-11 02:20:10,450 [Train Step] 2570/4000: loss_simple: 0.23063, loss_vlb: 1.01876, total_loss: 3.15445, lr: 0.00000, 
+2026-03-11 02:20:23,278 [Train Step] 2580/4000: loss_simple: 0.18443, loss_vlb: 1.01220, total_loss: 2.97198, lr: 0.00000, 
+2026-03-11 02:20:36,134 [Train Step] 2590/4000: loss_simple: 0.13378, loss_vlb: 1.01362, total_loss: 2.84522, lr: 0.00000, 
+2026-03-11 02:20:47,751 Saved model-last.pt (step=2600, loss=1.27467)
+2026-03-11 02:23:32,515 [Eval:val] step=2600 reason=periodic edge/AP=0.6700 edge/ODS_threshold=0.1200 edge/ODS_recall=0.7030 edge/ODS_precision=0.7315 edge/ODS_f1=0.7170 edge/OIS_recall=0.7425 edge/OIS_precision=0.7394 edge/OIS_f1=0.7410 | best(edge/AP)=0.7170 last(edge/AP)=0.6700
+2026-03-11 02:24:23,398 [Eval:rwtd] step=2600 reason=periodic edge/AP=0.4342 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5195 edge/ODS_precision=0.6739 edge/ODS_f1=0.5867 edge/OIS_recall=0.5097 edge/OIS_precision=0.7247 edge/OIS_f1=0.5984 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4342
+2026-03-11 02:24:24,916 [Train Step] 2600/4000: loss_simple: 0.11408, loss_vlb: 1.00662, total_loss: 2.79559, lr: 0.00000, 
+2026-03-11 02:24:37,417 [Train Step] 2610/4000: loss_simple: 0.21820, loss_vlb: 1.02384, total_loss: 3.12116, lr: 0.00000, 
+2026-03-11 02:24:50,028 [Train Step] 2620/4000: loss_simple: 0.12736, loss_vlb: 1.00809, total_loss: 2.87104, lr: 0.00000, 
+2026-03-11 02:25:02,735 [Train Step] 2630/4000: loss_simple: 0.15089, loss_vlb: 1.01476, total_loss: 2.95352, lr: 0.00000, 
+2026-03-11 02:25:15,574 [Train Step] 2640/4000: loss_simple: 0.21779, loss_vlb: 1.02341, total_loss: 3.08737, lr: 0.00000, 
+2026-03-11 02:25:28,350 [Train Step] 2650/4000: loss_simple: 0.13063, loss_vlb: 1.01436, total_loss: 2.85515, lr: 0.00000, 
+2026-03-11 02:25:41,162 [Train Step] 2660/4000: loss_simple: 0.19520, loss_vlb: 1.01751, total_loss: 3.06215, lr: 0.00000, 
+2026-03-11 02:25:54,041 [Train Step] 2670/4000: loss_simple: 0.12284, loss_vlb: 1.01227, total_loss: 2.83076, lr: 0.00000, 
+2026-03-11 02:26:06,859 [Train Step] 2680/4000: loss_simple: 0.10216, loss_vlb: 1.00878, total_loss: 2.76711, lr: 0.00000, 
+2026-03-11 02:26:19,703 [Train Step] 2690/4000: loss_simple: 0.10817, loss_vlb: 1.00836, total_loss: 2.78013, lr: 0.00000, 
+2026-03-11 02:26:31,399 Saved model-last.pt (step=2700, loss=1.16037)
+2026-03-11 02:29:15,740 [Eval:val] step=2700 reason=periodic edge/AP=0.6692 edge/ODS_threshold=0.1200 edge/ODS_recall=0.7093 edge/ODS_precision=0.7341 edge/ODS_f1=0.7215 edge/OIS_recall=0.7487 edge/OIS_precision=0.7360 edge/OIS_f1=0.7423 | best(edge/AP)=0.7170 last(edge/AP)=0.6692
+2026-03-11 02:30:07,171 [Eval:rwtd] step=2700 reason=periodic edge/AP=0.4438 edge/ODS_threshold=0.0163 edge/ODS_recall=0.5131 edge/ODS_precision=0.6878 edge/ODS_f1=0.5877 edge/OIS_recall=0.5118 edge/OIS_precision=0.7266 edge/OIS_f1=0.6005 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4438
+2026-03-11 02:30:08,585 [Train Step] 2700/4000: loss_simple: 0.15982, loss_vlb: 1.02049, total_loss: 2.95256, lr: 0.00000, 
+2026-03-11 02:30:21,102 [Train Step] 2710/4000: loss_simple: 0.17119, loss_vlb: 1.01854, total_loss: 2.98263, lr: 0.00000, 
+2026-03-11 02:30:33,724 [Train Step] 2720/4000: loss_simple: 0.19207, loss_vlb: 1.01890, total_loss: 2.99538, lr: 0.00000, 
+2026-03-11 02:30:46,517 [Train Step] 2730/4000: loss_simple: 0.21726, loss_vlb: 1.02124, total_loss: 3.21676, lr: 0.00000, 
+2026-03-11 02:30:59,281 [Train Step] 2740/4000: loss_simple: 0.41983, loss_vlb: 1.01887, total_loss: 4.04515, lr: 0.00000, 
+2026-03-11 02:31:12,048 [Train Step] 2750/4000: loss_simple: 0.12399, loss_vlb: 1.01413, total_loss: 2.83983, lr: 0.00000, 
+2026-03-11 02:31:24,827 [Train Step] 2760/4000: loss_simple: 0.13866, loss_vlb: 1.01473, total_loss: 2.92017, lr: 0.00000, 
+2026-03-11 02:31:37,693 [Train Step] 2770/4000: loss_simple: 0.18334, loss_vlb: 1.01871, total_loss: 3.06164, lr: 0.00000, 
+2026-03-11 02:31:50,504 [Train Step] 2780/4000: loss_simple: 0.15803, loss_vlb: 1.01672, total_loss: 2.95740, lr: 0.00000, 
+2026-03-11 02:32:03,324 [Train Step] 2790/4000: loss_simple: 0.37838, loss_vlb: 1.01993, total_loss: 3.49942, lr: 0.00000, 
+2026-03-11 02:32:15,000 Saved model-last.pt (step=2800, loss=1.13909)
+2026-03-11 02:34:57,180 [Eval:val] step=2800 reason=periodic edge/AP=0.6629 edge/ODS_threshold=0.1100 edge/ODS_recall=0.7097 edge/ODS_precision=0.7301 edge/ODS_f1=0.7197 edge/OIS_recall=0.7462 edge/OIS_precision=0.7383 edge/OIS_f1=0.7422 | best(edge/AP)=0.7170 last(edge/AP)=0.6629
+2026-03-11 02:35:47,571 [Eval:rwtd] step=2800 reason=periodic edge/AP=0.4370 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5151 edge/ODS_precision=0.6810 edge/ODS_f1=0.5865 edge/OIS_recall=0.5057 edge/OIS_precision=0.7360 edge/OIS_f1=0.5995 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4370
+2026-03-11 02:35:49,093 [Train Step] 2800/4000: loss_simple: 0.17990, loss_vlb: 1.01946, total_loss: 3.08014, lr: 0.00000, 
+2026-03-11 02:36:01,633 [Train Step] 2810/4000: loss_simple: 0.15057, loss_vlb: 1.01969, total_loss: 2.90753, lr: 0.00000, 
+2026-03-11 02:36:14,275 [Train Step] 2820/4000: loss_simple: 0.44930, loss_vlb: 1.01440, total_loss: 3.15063, lr: 0.00000, 
+2026-03-11 02:36:27,055 [Train Step] 2830/4000: loss_simple: 0.17906, loss_vlb: 1.01716, total_loss: 3.00280, lr: 0.00000, 
+2026-03-11 02:36:39,790 [Train Step] 2840/4000: loss_simple: 0.26905, loss_vlb: 1.01669, total_loss: 3.46777, lr: 0.00000, 
+2026-03-11 02:36:52,568 [Train Step] 2850/4000: loss_simple: 0.13324, loss_vlb: 1.01252, total_loss: 2.84745, lr: 0.00000, 
+2026-03-11 02:37:05,368 [Train Step] 2860/4000: loss_simple: 0.32253, loss_vlb: 1.01670, total_loss: 3.29721, lr: 0.00000, 
+2026-03-11 02:37:18,271 [Train Step] 2870/4000: loss_simple: 0.43157, loss_vlb: 1.02707, total_loss: 3.92913, lr: 0.00000, 
+2026-03-11 02:37:31,082 [Train Step] 2880/4000: loss_simple: 0.20407, loss_vlb: 1.01820, total_loss: 3.00245, lr: 0.00000, 
+2026-03-11 02:37:43,895 [Train Step] 2890/4000: loss_simple: 0.16286, loss_vlb: 1.01444, total_loss: 2.93244, lr: 0.00000, 
+2026-03-11 02:37:55,555 Saved model-last.pt (step=2900, loss=1.17093)
+2026-03-11 02:40:41,507 [Eval:val] step=2900 reason=periodic edge/AP=0.6717 edge/ODS_threshold=0.1200 edge/ODS_recall=0.7124 edge/ODS_precision=0.7337 edge/ODS_f1=0.7229 edge/OIS_recall=0.7478 edge/OIS_precision=0.7398 edge/OIS_f1=0.7438 | best(edge/AP)=0.7170 last(edge/AP)=0.6717
+2026-03-11 02:41:32,415 [Eval:rwtd] step=2900 reason=periodic edge/AP=0.4434 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5256 edge/ODS_precision=0.6749 edge/ODS_f1=0.5910 edge/OIS_recall=0.5154 edge/OIS_precision=0.7253 edge/OIS_f1=0.6026 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4434
+2026-03-11 02:41:33,926 [Train Step] 2900/4000: loss_simple: 0.18130, loss_vlb: 1.01688, total_loss: 3.06156, lr: 0.00000, 
+2026-03-11 02:41:46,455 [Train Step] 2910/4000: loss_simple: 0.14141, loss_vlb: 1.01610, total_loss: 2.94245, lr: 0.00000, 
+2026-03-11 02:41:59,099 [Train Step] 2920/4000: loss_simple: 0.15914, loss_vlb: 1.01630, total_loss: 2.90668, lr: 0.00000, 
+2026-03-11 02:42:11,896 [Train Step] 2930/4000: loss_simple: 0.17672, loss_vlb: 1.01208, total_loss: 2.97134, lr: 0.00000, 
+2026-03-11 02:42:24,660 [Train Step] 2940/4000: loss_simple: 0.13759, loss_vlb: 1.01685, total_loss: 2.88212, lr: 0.00000, 
+2026-03-11 02:42:37,442 [Train Step] 2950/4000: loss_simple: 0.20544, loss_vlb: 1.01575, total_loss: 2.91252, lr: 0.00000, 
+2026-03-11 02:42:50,318 [Train Step] 2960/4000: loss_simple: 0.12110, loss_vlb: 1.01040, total_loss: 2.82394, lr: 0.00000, 
+2026-03-11 02:43:03,169 [Train Step] 2970/4000: loss_simple: 0.14516, loss_vlb: 1.01414, total_loss: 2.92918, lr: 0.00000, 
+2026-03-11 02:43:15,986 [Train Step] 2980/4000: loss_simple: 0.15285, loss_vlb: 1.01427, total_loss: 2.97242, lr: 0.00000, 
+2026-03-11 02:43:28,801 [Train Step] 2990/4000: loss_simple: 0.15206, loss_vlb: 1.01505, total_loss: 2.88972, lr: 0.00000, 
+2026-03-11 02:43:40,505 Saved model-last.pt (step=3000, loss=1.14806)
+2026-03-11 02:46:23,425 [Eval:val] step=3000 reason=periodic edge/AP=0.6656 edge/ODS_threshold=0.1100 edge/ODS_recall=0.7070 edge/ODS_precision=0.7313 edge/ODS_f1=0.7190 edge/OIS_recall=0.7409 edge/OIS_precision=0.7388 edge/OIS_f1=0.7398 | best(edge/AP)=0.7170 last(edge/AP)=0.6656
+2026-03-11 02:47:13,678 [Eval:rwtd] step=3000 reason=periodic edge/AP=0.4342 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5141 edge/ODS_precision=0.6813 edge/ODS_f1=0.5860 edge/OIS_recall=0.5057 edge/OIS_precision=0.7270 edge/OIS_f1=0.5965 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4342
+2026-03-11 02:47:15,089 [Train Step] 3000/4000: loss_simple: 0.50847, loss_vlb: 1.02753, total_loss: 3.95719, lr: 0.00000, 
+2026-03-11 02:47:27,615 [Train Step] 3010/4000: loss_simple: 0.13500, loss_vlb: 1.01498, total_loss: 2.86065, lr: 0.00000, 
+2026-03-11 02:47:40,279 [Train Step] 3020/4000: loss_simple: 0.38736, loss_vlb: 1.02428, total_loss: 3.16548, lr: 0.00000, 
+2026-03-11 02:47:53,079 [Train Step] 3030/4000: loss_simple: 1.61494, loss_vlb: 1.01805, total_loss: 4.38925, lr: 0.00000, 
+2026-03-11 02:48:05,847 [Train Step] 3040/4000: loss_simple: 0.11772, loss_vlb: 1.01282, total_loss: 2.85097, lr: 0.00000, 
+2026-03-11 02:48:18,636 [Train Step] 3050/4000: loss_simple: 0.35813, loss_vlb: 1.02089, total_loss: 3.54865, lr: 0.00000, 
+2026-03-11 02:48:31,517 [Train Step] 3060/4000: loss_simple: 0.11957, loss_vlb: 1.01185, total_loss: 2.80737, lr: 0.00000, 
+2026-03-11 02:48:44,343 [Train Step] 3070/4000: loss_simple: 0.31767, loss_vlb: 1.02176, total_loss: 3.42921, lr: 0.00000, 
+2026-03-11 02:48:57,175 [Train Step] 3080/4000: loss_simple: 0.10865, loss_vlb: 1.01235, total_loss: 2.79628, lr: 0.00000, 
+2026-03-11 02:49:10,093 [Train Step] 3090/4000: loss_simple: 0.15611, loss_vlb: 1.01558, total_loss: 2.97666, lr: 0.00000, 
+2026-03-11 02:49:21,717 Saved model-last.pt (step=3100, loss=1.27902)
+2026-03-11 02:52:04,475 [Eval:val] step=3100 reason=periodic edge/AP=0.6687 edge/ODS_threshold=0.1122 edge/ODS_recall=0.7082 edge/ODS_precision=0.7298 edge/ODS_f1=0.7189 edge/OIS_recall=0.7418 edge/OIS_precision=0.7408 edge/OIS_f1=0.7413 | best(edge/AP)=0.7170 last(edge/AP)=0.6687
+2026-03-11 02:52:54,835 [Eval:rwtd] step=3100 reason=periodic edge/AP=0.4356 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5200 edge/ODS_precision=0.6781 edge/ODS_f1=0.5886 edge/OIS_recall=0.5102 edge/OIS_precision=0.7256 edge/OIS_f1=0.5992 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4356
+2026-03-11 02:52:56,338 [Train Step] 3100/4000: loss_simple: 0.13246, loss_vlb: 1.01381, total_loss: 2.84972, lr: 0.00000, 
+2026-03-11 02:53:08,813 [Train Step] 3110/4000: loss_simple: 0.12836, loss_vlb: 1.01280, total_loss: 2.83614, lr: 0.00000, 
+2026-03-11 02:53:21,399 [Train Step] 3120/4000: loss_simple: 0.11322, loss_vlb: 1.00847, total_loss: 2.79641, lr: 0.00000, 
+2026-03-11 02:53:34,161 [Train Step] 3130/4000: loss_simple: 0.10645, loss_vlb: 1.00848, total_loss: 2.77263, lr: 0.00000, 
+2026-03-11 02:53:46,908 [Train Step] 3140/4000: loss_simple: 0.12220, loss_vlb: 1.01213, total_loss: 2.82215, lr: 0.00000, 
+2026-03-11 02:53:59,670 [Train Step] 3150/4000: loss_simple: 0.76191, loss_vlb: 1.01408, total_loss: 5.39224, lr: 0.00000, 
+2026-03-11 02:54:12,526 [Train Step] 3160/4000: loss_simple: 0.11774, loss_vlb: 1.01317, total_loss: 2.82153, lr: 0.00000, 
+2026-03-11 02:54:25,326 [Train Step] 3170/4000: loss_simple: 0.11923, loss_vlb: 1.01397, total_loss: 2.81399, lr: 0.00000, 
+2026-03-11 02:54:38,127 [Train Step] 3180/4000: loss_simple: 0.12550, loss_vlb: 1.00909, total_loss: 2.84752, lr: 0.00000, 
+2026-03-11 02:54:51,016 [Train Step] 3190/4000: loss_simple: 0.20603, loss_vlb: 1.01682, total_loss: 3.11730, lr: 0.00000, 
+2026-03-11 02:55:02,620 Saved model-last.pt (step=3200, loss=1.15989)
+2026-03-11 02:57:45,725 [Eval:val] step=3200 reason=periodic edge/AP=0.6718 edge/ODS_threshold=0.1200 edge/ODS_recall=0.7083 edge/ODS_precision=0.7401 edge/ODS_f1=0.7239 edge/OIS_recall=0.7509 edge/OIS_precision=0.7336 edge/OIS_f1=0.7421 | best(edge/AP)=0.7170 last(edge/AP)=0.6718
+2026-03-11 02:58:35,988 [Eval:rwtd] step=3200 reason=periodic edge/AP=0.4412 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5219 edge/ODS_precision=0.6754 edge/ODS_f1=0.5888 edge/OIS_recall=0.5124 edge/OIS_precision=0.7222 edge/OIS_f1=0.5995 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4412
+2026-03-11 02:58:37,501 [Train Step] 3200/4000: loss_simple: 0.22881, loss_vlb: 1.02432, total_loss: 3.18330, lr: 0.00000, 
+2026-03-11 02:58:50,059 [Train Step] 3210/4000: loss_simple: 0.20715, loss_vlb: 1.01520, total_loss: 3.14972, lr: 0.00000, 
+2026-03-11 02:59:02,741 [Train Step] 3220/4000: loss_simple: 0.13330, loss_vlb: 1.01245, total_loss: 2.85008, lr: 0.00000, 
+2026-03-11 02:59:15,434 [Train Step] 3230/4000: loss_simple: 0.14936, loss_vlb: 1.01176, total_loss: 2.88532, lr: 0.00000, 
+2026-03-11 02:59:28,184 [Train Step] 3240/4000: loss_simple: 0.13686, loss_vlb: 1.01728, total_loss: 2.90228, lr: 0.00000, 
+2026-03-11 02:59:40,964 [Train Step] 3250/4000: loss_simple: 0.11880, loss_vlb: 1.01087, total_loss: 2.87052, lr: 0.00000, 
+2026-03-11 02:59:53,850 [Train Step] 3260/4000: loss_simple: 0.21659, loss_vlb: 1.01316, total_loss: 2.88610, lr: 0.00000, 
+2026-03-11 03:00:06,650 [Train Step] 3270/4000: loss_simple: 0.15734, loss_vlb: 1.01899, total_loss: 2.92974, lr: 0.00000, 
+2026-03-11 03:00:19,493 [Train Step] 3280/4000: loss_simple: 0.43867, loss_vlb: 1.02882, total_loss: 3.46881, lr: 0.00000, 
+2026-03-11 03:00:32,370 [Train Step] 3290/4000: loss_simple: 0.10580, loss_vlb: 1.00723, total_loss: 2.79939, lr: 0.00000, 
+2026-03-11 03:00:43,972 Saved model-last.pt (step=3300, loss=1.58129)
+2026-03-11 03:03:31,931 [Eval:val] step=3300 reason=periodic edge/AP=0.6738 edge/ODS_threshold=0.1200 edge/ODS_recall=0.7090 edge/ODS_precision=0.7384 edge/ODS_f1=0.7234 edge/OIS_recall=0.7476 edge/OIS_precision=0.7407 edge/OIS_f1=0.7441 | best(edge/AP)=0.7170 last(edge/AP)=0.6738
+2026-03-11 03:04:22,659 [Eval:rwtd] step=3300 reason=periodic edge/AP=0.4355 edge/ODS_threshold=0.0102 edge/ODS_recall=0.5188 edge/ODS_precision=0.6762 edge/ODS_f1=0.5871 edge/OIS_recall=0.5083 edge/OIS_precision=0.7280 edge/OIS_f1=0.5986 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4355
+2026-03-11 03:04:24,183 [Train Step] 3300/4000: loss_simple: 0.13029, loss_vlb: 1.01190, total_loss: 2.87173, lr: 0.00000, 
+2026-03-11 03:04:36,714 [Train Step] 3310/4000: loss_simple: 0.13567, loss_vlb: 1.01572, total_loss: 2.88828, lr: 0.00000, 
+2026-03-11 03:04:49,412 [Train Step] 3320/4000: loss_simple: 0.13139, loss_vlb: 1.01278, total_loss: 2.80708, lr: 0.00000, 
+2026-03-11 03:05:02,103 [Train Step] 3330/4000: loss_simple: 0.14667, loss_vlb: 1.01660, total_loss: 2.87841, lr: 0.00000, 
+2026-03-11 03:05:14,845 [Train Step] 3340/4000: loss_simple: 0.17285, loss_vlb: 1.01836, total_loss: 2.95089, lr: 0.00000, 
+2026-03-11 03:05:27,709 [Train Step] 3350/4000: loss_simple: 0.24023, loss_vlb: 1.01547, total_loss: 3.15465, lr: 0.00000, 
+2026-03-11 03:05:40,513 [Train Step] 3360/4000: loss_simple: 0.14344, loss_vlb: 1.01383, total_loss: 2.94916, lr: 0.00000, 
+2026-03-11 03:05:53,349 [Train Step] 3370/4000: loss_simple: 0.14601, loss_vlb: 1.01402, total_loss: 2.84606, lr: 0.00000, 
+2026-03-11 03:06:06,167 [Train Step] 3380/4000: loss_simple: 0.11521, loss_vlb: 1.01223, total_loss: 2.79205, lr: 0.00000, 
+2026-03-11 03:06:19,043 [Train Step] 3390/4000: loss_simple: 0.11435, loss_vlb: 1.01316, total_loss: 2.83117, lr: 0.00000, 
+2026-03-11 03:06:30,648 Saved model-last.pt (step=3400, loss=1.17363)
+2026-03-11 03:09:14,258 [Eval:val] step=3400 reason=periodic edge/AP=0.6727 edge/ODS_threshold=0.1155 edge/ODS_recall=0.7088 edge/ODS_precision=0.7386 edge/ODS_f1=0.7234 edge/OIS_recall=0.7468 edge/OIS_precision=0.7461 edge/OIS_f1=0.7464 | best(edge/AP)=0.7170 last(edge/AP)=0.6727
+2026-03-11 03:10:04,422 [Eval:rwtd] step=3400 reason=periodic edge/AP=0.4365 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5173 edge/ODS_precision=0.6792 edge/ODS_f1=0.5873 edge/OIS_recall=0.5072 edge/OIS_precision=0.7291 edge/OIS_f1=0.5982 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4365
+2026-03-11 03:10:05,829 [Train Step] 3400/4000: loss_simple: 0.60154, loss_vlb: 1.01196, total_loss: 3.79364, lr: 0.00000, 
+2026-03-11 03:10:18,348 [Train Step] 3410/4000: loss_simple: 0.25761, loss_vlb: 1.02215, total_loss: 3.16765, lr: 0.00000, 
+2026-03-11 03:10:31,062 [Train Step] 3420/4000: loss_simple: 0.18951, loss_vlb: 1.01886, total_loss: 2.94143, lr: 0.00000, 
+2026-03-11 03:10:43,770 [Train Step] 3430/4000: loss_simple: 0.15723, loss_vlb: 1.01577, total_loss: 2.87706, lr: 0.00000, 
+2026-03-11 03:10:56,515 [Train Step] 3440/4000: loss_simple: 0.12854, loss_vlb: 1.01162, total_loss: 2.87593, lr: 0.00000, 
+2026-03-11 03:11:09,368 [Train Step] 3450/4000: loss_simple: 0.35399, loss_vlb: 1.01755, total_loss: 3.74273, lr: 0.00000, 
+2026-03-11 03:11:22,147 [Train Step] 3460/4000: loss_simple: 0.31319, loss_vlb: 1.02427, total_loss: 3.25612, lr: 0.00000, 
+2026-03-11 03:11:34,944 [Train Step] 3470/4000: loss_simple: 0.13134, loss_vlb: 1.01302, total_loss: 2.85162, lr: 0.00000, 
+2026-03-11 03:11:47,862 [Train Step] 3480/4000: loss_simple: 0.16417, loss_vlb: 1.01225, total_loss: 2.97213, lr: 0.00000, 
+2026-03-11 03:12:00,701 [Train Step] 3490/4000: loss_simple: 0.11942, loss_vlb: 1.00829, total_loss: 2.77546, lr: 0.00000, 
+2026-03-11 03:12:12,356 Saved model-last.pt (step=3500, loss=1.39448)
+2026-03-11 03:14:57,447 [Eval:val] step=3500 reason=periodic edge/AP=0.6742 edge/ODS_threshold=0.1100 edge/ODS_recall=0.7156 edge/ODS_precision=0.7315 edge/ODS_f1=0.7235 edge/OIS_recall=0.7485 edge/OIS_precision=0.7410 edge/OIS_f1=0.7447 | best(edge/AP)=0.7170 last(edge/AP)=0.6742
+2026-03-11 03:15:48,951 [Eval:rwtd] step=3500 reason=periodic edge/AP=0.4355 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5185 edge/ODS_precision=0.6796 edge/ODS_f1=0.5882 edge/OIS_recall=0.5086 edge/OIS_precision=0.7309 edge/OIS_f1=0.5998 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4355
+2026-03-11 03:15:50,503 [Train Step] 3500/4000: loss_simple: 0.14820, loss_vlb: 1.01589, total_loss: 2.97690, lr: 0.00000, 
+2026-03-11 03:16:03,089 [Train Step] 3510/4000: loss_simple: 0.13522, loss_vlb: 1.01373, total_loss: 2.80967, lr: 0.00000, 
+2026-03-11 03:16:15,849 [Train Step] 3520/4000: loss_simple: 0.14919, loss_vlb: 1.01682, total_loss: 2.91620, lr: 0.00000, 
+2026-03-11 03:16:28,668 [Train Step] 3530/4000: loss_simple: 0.10839, loss_vlb: 1.00878, total_loss: 2.78055, lr: 0.00000, 
+2026-03-11 03:16:41,447 [Train Step] 3540/4000: loss_simple: 0.13169, loss_vlb: 1.01398, total_loss: 2.83734, lr: 0.00000, 
+2026-03-11 03:16:54,416 [Train Step] 3550/4000: loss_simple: 0.14817, loss_vlb: 1.01387, total_loss: 2.96077, lr: 0.00000, 
+2026-03-11 03:17:07,293 [Train Step] 3560/4000: loss_simple: 0.15600, loss_vlb: 1.01106, total_loss: 3.00982, lr: 0.00000, 
+2026-03-11 03:17:20,179 [Train Step] 3570/4000: loss_simple: 0.13805, loss_vlb: 1.01330, total_loss: 2.86892, lr: 0.00000, 
+2026-03-11 03:17:33,143 [Train Step] 3580/4000: loss_simple: 0.11977, loss_vlb: 1.01123, total_loss: 2.82675, lr: 0.00000, 
+2026-03-11 03:17:46,083 [Train Step] 3590/4000: loss_simple: 1.06407, loss_vlb: 1.01640, total_loss: 4.73757, lr: 0.00000, 
+2026-03-11 03:17:57,789 Saved model-last.pt (step=3600, loss=1.11233)
+2026-03-11 03:20:40,492 [Eval:val] step=3600 reason=periodic edge/AP=0.6706 edge/ODS_threshold=0.1100 edge/ODS_recall=0.7084 edge/ODS_precision=0.7367 edge/ODS_f1=0.7223 edge/OIS_recall=0.7473 edge/OIS_precision=0.7406 edge/OIS_f1=0.7439 | best(edge/AP)=0.7170 last(edge/AP)=0.6706
+2026-03-11 03:21:30,491 [Eval:rwtd] step=3600 reason=periodic edge/AP=0.4358 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5141 edge/ODS_precision=0.6813 edge/ODS_f1=0.5860 edge/OIS_recall=0.5053 edge/OIS_precision=0.7272 edge/OIS_f1=0.5963 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4358
+2026-03-11 03:21:31,995 [Train Step] 3600/4000: loss_simple: 0.15646, loss_vlb: 1.01779, total_loss: 2.97923, lr: 0.00000, 
+2026-03-11 03:21:44,683 [Train Step] 3610/4000: loss_simple: 0.31083, loss_vlb: 1.01436, total_loss: 3.57982, lr: 0.00000, 
+2026-03-11 03:21:57,374 [Train Step] 3620/4000: loss_simple: 0.09931, loss_vlb: 1.00950, total_loss: 2.78120, lr: 0.00000, 
+2026-03-11 03:22:10,157 [Train Step] 3630/4000: loss_simple: 0.21630, loss_vlb: 1.01802, total_loss: 3.11785, lr: 0.00000, 
+2026-03-11 03:22:22,986 [Train Step] 3640/4000: loss_simple: 0.14934, loss_vlb: 1.01615, total_loss: 2.88310, lr: 0.00000, 
+2026-03-11 03:22:35,933 [Train Step] 3650/4000: loss_simple: 0.09800, loss_vlb: 1.00941, total_loss: 2.77540, lr: 0.00000, 
+2026-03-11 03:22:48,787 [Train Step] 3660/4000: loss_simple: 0.11510, loss_vlb: 1.01132, total_loss: 2.80903, lr: 0.00000, 
+2026-03-11 03:23:01,686 [Train Step] 3670/4000: loss_simple: 0.12542, loss_vlb: 1.01109, total_loss: 2.86079, lr: 0.00000, 
+2026-03-11 03:23:14,653 [Train Step] 3680/4000: loss_simple: 0.11493, loss_vlb: 1.01141, total_loss: 2.80988, lr: 0.00000, 
+2026-03-11 03:23:27,501 [Train Step] 3690/4000: loss_simple: 0.13539, loss_vlb: 1.01314, total_loss: 2.89507, lr: 0.00000, 
+2026-03-11 03:23:39,198 Saved model-last.pt (step=3700, loss=1.11639)
+2026-03-11 03:26:24,428 [Eval:val] step=3700 reason=periodic edge/AP=0.6735 edge/ODS_threshold=0.1163 edge/ODS_recall=0.7113 edge/ODS_precision=0.7388 edge/ODS_f1=0.7248 edge/OIS_recall=0.7493 edge/OIS_precision=0.7404 edge/OIS_f1=0.7448 | best(edge/AP)=0.7170 last(edge/AP)=0.6735
+2026-03-11 03:27:15,351 [Eval:rwtd] step=3700 reason=periodic edge/AP=0.4407 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5201 edge/ODS_precision=0.6746 edge/ODS_f1=0.5874 edge/OIS_recall=0.5096 edge/OIS_precision=0.7262 edge/OIS_f1=0.5989 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4407
+2026-03-11 03:27:16,757 [Train Step] 3700/4000: loss_simple: 0.20575, loss_vlb: 1.01702, total_loss: 3.06619, lr: 0.00000, 
+2026-03-11 03:27:29,465 [Train Step] 3710/4000: loss_simple: 0.54847, loss_vlb: 1.02124, total_loss: 3.76145, lr: 0.00000, 
+2026-03-11 03:27:42,193 [Train Step] 3720/4000: loss_simple: 0.27350, loss_vlb: 1.01780, total_loss: 3.27701, lr: 0.00000, 
+2026-03-11 03:27:55,005 [Train Step] 3730/4000: loss_simple: 0.31472, loss_vlb: 1.01354, total_loss: 3.64923, lr: 0.00000, 
+2026-03-11 03:28:07,942 [Train Step] 3740/4000: loss_simple: 0.12853, loss_vlb: 1.01679, total_loss: 2.85796, lr: 0.00000, 
+2026-03-11 03:28:20,832 [Train Step] 3750/4000: loss_simple: 0.12703, loss_vlb: 1.01144, total_loss: 2.84210, lr: 0.00000, 
+2026-03-11 03:28:33,635 [Train Step] 3760/4000: loss_simple: 0.12931, loss_vlb: 1.01286, total_loss: 2.84864, lr: 0.00000, 
+2026-03-11 03:28:46,439 [Train Step] 3770/4000: loss_simple: 0.14011, loss_vlb: 1.01595, total_loss: 2.86782, lr: 0.00000, 
+2026-03-11 03:28:59,315 [Train Step] 3780/4000: loss_simple: 0.09319, loss_vlb: 1.00339, total_loss: 2.73291, lr: 0.00000, 
+2026-03-11 03:29:12,116 [Train Step] 3790/4000: loss_simple: 0.25591, loss_vlb: 1.02462, total_loss: 3.29128, lr: 0.00000, 
+2026-03-11 03:29:23,724 Saved model-last.pt (step=3800, loss=1.17362)
+2026-03-11 03:32:07,496 [Eval:val] step=3800 reason=periodic edge/AP=0.6728 edge/ODS_threshold=0.1112 edge/ODS_recall=0.7117 edge/ODS_precision=0.7342 edge/ODS_f1=0.7228 edge/OIS_recall=0.7456 edge/OIS_precision=0.7433 edge/OIS_f1=0.7445 | best(edge/AP)=0.7170 last(edge/AP)=0.6728
+2026-03-11 03:32:58,137 [Eval:rwtd] step=3800 reason=periodic edge/AP=0.4360 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5175 edge/ODS_precision=0.6822 edge/ODS_f1=0.5886 edge/OIS_recall=0.5085 edge/OIS_precision=0.7301 edge/OIS_f1=0.5995 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4360
+2026-03-11 03:32:59,649 [Train Step] 3800/4000: loss_simple: 0.17048, loss_vlb: 1.01612, total_loss: 2.94593, lr: 0.00000, 
+2026-03-11 03:33:12,216 [Train Step] 3810/4000: loss_simple: 0.25900, loss_vlb: 1.01812, total_loss: 3.35161, lr: 0.00000, 
+2026-03-11 03:33:24,808 [Train Step] 3820/4000: loss_simple: 0.18725, loss_vlb: 1.02168, total_loss: 2.99875, lr: 0.00000, 
+2026-03-11 03:33:37,499 [Train Step] 3830/4000: loss_simple: 0.55968, loss_vlb: 1.02373, total_loss: 3.94920, lr: 0.00000, 
+2026-03-11 03:33:50,311 [Train Step] 3840/4000: loss_simple: 0.19618, loss_vlb: 1.01302, total_loss: 2.99468, lr: 0.00000, 
+2026-03-11 03:34:03,077 [Train Step] 3850/4000: loss_simple: 0.72988, loss_vlb: 1.01877, total_loss: 3.46647, lr: 0.00000, 
+2026-03-11 03:34:15,883 [Train Step] 3860/4000: loss_simple: 0.11062, loss_vlb: 1.00856, total_loss: 2.81925, lr: 0.00000, 
+2026-03-11 03:34:28,772 [Train Step] 3870/4000: loss_simple: 0.20056, loss_vlb: 1.01439, total_loss: 3.09195, lr: 0.00000, 
+2026-03-11 03:34:41,595 [Train Step] 3880/4000: loss_simple: 0.14427, loss_vlb: 1.01407, total_loss: 2.89546, lr: 0.00000, 
+2026-03-11 03:34:54,434 [Train Step] 3890/4000: loss_simple: 0.22477, loss_vlb: 1.01502, total_loss: 2.96357, lr: 0.00000, 
+2026-03-11 03:35:06,045 Saved model-last.pt (step=3900, loss=1.13415)
+2026-03-11 03:37:47,333 [Eval:val] step=3900 reason=periodic edge/AP=0.6671 edge/ODS_threshold=0.1100 edge/ODS_recall=0.7072 edge/ODS_precision=0.7351 edge/ODS_f1=0.7209 edge/OIS_recall=0.7449 edge/OIS_precision=0.7417 edge/OIS_f1=0.7433 | best(edge/AP)=0.7170 last(edge/AP)=0.6671
+2026-03-11 03:38:37,423 [Eval:rwtd] step=3900 reason=periodic edge/AP=0.4346 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5137 edge/ODS_precision=0.6844 edge/ODS_f1=0.5869 edge/OIS_recall=0.5044 edge/OIS_precision=0.7327 edge/OIS_f1=0.5975 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4346
+2026-03-11 03:38:38,951 [Train Step] 3900/4000: loss_simple: 0.13576, loss_vlb: 1.01748, total_loss: 2.89555, lr: 0.00000, 
+2026-03-11 03:38:51,570 [Train Step] 3910/4000: loss_simple: 0.12700, loss_vlb: 1.01502, total_loss: 2.86506, lr: 0.00000, 
+2026-03-11 03:39:04,205 [Train Step] 3920/4000: loss_simple: 0.18548, loss_vlb: 1.01975, total_loss: 2.95688, lr: 0.00000, 
+2026-03-11 03:39:16,867 [Train Step] 3930/4000: loss_simple: 0.15809, loss_vlb: 1.00828, total_loss: 2.99490, lr: 0.00000, 
+2026-03-11 03:39:29,667 [Train Step] 3940/4000: loss_simple: 0.10789, loss_vlb: 1.00796, total_loss: 2.79521, lr: 0.00000, 
+2026-03-11 03:39:42,430 [Train Step] 3950/4000: loss_simple: 0.67615, loss_vlb: 1.02597, total_loss: 4.13902, lr: 0.00000, 
+2026-03-11 03:39:55,207 [Train Step] 3960/4000: loss_simple: 0.15411, loss_vlb: 1.01878, total_loss: 2.97628, lr: 0.00000, 
+2026-03-11 03:40:08,074 [Train Step] 3970/4000: loss_simple: 0.24935, loss_vlb: 1.01499, total_loss: 3.05595, lr: 0.00000, 
+2026-03-11 03:40:20,871 [Train Step] 3980/4000: loss_simple: 0.13295, loss_vlb: 1.01243, total_loss: 2.83937, lr: 0.00000, 
+2026-03-11 03:40:33,682 [Train Step] 3990/4000: loss_simple: 0.34795, loss_vlb: 1.01695, total_loss: 3.32163, lr: 0.00000, 
+2026-03-11 03:40:45,387 Saved model-last.pt (step=4000, loss=1.14617)
+2026-03-11 03:43:27,622 [Eval:val] step=4000 reason=periodic edge/AP=0.6761 edge/ODS_threshold=0.1128 edge/ODS_recall=0.7072 edge/ODS_precision=0.7410 edge/ODS_f1=0.7237 edge/OIS_recall=0.7457 edge/OIS_precision=0.7427 edge/OIS_f1=0.7442 | best(edge/AP)=0.7170 last(edge/AP)=0.6761
+2026-03-11 03:44:17,667 [Eval:rwtd] step=4000 reason=periodic edge/AP=0.4346 edge/ODS_threshold=0.0100 edge/ODS_recall=0.5131 edge/ODS_precision=0.6835 edge/ODS_f1=0.5861 edge/OIS_recall=0.5047 edge/OIS_precision=0.7292 edge/OIS_f1=0.5965 | best(rwtd/edge/AP)=0.5887 last(rwtd/edge/AP)=0.4346

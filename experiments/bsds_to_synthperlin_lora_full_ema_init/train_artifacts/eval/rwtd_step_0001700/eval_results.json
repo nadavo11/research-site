@@ -1,0 +1,28 @@
+{
+  "edge_metrics": {
+    "AP": 0.4470671009317955,
+    "ODS_threshold": 0.02,
+    "ODS_recall": 0.5140812926489718,
+    "ODS_precision": 0.6912737260437924,
+    "ODS_f1": 0.5896534799253952,
+    "OIS_recall": 0.5157644293310816,
+    "OIS_precision": 0.7291844801161571,
+    "OIS_f1": 0.6041812871359921
+  },
+  "generic_metrics": null,
+  "meta": {
+    "generic": {
+      "metrics_namespace": "pixel",
+      "enabled": false
+    },
+    "edge": {
+      "protocol": "legacy",
+      "ap_mode": "bsds_interp",
+      "edge_keys_mode": "legacy_minimal",
+      "thresholds": 99,
+      "max_dist": 0.0075,
+      "apply_thinning": true,
+      "apply_nms": true
+    }
+  }
+}

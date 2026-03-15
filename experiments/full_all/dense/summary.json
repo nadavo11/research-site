@@ -1,0 +1,41 @@
+{
+  "dataset_id": "aviadcohz/RWTD",
+  "failures": [],
+  "mean_metrics": {
+    "ari": 0.6927464731878381,
+    "mask_score_mean": 0.9448761723378858,
+    "mask_score_median": 0.9455686684076985,
+    "miou": 0.698764157408573,
+    "miou_agg": 0.5374754539133598,
+    "num_predicted_masks": 12.10625,
+    "texture_a_agg_iou": 0.5841076087568667,
+    "texture_a_best_iou": 0.700465118037005,
+    "texture_a_overlap_mask_count": 9.235416666666667,
+    "texture_b_agg_iou": 0.49084329906985297,
+    "texture_b_best_iou": 0.6970631967801412,
+    "texture_b_overlap_mask_count": 6.110416666666667
+  },
+  "median_metrics": {
+    "ari": 0.8127824508024161,
+    "mask_score_mean": 0.9446060359477997,
+    "mask_score_median": 0.9491390585899353,
+    "miou": 0.7042745637980359,
+    "miou_agg": 0.4959263197039019,
+    "num_predicted_masks": 4.0,
+    "texture_a_agg_iou": 0.5922675388204282,
+    "texture_a_best_iou": 0.9328144748220581,
+    "texture_a_overlap_mask_count": 3.0,
+    "texture_b_agg_iou": 0.4888705688375927,
+    "texture_b_best_iou": 0.9146150207861392,
+    "texture_b_overlap_mask_count": 3.0
+  },
+  "model_id": "facebook/sam3",
+  "num_evaluated_samples": 480,
+  "num_failed_samples": 0,
+  "num_total_samples": 480,
+  "primary_metric_name": "miou_agg",
+  "primary_metric_reason": "This repository uses aggregated mIoU as the primary automatic-mask comparison metric.",
+  "primary_metric_value": 0.5374754539133598,
+  "split": "all",
+  "variant": "dense"
+}

@@ -1,0 +1,1 @@
+/home/nada/PycharmProjects/DiffusionEdge/.venv/bin/accelerate launch train_cond_ldm.py --cfg /home/nada/PycharmProjects/DiffusionEdge/runs/diffedge_rwtd_lora_stage1/bsds_to_synthperlin_lora_full_ema_init/resolved_train_cfg.yaml --lora_preset relation_qkvo_plus_initconv --lora_only --assert_lora_used

@@ -1,0 +1,86 @@
+{
+  "variants": {
+    "default": {
+      "dataset_id": "aviadcohz/RWTD",
+      "failures": [],
+      "mean_metrics": {
+        "ari": 0.48063989787186767,
+        "mask_score_mean": 0.7023250268900648,
+        "mask_score_median": 0.70274446879824,
+        "miou": 0.3762504881220602,
+        "miou_agg": 0.3432007549112791,
+        "num_predicted_masks": 5.0875,
+        "texture_a_agg_iou": 0.3943511789679767,
+        "texture_a_best_iou": 0.41038216817268647,
+        "texture_a_overlap_mask_count": 3.95,
+        "texture_b_agg_iou": 0.29205033085458143,
+        "texture_b_best_iou": 0.3421188080714339,
+        "texture_b_overlap_mask_count": 2.3229166666666665
+      },
+      "median_metrics": {
+        "ari": 0.5205218406308814,
+        "mask_score_mean": 0.9496512711048126,
+        "mask_score_median": 0.9502015709877014,
+        "miou": 0.47748761346314816,
+        "miou_agg": 0.4817997758013298,
+        "num_predicted_masks": 2.0,
+        "texture_a_agg_iou": 0.2907072872014697,
+        "texture_a_best_iou": 0.08084918544515425,
+        "texture_a_overlap_mask_count": 1.0,
+        "texture_b_agg_iou": 0.013226204912988865,
+        "texture_b_best_iou": 0.013489510084795747,
+        "texture_b_overlap_mask_count": 1.0
+      },
+      "model_id": "facebook/sam3",
+      "num_evaluated_samples": 480,
+      "num_failed_samples": 0,
+      "num_total_samples": 480,
+      "primary_metric_name": "miou_agg",
+      "primary_metric_reason": "This repository uses aggregated mIoU as the primary automatic-mask comparison metric.",
+      "primary_metric_value": 0.3432007549112791,
+      "split": "all",
+      "variant": "default"
+    },
+    "dense": {
+      "dataset_id": "aviadcohz/RWTD",
+      "failures": [],
+      "mean_metrics": {
+        "ari": 0.6927464731878381,
+        "mask_score_mean": 0.9448761723378858,
+        "mask_score_median": 0.9455686684076985,
+        "miou": 0.698764157408573,
+        "miou_agg": 0.5374754539133598,
+        "num_predicted_masks": 12.10625,
+        "texture_a_agg_iou": 0.5841076087568667,
+        "texture_a_best_iou": 0.700465118037005,
+        "texture_a_overlap_mask_count": 9.235416666666667,
+        "texture_b_agg_iou": 0.49084329906985297,
+        "texture_b_best_iou": 0.6970631967801412,
+        "texture_b_overlap_mask_count": 6.110416666666667
+      },
+      "median_metrics": {
+        "ari": 0.8127824508024161,
+        "mask_score_mean": 0.9446060359477997,
+        "mask_score_median": 0.9491390585899353,
+        "miou": 0.7042745637980359,
+        "miou_agg": 0.4959263197039019,
+        "num_predicted_masks": 4.0,
+        "texture_a_agg_iou": 0.5922675388204282,
+        "texture_a_best_iou": 0.9328144748220581,
+        "texture_a_overlap_mask_count": 3.0,
+        "texture_b_agg_iou": 0.4888705688375927,
+        "texture_b_best_iou": 0.9146150207861392,
+        "texture_b_overlap_mask_count": 3.0
+      },
+      "model_id": "facebook/sam3",
+      "num_evaluated_samples": 480,
+      "num_failed_samples": 0,
+      "num_total_samples": 480,
+      "primary_metric_name": "miou_agg",
+      "primary_metric_reason": "This repository uses aggregated mIoU as the primary automatic-mask comparison metric.",
+      "primary_metric_value": 0.5374754539133598,
+      "split": "all",
+      "variant": "dense"
+    }
+  }
+}
