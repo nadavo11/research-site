@@ -50,6 +50,7 @@ oracle_f1 = [v['oracle_points'] for v in samples.values() if 'oracle_points' in 
 text_f1 = [v['text'] for v in samples.values() if 'text' in v]
 baseline_f1 = [v['baseline'] for v in samples.values() if 'baseline' in v]
 fc_f1 = [v['feature_cluster_global'] for v in samples.values() if 'feature_cluster_global' in v]
+fcc_f1 = [v['fc_coarse_only'] for v in samples.values() if 'fc_coarse_only' in v]
 
 sns.set_theme(style="whitegrid")
 
@@ -59,6 +60,7 @@ sns.histplot(baseline_f1, color='green', label='Unprompted Baseline', kde=True, 
 sns.histplot(text_f1, color='orange', label='Text Descriptions', kde=True, stat="density", linewidth=0, alpha=0.5)
 sns.histplot(oracle_f1, color='blue', label='Oracle Points', kde=True, stat="density", linewidth=0, alpha=0.5)
 sns.histplot(fc_f1, color='purple', label='Feature Clustering', kde=True, stat="density", linewidth=0, alpha=0.5)
+sns.histplot(fcc_f1, color='red', label='Pooled Coarse Init', kde=True, stat="density", linewidth=0, alpha=0.5)
 plt.title('Distribution of mIoU (F1) Scores by Protocol')
 plt.xlabel('mIoU')
 plt.ylabel('Density')
@@ -91,10 +93,11 @@ plot_data = pd.DataFrame({
     'Protocol': (['1. Baseline']*len(baseline_f1) + 
                  ['2. Text']*len(text_f1) + 
                  ['3. Oracle']*len(oracle_f1) + 
-                 ['4. Feature Clustering']*len(fc_f1)),
-    'mIoU': baseline_f1 + text_f1 + oracle_f1 + fc_f1
+                 ['4. Global FC']*len(fc_f1) +
+                 ['5. Pooled Coarse']*len(fcc_f1)),
+    'mIoU': baseline_f1 + text_f1 + oracle_f1 + fc_f1 + fcc_f1
 })
-sns.boxplot(x='Protocol', y='mIoU', data=plot_data, palette=['#2ca02c', '#ff7f0e', '#1f77b4', '#9467bd'], hue='Protocol', legend=False)
+sns.boxplot(x='Protocol', y='mIoU', data=plot_data, palette=['#2ca02c', '#ff7f0e', '#1f77b4', '#9467bd', '#d62728'], hue='Protocol', legend=False)
 plt.title('mIoU Performance Spread by Protocol')
 plt.ylabel('mIoU')
 plt.tight_layout()

@@ -6,5 +6,7 @@
   "Baseline_mIoU": 0.537,
   "Baseline_ARI": 0.693,
   "FC_mIoU": 0.671,
-  "FC_ARI": 0.614
+  "FC_ARI": 0.614,
+  "FC_Coarse_mIoU": 0.824,
+  "FC_Coarse_ARI": 0.698
 }

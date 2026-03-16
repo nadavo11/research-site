@@ -32,6 +32,18 @@
         <p class="kv"><strong>Where it fails:</strong> The text descriptions alone are sometimes not sufficient to
           distinguish closely overlapping visual properties.</p>
       </div>
+
+      <div class="card" style="margin-top:15px; background:#fff9f9; border-color:#fadbd8;">
+        <h4 style="margin:0 0 8px; color:#c0392b;">Latest: Pooled Coarse Initialized (Ablation)</h4>
+        <p style="margin:0; font-size:0.9rem; line-height:1.5;"> This variant represents a significant technical
+          ablation: it average-pools the <strong>coarsest level of the SAM 3 backbone feature pyramid</strong>
+          (backbone_fpn)
+          before performing global 2-way clustering. The resulting partition is upsampled directly to image resolution
+          without any finer-level refinement or official SAM mask-prompt passes. Despite its "coarse" nature, this
+          method achieves a breakthrough mIoU of <strong>0.824</strong>, suggesting that the lowest-frequency features
+          contain surprisingly robust semantic boundary information for RWTD textures.</p>
+      </div>
+
       <h3 style="margin-top:20px; font-size:1.1rem;">Overall Results Table</h3>
       <div class="table-wrap" style="margin-top:10px;">
         <table>
@@ -45,8 +57,14 @@
           </thead>
           <tbody>
             <tr>
+              <td><strong>Pooled Coarse Initialized (Ablation)</strong></td>
+              <td><strong>0.824</strong></td>
+              <td>0.698</td>
+              <td>-</td>
+            </tr>
+            <tr>
               <td><strong>Feature Clustering (Global)</strong></td>
-              <td><strong>0.671</strong></td>
+              <td>0.671</td>
               <td>0.614</td>
               <td>-</td>
             </tr>

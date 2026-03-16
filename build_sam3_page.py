@@ -9,7 +9,7 @@ dest_dir = Path('/home/nada/PycharmProjects/research-site/site/experiments/sam3-
 # Create directories
 os.makedirs(dest_dir, exist_ok=True)
 os.makedirs(dest_dir / 'repro', exist_ok=True)
-for sub in ['oracle_points', 'text', 'baseline', 'feature_cluster_global']:
+for sub in ['oracle_points', 'text', 'baseline', 'feature_cluster_global', 'fc_coarse_only']:
     os.makedirs(dest_dir / 'assets/gallery' / sub, exist_ok=True)
     os.makedirs(dest_dir / 'assets/qc' / sub, exist_ok=True)
     os.makedirs(dest_dir / 'assets/all_previews' / sub, exist_ok=True)
@@ -43,6 +43,13 @@ with open('/home/nada/PycharmProjects/research-site/experiments/test_feature_clu
 fc_metrics = summ_fc['mean_metrics']
 metrics["FC_mIoU"] = round(fc_metrics['miou'], 3)
 metrics["FC_ARI"] = round(fc_metrics['ari'], 3)
+
+# Extract coarse-only pooling metrics
+with open('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_coarse_to_fine_global_pooled_init_coarse_only/summary.json', 'r') as f:
+    summ_fcc = json.load(f)
+fcc_metrics = summ_fcc['mean_metrics']
+metrics["FC_Coarse_mIoU"] = round(fcc_metrics['miou'], 3)
+metrics["FC_Coarse_ARI"] = round(fcc_metrics['ari'], 3)
 
 with open(dest_dir / 'metrics.json', 'w') as f:
     json.dump(metrics, f, indent=2)
@@ -100,7 +107,8 @@ protocols_config = [
     ('oracle_points', source_dir / 'oracle_points'),
     ('text', source_dir / 'text'),
     ('baseline', Path('/home/nada/PycharmProjects/research-site/experiments/test_dense')),
-    ('feature_cluster_global', Path('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_global'))
+    ('feature_cluster_global', Path('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_global')),
+    ('fc_coarse_only', Path('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_coarse_to_fine_global_pooled_init_coarse_only'))
 ]
 
 for protocol, p_dir in protocols_config:
@@ -117,7 +125,7 @@ for protocol, p_dir in protocols_config:
                 numeric_id = "".join(filter(str.isdigit, file_name_orig.replace('.png', '')))
                 
                 # Feature clustering uses different keys
-                if protocol == 'feature_cluster_global':
+                if protocol in ['feature_cluster_global', 'fc_coarse_only']:
                     f1 = data.get('miou', 0)
                     precision = data.get('mask_score_mean', 0) # Fallback
                     recall = 0
