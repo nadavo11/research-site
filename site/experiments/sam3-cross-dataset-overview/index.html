@@ -6,264 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAM 3 Cross-Dataset Benchmarking</title>
     <link rel="stylesheet" href="../../assets/site.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --premium-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-            --font-main: 'Space Grotesk', sans-serif;
-            --font-accent: 'Outfit', sans-serif;
-        }
-
-        body {
-            font-family: var(--font-main);
-            background:
-                linear-gradient(120deg, #f0f4f8 0%, #d9e2ec 100%),
-                radial-gradient(at 0% 0%, rgba(0, 95, 115, 0.05) 0%, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(202, 103, 2, 0.05) 0%, transparent 50%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-            animation: fadeInDown 0.8s ease-out;
-        }
-
-        header h1 {
-            font-family: var(--font-accent);
-            font-size: 3.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #005f73 0%, #0a9396 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            letter-spacing: -0.02em;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: #4c5d73;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        .executive-summary {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: var(--premium-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .executive-summary::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 6px;
-            height: 100%;
-            background: var(--brand);
-        }
-
-        .executive-summary h2 {
-            font-family: var(--font-accent);
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--ink);
-        }
-
-        .executive-summary p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: #334e68;
-            max-width: 900px;
-        }
-
-        .dataset-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            margin-bottom: 60px;
-        }
-
-        .dataset-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: var(--premium-shadow);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .dataset-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .dataset-card h3 {
-            font-family: var(--font-accent);
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-            color: var(--brand);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .dataset-card h3::before {
-            content: "";
-            width: 12px;
-            height: 12px;
-            background: var(--accent);
-            border-radius: 3px;
-            transform: rotate(45deg);
-        }
-
-        .dataset-card p {
-            color: #627d98;
-            margin-bottom: 25px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .stats-row {
-            display: flex;
-            gap: 40px;
-            margin-bottom: 30px;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--ink);
-            letter-spacing: -0.03em;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #9fb3c8;
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            margin-top: 5px;
-        }
-
-        .preview-group {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: auto;
-        }
-
-        .preview-img {
-            width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 2px solid #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease;
-            cursor: pointer;
-            background: #eee;
-        }
-
-        .preview-img:hover {
-            transform: scale(1.1);
-            z-index: 2;
-        }
-
-        .cta-section {
-            text-align: center;
-        }
-
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, #005f73 0%, #0a9396 100%);
-            color: #fff;
-            padding: 16px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-family: var(--font-accent);
-            font-weight: 600;
-            font-size: 1.1rem;
-            box-shadow: 0 10px 20px rgba(0, 95, 115, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(0, 95, 115, 0.3);
-            filter: brightness(1.1);
-        }
-
-        .cta-button svg {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .cta-button:hover svg {
-            transform: translateX(5px);
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 900px) {
-            .dataset-grid {
-                grid-template-columns: 1fr;
-            }
-
-            header h1 {
-                font-size: 2.5rem;
-            }
-        }
-    </style>
 </head>
 
 <body>
-    <div class="container">
-        <header>
+    <div class="container animate-fade-in-down">
+        <header style="text-align: center; margin-bottom: 60px;">
             <div class="subtitle">Unified Analysis</div>
-            <h1>Generalization Benchmark</h1>
+            <h1 class="title-gradient">Generalization Benchmark</h1>
         </header>
 
         <section class="executive-summary">
@@ -282,17 +31,20 @@
             <div class="dataset-card" id="rwtd-card">
                 <h3>RWTD Dataset</h3>
                 <p>Natural texture transitions and high-frequency boundary detection in organic scenes.</p>
-                <div class="stats-row">
+                <div style="display: flex; gap: 40px; margin-bottom: 30px;">
                     <div class="stat-item">
                         <div class="stat-value" id="rwtd-miou">--</div>
-                        <div class="stat-label">mIoU</div>
+                        <div class="stat-label" style="font-size: 0.8rem; color: #9fb3c8; text-transform: uppercase;">
+                            mIoU</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="rwtd-ari">--</div>
-                        <div class="stat-label">ARI</div>
+                        <div class="stat-label" style="font-size: 0.8rem; color: #9fb3c8; text-transform: uppercase;">
+                            ARI</div>
                     </div>
                 </div>
-                <div class="preview-group" id="rwtd-previews">
+                <div class="preview-group" id="rwtd-previews"
+                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: auto;">
                     <!-- Loaded via JS -->
                 </div>
             </div>
@@ -301,26 +53,30 @@
             <div class="dataset-card" id="caid-card">
                 <h3>CAID Dataset</h3>
                 <p>Architectural plan partitions and region clustering in structured manifold domains.</p>
-                <div class="stats-row">
+                <div style="display: flex; gap: 40px; margin-bottom: 30px;">
                     <div class="stat-item">
                         <div class="stat-value" id="caid-miou">--</div>
-                        <div class="stat-label">mIoU</div>
+                        <div class="stat-label" style="font-size: 0.8rem; color: #9fb3c8; text-transform: uppercase;">
+                            mIoU</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="caid-ari">--</div>
-                        <div class="stat-label">ARI</div>
+                        <div class="stat-label" style="font-size: 0.8rem; color: #9fb3c8; text-transform: uppercase;">
+                            ARI</div>
                     </div>
                 </div>
-                <div class="preview-group" id="caid-previews">
+                <div class="preview-group" id="caid-previews"
+                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: auto;">
                     <!-- Loaded via JS -->
                 </div>
             </div>
         </div>
 
-        <div class="cta-section">
-            <a href="gallery.html" class="cta-button">
+        <div style="text-align: center;">
+            <a href="gallery.html" class="btn">
                 Explore Full Results Gallery
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                    style="width:20px; height:20px;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
                     </path>
                 </svg>
@@ -361,7 +117,13 @@
 
                         samples.forEach(s => {
                             const img = document.createElement('img');
-                            img.className = 'preview-img';
+                            img.style.width = '100%';
+                            img.style.aspectRatio = '1';
+                            img.style.objectFit = 'cover';
+                            img.style.borderRadius = '12px';
+                            img.style.border = '2px solid #fff';
+                            img.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+                            img.style.cursor = 'pointer';
                             img.src = `assets/all_previews/${s.file_path}`;
                             img.alt = `${dataset} sample overview`;
                             img.title = `mIoU: ${s.mIoU.toFixed(3)}`;

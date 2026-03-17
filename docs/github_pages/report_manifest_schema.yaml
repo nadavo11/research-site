@@ -134,6 +134,12 @@ properties:
       environment:
         type: string
 
+  ui_standard:
+    type: string
+    enum: [standard, premium]
+    default: "standard"
+    description: "Defines the visual theme and UX contract for the report page."
+
   metrics:
     type: object
     additionalProperties: false

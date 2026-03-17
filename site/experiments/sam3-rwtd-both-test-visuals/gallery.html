@@ -8,228 +8,124 @@
     <link rel="stylesheet" href="../../assets/site.css" />
     <style>
         .gallery-toolbar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 10px;
-            background: #f1f7fa;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 12px 14px;
-            margin-bottom: 12px;
+            gap: 20px;
+            box-shadow: var(--premium-shadow);
         }
 
         .gallery-toolbar label {
-            font-weight: 700;
-            font-size: 0.88rem;
+            font-family: var(--font-accent);
+            font-weight: 600;
+            font-size: 0.9rem;
             color: var(--ink);
         }
 
         .gallery-toolbar select,
         .gallery-toolbar input {
             font: inherit;
-            border: 1px solid #7bb2c0;
-            background: #edf7fb;
-            color: #0d3b4c;
-            border-radius: 999px;
-            padding: 5px 12px;
-            font-size: 0.86rem;
-        }
-
-        .gallery-toolbar input[type="range"] {
-            width: 120px;
-        }
-
-        .gallery-toolbar .count {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-left: auto;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .gallery figure {
-            margin: 0;
             border: 1px solid var(--line);
-            border-radius: 10px;
-            background: #fbfdff;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .gallery figure img {
-            width: 100%;
-            display: block;
-            cursor: zoom-in;
-            border-radius: 10px 10px 0 0;
-        }
-
-        .gallery figure .metrics-bar {
-            padding: 6px 8px;
-            font-size: 0.78rem;
-            line-height: 1.5;
-            background: #f7fafd;
-            border-top: 1px solid var(--line);
-        }
-
-        .gallery-compare {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-
-        .compare-row {
-            border-bottom: 2px solid var(--line);
-            padding-bottom: 20px;
-        }
-
-        .compare-row h3 {
-            margin-bottom: 15px;
+            background: #fff;
             color: var(--ink);
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .gallery-toolbar select:focus { border-color: var(--brand); }
+
+        #fullGallery {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         }
 
-        .compare-strip {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-
-        .compare-card {
-            flex: 0 0 300px;
-            background: #fbfdff;
+        #fullGallery figure {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
             border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 8px;
-            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
         }
 
-        .compare-card img {
-            width: 100%;
-            border-radius: 4px;
-            cursor: zoom-in;
-        }
+        #fullGallery figure:hover { transform: translateY(-5px); }
 
-        .mini-label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--muted);
-            text-transform: uppercase;
-        }
-
-        .metric-badge {
+        .f1-badge {
             position: absolute;
-            top: 6px;
-            right: 6px;
-            background: rgba(0, 0, 0, 0.72);
+            top: 12px;
+            right: 12px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(4px);
             color: #fff;
-            padding: 4px 10px;
-            border-radius: 8px;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            text-align: right;
-        }
-
-        .metric-badge span {
-            display: block;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 700;
-        }
-
-        .metric-badge span.primary {
-            font-size: 0.82rem;
-            color: #ffda6a;
-        }
-
-        .pill {
-            display: inline-block;
-            font-size: 0.7rem;
-            padding: 1px 6px;
-            border-radius: 4px;
-            background: #eee;
-            margin-right: 4px;
-            margin-bottom: 4px;
-            border: 1px solid #ddd;
-        }
-
-        .metric-good {
-            background: #edf9f1;
-            border-color: #a6dfb8;
-            color: #1d7a3e;
-        }
-
-        .metric-mid {
-            background: #fff9e6;
-            border-color: #ffe08a;
-            color: #856404;
-        }
-
-        .metric-bad {
-            background: #fdf2f2;
-            border-color: #f8b4b4;
-            color: #9b1c1c;
+            padding: 4px 12px;
+            border-radius: 999px;
+            z-index: 2;
         }
     </style>
 </head>
 
 <body>
-    <main>
-        <section class="hero">
-            <h1>Full Preview Gallery</h1>
-            <p>SAM 3 RWTD Both Protocols — Multiple experiments with per-image metrics</p>
-            <p style="margin-top:8px;"><a class="btn" href="index.html"
-                    style="border-color:#8ecae6;background:#edf7fc;color:#0b4f6c;">← Back to report</a></p>
-        </section>
+    <div class="container animate-fade-in-down">
+        <header style="text-align: center; margin-bottom: 40px;">
+            <div class="subtitle">Visual Evidence</div>
+            <h1 class="title-gradient">Full Prediction Gallery</h1>
+            <p style="color: var(--muted); margin-top: 10px; font-weight: 300;">SAM 3 RWTD Both Protocols — 454 predictions with exhaustive metrics.</p>
+            <div style="margin-top: 20px;">
+                <a class="btn secondary" href="index.html">← Return to Report</a>
+            </div>
+        </header>
 
         <section class="section">
             <div class="gallery-toolbar">
-                <label for="sortBy">Sort:</label>
-                <select id="sortBy">
-                    <option value="f1_desc">F1 ↓ best first</option>
-                    <option value="f1_asc">F1 ↑ worst first</option>
-                    <option value="id_asc">Sample ID ↑</option>
-                    <option value="id_desc">Sample ID ↓</option>
-                </select>
-                <label for="filterProtocol">Protocol:</label>
-                <select id="filterProtocol" style="font-weight:bold; color:#0b4f6c;">
-                    <option value="all">All Methods</option>
-                    <option value="oracle_points">Oracle Points</option>
-                    <option value="text">Text Prompts</option>
-                    <option value="baseline">TextureSAM (Baseline)</option>
-                    <option value="feature_cluster_global">Feature Clustering (Global)</option>
-                    <option value="feature_clustering_mask_only">Feature-Clustering (Mask Only)</option>
-                </select>
-                <label for="viewMode">View Mode:</label>
-                <select id="viewMode"
-                    style="background:var(--accent); color:white; border:none; padding:4px 12px; border-radius:999px;">
-                    <option value="grid">Grid (Masonry)</option>
-                    <option value="compare">1-to-1 Comparison</option>
-                </select>
-                <label for="filterF1">Min F1:</label>
-                <input type="range" id="filterF1" min="0" max="100" value="0" />
-                <span id="filterF1Val">0.00</span>
-                <label for="filterQuality">Quality:</label>
-                <select id="filterQuality">
-                    <option value="all">All</option>
-                    <option value="good">Good (F1 ≥ 0.7)</option>
-                    <option value="medium">Medium (0.4–0.7)</option>
-                    <option value="bad">Bad (F1 < 0.4)</option>
-                </select>
-                <span class="count" id="countLabel">Loading...</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="sortBy">Sort:</label>
+                    <select id="sortBy">
+                        <option value="f1_desc">mIoU ↓ best first</option>
+                        <option value="f1_asc">mIoU ↑ worst first</option>
+                        <option value="precision_desc">Precision ↓</option>
+                        <option value="id_asc">ID ↑</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="filterF1">Min mIoU:</label>
+                    <input type="range" id="filterF1" min="0" max="100" value="0" />
+                    <span id="filterF1Val" style="font-family: var(--font-accent); font-weight: 700; color: var(--brand);">0.00</span>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="filterQuality">Quality Tier:</label>
+                    <select id="filterQuality">
+                        <option value="all">All Tiers</option>
+                        <option value="good">Good (≥ 0.7)</option>
+                        <option value="medium">Medium (0.4–0.7)</option>
+                        <option value="bad">Bad (< 0.4)</option>
+                    </select>
+                </div>
+
+                <div class="count" id="countLabel" style="margin-left: auto; font-family: var(--font-accent); font-weight: 600; color: var(--muted);">454 / 454</div>
             </div>
+            
             <div id="fullGallery"></div>
         </section>
 
-        <footer>Full gallery generated from per-image evaluation data. 2026-03-15.</footer>
-    </main>
+        <footer>
+            <p>Full gallery archives. Research Site Premium v1.2</p>
+        </footer>
+    </div>
 
     <dialog class="image-dialog" id="imageDialog">
         <img id="imageDialogImg" alt="Expanded preview" />
@@ -244,15 +140,13 @@
             const filterSlider = document.getElementById('filterF1');
             const filterVal = document.getElementById('filterF1Val');
             const filterQual = document.getElementById('filterQuality');
-            const filterProtocol = document.getElementById('filterProtocol');
-            const viewMode = document.getElementById('viewMode');
             const countLabel = document.getElementById('countLabel');
             const total = data.per_image.length;
 
             function f1Class(f1) {
-                if (f1 >= 0.7) return 'metric-good';
-                if (f1 >= 0.4) return 'metric-mid';
-                return 'metric-bad';
+                if (f1 >= 0.7) return 'tag good';
+                if (f1 >= 0.4) return 'tag warn';
+                return 'tag bad';
             }
 
             function qualityLabel(f1) {
@@ -265,79 +159,46 @@
                 const sortKey = sortSel.value;
                 const minF1 = parseFloat(filterSlider.value) / 100;
                 const qualFilter = filterQual.value;
-                const protoFilter = filterProtocol.value;
-                const mode = viewMode.value;
                 filterVal.textContent = minF1.toFixed(2);
 
                 let items = data.per_image.filter(img => {
                     if (img.f1 < minF1) return false;
                     if (qualFilter !== 'all' && qualityLabel(img.f1) !== qualFilter) return false;
-                    if (protoFilter !== 'all' && img.protocol !== protoFilter) return false;
                     return true;
                 });
 
+                const parts = sortKey.split('_');
+                const field = parts[0];
+                const dir = parts[1];
                 items.sort((a, b) => {
-                    if (sortKey === 'f1_desc') return b.f1 - a.f1;
-                    if (sortKey === 'f1_asc') return a.f1 - b.f1;
-                    if (sortKey === 'id_asc') return a.sample_id - b.sample_id || a.id.localeCompare(b.id);
-                    if (sortKey === 'id_desc') return b.sample_id - a.sample_id || b.id.localeCompare(a.id);
-                    return 0;
+                    const va = a[field], vb = b[field];
+                    return dir === 'desc' ? vb - va : va - vb;
                 });
 
-                if (mode === 'grid') {
-                    gallery.className = 'gallery';
-                    gallery.innerHTML = items.map((img, i) => {
-                        const cls = f1Class(img.f1);
-                        return '<figure>' +
-                            '<div class="metric-badge">' +
-                            '<span class="primary">mIoU ' + img.f1.toFixed(3) + '</span>' +
-                            '<span>ARI ' + (img.ari || 0).toFixed(3) + '</span>' +
-                            '</div>' +
-                            '<img src="assets/all_previews/' + img.file_path + '" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
-                            '<div class="metrics-bar">' +
-                            '<span class="pill">id=' + (img.sample_id || img.id) + '</span>' +
-                            '<span class="pill">rank ' + (i + 1) + '/' + items.length + '</span><br/>' +
-                            '<span class="pill ' + cls + '">' + (img.protocol === 'feature_clustering_mask_only' ? 'FC (Mask Only)' : img.protocol) + '</span>' +
-                            '</div>' +
-                            '</figure>';
-                    }).join('');
-                } else {
-                    gallery.className = 'gallery-compare';
-                    const groups = {};
-                    items.forEach(img => {
-                        if (!groups[img.sample_id]) groups[img.sample_id] = [];
-                        groups[img.sample_id].push(img);
-                    });
+                countLabel.textContent = items.length + ' / ' + total;
 
-                    let html = '';
-                    Object.keys(groups).sort((a, b) => parseInt(a) - parseInt(b)).forEach(sid => {
-                        html += '<div class="compare-row">' +
-                            '<h3>Sample ' + sid + '</h3>' +
-                            '<div class="compare-strip">';
-                        groups[sid].forEach(img => {
-                            const cls = f1Class(img.f1);
-                            html += '<div class="compare-card">' +
-                                '<span class="mini-label">' + img.protocol + '</span>' +
-                                '<div class="metric-badge" style="top:26px;">' +
-                                '<span class="primary">mIoU ' + img.f1.toFixed(3) + '</span>' +
-                                '<span>ARI ' + (img.ari || 0).toFixed(3) + '</span>' +
-                                '</div>' +
-                                '<img src="assets/all_previews/' + img.file_path + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
-                                '</div>';
-                        });
-                        html += '</div></div>';
-                    });
-                    gallery.innerHTML = html;
-                }
+                gallery.innerHTML = items.map((img, i) => {
+                    const cls = f1Class(img.f1);
+                    return '<figure style="position:relative;">' +
+                        '<span class="f1-badge">mIoU ' + img.f1.toFixed(3) + '</span>' +
+                        '<img src="assets/all_previews/' + img.file_path + '" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
+                        '<div style="padding: 15px; border-top: 1px solid var(--line);">' +
+                        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">' +
+                        '<span class="pill">id=' + img.id.split('_').slice(-1)[0] + '</span>' +
+                        '<span class="' + cls + '">mIoU ' + img.f1.toFixed(3) + '</span>' +
+                        '</div>' +
+                        '<div style="font-size: 0.75rem; color: var(--muted);">' +
+                        '<strong>Mode:</strong> ' + img.protocol + ' · ' +
+                        '<strong>P:</strong> ' + img.precision.toFixed(3) + ' · ' +
+                        '<strong>R:</strong> ' + img.recall.toFixed(3) +
+                        '</div>' +
+                        '</div>' +
+                        '</figure>';
+                }).join('');
 
-                countLabel.textContent = 'Showing ' + items.length + ' of ' + total + ' samples';
-                bindZoom();
-            }
-
-            const dialog = document.getElementById('imageDialog');
-            const dialogImg = document.getElementById('imageDialogImg');
-
-            function bindZoom() {
+                // Rebind zoom
+                const dialog = document.getElementById('imageDialog');
+                const dialogImg = document.getElementById('imageDialogImg');
                 gallery.querySelectorAll('[data-zoom-src]').forEach(img => {
                     img.addEventListener('click', () => {
                         dialogImg.src = img.getAttribute('data-zoom-src');
@@ -349,11 +210,9 @@
             sortSel.addEventListener('change', render);
             filterSlider.addEventListener('input', render);
             filterQual.addEventListener('change', render);
-            filterProtocol.addEventListener('change', render);
-            viewMode.addEventListener('change', render);
-
             render();
 
+            const dialog = document.getElementById('imageDialog');
             dialog.addEventListener('click', (e) => {
                 const r = dialog.getBoundingClientRect();
                 if (e.clientY < r.top || e.clientY > r.bottom || e.clientX < r.left || e.clientX > r.right) dialog.close();
@@ -361,5 +220,4 @@
         })();
     </script>
 </body>
-
 </html>

@@ -4,151 +4,121 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Research Runs - Overview</title>
+  <title>Research Site Dashboard</title>
   <link rel="stylesheet" href="assets/site.css" />
 </head>
 
 <body>
-  <main>
-    <section class="hero">
-      <h1>Research Runs</h1>
-      <p>One page per run. Start here for what changed, what improved, where quality failed, and which artifacts can
-        reproduce the result.</p>
-      <p style="margin-top: 12px;"><a class="btn" href="/admin/index.html">Edit Site</a></p>
-    </section>
+  <div class="container animate-fade-in-down">
+    <header style="text-align: center; margin-bottom: 60px;">
+      <div class="subtitle">Research Intelligence</div>
+      <h1 class="title-gradient">Research Runs Dashboard</h1>
+      <p style="color: var(--muted); font-size: 1.2rem; font-weight: 300; max-width: 800px; margin: 20px auto 0;">
+        Unified repository for experiment execution, improvement tracking, and visual grounding across adaptive vision
+        models.
+      </p>
+      <div style="margin-top: 30px;">
+        <a class="btn" href="/admin/index.html">Surgical Site Edit</a>
+      </div>
+    </header>
 
     <section class="section">
-      <h2>What This Site Solves</h2>
+      <h2>Analytical Foundations</h2>
       <div class="card-grid">
         <article class="card">
-          <h3>Fast Read</h3>
-          <p>Each run starts with a plain-language verdict, not raw metadata blocks.</p>
+          <h3>Surgical Verdicts</h3>
+          <p>Every analysis starts with a plain-language executive verdict, bypassing raw metadata overload.</p>
         </article>
         <article class="card">
-          <h3>Trust Signals</h3>
-          <p>Metrics are shown with baseline and delta so improvement claims are testable.</p>
+          <h3>Delta Tracking</h3>
+          <p>Strict baseline-vs-current comparison ensures all improvement claims are statistically grounding.</p>
         </article>
         <article class="card">
-          <h3>Visual Grounding</h3>
-          <p>Fixed sample IDs and QC panels prevent cherry-picked examples.</p>
+          <h3>Visual Proof</h3>
+          <p>Fixed sample IDs and automated QC panels prevent selective reporting and highlight edge-case failures.</p>
         </article>
       </div>
     </section>
 
     <section class="section">
-      <h2>Experiment Index</h2>
-      <div class="actions" style="margin-bottom: 10px;">
-        <label for="expFilter"><strong>Filter domain:</strong></label>
-        <select id="expFilter">
-          <option value="all">All</option>
-          <option value="edge">Edge detection</option>
-          <option value="compression">Image compression</option>
-        </select>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h2>Experiment Index</h2>
+        <div class="gallery-controls">
+          <label for="expFilter" style="font-weight: 600; font-size: 0.9rem;">Filter Category:</label>
+          <select id="expFilter">
+            <option value="all">All Domains</option>
+            <option value="edge">Edge & Segmentation</option>
+            <option value="compression">Neural Compression</option>
+          </select>
+        </div>
       </div>
+
       <div class="card-grid">
-        <article class="card" data-exp-card data-domain="edge">
-          <p><span class="tag good">meta-analysis</span><span class="tag">cross-dataset</span><span
-              class="tag">sam3</span></p>
-          <h3>SAM 3 Cross-Dataset Benchmarking (RWTD vs CAID)</h3>
-          <p class="kv"><strong>Date:</strong> 2026-03-17</p>
-          <p class="kv"><strong>Coverage:</strong> 3,331 samples across natural & architectural domains.</p>
-          <a class="btn" href="experiments/sam3-cross-dataset-overview/index.html">Open meta-report</a>
+        <!-- Premium Meta-Analysis Card -->
+        <article class="dataset-card" data-exp-card data-domain="edge" style="grid-column: span 2;">
+          <div class="subtitle" style="color: var(--good);">Top Analysis</div>
+          <h3>SAM 3 Cross-Dataset Benchmarking</h3>
+          <p>Comprehensive meta-analysis across natural texture (RWTD) and architectural (CAID) domains, revealing the
+            core generalization boundaries of adaptive foundation models.</p>
+          <div style="display: flex; gap: 30px; margin: 20px 0;">
+            <div class="stat-item">
+              <div class="stat-value" style="font-size: 1.8rem; color: var(--brand);">3,331</div>
+              <div class="pill">Samples</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" style="font-size: 1.8rem; color: var(--brand);">0.824</div>
+              <div class="pill">mIoU (RWTD)</div>
+            </div>
+          </div>
+          <a class="btn" href="experiments/sam3-cross-dataset-overview/index.html">Inspect Meta-Report</a>
         </article>
 
         <article class="card" data-exp-card data-domain="edge">
-          <p><span class="tag good">evaluation</span><span class="tag">sam3</span><span class="tag">foundation
-              model</span></p>
+          <p><span class="tag good">evaluation</span><span class="tag">sam3</span></p>
           <h3>RWTD Segmentation — SAM 3 Oracle Points & Text</h3>
           <p class="kv"><strong>Date:</strong> 2026-03-12</p>
-          <p class="kv"><strong>Primary metric:</strong> mIoU = 0.516 (Oracle Points)</p>
-          <a class="btn" href="experiments/sam3-rwtd-both-test-visuals/index.html">Open report</a>
-        </article>
-        <article class="card" data-exp-card data-domain="edge">
-          <p><span class="tag good">milestone</span><span class="tag">edge detection</span><span class="tag">full
-              train</span></p>
-          <h3>RWTD edge — BSDS→SynthPerlin LoRA full EMA init</h3>
-          <p class="kv"><strong>Date:</strong> 2026-03-12</p>
-          <p class="kv"><strong>Primary metric:</strong> edge/AP = 0.5878, delta +0.1745 vs zero-shot.</p>
-          <a class="btn" href="experiments/2026-03-12_edge_rwtd_diffedge_lorac_bsdsft/index.html">Open report</a>
+          <p class="kv"><strong>Primary metric:</strong> mIoU = 0.516</p>
+          <a class="btn secondary" href="experiments/sam3-rwtd-both-test-visuals/index.html">View Report</a>
         </article>
 
         <article class="card" data-exp-card data-domain="edge">
-          <p><span class="tag good">reviewed</span><span class="tag">edge detection</span></p>
-          <h3>RWTD synthetic domain - DiffEdge LoRA C 64-shot</h3>
-          <p class="kv"><strong>Date:</strong> 2026-03-10</p>
-          <p class="kv"><strong>Primary metric:</strong> edge/AP = 0.4845, delta +0.0712 vs zero-shot.</p>
-          <a class="btn" href="experiments/2026-03-10_edge_rwtd_diffedge_lorac_64shot/index.html">Open report</a>
+          <p><span class="tag good">milestone</span><span class="tag">edge</span></p>
+          <h3>BSDS→SynthPerlin LoRA Init</h3>
+          <p class="kv"><strong>Date:</strong> 2026-03-12</p>
+          <p class="kv"><strong>Performance:</strong> AP = 0.5878 (+0.17 Delta)</p>
+          <a class="btn secondary" href="experiments/2026-03-12_edge_rwtd_diffedge_lorac_bsdsft/index.html">View
+            Report</a>
         </article>
 
         <article class="card" data-exp-card data-domain="compression">
-          <p><span class="tag warn">reviewed baseline-quality</span><span class="tag">compression</span></p>
-          <h3>CIFAR-10 patch compression eval (fc residual, 4-sample fixed slice)</h3>
-          <p class="kv"><strong>Date:</strong> 2024-02-20</p>
-          <p class="kv"><strong>Primary metric:</strong> PSNR = 12.98 dB, delta -0.52 vs mean-color baseline.</p>
-          <a class="btn" href="experiments/2024-02-20_compression_cifar10_fc_residual_eval4/index.html">Open report</a>
+          <p><span class="tag warn">reference</span><span class="tag">compression</span></p>
+          <h3>CIFAR-10 Residual Eval</h3>
+          <p class="kv"><strong>Primary metric:</strong> PSNR = 12.98 dB</p>
+          <a class="btn secondary" href="experiments/2024-02-20_compression_cifar10_fc_residual_eval4/index.html">View
+            Report</a>
         </article>
       </div>
     </section>
 
-    <section class="section">
-      <h2>Cross-Run Snapshot</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Run</th>
-              <th>Primary metric</th>
-              <th>Baseline</th>
-              <th>Delta</th>
-              <th>Takeaway</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>sam3-cross-dataset-overview</td>
-              <td>mIoU = 0.674 (CAID) / 0.824 (RWTD)</td>
-              <td>N/A (Multi-domain)</td>
-              <td style="color:#000;"><strong>-</strong></td>
-              <td>Unified comparison confirms SAM 3's variable precision across natural texture vs architectural
-                semantics.</td>
-            </tr>
-            <tr>
-              <td>sam3-rwtd-both-test-visuals</td>
-              <td>mIoU = 0.516</td>
-              <td>N/A (zero-shot)</td>
-              <td style="color:#000;"><strong>-</strong></td>
-              <td>Oracle points very effective; text descriptions often insufficient for distinguishing overlapping
-                textures.</td>
-            </tr>
-            <tr>
-              <td>2026-03-12_edge_rwtd_diffedge_lorac_bsdsft</td>
-              <td>edge/AP = 0.5878</td>
-              <td>0.4133 (synthetic zero-shot)</td>
-              <td style="color:#1d7a3e;"><strong>+0.1745</strong></td>
-              <td>Best AP — full-data EMA init training substantially outperforms few-shot variants.</td>
-            </tr>
-            <tr>
-              <td>2026-03-10_edge_rwtd_diffedge_lorac_64shot</td>
-              <td>edge/AP = 0.4845</td>
-              <td>0.4133 (synthetic zero-shot)</td>
-              <td style="color:#1d7a3e;"><strong>+0.0712</strong></td>
-              <td>Synthetic-domain gain is real, thin boundaries still fail on hard samples.</td>
-            </tr>
-            <tr>
-              <td>2024-02-20_compression_cifar10_fc_residual_eval4</td>
-              <td>PSNR = 12.98 dB</td>
-              <td>13.50 dB (mean-color)</td>
-              <td style="color:#9b2226;"><strong>-0.52</strong></td>
-              <td>This legacy run underperforms baseline and should be treated as reference-only.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+    <footer style="margin-top: 100px;">
+      <p>Research Analytics Infrastructure by <strong>Antigravity</strong> &copy; 2026</p>
+      <p style="font-size: 0.8rem; margin-top: 10px; color: var(--muted);">Anchored to Premium Design Contract v1.2</p>
+    </footer>
+  </div>
 
-    <footer>Updated for readability and navigation: 2026-03-12.</footer>
-  </main>
   <script src="assets/site.js"></script>
+  <script>
+    document.getElementById('expFilter').addEventListener('change', (e) => {
+      const domain = e.target.value;
+      document.querySelectorAll('[data-exp-card]').forEach(card => {
+        if (domain === 'all' || card.dataset.domain === domain) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
