@@ -112,6 +112,12 @@
             color: #ffb703;
             background: #fff3e0;
         }
+
+        .ds-stld {
+            border-color: #219ebc;
+            color: #023047;
+            background: #e1f5fe;
+        }
     </style>
 </head>
 
@@ -119,7 +125,7 @@
     <main>
         <section class="hero">
             <h1>Cross-Dataset Preview Gallery</h1>
-            <p>Unified comparison of SAM 3 on RWTD and CAID datasets</p>
+            <p>Unified comparison of SAM 3 Coarse Feature Clustering on RWTD, CAID, and STLD datasets</p>
             <p style="margin-top:10px;"><a class="btn" href="index.html"
                     style="border-color:#8ecae6;background:#edf7fc;color:#0b4f6c;">← Back to report</a></p>
         </section>
@@ -131,6 +137,7 @@
                     <option value="all">All Datasets</option>
                     <option value="rwtd">RWTD (Texture)</option>
                     <option value="caid">CAID (Architectural)</option>
+                    <option value="stld">STLD (Structural)</option>
                 </select>
                 <label for="sortBy">Sort:</label>
                 <select id="sortBy">

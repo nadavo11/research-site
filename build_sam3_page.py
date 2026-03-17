@@ -45,7 +45,7 @@ metrics["FC_mIoU"] = round(fc_metrics['miou'], 3)
 metrics["FC_ARI"] = round(fc_metrics['ari'], 3)
 
 # Extract coarse-only pooling metrics
-with open('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_coarse_to_fine_global_pooled_init_coarse_only/summary.json', 'r') as f:
+with open('/home/nada/PycharmProjects/research-site/experiments/Coarse Feature Clustering/rwtd/summary.json', 'r') as f:
     summ_fcc = json.load(f)
 fcc_metrics = summ_fcc['mean_metrics']
 metrics["FC_Coarse_mIoU"] = round(fcc_metrics['miou'], 3)
@@ -108,7 +108,7 @@ protocols_config = [
     ('text', source_dir / 'text'),
     ('baseline', Path('/home/nada/PycharmProjects/research-site/experiments/test_dense')),
     ('feature_cluster_global', Path('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_global')),
-    ('feature_clustering_mask_only', Path('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_coarse_to_fine_global_pooled_init_coarse_only'))
+    ('feature_clustering_mask_only', Path('/home/nada/PycharmProjects/research-site/experiments/Coarse Feature Clustering/rwtd'))
 ]
 
 for protocol, p_dir in protocols_config:

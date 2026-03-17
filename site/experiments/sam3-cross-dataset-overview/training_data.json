@@ -5,1816 +5,1816 @@
       "id": "rwtd_1",
       "sample_id": 1,
       "dataset": "rwtd",
-      "mIoU": 0.4799,
-      "ARI": 0.958,
+      "mIoU": 0.3808,
+      "ARI": 0.0253,
       "file_path": "rwtd/1.png"
     },
     {
       "id": "rwtd_101",
       "sample_id": 101,
       "dataset": "rwtd",
-      "mIoU": 0.4759,
-      "ARI": 0.8393,
+      "mIoU": 0.8723,
+      "ARI": 0.7472,
       "file_path": "rwtd/101.png"
     },
     {
       "id": "rwtd_102",
       "sample_id": 102,
       "dataset": "rwtd",
-      "mIoU": 0.1699,
-      "ARI": 0.1624,
+      "mIoU": 0.7737,
+      "ARI": 0.5562,
       "file_path": "rwtd/102.png"
     },
     {
       "id": "rwtd_103",
       "sample_id": 103,
       "dataset": "rwtd",
-      "mIoU": 0.4787,
-      "ARI": 0.841,
+      "mIoU": 0.7188,
+      "ARI": 0.4824,
       "file_path": "rwtd/103.png"
     },
     {
       "id": "rwtd_104",
       "sample_id": 104,
       "dataset": "rwtd",
-      "mIoU": 0.7924,
-      "ARI": 0.3121,
+      "mIoU": 0.5672,
+      "ARI": 0.3085,
       "file_path": "rwtd/104.png"
     },
     {
       "id": "rwtd_106",
       "sample_id": 106,
       "dataset": "rwtd",
-      "mIoU": 0.4324,
-      "ARI": 0.8559,
+      "mIoU": 0.3071,
+      "ARI": -0.0104,
       "file_path": "rwtd/106.png"
     },
     {
       "id": "rwtd_12",
       "sample_id": 12,
       "dataset": "rwtd",
-      "mIoU": 0.0212,
-      "ARI": 0.0007,
+      "mIoU": 0.8819,
+      "ARI": 0.7651,
       "file_path": "rwtd/12.png"
     },
     {
       "id": "rwtd_121",
       "sample_id": 121,
       "dataset": "rwtd",
-      "mIoU": 0.4675,
-      "ARI": 0.8383,
+      "mIoU": 0.9263,
+      "ARI": 0.8587,
       "file_path": "rwtd/121.png"
     },
     {
       "id": "rwtd_122",
       "sample_id": 122,
       "dataset": "rwtd",
-      "mIoU": 0.9236,
-      "ARI": 0.852,
+      "mIoU": 0.9269,
+      "ARI": 0.8541,
       "file_path": "rwtd/122.png"
     },
     {
       "id": "rwtd_125",
       "sample_id": 125,
       "dataset": "rwtd",
-      "mIoU": 0.4808,
-      "ARI": 0.8703,
+      "mIoU": 0.9456,
+      "ARI": 0.9052,
       "file_path": "rwtd/125.png"
     },
     {
       "id": "rwtd_128",
       "sample_id": 128,
       "dataset": "rwtd",
-      "mIoU": 0.4399,
-      "ARI": 0.6613,
+      "mIoU": 0.9459,
+      "ARI": 0.9081,
       "file_path": "rwtd/128.png"
     },
     {
       "id": "rwtd_129",
       "sample_id": 129,
       "dataset": "rwtd",
-      "mIoU": 0.9211,
-      "ARI": 0.8193,
+      "mIoU": 0.872,
+      "ARI": 0.7501,
       "file_path": "rwtd/129.png"
     },
     {
       "id": "rwtd_13",
       "sample_id": 13,
       "dataset": "rwtd",
-      "mIoU": 0.02,
-      "ARI": 0.0049,
+      "mIoU": 0.8369,
+      "ARI": 0.6823,
       "file_path": "rwtd/13.png"
     },
     {
       "id": "rwtd_134",
       "sample_id": 134,
       "dataset": "rwtd",
-      "mIoU": 0.5143,
-      "ARI": 0.9101,
+      "mIoU": 0.9352,
+      "ARI": 0.871,
       "file_path": "rwtd/134.png"
     },
     {
       "id": "rwtd_139",
       "sample_id": 139,
       "dataset": "rwtd",
-      "mIoU": 0.9148,
-      "ARI": 0.8411,
+      "mIoU": 0.909,
+      "ARI": 0.8213,
       "file_path": "rwtd/139.png"
     },
     {
       "id": "rwtd_14",
       "sample_id": 14,
       "dataset": "rwtd",
-      "mIoU": 0.0026,
-      "ARI": -0.0,
+      "mIoU": 0.9631,
+      "ARI": 0.9266,
       "file_path": "rwtd/14.png"
     },
     {
       "id": "rwtd_142",
       "sample_id": 142,
       "dataset": "rwtd",
-      "mIoU": 0.8584,
-      "ARI": 0.4453,
+      "mIoU": 0.3471,
+      "ARI": 0.017,
       "file_path": "rwtd/142.png"
     },
     {
       "id": "rwtd_149",
       "sample_id": 149,
       "dataset": "rwtd",
-      "mIoU": 0.8425,
-      "ARI": 0.6972,
+      "mIoU": 0.8411,
+      "ARI": 0.6862,
       "file_path": "rwtd/149.png"
     },
     {
       "id": "rwtd_15",
       "sample_id": 15,
       "dataset": "rwtd",
-      "mIoU": 0.8549,
-      "ARI": 0.6766,
+      "mIoU": 0.8139,
+      "ARI": 0.6393,
       "file_path": "rwtd/15.png"
     },
     {
       "id": "rwtd_175",
       "sample_id": 175,
       "dataset": "rwtd",
-      "mIoU": 0.7414,
-      "ARI": 0.4995,
+      "mIoU": 0.4005,
+      "ARI": 0.0172,
       "file_path": "rwtd/175.png"
     },
     {
       "id": "rwtd_176",
       "sample_id": 176,
       "dataset": "rwtd",
-      "mIoU": 0.4504,
-      "ARI": 0.4783,
+      "mIoU": 0.5978,
+      "ARI": 0.3578,
       "file_path": "rwtd/176.png"
     },
     {
       "id": "rwtd_18",
       "sample_id": 18,
       "dataset": "rwtd",
-      "mIoU": 0.3497,
-      "ARI": 0.6435,
+      "mIoU": 0.4241,
+      "ARI": 0.0423,
       "file_path": "rwtd/18.png"
     },
     {
       "id": "rwtd_181",
       "sample_id": 181,
       "dataset": "rwtd",
-      "mIoU": 0.0915,
-      "ARI": -0.0108,
+      "mIoU": 0.972,
+      "ARI": 0.945,
       "file_path": "rwtd/181.png"
     },
     {
       "id": "rwtd_182",
       "sample_id": 182,
       "dataset": "rwtd",
-      "mIoU": 0.9191,
-      "ARI": 0.8461,
+      "mIoU": 0.8959,
+      "ARI": 0.7925,
       "file_path": "rwtd/182.png"
     },
     {
       "id": "rwtd_183",
       "sample_id": 183,
       "dataset": "rwtd",
-      "mIoU": 0.4901,
-      "ARI": 0.9627,
+      "mIoU": 0.9655,
+      "ARI": 0.9316,
       "file_path": "rwtd/183.png"
     },
     {
       "id": "rwtd_184",
       "sample_id": 184,
       "dataset": "rwtd",
-      "mIoU": 0.4985,
-      "ARI": 0.8504,
+      "mIoU": 0.9842,
+      "ARI": 0.9685,
       "file_path": "rwtd/184.png"
     },
     {
       "id": "rwtd_185",
       "sample_id": 185,
       "dataset": "rwtd",
-      "mIoU": 0.5754,
-      "ARI": 0.7563,
+      "mIoU": 0.9766,
+      "ARI": 0.9545,
       "file_path": "rwtd/185.png"
     },
     {
       "id": "rwtd_186",
       "sample_id": 186,
       "dataset": "rwtd",
-      "mIoU": 0.0144,
-      "ARI": 0.0124,
+      "mIoU": 0.8019,
+      "ARI": 0.6141,
       "file_path": "rwtd/186.png"
     },
     {
       "id": "rwtd_189",
       "sample_id": 189,
       "dataset": "rwtd",
-      "mIoU": 0.4569,
-      "ARI": 0.3293,
+      "mIoU": 0.8259,
+      "ARI": 0.7703,
       "file_path": "rwtd/189.png"
     },
     {
       "id": "rwtd_194",
       "sample_id": 194,
       "dataset": "rwtd",
-      "mIoU": 0.0317,
-      "ARI": 0.0048,
+      "mIoU": 0.9694,
+      "ARI": 0.9388,
       "file_path": "rwtd/194.png"
     },
     {
       "id": "rwtd_197",
       "sample_id": 197,
       "dataset": "rwtd",
-      "mIoU": 0.038,
-      "ARI": 0.0285,
+      "mIoU": 0.9594,
+      "ARI": 0.9213,
       "file_path": "rwtd/197.png"
     },
     {
       "id": "rwtd_2",
       "sample_id": 2,
       "dataset": "rwtd",
-      "mIoU": 0.0246,
-      "ARI": 0.0347,
+      "mIoU": 0.4213,
+      "ARI": 0.0712,
       "file_path": "rwtd/2.png"
     },
     {
       "id": "rwtd_200",
       "sample_id": 200,
       "dataset": "rwtd",
-      "mIoU": 0.0347,
-      "ARI": 0.0041,
+      "mIoU": 0.9468,
+      "ARI": 0.9069,
       "file_path": "rwtd/200.png"
     },
     {
       "id": "rwtd_201",
       "sample_id": 201,
       "dataset": "rwtd",
-      "mIoU": 0.2698,
-      "ARI": 0.221,
+      "mIoU": 0.9639,
+      "ARI": 0.9279,
       "file_path": "rwtd/201.png"
     },
     {
       "id": "rwtd_202",
       "sample_id": 202,
       "dataset": "rwtd",
-      "mIoU": 0.5368,
-      "ARI": 0.8195,
+      "mIoU": 0.9533,
+      "ARI": 0.9169,
       "file_path": "rwtd/202.png"
     },
     {
       "id": "rwtd_205",
       "sample_id": 205,
       "dataset": "rwtd",
-      "mIoU": 0.945,
-      "ARI": 0.8954,
+      "mIoU": 0.9766,
+      "ARI": 0.9537,
       "file_path": "rwtd/205.png"
     },
     {
       "id": "rwtd_207",
       "sample_id": 207,
       "dataset": "rwtd",
-      "mIoU": 0.9695,
-      "ARI": 0.9386,
+      "mIoU": 0.9576,
+      "ARI": 0.9156,
       "file_path": "rwtd/207.png"
     },
     {
       "id": "rwtd_210",
       "sample_id": 210,
       "dataset": "rwtd",
-      "mIoU": 0.9171,
-      "ARI": 0.8433,
+      "mIoU": 0.9567,
+      "ARI": 0.914,
       "file_path": "rwtd/210.png"
     },
     {
       "id": "rwtd_213",
       "sample_id": 213,
       "dataset": "rwtd",
-      "mIoU": 0.9727,
-      "ARI": 0.9404,
+      "mIoU": 0.9734,
+      "ARI": 0.9479,
       "file_path": "rwtd/213.png"
     },
     {
       "id": "rwtd_214",
       "sample_id": 214,
       "dataset": "rwtd",
-      "mIoU": 0.6368,
-      "ARI": 0.8002,
+      "mIoU": 0.9909,
+      "ARI": 0.982,
       "file_path": "rwtd/214.png"
     },
     {
       "id": "rwtd_215",
       "sample_id": 215,
       "dataset": "rwtd",
-      "mIoU": 0.5906,
-      "ARI": 0.8646,
+      "mIoU": 0.9862,
+      "ARI": 0.9731,
       "file_path": "rwtd/215.png"
     },
     {
       "id": "rwtd_216",
       "sample_id": 216,
       "dataset": "rwtd",
-      "mIoU": 0.043,
-      "ARI": 0.0148,
+      "mIoU": 0.8471,
+      "ARI": 0.6963,
       "file_path": "rwtd/216.png"
     },
     {
       "id": "rwtd_219",
       "sample_id": 219,
       "dataset": "rwtd",
-      "mIoU": 0.5377,
-      "ARI": 0.6925,
+      "mIoU": 0.9934,
+      "ARI": 0.9868,
       "file_path": "rwtd/219.png"
     },
     {
       "id": "rwtd_22",
       "sample_id": 22,
       "dataset": "rwtd",
-      "mIoU": 0.4704,
-      "ARI": 0.8652,
+      "mIoU": 0.9655,
+      "ARI": 0.9316,
       "file_path": "rwtd/22.png"
     },
     {
       "id": "rwtd_221",
       "sample_id": 221,
       "dataset": "rwtd",
-      "mIoU": 0.5611,
-      "ARI": 0.8452,
+      "mIoU": 0.9622,
+      "ARI": 0.9245,
       "file_path": "rwtd/221.png"
     },
     {
       "id": "rwtd_222",
       "sample_id": 222,
       "dataset": "rwtd",
-      "mIoU": 0.9444,
-      "ARI": 0.9093,
+      "mIoU": 0.9411,
+      "ARI": 0.9049,
       "file_path": "rwtd/222.png"
     },
     {
       "id": "rwtd_224",
       "sample_id": 224,
       "dataset": "rwtd",
-      "mIoU": 0.5226,
-      "ARI": 0.9134,
+      "mIoU": 0.9877,
+      "ARI": 0.9754,
       "file_path": "rwtd/224.png"
     },
     {
       "id": "rwtd_229",
       "sample_id": 229,
       "dataset": "rwtd",
-      "mIoU": 0.5947,
-      "ARI": 0.7749,
+      "mIoU": 0.987,
+      "ARI": 0.9748,
       "file_path": "rwtd/229.png"
     },
     {
       "id": "rwtd_237",
       "sample_id": 237,
       "dataset": "rwtd",
-      "mIoU": 0.9456,
-      "ARI": 0.8932,
+      "mIoU": 0.9764,
+      "ARI": 0.953,
       "file_path": "rwtd/237.png"
     },
     {
       "id": "rwtd_24",
       "sample_id": 24,
       "dataset": "rwtd",
-      "mIoU": 0.9497,
-      "ARI": 0.8315,
+      "mIoU": 0.4943,
+      "ARI": 0.1546,
       "file_path": "rwtd/24.png"
     },
     {
       "id": "rwtd_240",
       "sample_id": 240,
       "dataset": "rwtd",
-      "mIoU": 0.386,
-      "ARI": 0.5333,
+      "mIoU": 0.3796,
+      "ARI": 0.0216,
       "file_path": "rwtd/240.png"
     },
     {
       "id": "rwtd_244",
       "sample_id": 244,
       "dataset": "rwtd",
-      "mIoU": 0.4433,
-      "ARI": 0.2917,
+      "mIoU": 0.6714,
+      "ARI": 0.4112,
       "file_path": "rwtd/244.png"
     },
     {
       "id": "rwtd_245",
       "sample_id": 245,
       "dataset": "rwtd",
-      "mIoU": 0.0376,
-      "ARI": -0.0212,
+      "mIoU": 0.9383,
+      "ARI": 0.8853,
       "file_path": "rwtd/245.png"
     },
     {
       "id": "rwtd_246",
       "sample_id": 246,
       "dataset": "rwtd",
-      "mIoU": 0.9806,
-      "ARI": 0.959,
+      "mIoU": 0.9752,
+      "ARI": 0.9505,
       "file_path": "rwtd/246.png"
     },
     {
       "id": "rwtd_247",
       "sample_id": 247,
       "dataset": "rwtd",
-      "mIoU": 0.3754,
-      "ARI": 0.5506,
+      "mIoU": 0.9907,
+      "ARI": 0.9815,
       "file_path": "rwtd/247.png"
     },
     {
       "id": "rwtd_25",
       "sample_id": 25,
       "dataset": "rwtd",
-      "mIoU": 0.4884,
-      "ARI": 0.9214,
+      "mIoU": 0.9414,
+      "ARI": 0.888,
       "file_path": "rwtd/25.png"
     },
     {
       "id": "rwtd_250",
       "sample_id": 250,
       "dataset": "rwtd",
-      "mIoU": 0.4824,
-      "ARI": 0.7214,
+      "mIoU": 0.9347,
+      "ARI": 0.8854,
       "file_path": "rwtd/250.png"
     },
     {
       "id": "rwtd_251",
       "sample_id": 251,
       "dataset": "rwtd",
-      "mIoU": 0.4891,
-      "ARI": 0.7929,
+      "mIoU": 0.9796,
+      "ARI": 0.9593,
       "file_path": "rwtd/251.png"
     },
     {
       "id": "rwtd_253",
       "sample_id": 253,
       "dataset": "rwtd",
-      "mIoU": 0.8347,
-      "ARI": 0.6771,
+      "mIoU": 0.9638,
+      "ARI": 0.9297,
       "file_path": "rwtd/253.png"
     },
     {
       "id": "rwtd_254",
       "sample_id": 254,
       "dataset": "rwtd",
-      "mIoU": 0.4776,
-      "ARI": 0.8845,
+      "mIoU": 0.9582,
+      "ARI": 0.9173,
       "file_path": "rwtd/254.png"
     },
     {
       "id": "rwtd_256",
       "sample_id": 256,
       "dataset": "rwtd",
-      "mIoU": 0.0987,
-      "ARI": 0.0096,
+      "mIoU": 0.9841,
+      "ARI": 0.9683,
       "file_path": "rwtd/256.png"
     },
     {
       "id": "rwtd_257",
       "sample_id": 257,
       "dataset": "rwtd",
-      "mIoU": 0.0534,
-      "ARI": 0.0464,
+      "mIoU": 0.9568,
+      "ARI": 0.9192,
       "file_path": "rwtd/257.png"
     },
     {
       "id": "rwtd_258",
       "sample_id": 258,
       "dataset": "rwtd",
-      "mIoU": 0.1934,
-      "ARI": 0.0568,
+      "mIoU": 0.9666,
+      "ARI": 0.9334,
       "file_path": "rwtd/258.png"
     },
     {
       "id": "rwtd_259",
       "sample_id": 259,
       "dataset": "rwtd",
-      "mIoU": 0.0517,
-      "ARI": -0.0215,
+      "mIoU": 0.939,
+      "ARI": 0.8942,
       "file_path": "rwtd/259.png"
     },
     {
       "id": "rwtd_260",
       "sample_id": 260,
       "dataset": "rwtd",
-      "mIoU": 0.1346,
-      "ARI": 0.0806,
+      "mIoU": 0.9756,
+      "ARI": 0.9512,
       "file_path": "rwtd/260.png"
     },
     {
       "id": "rwtd_261",
       "sample_id": 261,
       "dataset": "rwtd",
-      "mIoU": 0.7291,
-      "ARI": 0.7248,
+      "mIoU": 0.9833,
+      "ARI": 0.9674,
       "file_path": "rwtd/261.png"
     },
     {
       "id": "rwtd_262",
       "sample_id": 262,
       "dataset": "rwtd",
-      "mIoU": 0.5118,
-      "ARI": 0.9478,
+      "mIoU": 0.9568,
+      "ARI": 0.9146,
       "file_path": "rwtd/262.png"
     },
     {
       "id": "rwtd_263",
       "sample_id": 263,
       "dataset": "rwtd",
-      "mIoU": 0.165,
-      "ARI": 0.0696,
+      "mIoU": 0.9813,
+      "ARI": 0.9628,
       "file_path": "rwtd/263.png"
     },
     {
       "id": "rwtd_265",
       "sample_id": 265,
       "dataset": "rwtd",
-      "mIoU": 0.6592,
-      "ARI": 0.3715,
+      "mIoU": 0.4761,
+      "ARI": 0.1076,
       "file_path": "rwtd/265.png"
     },
     {
       "id": "rwtd_268",
       "sample_id": 268,
       "dataset": "rwtd",
-      "mIoU": 0.3728,
-      "ARI": 0.5416,
+      "mIoU": 0.9724,
+      "ARI": 0.9449,
       "file_path": "rwtd/268.png"
     },
     {
       "id": "rwtd_269",
       "sample_id": 269,
       "dataset": "rwtd",
-      "mIoU": 0.1541,
-      "ARI": 0.0908,
+      "mIoU": 0.9509,
+      "ARI": 0.9021,
       "file_path": "rwtd/269.png"
     },
     {
       "id": "rwtd_27",
       "sample_id": 27,
       "dataset": "rwtd",
-      "mIoU": 0.1408,
-      "ARI": 0.1659,
+      "mIoU": 0.5028,
+      "ARI": 0.1069,
       "file_path": "rwtd/27.png"
     },
     {
       "id": "rwtd_270",
       "sample_id": 270,
       "dataset": "rwtd",
-      "mIoU": 0.5244,
-      "ARI": 0.7418,
+      "mIoU": 0.6611,
+      "ARI": 0.443,
       "file_path": "rwtd/270.png"
     },
     {
       "id": "rwtd_274",
       "sample_id": 274,
       "dataset": "rwtd",
-      "mIoU": 0.4084,
-      "ARI": 0.769,
+      "mIoU": 0.9717,
+      "ARI": 0.9441,
       "file_path": "rwtd/274.png"
     },
     {
       "id": "rwtd_276",
       "sample_id": 276,
       "dataset": "rwtd",
-      "mIoU": 0.342,
-      "ARI": 0.3266,
+      "mIoU": 0.8337,
+      "ARI": 0.7067,
       "file_path": "rwtd/276.png"
     },
     {
       "id": "rwtd_28",
       "sample_id": 28,
       "dataset": "rwtd",
-      "mIoU": 0.0104,
-      "ARI": 0.0002,
+      "mIoU": 0.9062,
+      "ARI": 0.813,
       "file_path": "rwtd/28.png"
     },
     {
       "id": "rwtd_280",
       "sample_id": 280,
       "dataset": "rwtd",
-      "mIoU": 0.47,
-      "ARI": 0.8599,
+      "mIoU": 0.9549,
+      "ARI": 0.9116,
       "file_path": "rwtd/280.png"
     },
     {
       "id": "rwtd_281",
       "sample_id": 281,
       "dataset": "rwtd",
-      "mIoU": 0.811,
-      "ARI": 0.6699,
+      "mIoU": 0.9413,
+      "ARI": 0.883,
       "file_path": "rwtd/281.png"
     },
     {
       "id": "rwtd_282",
       "sample_id": 282,
       "dataset": "rwtd",
-      "mIoU": 0.5115,
-      "ARI": 0.9075,
+      "mIoU": 0.8968,
+      "ARI": 0.7944,
       "file_path": "rwtd/282.png"
     },
     {
       "id": "rwtd_288",
       "sample_id": 288,
       "dataset": "rwtd",
-      "mIoU": 0.4945,
-      "ARI": 0.9434,
+      "mIoU": 0.3654,
+      "ARI": 0.0138,
       "file_path": "rwtd/288.png"
     },
     {
       "id": "rwtd_293",
       "sample_id": 293,
       "dataset": "rwtd",
-      "mIoU": 0.2605,
-      "ARI": 0.5855,
+      "mIoU": 0.9332,
+      "ARI": 0.9076,
       "file_path": "rwtd/293.png"
     },
     {
       "id": "rwtd_294",
       "sample_id": 294,
       "dataset": "rwtd",
-      "mIoU": 0.3409,
-      "ARI": 0.5091,
+      "mIoU": 0.9552,
+      "ARI": 0.9116,
       "file_path": "rwtd/294.png"
     },
     {
       "id": "rwtd_299",
       "sample_id": 299,
       "dataset": "rwtd",
-      "mIoU": 0.0092,
-      "ARI": -0.0023,
+      "mIoU": 0.9362,
+      "ARI": 0.873,
       "file_path": "rwtd/299.png"
     },
     {
       "id": "rwtd_3",
       "sample_id": 3,
       "dataset": "rwtd",
-      "mIoU": 0.0526,
-      "ARI": 0.2017,
+      "mIoU": 0.3618,
+      "ARI": 0.0101,
       "file_path": "rwtd/3.png"
     },
     {
       "id": "rwtd_30",
       "sample_id": 30,
       "dataset": "rwtd",
-      "mIoU": 0.4916,
-      "ARI": 0.8811,
+      "mIoU": 0.9115,
+      "ARI": 0.8241,
       "file_path": "rwtd/30.png"
     },
     {
       "id": "rwtd_300",
       "sample_id": 300,
       "dataset": "rwtd",
-      "mIoU": 0.5156,
-      "ARI": 0.8998,
+      "mIoU": 0.9798,
+      "ARI": 0.96,
       "file_path": "rwtd/300.png"
     },
     {
       "id": "rwtd_302",
       "sample_id": 302,
       "dataset": "rwtd",
-      "mIoU": 0.4807,
-      "ARI": 0.8301,
+      "mIoU": 0.9562,
+      "ARI": 0.9131,
       "file_path": "rwtd/302.png"
     },
     {
       "id": "rwtd_303",
       "sample_id": 303,
       "dataset": "rwtd",
-      "mIoU": 0.9734,
-      "ARI": 0.9424,
+      "mIoU": 0.9593,
+      "ARI": 0.9243,
       "file_path": "rwtd/303.png"
     },
     {
       "id": "rwtd_304",
       "sample_id": 304,
       "dataset": "rwtd",
-      "mIoU": 0.0283,
-      "ARI": 0.0497,
+      "mIoU": 0.5603,
+      "ARI": 0.2001,
       "file_path": "rwtd/304.png"
     },
     {
       "id": "rwtd_308",
       "sample_id": 308,
       "dataset": "rwtd",
-      "mIoU": 0.8529,
-      "ARI": 0.5603,
+      "mIoU": 0.4468,
+      "ARI": 0.0779,
       "file_path": "rwtd/308.png"
     },
     {
       "id": "rwtd_310",
       "sample_id": 310,
       "dataset": "rwtd",
-      "mIoU": 0.951,
-      "ARI": 0.8679,
+      "mIoU": 0.3149,
+      "ARI": 0.007,
       "file_path": "rwtd/310.png"
     },
     {
       "id": "rwtd_311",
       "sample_id": 311,
       "dataset": "rwtd",
-      "mIoU": 0.0218,
-      "ARI": 0.0191,
+      "mIoU": 0.7336,
+      "ARI": 0.6032,
       "file_path": "rwtd/311.png"
     },
     {
       "id": "rwtd_315",
       "sample_id": 315,
       "dataset": "rwtd",
-      "mIoU": 0.4646,
-      "ARI": 0.9528,
+      "mIoU": 0.8786,
+      "ARI": 0.8403,
       "file_path": "rwtd/315.png"
     },
     {
       "id": "rwtd_318",
       "sample_id": 318,
       "dataset": "rwtd",
-      "mIoU": 0.5397,
-      "ARI": 0.9063,
+      "mIoU": 0.5749,
+      "ARI": 0.25,
       "file_path": "rwtd/318.png"
     },
     {
       "id": "rwtd_319",
       "sample_id": 319,
       "dataset": "rwtd",
-      "mIoU": 0.6987,
-      "ARI": 0.6561,
+      "mIoU": 0.958,
+      "ARI": 0.9169,
       "file_path": "rwtd/319.png"
     },
     {
       "id": "rwtd_322",
       "sample_id": 322,
       "dataset": "rwtd",
-      "mIoU": 0.9116,
-      "ARI": 0.8074,
+      "mIoU": 0.9318,
+      "ARI": 0.8665,
       "file_path": "rwtd/322.png"
     },
     {
       "id": "rwtd_323",
       "sample_id": 323,
       "dataset": "rwtd",
-      "mIoU": 0.4698,
-      "ARI": 0.8437,
+      "mIoU": 0.551,
+      "ARI": 0.1933,
       "file_path": "rwtd/323.png"
     },
     {
       "id": "rwtd_324",
       "sample_id": 324,
       "dataset": "rwtd",
-      "mIoU": 0.3849,
-      "ARI": 0.521,
+      "mIoU": 0.9627,
+      "ARI": 0.9256,
       "file_path": "rwtd/324.png"
     },
     {
       "id": "rwtd_325",
       "sample_id": 325,
       "dataset": "rwtd",
-      "mIoU": 0.197,
-      "ARI": 0.1742,
+      "mIoU": 0.9192,
+      "ARI": 0.8399,
       "file_path": "rwtd/325.png"
     },
     {
       "id": "rwtd_327",
       "sample_id": 327,
       "dataset": "rwtd",
-      "mIoU": 0.9371,
-      "ARI": 0.8689,
+      "mIoU": 0.9062,
+      "ARI": 0.8141,
       "file_path": "rwtd/327.png"
     },
     {
       "id": "rwtd_328",
       "sample_id": 328,
       "dataset": "rwtd",
-      "mIoU": 0.4784,
-      "ARI": 0.815,
+      "mIoU": 0.9227,
+      "ARI": 0.8546,
       "file_path": "rwtd/328.png"
     },
     {
       "id": "rwtd_329",
       "sample_id": 329,
       "dataset": "rwtd",
-      "mIoU": 0.4673,
-      "ARI": 0.8276,
+      "mIoU": 0.909,
+      "ARI": 0.8186,
       "file_path": "rwtd/329.png"
     },
     {
       "id": "rwtd_33",
       "sample_id": 33,
       "dataset": "rwtd",
-      "mIoU": 0.4899,
-      "ARI": 0.9011,
+      "mIoU": 0.3587,
+      "ARI": -0.0036,
       "file_path": "rwtd/33.png"
     },
     {
       "id": "rwtd_330",
       "sample_id": 330,
       "dataset": "rwtd",
-      "mIoU": 0.2766,
-      "ARI": 0.3982,
+      "mIoU": 0.9332,
+      "ARI": 0.8732,
       "file_path": "rwtd/330.png"
     },
     {
       "id": "rwtd_331",
       "sample_id": 331,
       "dataset": "rwtd",
-      "mIoU": 0.4984,
-      "ARI": 0.8058,
+      "mIoU": 0.8888,
+      "ARI": 0.8029,
       "file_path": "rwtd/331.png"
     },
     {
       "id": "rwtd_332",
       "sample_id": 332,
       "dataset": "rwtd",
-      "mIoU": 0.838,
-      "ARI": 0.8309,
+      "mIoU": 0.9338,
+      "ARI": 0.8758,
       "file_path": "rwtd/332.png"
     },
     {
       "id": "rwtd_334",
       "sample_id": 334,
       "dataset": "rwtd",
-      "mIoU": 0.894,
-      "ARI": 0.8207,
+      "mIoU": 0.8807,
+      "ARI": 0.7732,
       "file_path": "rwtd/334.png"
     },
     {
       "id": "rwtd_337",
       "sample_id": 337,
       "dataset": "rwtd",
-      "mIoU": 0.9591,
-      "ARI": 0.9218,
+      "mIoU": 0.9325,
+      "ARI": 0.8978,
       "file_path": "rwtd/337.png"
     },
     {
       "id": "rwtd_34",
       "sample_id": 34,
       "dataset": "rwtd",
-      "mIoU": 0.4135,
-      "ARI": 0.5638,
+      "mIoU": 0.7365,
+      "ARI": 0.5154,
       "file_path": "rwtd/34.png"
     },
     {
       "id": "rwtd_342",
       "sample_id": 342,
       "dataset": "rwtd",
-      "mIoU": 0.7531,
-      "ARI": 0.6598,
+      "mIoU": 0.94,
+      "ARI": 0.8814,
       "file_path": "rwtd/342.png"
     },
     {
       "id": "rwtd_343",
       "sample_id": 343,
       "dataset": "rwtd",
-      "mIoU": 0.4733,
-      "ARI": 0.8914,
+      "mIoU": 0.8762,
+      "ARI": 0.7942,
       "file_path": "rwtd/343.png"
     },
     {
       "id": "rwtd_344",
       "sample_id": 344,
       "dataset": "rwtd",
-      "mIoU": 0.4723,
-      "ARI": 0.6528,
+      "mIoU": 0.9385,
+      "ARI": 0.8962,
       "file_path": "rwtd/344.png"
     },
     {
       "id": "rwtd_345",
       "sample_id": 345,
       "dataset": "rwtd",
-      "mIoU": 0.5004,
-      "ARI": 0.7665,
+      "mIoU": 0.8574,
+      "ARI": 0.7382,
       "file_path": "rwtd/345.png"
     },
     {
       "id": "rwtd_346",
       "sample_id": 346,
       "dataset": "rwtd",
-      "mIoU": 0.0261,
-      "ARI": 0.0046,
+      "mIoU": 0.9167,
+      "ARI": 0.8517,
       "file_path": "rwtd/346.png"
     },
     {
       "id": "rwtd_347",
       "sample_id": 347,
       "dataset": "rwtd",
-      "mIoU": 0.0069,
-      "ARI": 0.0038,
+      "mIoU": 0.9477,
+      "ARI": 0.8977,
       "file_path": "rwtd/347.png"
     },
     {
       "id": "rwtd_349",
       "sample_id": 349,
       "dataset": "rwtd",
-      "mIoU": 0.9178,
-      "ARI": 0.8976,
+      "mIoU": 0.9333,
+      "ARI": 0.8835,
       "file_path": "rwtd/349.png"
     },
     {
       "id": "rwtd_350",
       "sample_id": 350,
       "dataset": "rwtd",
-      "mIoU": 0.8929,
-      "ARI": 0.826,
+      "mIoU": 0.9564,
+      "ARI": 0.9268,
       "file_path": "rwtd/350.png"
     },
     {
       "id": "rwtd_351",
       "sample_id": 351,
       "dataset": "rwtd",
-      "mIoU": 0.9502,
-      "ARI": 0.9088,
+      "mIoU": 0.9761,
+      "ARI": 0.9523,
       "file_path": "rwtd/351.png"
     },
     {
       "id": "rwtd_352",
       "sample_id": 352,
       "dataset": "rwtd",
-      "mIoU": 0.4611,
-      "ARI": 0.904,
+      "mIoU": 0.8126,
+      "ARI": 0.6791,
       "file_path": "rwtd/352.png"
     },
     {
       "id": "rwtd_357",
       "sample_id": 357,
       "dataset": "rwtd",
-      "mIoU": 0.6283,
-      "ARI": 0.6898,
+      "mIoU": 0.6841,
+      "ARI": 0.3904,
       "file_path": "rwtd/357.png"
     },
     {
       "id": "rwtd_358",
       "sample_id": 358,
       "dataset": "rwtd",
-      "mIoU": 0.4209,
-      "ARI": 0.1214,
+      "mIoU": 0.3858,
+      "ARI": 0.0388,
       "file_path": "rwtd/358.png"
     },
     {
       "id": "rwtd_359",
       "sample_id": 359,
       "dataset": "rwtd",
-      "mIoU": 0.2506,
-      "ARI": 0.2656,
+      "mIoU": 0.9193,
+      "ARI": 0.8411,
       "file_path": "rwtd/359.png"
     },
     {
       "id": "rwtd_36",
       "sample_id": 36,
       "dataset": "rwtd",
-      "mIoU": 0.5027,
-      "ARI": 0.8832,
+      "mIoU": 0.899,
+      "ARI": 0.841,
       "file_path": "rwtd/36.png"
     },
     {
       "id": "rwtd_362",
       "sample_id": 362,
       "dataset": "rwtd",
-      "mIoU": 0.5294,
-      "ARI": 0.8133,
+      "mIoU": 0.9114,
+      "ARI": 0.8233,
       "file_path": "rwtd/362.png"
     },
     {
       "id": "rwtd_364",
       "sample_id": 364,
       "dataset": "rwtd",
-      "mIoU": 0.9342,
-      "ARI": 0.8946,
+      "mIoU": 0.3202,
+      "ARI": -0.0026,
       "file_path": "rwtd/364.png"
     },
     {
       "id": "rwtd_365",
       "sample_id": 365,
       "dataset": "rwtd",
-      "mIoU": 0.4881,
-      "ARI": 0.729,
+      "mIoU": 0.9224,
+      "ARI": 0.8491,
       "file_path": "rwtd/365.png"
     },
     {
       "id": "rwtd_366",
       "sample_id": 366,
       "dataset": "rwtd",
-      "mIoU": 0.4436,
-      "ARI": 0.6996,
+      "mIoU": 0.867,
+      "ARI": 0.7354,
       "file_path": "rwtd/366.png"
     },
     {
       "id": "rwtd_371",
       "sample_id": 371,
       "dataset": "rwtd",
-      "mIoU": 0.9519,
-      "ARI": 0.904,
+      "mIoU": 0.929,
+      "ARI": 0.8622,
       "file_path": "rwtd/371.png"
     },
     {
       "id": "rwtd_373",
       "sample_id": 373,
       "dataset": "rwtd",
-      "mIoU": 0.7142,
-      "ARI": 0.4094,
+      "mIoU": 0.92,
+      "ARI": 0.8716,
       "file_path": "rwtd/373.png"
     },
     {
       "id": "rwtd_374",
       "sample_id": 374,
       "dataset": "rwtd",
-      "mIoU": 0.4717,
-      "ARI": 0.836,
+      "mIoU": 0.8041,
+      "ARI": 0.6446,
       "file_path": "rwtd/374.png"
     },
     {
       "id": "rwtd_376",
       "sample_id": 376,
       "dataset": "rwtd",
-      "mIoU": 0.1373,
-      "ARI": 0.1037,
+      "mIoU": 0.9305,
+      "ARI": 0.8748,
       "file_path": "rwtd/376.png"
     },
     {
       "id": "rwtd_377",
       "sample_id": 377,
       "dataset": "rwtd",
-      "mIoU": 0.2005,
-      "ARI": 0.1663,
+      "mIoU": 0.5314,
+      "ARI": 0.1718,
       "file_path": "rwtd/377.png"
     },
     {
       "id": "rwtd_378",
       "sample_id": 378,
       "dataset": "rwtd",
-      "mIoU": 0.8957,
-      "ARI": 0.8407,
+      "mIoU": 0.3913,
+      "ARI": 0.0391,
       "file_path": "rwtd/378.png"
     },
     {
       "id": "rwtd_380",
       "sample_id": 380,
       "dataset": "rwtd",
-      "mIoU": 0.4685,
-      "ARI": 0.8666,
+      "mIoU": 0.8316,
+      "ARI": 0.7045,
       "file_path": "rwtd/380.png"
     },
     {
       "id": "rwtd_383",
       "sample_id": 383,
       "dataset": "rwtd",
-      "mIoU": 0.474,
-      "ARI": 0.8186,
+      "mIoU": 0.9005,
+      "ARI": 0.8042,
       "file_path": "rwtd/383.png"
     },
     {
       "id": "rwtd_387",
       "sample_id": 387,
       "dataset": "rwtd",
-      "mIoU": 0.6535,
-      "ARI": 0.8543,
+      "mIoU": 0.9044,
+      "ARI": 0.8439,
       "file_path": "rwtd/387.png"
     },
     {
       "id": "rwtd_389",
       "sample_id": 389,
       "dataset": "rwtd",
-      "mIoU": 0.912,
-      "ARI": 0.8167,
+      "mIoU": 0.9249,
+      "ARI": 0.8527,
       "file_path": "rwtd/389.png"
     },
     {
       "id": "rwtd_39",
       "sample_id": 39,
       "dataset": "rwtd",
-      "mIoU": 0.7756,
-      "ARI": 0.6059,
+      "mIoU": 0.6205,
+      "ARI": 0.2882,
       "file_path": "rwtd/39.png"
     },
     {
       "id": "rwtd_391",
       "sample_id": 391,
       "dataset": "rwtd",
-      "mIoU": 0.9302,
-      "ARI": 0.857,
+      "mIoU": 0.8197,
+      "ARI": 0.7007,
       "file_path": "rwtd/391.png"
     },
     {
       "id": "rwtd_392",
       "sample_id": 392,
       "dataset": "rwtd",
-      "mIoU": 0.9352,
-      "ARI": 0.8719,
+      "mIoU": 0.9322,
+      "ARI": 0.8648,
       "file_path": "rwtd/392.png"
     },
     {
       "id": "rwtd_393",
       "sample_id": 393,
       "dataset": "rwtd",
-      "mIoU": 0.9519,
-      "ARI": 0.8964,
+      "mIoU": 0.8441,
+      "ARI": 0.7012,
       "file_path": "rwtd/393.png"
     },
     {
       "id": "rwtd_394",
       "sample_id": 394,
       "dataset": "rwtd",
-      "mIoU": 0.9593,
-      "ARI": 0.9189,
+      "mIoU": 0.8627,
+      "ARI": 0.7291,
       "file_path": "rwtd/394.png"
     },
     {
       "id": "rwtd_395",
       "sample_id": 395,
       "dataset": "rwtd",
-      "mIoU": 0.9505,
-      "ARI": 0.9022,
+      "mIoU": 0.9005,
+      "ARI": 0.8093,
       "file_path": "rwtd/395.png"
     },
     {
       "id": "rwtd_398",
       "sample_id": 398,
       "dataset": "rwtd",
-      "mIoU": 0.1762,
-      "ARI": 0.318,
+      "mIoU": 0.7943,
+      "ARI": 0.6703,
       "file_path": "rwtd/398.png"
     },
     {
       "id": "rwtd_4",
       "sample_id": 4,
       "dataset": "rwtd",
-      "mIoU": 0.5755,
-      "ARI": 0.8429,
+      "mIoU": 0.3312,
+      "ARI": 0.0041,
       "file_path": "rwtd/4.png"
     },
     {
       "id": "rwtd_40",
       "sample_id": 40,
       "dataset": "rwtd",
-      "mIoU": 0.3633,
-      "ARI": 0.7339,
+      "mIoU": 0.4122,
+      "ARI": 0.0346,
       "file_path": "rwtd/40.png"
     },
     {
       "id": "rwtd_400",
       "sample_id": 400,
       "dataset": "rwtd",
-      "mIoU": 0.4709,
-      "ARI": 0.8884,
+      "mIoU": 0.6024,
+      "ARI": 0.254,
       "file_path": "rwtd/400.png"
     },
     {
       "id": "rwtd_403",
       "sample_id": 403,
       "dataset": "rwtd",
-      "mIoU": 0.5443,
-      "ARI": 0.8771,
+      "mIoU": 0.9301,
+      "ARI": 0.8996,
       "file_path": "rwtd/403.png"
     },
     {
       "id": "rwtd_408",
       "sample_id": 408,
       "dataset": "rwtd",
-      "mIoU": 0.057,
-      "ARI": 0.0038,
+      "mIoU": 0.8628,
+      "ARI": 0.7274,
       "file_path": "rwtd/408.png"
     },
     {
       "id": "rwtd_41",
       "sample_id": 41,
       "dataset": "rwtd",
-      "mIoU": 0.3052,
-      "ARI": 0.5758,
+      "mIoU": 0.8653,
+      "ARI": 0.7686,
       "file_path": "rwtd/41.png"
     },
     {
       "id": "rwtd_410",
       "sample_id": 410,
       "dataset": "rwtd",
-      "mIoU": 0.4307,
-      "ARI": 0.6619,
+      "mIoU": 0.9185,
+      "ARI": 0.8459,
       "file_path": "rwtd/410.png"
     },
     {
       "id": "rwtd_411",
       "sample_id": 411,
       "dataset": "rwtd",
-      "mIoU": 0.9373,
-      "ARI": 0.861,
+      "mIoU": 0.8897,
+      "ARI": 0.7979,
       "file_path": "rwtd/411.png"
     },
     {
       "id": "rwtd_412",
       "sample_id": 412,
       "dataset": "rwtd",
-      "mIoU": 0.9476,
-      "ARI": 0.8747,
+      "mIoU": 0.833,
+      "ARI": 0.7108,
       "file_path": "rwtd/412.png"
     },
     {
       "id": "rwtd_414",
       "sample_id": 414,
       "dataset": "rwtd",
-      "mIoU": 0.5446,
-      "ARI": 0.394,
+      "mIoU": 0.9193,
+      "ARI": 0.8455,
       "file_path": "rwtd/414.png"
     },
     {
       "id": "rwtd_416",
       "sample_id": 416,
       "dataset": "rwtd",
-      "mIoU": 0.9308,
-      "ARI": 0.9064,
+      "mIoU": 0.9267,
+      "ARI": 0.8621,
       "file_path": "rwtd/416.png"
     },
     {
       "id": "rwtd_417",
       "sample_id": 417,
       "dataset": "rwtd",
-      "mIoU": 0.5332,
-      "ARI": 0.7919,
+      "mIoU": 0.9221,
+      "ARI": 0.8473,
       "file_path": "rwtd/417.png"
     },
     {
       "id": "rwtd_418",
       "sample_id": 418,
       "dataset": "rwtd",
-      "mIoU": 0.142,
-      "ARI": -0.0964,
+      "mIoU": 0.7682,
+      "ARI": 0.6182,
       "file_path": "rwtd/418.png"
     },
     {
       "id": "rwtd_422",
       "sample_id": 422,
       "dataset": "rwtd",
-      "mIoU": 0.5003,
-      "ARI": 0.9742,
+      "mIoU": 0.9859,
+      "ARI": 0.9718,
       "file_path": "rwtd/422.png"
     },
     {
       "id": "rwtd_423",
       "sample_id": 423,
       "dataset": "rwtd",
-      "mIoU": 0.9645,
-      "ARI": 0.9091,
+      "mIoU": 0.934,
+      "ARI": 0.8776,
       "file_path": "rwtd/423.png"
     },
     {
       "id": "rwtd_424",
       "sample_id": 424,
       "dataset": "rwtd",
-      "mIoU": 0.4787,
-      "ARI": 0.897,
+      "mIoU": 0.9579,
+      "ARI": 0.9203,
       "file_path": "rwtd/424.png"
     },
     {
       "id": "rwtd_425",
       "sample_id": 425,
       "dataset": "rwtd",
-      "mIoU": 0.4673,
-      "ARI": 0.8963,
+      "mIoU": 0.8711,
+      "ARI": 0.7533,
       "file_path": "rwtd/425.png"
     },
     {
       "id": "rwtd_426",
       "sample_id": 426,
       "dataset": "rwtd",
-      "mIoU": 0.4773,
-      "ARI": 0.9304,
+      "mIoU": 0.588,
+      "ARI": 0.2313,
       "file_path": "rwtd/426.png"
     },
     {
       "id": "rwtd_428",
       "sample_id": 428,
       "dataset": "rwtd",
-      "mIoU": 0.9585,
-      "ARI": 0.9154,
+      "mIoU": 0.9165,
+      "ARI": 0.839,
       "file_path": "rwtd/428.png"
     },
     {
       "id": "rwtd_429",
       "sample_id": 429,
       "dataset": "rwtd",
-      "mIoU": 0.7113,
-      "ARI": 0.6968,
+      "mIoU": 0.795,
+      "ARI": 0.604,
       "file_path": "rwtd/429.png"
     },
     {
       "id": "rwtd_431",
       "sample_id": 431,
       "dataset": "rwtd",
-      "mIoU": 0.9547,
-      "ARI": 0.9045,
+      "mIoU": 0.8843,
+      "ARI": 0.7884,
       "file_path": "rwtd/431.png"
     },
     {
       "id": "rwtd_432",
       "sample_id": 432,
       "dataset": "rwtd",
-      "mIoU": 0.5305,
-      "ARI": 0.3785,
+      "mIoU": 0.8689,
+      "ARI": 0.768,
       "file_path": "rwtd/432.png"
     },
     {
       "id": "rwtd_434",
       "sample_id": 434,
       "dataset": "rwtd",
-      "mIoU": 0.3029,
-      "ARI": 0.299,
+      "mIoU": 0.9371,
+      "ARI": 0.8755,
       "file_path": "rwtd/434.png"
     },
     {
       "id": "rwtd_44",
       "sample_id": 44,
       "dataset": "rwtd",
-      "mIoU": 0.2465,
-      "ARI": 0.5002,
+      "mIoU": 0.284,
+      "ARI": 0.0034,
       "file_path": "rwtd/44.png"
     },
     {
       "id": "rwtd_440",
       "sample_id": 440,
       "dataset": "rwtd",
-      "mIoU": 0.0475,
-      "ARI": 0.1287,
+      "mIoU": 0.2899,
+      "ARI": -0.0812,
       "file_path": "rwtd/440.png"
     },
     {
       "id": "rwtd_441",
       "sample_id": 441,
       "dataset": "rwtd",
-      "mIoU": 0.9587,
-      "ARI": 0.9057,
+      "mIoU": 0.8246,
+      "ARI": 0.7379,
       "file_path": "rwtd/441.png"
     },
     {
       "id": "rwtd_442",
       "sample_id": 442,
       "dataset": "rwtd",
-      "mIoU": 0.4831,
-      "ARI": 0.8636,
+      "mIoU": 0.8346,
+      "ARI": 0.7262,
       "file_path": "rwtd/442.png"
     },
     {
       "id": "rwtd_443",
       "sample_id": 443,
       "dataset": "rwtd",
-      "mIoU": 0.4234,
-      "ARI": 0.6077,
+      "mIoU": 0.8555,
+      "ARI": 0.7323,
       "file_path": "rwtd/443.png"
     },
     {
       "id": "rwtd_444",
       "sample_id": 444,
       "dataset": "rwtd",
-      "mIoU": 0.9534,
-      "ARI": 0.8806,
+      "mIoU": 0.8621,
+      "ARI": 0.7621,
       "file_path": "rwtd/444.png"
     },
     {
       "id": "rwtd_447",
       "sample_id": 447,
       "dataset": "rwtd",
-      "mIoU": 0.4581,
-      "ARI": 0.8902,
+      "mIoU": 0.9012,
+      "ARI": 0.8235,
       "file_path": "rwtd/447.png"
     },
     {
       "id": "rwtd_448",
       "sample_id": 448,
       "dataset": "rwtd",
-      "mIoU": 0.9632,
-      "ARI": 0.9274,
+      "mIoU": 0.9211,
+      "ARI": 0.8426,
       "file_path": "rwtd/448.png"
     },
     {
       "id": "rwtd_449",
       "sample_id": 449,
       "dataset": "rwtd",
-      "mIoU": 0.9616,
-      "ARI": 0.9227,
+      "mIoU": 0.9272,
+      "ARI": 0.8548,
       "file_path": "rwtd/449.png"
     },
     {
       "id": "rwtd_45",
       "sample_id": 45,
       "dataset": "rwtd",
-      "mIoU": 0.0606,
-      "ARI": 0.1028,
+      "mIoU": 0.9827,
+      "ARI": 0.9675,
       "file_path": "rwtd/45.png"
     },
     {
       "id": "rwtd_450",
       "sample_id": 450,
       "dataset": "rwtd",
-      "mIoU": 0.0385,
-      "ARI": 0.021,
+      "mIoU": 0.9148,
+      "ARI": 0.8336,
       "file_path": "rwtd/450.png"
     },
     {
       "id": "rwtd_451",
       "sample_id": 451,
       "dataset": "rwtd",
-      "mIoU": 0.8704,
-      "ARI": 0.6234,
+      "mIoU": 0.4064,
+      "ARI": 0.0092,
       "file_path": "rwtd/451.png"
     },
     {
       "id": "rwtd_452",
       "sample_id": 452,
       "dataset": "rwtd",
-      "mIoU": 0.4498,
-      "ARI": 0.8385,
+      "mIoU": 0.9365,
+      "ARI": 0.8776,
       "file_path": "rwtd/452.png"
     },
     {
       "id": "rwtd_453",
       "sample_id": 453,
       "dataset": "rwtd",
-      "mIoU": 0.4846,
-      "ARI": 0.3692,
+      "mIoU": 0.8409,
+      "ARI": 0.7033,
       "file_path": "rwtd/453.png"
     },
     {
       "id": "rwtd_455",
       "sample_id": 455,
       "dataset": "rwtd",
-      "mIoU": 0.4268,
-      "ARI": 0.7948,
+      "mIoU": 0.3084,
+      "ARI": -0.0,
       "file_path": "rwtd/455.png"
     },
     {
       "id": "rwtd_456",
       "sample_id": 456,
       "dataset": "rwtd",
-      "mIoU": 0.8862,
-      "ARI": 0.8288,
+      "mIoU": 0.8988,
+      "ARI": 0.8067,
       "file_path": "rwtd/456.png"
     },
     {
       "id": "rwtd_457",
       "sample_id": 457,
       "dataset": "rwtd",
-      "mIoU": 0.6902,
-      "ARI": 0.7989,
+      "mIoU": 0.9507,
+      "ARI": 0.9112,
       "file_path": "rwtd/457.png"
     },
     {
       "id": "rwtd_461",
       "sample_id": 461,
       "dataset": "rwtd",
-      "mIoU": 0.8284,
-      "ARI": 0.6645,
+      "mIoU": 0.8649,
+      "ARI": 0.7349,
       "file_path": "rwtd/461.png"
     },
     {
       "id": "rwtd_463",
       "sample_id": 463,
       "dataset": "rwtd",
-      "mIoU": 0.4092,
-      "ARI": 0.5903,
+      "mIoU": 0.8969,
+      "ARI": 0.8324,
       "file_path": "rwtd/463.png"
     },
     {
       "id": "rwtd_464",
       "sample_id": 464,
       "dataset": "rwtd",
-      "mIoU": 0.4823,
-      "ARI": 0.9026,
+      "mIoU": 0.9705,
+      "ARI": 0.9433,
       "file_path": "rwtd/464.png"
     },
     {
       "id": "rwtd_465",
       "sample_id": 465,
       "dataset": "rwtd",
-      "mIoU": 0.4332,
-      "ARI": 0.6456,
+      "mIoU": 0.5151,
+      "ARI": 0.1562,
       "file_path": "rwtd/465.png"
     },
     {
       "id": "rwtd_466",
       "sample_id": 466,
       "dataset": "rwtd",
-      "mIoU": 0.4419,
-      "ARI": 0.8395,
+      "mIoU": 0.4943,
+      "ARI": 0.1668,
       "file_path": "rwtd/466.png"
     },
     {
       "id": "rwtd_467",
       "sample_id": 467,
       "dataset": "rwtd",
-      "mIoU": 0.032,
-      "ARI": 0.0358,
+      "mIoU": 0.8322,
+      "ARI": 0.6822,
       "file_path": "rwtd/467.png"
     },
     {
       "id": "rwtd_468",
       "sample_id": 468,
       "dataset": "rwtd",
-      "mIoU": 0.9196,
-      "ARI": 0.8396,
+      "mIoU": 0.9313,
+      "ARI": 0.864,
       "file_path": "rwtd/468.png"
     },
     {
       "id": "rwtd_469",
       "sample_id": 469,
       "dataset": "rwtd",
-      "mIoU": 0.6256,
-      "ARI": 0.8392,
+      "mIoU": 0.8791,
+      "ARI": 0.7763,
       "file_path": "rwtd/469.png"
     },
     {
       "id": "rwtd_47",
       "sample_id": 47,
       "dataset": "rwtd",
-      "mIoU": 0.49,
-      "ARI": 0.389,
+      "mIoU": 0.9376,
+      "ARI": 0.8756,
       "file_path": "rwtd/47.png"
     },
     {
       "id": "rwtd_471",
       "sample_id": 471,
       "dataset": "rwtd",
-      "mIoU": 0.7279,
-      "ARI": 0.6688,
+      "mIoU": 0.8994,
+      "ARI": 0.8093,
       "file_path": "rwtd/471.png"
     },
     {
       "id": "rwtd_472",
       "sample_id": 472,
       "dataset": "rwtd",
-      "mIoU": 0.4495,
-      "ARI": 0.4207,
+      "mIoU": 0.9284,
+      "ARI": 0.8581,
       "file_path": "rwtd/472.png"
     },
     {
       "id": "rwtd_473",
       "sample_id": 473,
       "dataset": "rwtd",
-      "mIoU": 0.1197,
-      "ARI": -0.0208,
+      "mIoU": 0.7252,
+      "ARI": 0.5444,
       "file_path": "rwtd/473.png"
     },
     {
       "id": "rwtd_474",
       "sample_id": 474,
       "dataset": "rwtd",
-      "mIoU": 0.1845,
-      "ARI": -0.0665,
+      "mIoU": 0.4122,
+      "ARI": 0.0213,
       "file_path": "rwtd/474.png"
     },
     {
       "id": "rwtd_476",
       "sample_id": 476,
       "dataset": "rwtd",
-      "mIoU": 0.413,
-      "ARI": 0.7606,
+      "mIoU": 0.9352,
+      "ARI": 0.881,
       "file_path": "rwtd/476.png"
     },
     {
       "id": "rwtd_478",
       "sample_id": 478,
       "dataset": "rwtd",
-      "mIoU": 0.9455,
-      "ARI": 0.8998,
+      "mIoU": 0.8817,
+      "ARI": 0.7908,
       "file_path": "rwtd/478.png"
     },
     {
       "id": "rwtd_479",
       "sample_id": 479,
       "dataset": "rwtd",
-      "mIoU": 0.464,
-      "ARI": 0.8981,
+      "mIoU": 0.9328,
+      "ARI": 0.9075,
       "file_path": "rwtd/479.png"
     },
     {
       "id": "rwtd_48",
       "sample_id": 48,
       "dataset": "rwtd",
-      "mIoU": 0.4932,
-      "ARI": 0.7928,
+      "mIoU": 0.9264,
+      "ARI": 0.8647,
       "file_path": "rwtd/48.png"
     },
     {
       "id": "rwtd_485",
       "sample_id": 485,
       "dataset": "rwtd",
-      "mIoU": 0.7488,
-      "ARI": 0.7683,
+      "mIoU": 0.9028,
+      "ARI": 0.8079,
       "file_path": "rwtd/485.png"
     },
     {
       "id": "rwtd_492",
       "sample_id": 492,
       "dataset": "rwtd",
-      "mIoU": 0.4925,
-      "ARI": 0.9421,
+      "mIoU": 0.9651,
+      "ARI": 0.9313,
       "file_path": "rwtd/492.png"
     },
     {
       "id": "rwtd_5",
       "sample_id": 5,
       "dataset": "rwtd",
-      "mIoU": 0.4913,
-      "ARI": 0.8652,
+      "mIoU": 0.9745,
+      "ARI": 0.9549,
       "file_path": "rwtd/5.png"
     },
     {
       "id": "rwtd_51",
       "sample_id": 51,
       "dataset": "rwtd",
-      "mIoU": 0.5909,
-      "ARI": 0.8073,
+      "mIoU": 0.9792,
+      "ARI": 0.9584,
       "file_path": "rwtd/51.png"
     },
     {
       "id": "rwtd_56",
       "sample_id": 56,
       "dataset": "rwtd",
-      "mIoU": 0.5193,
-      "ARI": 0.7184,
+      "mIoU": 0.9107,
+      "ARI": 0.8241,
       "file_path": "rwtd/56.png"
     },
     {
       "id": "rwtd_58",
       "sample_id": 58,
       "dataset": "rwtd",
-      "mIoU": 0.3799,
-      "ARI": 0.5589,
+      "mIoU": 0.9598,
+      "ARI": 0.9198,
       "file_path": "rwtd/58.png"
     },
     {
       "id": "rwtd_59",
       "sample_id": 59,
       "dataset": "rwtd",
-      "mIoU": 0.0376,
-      "ARI": -0.0045,
+      "mIoU": 0.9272,
+      "ARI": 0.8561,
       "file_path": "rwtd/59.png"
     },
     {
       "id": "rwtd_60",
       "sample_id": 60,
       "dataset": "rwtd",
-      "mIoU": 0.134,
-      "ARI": 0.0268,
+      "mIoU": 0.9776,
+      "ARI": 0.9594,
       "file_path": "rwtd/60.png"
     },
     {
       "id": "rwtd_63",
       "sample_id": 63,
       "dataset": "rwtd",
-      "mIoU": 0.5231,
-      "ARI": 0.7952,
+      "mIoU": 0.9373,
+      "ARI": 0.8877,
       "file_path": "rwtd/63.png"
     },
     {
       "id": "rwtd_67",
       "sample_id": 67,
       "dataset": "rwtd",
-      "mIoU": 0.4414,
-      "ARI": 0.7859,
+      "mIoU": 0.7774,
+      "ARI": 0.568,
       "file_path": "rwtd/67.png"
     },
     {
       "id": "rwtd_69",
       "sample_id": 69,
       "dataset": "rwtd",
-      "mIoU": 0.2219,
-      "ARI": 0.0472,
+      "mIoU": 0.4638,
+      "ARI": 0.0715,
       "file_path": "rwtd/69.png"
     },
     {
       "id": "rwtd_70",
       "sample_id": 70,
       "dataset": "rwtd",
-      "mIoU": 0.0138,
-      "ARI": 0.0039,
+      "mIoU": 0.9863,
+      "ARI": 0.9727,
       "file_path": "rwtd/70.png"
     },
     {
       "id": "rwtd_71",
       "sample_id": 71,
       "dataset": "rwtd",
-      "mIoU": 0.9057,
-      "ARI": 0.624,
+      "mIoU": 0.3237,
+      "ARI": -0.0979,
       "file_path": "rwtd/71.png"
     },
     {
       "id": "rwtd_73",
       "sample_id": 73,
       "dataset": "rwtd",
-      "mIoU": 0.4444,
-      "ARI": 0.5711,
+      "mIoU": 0.9323,
+      "ARI": 0.8648,
       "file_path": "rwtd/73.png"
     },
     {
       "id": "rwtd_74",
       "sample_id": 74,
       "dataset": "rwtd",
-      "mIoU": 0.2353,
-      "ARI": 0.1901,
+      "mIoU": 0.945,
+      "ARI": 0.8906,
       "file_path": "rwtd/74.png"
     },
     {
       "id": "rwtd_76",
       "sample_id": 76,
       "dataset": "rwtd",
-      "mIoU": 0.0095,
-      "ARI": -0.0005,
+      "mIoU": 0.9766,
+      "ARI": 0.9535,
       "file_path": "rwtd/76.png"
     },
     {
       "id": "rwtd_77",
       "sample_id": 77,
       "dataset": "rwtd",
-      "mIoU": 0.0226,
-      "ARI": 0.0421,
+      "mIoU": 0.8601,
+      "ARI": 0.7906,
       "file_path": "rwtd/77.png"
     },
     {
       "id": "rwtd_78",
       "sample_id": 78,
       "dataset": "rwtd",
-      "mIoU": 0.4772,
-      "ARI": 0.8979,
+      "mIoU": 0.9074,
+      "ARI": 0.826,
       "file_path": "rwtd/78.png"
     },
     {
       "id": "rwtd_79",
       "sample_id": 79,
       "dataset": "rwtd",
-      "mIoU": 0.8915,
-      "ARI": 0.7148,
+      "mIoU": 0.3273,
+      "ARI": -0.0195,
       "file_path": "rwtd/79.png"
     },
     {
       "id": "rwtd_8",
       "sample_id": 8,
       "dataset": "rwtd",
-      "mIoU": 0.4499,
-      "ARI": 0.799,
+      "mIoU": 0.4206,
+      "ARI": 0.043,
       "file_path": "rwtd/8.png"
     },
     {
       "id": "rwtd_84",
       "sample_id": 84,
       "dataset": "rwtd",
-      "mIoU": 0.5327,
-      "ARI": 0.7141,
+      "mIoU": 0.9045,
+      "ARI": 0.8122,
       "file_path": "rwtd/84.png"
     },
     {
       "id": "rwtd_85",
       "sample_id": 85,
       "dataset": "rwtd",
-      "mIoU": 0.473,
-      "ARI": 0.8675,
+      "mIoU": 0.9709,
+      "ARI": 0.9436,
       "file_path": "rwtd/85.png"
     },
     {
       "id": "rwtd_86",
       "sample_id": 86,
       "dataset": "rwtd",
-      "mIoU": 0.9225,
-      "ARI": 0.8293,
+      "mIoU": 0.8443,
+      "ARI": 0.7032,
       "file_path": "rwtd/86.png"
     },
     {
       "id": "rwtd_88",
       "sample_id": 88,
       "dataset": "rwtd",
-      "mIoU": 0.9055,
-      "ARI": 0.8204,
+      "mIoU": 0.9067,
+      "ARI": 0.8139,
       "file_path": "rwtd/88.png"
     },
     {
       "id": "rwtd_95",
       "sample_id": 95,
       "dataset": "rwtd",
-      "mIoU": 0.6979,
-      "ARI": 0.6751,
+      "mIoU": 0.4327,
+      "ARI": 0.066,
       "file_path": "rwtd/95.png"
     },
     {
       "id": "rwtd_96",
       "sample_id": 96,
       "dataset": "rwtd",
-      "mIoU": 0.5012,
-      "ARI": 0.9376,
+      "mIoU": 0.738,
+      "ARI": 0.4877,
       "file_path": "rwtd/96.png"
     },
     {
@@ -26648,6 +26648,1606 @@
       "mIoU": 0.3369,
       "ARI": 0.0278,
       "file_path": "caid/img_20688.png"
+    },
+    {
+      "id": "stld_1",
+      "sample_id": 1,
+      "dataset": "stld",
+      "mIoU": 0.2837,
+      "ARI": -0.011,
+      "file_path": "stld/1.png"
+    },
+    {
+      "id": "stld_2",
+      "sample_id": 2,
+      "dataset": "stld",
+      "mIoU": 0.3539,
+      "ARI": 0.0206,
+      "file_path": "stld/2.png"
+    },
+    {
+      "id": "stld_3",
+      "sample_id": 3,
+      "dataset": "stld",
+      "mIoU": 0.6119,
+      "ARI": 0.3031,
+      "file_path": "stld/3.png"
+    },
+    {
+      "id": "stld_4",
+      "sample_id": 4,
+      "dataset": "stld",
+      "mIoU": 0.3021,
+      "ARI": 0.0012,
+      "file_path": "stld/4.png"
+    },
+    {
+      "id": "stld_5",
+      "sample_id": 5,
+      "dataset": "stld",
+      "mIoU": 0.4051,
+      "ARI": 0.0221,
+      "file_path": "stld/5.png"
+    },
+    {
+      "id": "stld_6",
+      "sample_id": 6,
+      "dataset": "stld",
+      "mIoU": 0.336,
+      "ARI": 0.0012,
+      "file_path": "stld/6.png"
+    },
+    {
+      "id": "stld_7",
+      "sample_id": 7,
+      "dataset": "stld",
+      "mIoU": 0.6887,
+      "ARI": 0.5288,
+      "file_path": "stld/7.png"
+    },
+    {
+      "id": "stld_8",
+      "sample_id": 8,
+      "dataset": "stld",
+      "mIoU": 0.6805,
+      "ARI": 0.508,
+      "file_path": "stld/8.png"
+    },
+    {
+      "id": "stld_9",
+      "sample_id": 9,
+      "dataset": "stld",
+      "mIoU": 0.617,
+      "ARI": 0.2991,
+      "file_path": "stld/9.png"
+    },
+    {
+      "id": "stld_10",
+      "sample_id": 10,
+      "dataset": "stld",
+      "mIoU": 0.288,
+      "ARI": -0.0051,
+      "file_path": "stld/10.png"
+    },
+    {
+      "id": "stld_11",
+      "sample_id": 11,
+      "dataset": "stld",
+      "mIoU": 0.3188,
+      "ARI": -0.0196,
+      "file_path": "stld/11.png"
+    },
+    {
+      "id": "stld_12",
+      "sample_id": 12,
+      "dataset": "stld",
+      "mIoU": 0.3507,
+      "ARI": 0.0212,
+      "file_path": "stld/12.png"
+    },
+    {
+      "id": "stld_13",
+      "sample_id": 13,
+      "dataset": "stld",
+      "mIoU": 0.3857,
+      "ARI": 0.0427,
+      "file_path": "stld/13.png"
+    },
+    {
+      "id": "stld_14",
+      "sample_id": 14,
+      "dataset": "stld",
+      "mIoU": 0.3913,
+      "ARI": 0.0558,
+      "file_path": "stld/14.png"
+    },
+    {
+      "id": "stld_15",
+      "sample_id": 15,
+      "dataset": "stld",
+      "mIoU": 0.5012,
+      "ARI": 0.1241,
+      "file_path": "stld/15.png"
+    },
+    {
+      "id": "stld_16",
+      "sample_id": 16,
+      "dataset": "stld",
+      "mIoU": 0.2707,
+      "ARI": -0.0034,
+      "file_path": "stld/16.png"
+    },
+    {
+      "id": "stld_17",
+      "sample_id": 17,
+      "dataset": "stld",
+      "mIoU": 0.3663,
+      "ARI": 0.0351,
+      "file_path": "stld/17.png"
+    },
+    {
+      "id": "stld_18",
+      "sample_id": 18,
+      "dataset": "stld",
+      "mIoU": 0.3914,
+      "ARI": 0.0457,
+      "file_path": "stld/18.png"
+    },
+    {
+      "id": "stld_19",
+      "sample_id": 19,
+      "dataset": "stld",
+      "mIoU": 0.9416,
+      "ARI": 0.914,
+      "file_path": "stld/19.png"
+    },
+    {
+      "id": "stld_20",
+      "sample_id": 20,
+      "dataset": "stld",
+      "mIoU": 0.3329,
+      "ARI": -0.0102,
+      "file_path": "stld/20.png"
+    },
+    {
+      "id": "stld_21",
+      "sample_id": 21,
+      "dataset": "stld",
+      "mIoU": 0.9465,
+      "ARI": 0.9174,
+      "file_path": "stld/21.png"
+    },
+    {
+      "id": "stld_22",
+      "sample_id": 22,
+      "dataset": "stld",
+      "mIoU": 0.3789,
+      "ARI": 0.0506,
+      "file_path": "stld/22.png"
+    },
+    {
+      "id": "stld_23",
+      "sample_id": 23,
+      "dataset": "stld",
+      "mIoU": 0.3961,
+      "ARI": 0.0306,
+      "file_path": "stld/23.png"
+    },
+    {
+      "id": "stld_24",
+      "sample_id": 24,
+      "dataset": "stld",
+      "mIoU": 0.3812,
+      "ARI": 0.0318,
+      "file_path": "stld/24.png"
+    },
+    {
+      "id": "stld_25",
+      "sample_id": 25,
+      "dataset": "stld",
+      "mIoU": 0.878,
+      "ARI": 0.7657,
+      "file_path": "stld/25.png"
+    },
+    {
+      "id": "stld_26",
+      "sample_id": 26,
+      "dataset": "stld",
+      "mIoU": 0.9063,
+      "ARI": 0.8672,
+      "file_path": "stld/26.png"
+    },
+    {
+      "id": "stld_27",
+      "sample_id": 27,
+      "dataset": "stld",
+      "mIoU": 0.4063,
+      "ARI": 0.0641,
+      "file_path": "stld/27.png"
+    },
+    {
+      "id": "stld_28",
+      "sample_id": 28,
+      "dataset": "stld",
+      "mIoU": 0.3202,
+      "ARI": 0.0097,
+      "file_path": "stld/28.png"
+    },
+    {
+      "id": "stld_29",
+      "sample_id": 29,
+      "dataset": "stld",
+      "mIoU": 0.6704,
+      "ARI": 0.4658,
+      "file_path": "stld/29.png"
+    },
+    {
+      "id": "stld_30",
+      "sample_id": 30,
+      "dataset": "stld",
+      "mIoU": 0.3604,
+      "ARI": 0.016,
+      "file_path": "stld/30.png"
+    },
+    {
+      "id": "stld_31",
+      "sample_id": 31,
+      "dataset": "stld",
+      "mIoU": 0.4914,
+      "ARI": 0.1101,
+      "file_path": "stld/31.png"
+    },
+    {
+      "id": "stld_32",
+      "sample_id": 32,
+      "dataset": "stld",
+      "mIoU": 0.772,
+      "ARI": 0.6255,
+      "file_path": "stld/32.png"
+    },
+    {
+      "id": "stld_33",
+      "sample_id": 33,
+      "dataset": "stld",
+      "mIoU": 0.245,
+      "ARI": -0.0066,
+      "file_path": "stld/33.png"
+    },
+    {
+      "id": "stld_34",
+      "sample_id": 34,
+      "dataset": "stld",
+      "mIoU": 0.3608,
+      "ARI": 0.0235,
+      "file_path": "stld/34.png"
+    },
+    {
+      "id": "stld_35",
+      "sample_id": 35,
+      "dataset": "stld",
+      "mIoU": 0.4125,
+      "ARI": 0.0223,
+      "file_path": "stld/35.png"
+    },
+    {
+      "id": "stld_36",
+      "sample_id": 36,
+      "dataset": "stld",
+      "mIoU": 0.3859,
+      "ARI": 0.041,
+      "file_path": "stld/36.png"
+    },
+    {
+      "id": "stld_37",
+      "sample_id": 37,
+      "dataset": "stld",
+      "mIoU": 0.3687,
+      "ARI": 0.0385,
+      "file_path": "stld/37.png"
+    },
+    {
+      "id": "stld_38",
+      "sample_id": 38,
+      "dataset": "stld",
+      "mIoU": 0.3474,
+      "ARI": 0.0106,
+      "file_path": "stld/38.png"
+    },
+    {
+      "id": "stld_39",
+      "sample_id": 39,
+      "dataset": "stld",
+      "mIoU": 0.4486,
+      "ARI": 0.053,
+      "file_path": "stld/39.png"
+    },
+    {
+      "id": "stld_40",
+      "sample_id": 40,
+      "dataset": "stld",
+      "mIoU": 0.2406,
+      "ARI": -0.0065,
+      "file_path": "stld/40.png"
+    },
+    {
+      "id": "stld_41",
+      "sample_id": 41,
+      "dataset": "stld",
+      "mIoU": 0.2445,
+      "ARI": -0.0031,
+      "file_path": "stld/41.png"
+    },
+    {
+      "id": "stld_42",
+      "sample_id": 42,
+      "dataset": "stld",
+      "mIoU": 0.3723,
+      "ARI": 0.0368,
+      "file_path": "stld/42.png"
+    },
+    {
+      "id": "stld_43",
+      "sample_id": 43,
+      "dataset": "stld",
+      "mIoU": 0.3364,
+      "ARI": 0.0128,
+      "file_path": "stld/43.png"
+    },
+    {
+      "id": "stld_44",
+      "sample_id": 44,
+      "dataset": "stld",
+      "mIoU": 0.3559,
+      "ARI": 0.0173,
+      "file_path": "stld/44.png"
+    },
+    {
+      "id": "stld_45",
+      "sample_id": 45,
+      "dataset": "stld",
+      "mIoU": 0.3598,
+      "ARI": 0.0356,
+      "file_path": "stld/45.png"
+    },
+    {
+      "id": "stld_46",
+      "sample_id": 46,
+      "dataset": "stld",
+      "mIoU": 0.3257,
+      "ARI": 0.0031,
+      "file_path": "stld/46.png"
+    },
+    {
+      "id": "stld_47",
+      "sample_id": 47,
+      "dataset": "stld",
+      "mIoU": 0.3824,
+      "ARI": 0.0498,
+      "file_path": "stld/47.png"
+    },
+    {
+      "id": "stld_48",
+      "sample_id": 48,
+      "dataset": "stld",
+      "mIoU": 0.2798,
+      "ARI": -0.006,
+      "file_path": "stld/48.png"
+    },
+    {
+      "id": "stld_49",
+      "sample_id": 49,
+      "dataset": "stld",
+      "mIoU": 0.3067,
+      "ARI": -0.0001,
+      "file_path": "stld/49.png"
+    },
+    {
+      "id": "stld_50",
+      "sample_id": 50,
+      "dataset": "stld",
+      "mIoU": 0.6499,
+      "ARI": 0.4717,
+      "file_path": "stld/50.png"
+    },
+    {
+      "id": "stld_51",
+      "sample_id": 51,
+      "dataset": "stld",
+      "mIoU": 0.5379,
+      "ARI": 0.2436,
+      "file_path": "stld/51.png"
+    },
+    {
+      "id": "stld_52",
+      "sample_id": 52,
+      "dataset": "stld",
+      "mIoU": 0.2808,
+      "ARI": -0.0219,
+      "file_path": "stld/52.png"
+    },
+    {
+      "id": "stld_53",
+      "sample_id": 53,
+      "dataset": "stld",
+      "mIoU": 0.3278,
+      "ARI": 0.0006,
+      "file_path": "stld/53.png"
+    },
+    {
+      "id": "stld_54",
+      "sample_id": 54,
+      "dataset": "stld",
+      "mIoU": 0.4429,
+      "ARI": 0.124,
+      "file_path": "stld/54.png"
+    },
+    {
+      "id": "stld_55",
+      "sample_id": 55,
+      "dataset": "stld",
+      "mIoU": 0.4847,
+      "ARI": 0.1714,
+      "file_path": "stld/55.png"
+    },
+    {
+      "id": "stld_56",
+      "sample_id": 56,
+      "dataset": "stld",
+      "mIoU": 0.4096,
+      "ARI": 0.0818,
+      "file_path": "stld/56.png"
+    },
+    {
+      "id": "stld_57",
+      "sample_id": 57,
+      "dataset": "stld",
+      "mIoU": 0.4224,
+      "ARI": 0.0433,
+      "file_path": "stld/57.png"
+    },
+    {
+      "id": "stld_58",
+      "sample_id": 58,
+      "dataset": "stld",
+      "mIoU": 0.3503,
+      "ARI": 0.0083,
+      "file_path": "stld/58.png"
+    },
+    {
+      "id": "stld_59",
+      "sample_id": 59,
+      "dataset": "stld",
+      "mIoU": 0.3896,
+      "ARI": 0.0142,
+      "file_path": "stld/59.png"
+    },
+    {
+      "id": "stld_60",
+      "sample_id": 60,
+      "dataset": "stld",
+      "mIoU": 0.3238,
+      "ARI": -0.0065,
+      "file_path": "stld/60.png"
+    },
+    {
+      "id": "stld_61",
+      "sample_id": 61,
+      "dataset": "stld",
+      "mIoU": 0.369,
+      "ARI": 0.0358,
+      "file_path": "stld/61.png"
+    },
+    {
+      "id": "stld_62",
+      "sample_id": 62,
+      "dataset": "stld",
+      "mIoU": 0.4271,
+      "ARI": 0.0968,
+      "file_path": "stld/62.png"
+    },
+    {
+      "id": "stld_63",
+      "sample_id": 63,
+      "dataset": "stld",
+      "mIoU": 0.3787,
+      "ARI": 0.0424,
+      "file_path": "stld/63.png"
+    },
+    {
+      "id": "stld_64",
+      "sample_id": 64,
+      "dataset": "stld",
+      "mIoU": 0.8594,
+      "ARI": 0.7715,
+      "file_path": "stld/64.png"
+    },
+    {
+      "id": "stld_65",
+      "sample_id": 65,
+      "dataset": "stld",
+      "mIoU": 0.4153,
+      "ARI": 0.0741,
+      "file_path": "stld/65.png"
+    },
+    {
+      "id": "stld_66",
+      "sample_id": 66,
+      "dataset": "stld",
+      "mIoU": 0.3379,
+      "ARI": 0.0098,
+      "file_path": "stld/66.png"
+    },
+    {
+      "id": "stld_67",
+      "sample_id": 67,
+      "dataset": "stld",
+      "mIoU": 0.2989,
+      "ARI": -0.0112,
+      "file_path": "stld/67.png"
+    },
+    {
+      "id": "stld_68",
+      "sample_id": 68,
+      "dataset": "stld",
+      "mIoU": 0.328,
+      "ARI": 0.0128,
+      "file_path": "stld/68.png"
+    },
+    {
+      "id": "stld_69",
+      "sample_id": 69,
+      "dataset": "stld",
+      "mIoU": 0.272,
+      "ARI": -0.0026,
+      "file_path": "stld/69.png"
+    },
+    {
+      "id": "stld_70",
+      "sample_id": 70,
+      "dataset": "stld",
+      "mIoU": 0.384,
+      "ARI": 0.0216,
+      "file_path": "stld/70.png"
+    },
+    {
+      "id": "stld_71",
+      "sample_id": 71,
+      "dataset": "stld",
+      "mIoU": 0.4201,
+      "ARI": 0.0417,
+      "file_path": "stld/71.png"
+    },
+    {
+      "id": "stld_72",
+      "sample_id": 72,
+      "dataset": "stld",
+      "mIoU": 0.3456,
+      "ARI": 0.021,
+      "file_path": "stld/72.png"
+    },
+    {
+      "id": "stld_73",
+      "sample_id": 73,
+      "dataset": "stld",
+      "mIoU": 0.3847,
+      "ARI": 0.0285,
+      "file_path": "stld/73.png"
+    },
+    {
+      "id": "stld_74",
+      "sample_id": 74,
+      "dataset": "stld",
+      "mIoU": 0.3206,
+      "ARI": 0.0079,
+      "file_path": "stld/74.png"
+    },
+    {
+      "id": "stld_75",
+      "sample_id": 75,
+      "dataset": "stld",
+      "mIoU": 0.5409,
+      "ARI": 0.2103,
+      "file_path": "stld/75.png"
+    },
+    {
+      "id": "stld_76",
+      "sample_id": 76,
+      "dataset": "stld",
+      "mIoU": 0.266,
+      "ARI": -0.0003,
+      "file_path": "stld/76.png"
+    },
+    {
+      "id": "stld_77",
+      "sample_id": 77,
+      "dataset": "stld",
+      "mIoU": 0.3267,
+      "ARI": 0.0023,
+      "file_path": "stld/77.png"
+    },
+    {
+      "id": "stld_78",
+      "sample_id": 78,
+      "dataset": "stld",
+      "mIoU": 0.3538,
+      "ARI": 0.0144,
+      "file_path": "stld/78.png"
+    },
+    {
+      "id": "stld_79",
+      "sample_id": 79,
+      "dataset": "stld",
+      "mIoU": 0.4419,
+      "ARI": 0.096,
+      "file_path": "stld/79.png"
+    },
+    {
+      "id": "stld_80",
+      "sample_id": 80,
+      "dataset": "stld",
+      "mIoU": 0.4058,
+      "ARI": 0.0705,
+      "file_path": "stld/80.png"
+    },
+    {
+      "id": "stld_81",
+      "sample_id": 81,
+      "dataset": "stld",
+      "mIoU": 0.4469,
+      "ARI": 0.075,
+      "file_path": "stld/81.png"
+    },
+    {
+      "id": "stld_82",
+      "sample_id": 82,
+      "dataset": "stld",
+      "mIoU": 0.8202,
+      "ARI": 0.7276,
+      "file_path": "stld/82.png"
+    },
+    {
+      "id": "stld_83",
+      "sample_id": 83,
+      "dataset": "stld",
+      "mIoU": 0.4025,
+      "ARI": 0.0361,
+      "file_path": "stld/83.png"
+    },
+    {
+      "id": "stld_84",
+      "sample_id": 84,
+      "dataset": "stld",
+      "mIoU": 0.8194,
+      "ARI": 0.7435,
+      "file_path": "stld/84.png"
+    },
+    {
+      "id": "stld_85",
+      "sample_id": 85,
+      "dataset": "stld",
+      "mIoU": 0.2996,
+      "ARI": -0.0171,
+      "file_path": "stld/85.png"
+    },
+    {
+      "id": "stld_86",
+      "sample_id": 86,
+      "dataset": "stld",
+      "mIoU": 0.7934,
+      "ARI": 0.6948,
+      "file_path": "stld/86.png"
+    },
+    {
+      "id": "stld_87",
+      "sample_id": 87,
+      "dataset": "stld",
+      "mIoU": 0.3397,
+      "ARI": 0.0072,
+      "file_path": "stld/87.png"
+    },
+    {
+      "id": "stld_88",
+      "sample_id": 88,
+      "dataset": "stld",
+      "mIoU": 0.4522,
+      "ARI": 0.1175,
+      "file_path": "stld/88.png"
+    },
+    {
+      "id": "stld_89",
+      "sample_id": 89,
+      "dataset": "stld",
+      "mIoU": 0.341,
+      "ARI": 0.0064,
+      "file_path": "stld/89.png"
+    },
+    {
+      "id": "stld_90",
+      "sample_id": 90,
+      "dataset": "stld",
+      "mIoU": 0.3434,
+      "ARI": 0.0007,
+      "file_path": "stld/90.png"
+    },
+    {
+      "id": "stld_91",
+      "sample_id": 91,
+      "dataset": "stld",
+      "mIoU": 0.8039,
+      "ARI": 0.727,
+      "file_path": "stld/91.png"
+    },
+    {
+      "id": "stld_92",
+      "sample_id": 92,
+      "dataset": "stld",
+      "mIoU": 0.2783,
+      "ARI": -0.0081,
+      "file_path": "stld/92.png"
+    },
+    {
+      "id": "stld_93",
+      "sample_id": 93,
+      "dataset": "stld",
+      "mIoU": 0.3059,
+      "ARI": -0.0189,
+      "file_path": "stld/93.png"
+    },
+    {
+      "id": "stld_94",
+      "sample_id": 94,
+      "dataset": "stld",
+      "mIoU": 0.3013,
+      "ARI": -0.0319,
+      "file_path": "stld/94.png"
+    },
+    {
+      "id": "stld_95",
+      "sample_id": 95,
+      "dataset": "stld",
+      "mIoU": 0.539,
+      "ARI": 0.2557,
+      "file_path": "stld/95.png"
+    },
+    {
+      "id": "stld_96",
+      "sample_id": 96,
+      "dataset": "stld",
+      "mIoU": 0.7774,
+      "ARI": 0.6508,
+      "file_path": "stld/96.png"
+    },
+    {
+      "id": "stld_97",
+      "sample_id": 97,
+      "dataset": "stld",
+      "mIoU": 0.9083,
+      "ARI": 0.8422,
+      "file_path": "stld/97.png"
+    },
+    {
+      "id": "stld_98",
+      "sample_id": 98,
+      "dataset": "stld",
+      "mIoU": 0.2389,
+      "ARI": -0.0154,
+      "file_path": "stld/98.png"
+    },
+    {
+      "id": "stld_99",
+      "sample_id": 99,
+      "dataset": "stld",
+      "mIoU": 0.8758,
+      "ARI": 0.7938,
+      "file_path": "stld/99.png"
+    },
+    {
+      "id": "stld_100",
+      "sample_id": 100,
+      "dataset": "stld",
+      "mIoU": 0.8361,
+      "ARI": 0.7713,
+      "file_path": "stld/100.png"
+    },
+    {
+      "id": "stld_101",
+      "sample_id": 101,
+      "dataset": "stld",
+      "mIoU": 0.3513,
+      "ARI": 0.0149,
+      "file_path": "stld/101.png"
+    },
+    {
+      "id": "stld_102",
+      "sample_id": 102,
+      "dataset": "stld",
+      "mIoU": 0.9174,
+      "ARI": 0.875,
+      "file_path": "stld/102.png"
+    },
+    {
+      "id": "stld_103",
+      "sample_id": 103,
+      "dataset": "stld",
+      "mIoU": 0.8209,
+      "ARI": 0.7393,
+      "file_path": "stld/103.png"
+    },
+    {
+      "id": "stld_104",
+      "sample_id": 104,
+      "dataset": "stld",
+      "mIoU": 0.3322,
+      "ARI": 0.0105,
+      "file_path": "stld/104.png"
+    },
+    {
+      "id": "stld_105",
+      "sample_id": 105,
+      "dataset": "stld",
+      "mIoU": 0.3503,
+      "ARI": 0.0159,
+      "file_path": "stld/105.png"
+    },
+    {
+      "id": "stld_106",
+      "sample_id": 106,
+      "dataset": "stld",
+      "mIoU": 0.8681,
+      "ARI": 0.7889,
+      "file_path": "stld/106.png"
+    },
+    {
+      "id": "stld_107",
+      "sample_id": 107,
+      "dataset": "stld",
+      "mIoU": 0.3261,
+      "ARI": 0.0068,
+      "file_path": "stld/107.png"
+    },
+    {
+      "id": "stld_108",
+      "sample_id": 108,
+      "dataset": "stld",
+      "mIoU": 0.3506,
+      "ARI": 0.0087,
+      "file_path": "stld/108.png"
+    },
+    {
+      "id": "stld_109",
+      "sample_id": 109,
+      "dataset": "stld",
+      "mIoU": 0.4345,
+      "ARI": 0.0734,
+      "file_path": "stld/109.png"
+    },
+    {
+      "id": "stld_110",
+      "sample_id": 110,
+      "dataset": "stld",
+      "mIoU": 0.3066,
+      "ARI": 0.003,
+      "file_path": "stld/110.png"
+    },
+    {
+      "id": "stld_111",
+      "sample_id": 111,
+      "dataset": "stld",
+      "mIoU": 0.6156,
+      "ARI": 0.39,
+      "file_path": "stld/111.png"
+    },
+    {
+      "id": "stld_112",
+      "sample_id": 112,
+      "dataset": "stld",
+      "mIoU": 0.3768,
+      "ARI": 0.029,
+      "file_path": "stld/112.png"
+    },
+    {
+      "id": "stld_113",
+      "sample_id": 113,
+      "dataset": "stld",
+      "mIoU": 0.2568,
+      "ARI": -0.0,
+      "file_path": "stld/113.png"
+    },
+    {
+      "id": "stld_114",
+      "sample_id": 114,
+      "dataset": "stld",
+      "mIoU": 0.3503,
+      "ARI": 0.0259,
+      "file_path": "stld/114.png"
+    },
+    {
+      "id": "stld_115",
+      "sample_id": 115,
+      "dataset": "stld",
+      "mIoU": 0.3734,
+      "ARI": 0.0228,
+      "file_path": "stld/115.png"
+    },
+    {
+      "id": "stld_116",
+      "sample_id": 116,
+      "dataset": "stld",
+      "mIoU": 0.5571,
+      "ARI": 0.269,
+      "file_path": "stld/116.png"
+    },
+    {
+      "id": "stld_117",
+      "sample_id": 117,
+      "dataset": "stld",
+      "mIoU": 0.3573,
+      "ARI": 0.0283,
+      "file_path": "stld/117.png"
+    },
+    {
+      "id": "stld_118",
+      "sample_id": 118,
+      "dataset": "stld",
+      "mIoU": 0.3377,
+      "ARI": -0.0308,
+      "file_path": "stld/118.png"
+    },
+    {
+      "id": "stld_119",
+      "sample_id": 119,
+      "dataset": "stld",
+      "mIoU": 0.339,
+      "ARI": 0.0041,
+      "file_path": "stld/119.png"
+    },
+    {
+      "id": "stld_120",
+      "sample_id": 120,
+      "dataset": "stld",
+      "mIoU": 0.4496,
+      "ARI": 0.0771,
+      "file_path": "stld/120.png"
+    },
+    {
+      "id": "stld_121",
+      "sample_id": 121,
+      "dataset": "stld",
+      "mIoU": 0.4327,
+      "ARI": 0.1001,
+      "file_path": "stld/121.png"
+    },
+    {
+      "id": "stld_122",
+      "sample_id": 122,
+      "dataset": "stld",
+      "mIoU": 0.8541,
+      "ARI": 0.7533,
+      "file_path": "stld/122.png"
+    },
+    {
+      "id": "stld_123",
+      "sample_id": 123,
+      "dataset": "stld",
+      "mIoU": 0.459,
+      "ARI": 0.0598,
+      "file_path": "stld/123.png"
+    },
+    {
+      "id": "stld_124",
+      "sample_id": 124,
+      "dataset": "stld",
+      "mIoU": 0.7363,
+      "ARI": 0.5648,
+      "file_path": "stld/124.png"
+    },
+    {
+      "id": "stld_125",
+      "sample_id": 125,
+      "dataset": "stld",
+      "mIoU": 0.3109,
+      "ARI": 0.001,
+      "file_path": "stld/125.png"
+    },
+    {
+      "id": "stld_126",
+      "sample_id": 126,
+      "dataset": "stld",
+      "mIoU": 0.921,
+      "ARI": 0.8604,
+      "file_path": "stld/126.png"
+    },
+    {
+      "id": "stld_127",
+      "sample_id": 127,
+      "dataset": "stld",
+      "mIoU": 0.4046,
+      "ARI": 0.001,
+      "file_path": "stld/127.png"
+    },
+    {
+      "id": "stld_128",
+      "sample_id": 128,
+      "dataset": "stld",
+      "mIoU": 0.9021,
+      "ARI": 0.8138,
+      "file_path": "stld/128.png"
+    },
+    {
+      "id": "stld_129",
+      "sample_id": 129,
+      "dataset": "stld",
+      "mIoU": 0.5981,
+      "ARI": 0.3384,
+      "file_path": "stld/129.png"
+    },
+    {
+      "id": "stld_130",
+      "sample_id": 130,
+      "dataset": "stld",
+      "mIoU": 0.6587,
+      "ARI": 0.4222,
+      "file_path": "stld/130.png"
+    },
+    {
+      "id": "stld_131",
+      "sample_id": 131,
+      "dataset": "stld",
+      "mIoU": 0.835,
+      "ARI": 0.697,
+      "file_path": "stld/131.png"
+    },
+    {
+      "id": "stld_132",
+      "sample_id": 132,
+      "dataset": "stld",
+      "mIoU": 0.8267,
+      "ARI": 0.7301,
+      "file_path": "stld/132.png"
+    },
+    {
+      "id": "stld_133",
+      "sample_id": 133,
+      "dataset": "stld",
+      "mIoU": 0.3289,
+      "ARI": -0.0349,
+      "file_path": "stld/133.png"
+    },
+    {
+      "id": "stld_134",
+      "sample_id": 134,
+      "dataset": "stld",
+      "mIoU": 0.3886,
+      "ARI": -0.0031,
+      "file_path": "stld/134.png"
+    },
+    {
+      "id": "stld_135",
+      "sample_id": 135,
+      "dataset": "stld",
+      "mIoU": 0.32,
+      "ARI": 0.0054,
+      "file_path": "stld/135.png"
+    },
+    {
+      "id": "stld_136",
+      "sample_id": 136,
+      "dataset": "stld",
+      "mIoU": 0.3453,
+      "ARI": 0.0031,
+      "file_path": "stld/136.png"
+    },
+    {
+      "id": "stld_137",
+      "sample_id": 137,
+      "dataset": "stld",
+      "mIoU": 0.6605,
+      "ARI": 0.4779,
+      "file_path": "stld/137.png"
+    },
+    {
+      "id": "stld_138",
+      "sample_id": 138,
+      "dataset": "stld",
+      "mIoU": 0.3388,
+      "ARI": 0.0123,
+      "file_path": "stld/138.png"
+    },
+    {
+      "id": "stld_139",
+      "sample_id": 139,
+      "dataset": "stld",
+      "mIoU": 0.3492,
+      "ARI": 0.0044,
+      "file_path": "stld/139.png"
+    },
+    {
+      "id": "stld_140",
+      "sample_id": 140,
+      "dataset": "stld",
+      "mIoU": 0.4865,
+      "ARI": 0.1121,
+      "file_path": "stld/140.png"
+    },
+    {
+      "id": "stld_141",
+      "sample_id": 141,
+      "dataset": "stld",
+      "mIoU": 0.3005,
+      "ARI": -0.032,
+      "file_path": "stld/141.png"
+    },
+    {
+      "id": "stld_142",
+      "sample_id": 142,
+      "dataset": "stld",
+      "mIoU": 0.3695,
+      "ARI": 0.0367,
+      "file_path": "stld/142.png"
+    },
+    {
+      "id": "stld_143",
+      "sample_id": 143,
+      "dataset": "stld",
+      "mIoU": 0.4631,
+      "ARI": 0.126,
+      "file_path": "stld/143.png"
+    },
+    {
+      "id": "stld_144",
+      "sample_id": 144,
+      "dataset": "stld",
+      "mIoU": 0.4666,
+      "ARI": 0.1418,
+      "file_path": "stld/144.png"
+    },
+    {
+      "id": "stld_145",
+      "sample_id": 145,
+      "dataset": "stld",
+      "mIoU": 0.8639,
+      "ARI": 0.762,
+      "file_path": "stld/145.png"
+    },
+    {
+      "id": "stld_146",
+      "sample_id": 146,
+      "dataset": "stld",
+      "mIoU": 0.4527,
+      "ARI": 0.118,
+      "file_path": "stld/146.png"
+    },
+    {
+      "id": "stld_147",
+      "sample_id": 147,
+      "dataset": "stld",
+      "mIoU": 0.2679,
+      "ARI": -0.0062,
+      "file_path": "stld/147.png"
+    },
+    {
+      "id": "stld_148",
+      "sample_id": 148,
+      "dataset": "stld",
+      "mIoU": 0.8972,
+      "ARI": 0.8562,
+      "file_path": "stld/148.png"
+    },
+    {
+      "id": "stld_149",
+      "sample_id": 149,
+      "dataset": "stld",
+      "mIoU": 0.3224,
+      "ARI": 0.0073,
+      "file_path": "stld/149.png"
+    },
+    {
+      "id": "stld_150",
+      "sample_id": 150,
+      "dataset": "stld",
+      "mIoU": 0.3357,
+      "ARI": 0.0142,
+      "file_path": "stld/150.png"
+    },
+    {
+      "id": "stld_151",
+      "sample_id": 151,
+      "dataset": "stld",
+      "mIoU": 0.6129,
+      "ARI": 0.3242,
+      "file_path": "stld/151.png"
+    },
+    {
+      "id": "stld_152",
+      "sample_id": 152,
+      "dataset": "stld",
+      "mIoU": 0.8738,
+      "ARI": 0.8211,
+      "file_path": "stld/152.png"
+    },
+    {
+      "id": "stld_153",
+      "sample_id": 153,
+      "dataset": "stld",
+      "mIoU": 0.3825,
+      "ARI": 0.042,
+      "file_path": "stld/153.png"
+    },
+    {
+      "id": "stld_154",
+      "sample_id": 154,
+      "dataset": "stld",
+      "mIoU": 0.2714,
+      "ARI": -0.0082,
+      "file_path": "stld/154.png"
+    },
+    {
+      "id": "stld_155",
+      "sample_id": 155,
+      "dataset": "stld",
+      "mIoU": 0.2985,
+      "ARI": -0.0011,
+      "file_path": "stld/155.png"
+    },
+    {
+      "id": "stld_156",
+      "sample_id": 156,
+      "dataset": "stld",
+      "mIoU": 0.5553,
+      "ARI": 0.1995,
+      "file_path": "stld/156.png"
+    },
+    {
+      "id": "stld_157",
+      "sample_id": 157,
+      "dataset": "stld",
+      "mIoU": 0.6905,
+      "ARI": 0.5239,
+      "file_path": "stld/157.png"
+    },
+    {
+      "id": "stld_158",
+      "sample_id": 158,
+      "dataset": "stld",
+      "mIoU": 0.4406,
+      "ARI": 0.0414,
+      "file_path": "stld/158.png"
+    },
+    {
+      "id": "stld_159",
+      "sample_id": 159,
+      "dataset": "stld",
+      "mIoU": 0.5152,
+      "ARI": 0.1569,
+      "file_path": "stld/159.png"
+    },
+    {
+      "id": "stld_160",
+      "sample_id": 160,
+      "dataset": "stld",
+      "mIoU": 0.901,
+      "ARI": 0.8144,
+      "file_path": "stld/160.png"
+    },
+    {
+      "id": "stld_161",
+      "sample_id": 161,
+      "dataset": "stld",
+      "mIoU": 0.397,
+      "ARI": 0.0589,
+      "file_path": "stld/161.png"
+    },
+    {
+      "id": "stld_162",
+      "sample_id": 162,
+      "dataset": "stld",
+      "mIoU": 0.5354,
+      "ARI": 0.1827,
+      "file_path": "stld/162.png"
+    },
+    {
+      "id": "stld_163",
+      "sample_id": 163,
+      "dataset": "stld",
+      "mIoU": 0.8266,
+      "ARI": 0.7084,
+      "file_path": "stld/163.png"
+    },
+    {
+      "id": "stld_164",
+      "sample_id": 164,
+      "dataset": "stld",
+      "mIoU": 0.3093,
+      "ARI": -0.0057,
+      "file_path": "stld/164.png"
+    },
+    {
+      "id": "stld_165",
+      "sample_id": 165,
+      "dataset": "stld",
+      "mIoU": 0.8604,
+      "ARI": 0.7781,
+      "file_path": "stld/165.png"
+    },
+    {
+      "id": "stld_166",
+      "sample_id": 166,
+      "dataset": "stld",
+      "mIoU": 0.2882,
+      "ARI": -0.0232,
+      "file_path": "stld/166.png"
+    },
+    {
+      "id": "stld_167",
+      "sample_id": 167,
+      "dataset": "stld",
+      "mIoU": 0.3745,
+      "ARI": 0.03,
+      "file_path": "stld/167.png"
+    },
+    {
+      "id": "stld_168",
+      "sample_id": 168,
+      "dataset": "stld",
+      "mIoU": 0.4248,
+      "ARI": 0.0688,
+      "file_path": "stld/168.png"
+    },
+    {
+      "id": "stld_169",
+      "sample_id": 169,
+      "dataset": "stld",
+      "mIoU": 0.4891,
+      "ARI": 0.1472,
+      "file_path": "stld/169.png"
+    },
+    {
+      "id": "stld_170",
+      "sample_id": 170,
+      "dataset": "stld",
+      "mIoU": 0.2653,
+      "ARI": -0.0,
+      "file_path": "stld/170.png"
+    },
+    {
+      "id": "stld_171",
+      "sample_id": 171,
+      "dataset": "stld",
+      "mIoU": 0.3626,
+      "ARI": 0.0213,
+      "file_path": "stld/171.png"
+    },
+    {
+      "id": "stld_172",
+      "sample_id": 172,
+      "dataset": "stld",
+      "mIoU": 0.8704,
+      "ARI": 0.8075,
+      "file_path": "stld/172.png"
+    },
+    {
+      "id": "stld_173",
+      "sample_id": 173,
+      "dataset": "stld",
+      "mIoU": 0.3193,
+      "ARI": -0.0002,
+      "file_path": "stld/173.png"
+    },
+    {
+      "id": "stld_174",
+      "sample_id": 174,
+      "dataset": "stld",
+      "mIoU": 0.3768,
+      "ARI": 0.0335,
+      "file_path": "stld/174.png"
+    },
+    {
+      "id": "stld_175",
+      "sample_id": 175,
+      "dataset": "stld",
+      "mIoU": 0.3542,
+      "ARI": 0.0236,
+      "file_path": "stld/175.png"
+    },
+    {
+      "id": "stld_176",
+      "sample_id": 176,
+      "dataset": "stld",
+      "mIoU": 0.3691,
+      "ARI": -0.0001,
+      "file_path": "stld/176.png"
+    },
+    {
+      "id": "stld_177",
+      "sample_id": 177,
+      "dataset": "stld",
+      "mIoU": 0.3465,
+      "ARI": 0.0051,
+      "file_path": "stld/177.png"
+    },
+    {
+      "id": "stld_178",
+      "sample_id": 178,
+      "dataset": "stld",
+      "mIoU": 0.3322,
+      "ARI": -0.0135,
+      "file_path": "stld/178.png"
+    },
+    {
+      "id": "stld_179",
+      "sample_id": 179,
+      "dataset": "stld",
+      "mIoU": 0.3059,
+      "ARI": 0.0007,
+      "file_path": "stld/179.png"
+    },
+    {
+      "id": "stld_180",
+      "sample_id": 180,
+      "dataset": "stld",
+      "mIoU": 0.5273,
+      "ARI": 0.2345,
+      "file_path": "stld/180.png"
+    },
+    {
+      "id": "stld_181",
+      "sample_id": 181,
+      "dataset": "stld",
+      "mIoU": 0.2662,
+      "ARI": -0.0011,
+      "file_path": "stld/181.png"
+    },
+    {
+      "id": "stld_182",
+      "sample_id": 182,
+      "dataset": "stld",
+      "mIoU": 0.453,
+      "ARI": 0.1041,
+      "file_path": "stld/182.png"
+    },
+    {
+      "id": "stld_183",
+      "sample_id": 183,
+      "dataset": "stld",
+      "mIoU": 0.9067,
+      "ARI": 0.8233,
+      "file_path": "stld/183.png"
+    },
+    {
+      "id": "stld_184",
+      "sample_id": 184,
+      "dataset": "stld",
+      "mIoU": 0.414,
+      "ARI": 0.0761,
+      "file_path": "stld/184.png"
+    },
+    {
+      "id": "stld_185",
+      "sample_id": 185,
+      "dataset": "stld",
+      "mIoU": 0.4574,
+      "ARI": 0.1161,
+      "file_path": "stld/185.png"
+    },
+    {
+      "id": "stld_186",
+      "sample_id": 186,
+      "dataset": "stld",
+      "mIoU": 0.9315,
+      "ARI": 0.8699,
+      "file_path": "stld/186.png"
+    },
+    {
+      "id": "stld_187",
+      "sample_id": 187,
+      "dataset": "stld",
+      "mIoU": 0.3614,
+      "ARI": 0.03,
+      "file_path": "stld/187.png"
+    },
+    {
+      "id": "stld_188",
+      "sample_id": 188,
+      "dataset": "stld",
+      "mIoU": 0.8223,
+      "ARI": 0.6493,
+      "file_path": "stld/188.png"
+    },
+    {
+      "id": "stld_189",
+      "sample_id": 189,
+      "dataset": "stld",
+      "mIoU": 0.4903,
+      "ARI": 0.1128,
+      "file_path": "stld/189.png"
+    },
+    {
+      "id": "stld_190",
+      "sample_id": 190,
+      "dataset": "stld",
+      "mIoU": 0.2815,
+      "ARI": -0.0058,
+      "file_path": "stld/190.png"
+    },
+    {
+      "id": "stld_191",
+      "sample_id": 191,
+      "dataset": "stld",
+      "mIoU": 0.3035,
+      "ARI": 0.001,
+      "file_path": "stld/191.png"
+    },
+    {
+      "id": "stld_192",
+      "sample_id": 192,
+      "dataset": "stld",
+      "mIoU": 0.4218,
+      "ARI": 0.0757,
+      "file_path": "stld/192.png"
+    },
+    {
+      "id": "stld_193",
+      "sample_id": 193,
+      "dataset": "stld",
+      "mIoU": 0.3533,
+      "ARI": 0.0191,
+      "file_path": "stld/193.png"
+    },
+    {
+      "id": "stld_194",
+      "sample_id": 194,
+      "dataset": "stld",
+      "mIoU": 0.3582,
+      "ARI": 0.0073,
+      "file_path": "stld/194.png"
+    },
+    {
+      "id": "stld_195",
+      "sample_id": 195,
+      "dataset": "stld",
+      "mIoU": 0.3642,
+      "ARI": 0.0308,
+      "file_path": "stld/195.png"
+    },
+    {
+      "id": "stld_196",
+      "sample_id": 196,
+      "dataset": "stld",
+      "mIoU": 0.4034,
+      "ARI": 0.0547,
+      "file_path": "stld/196.png"
+    },
+    {
+      "id": "stld_197",
+      "sample_id": 197,
+      "dataset": "stld",
+      "mIoU": 0.8313,
+      "ARI": 0.7652,
+      "file_path": "stld/197.png"
+    },
+    {
+      "id": "stld_198",
+      "sample_id": 198,
+      "dataset": "stld",
+      "mIoU": 0.3045,
+      "ARI": -0.0063,
+      "file_path": "stld/198.png"
+    },
+    {
+      "id": "stld_199",
+      "sample_id": 199,
+      "dataset": "stld",
+      "mIoU": 0.2983,
+      "ARI": 0.002,
+      "file_path": "stld/199.png"
+    },
+    {
+      "id": "stld_200",
+      "sample_id": 200,
+      "dataset": "stld",
+      "mIoU": 0.2557,
+      "ARI": 0.0001,
+      "file_path": "stld/200.png"
     }
   ]
 }

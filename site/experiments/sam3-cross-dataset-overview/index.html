@@ -19,10 +19,10 @@
             <h2>Executive Synopsis</h2>
             <p>
                 This benchmark evaluates the generalization capabilities of <strong>SAM 3</strong> by comparing its
-                zero-shot segmentation performance across two highly divergent domains.
-                <strong>RWTD</strong> tests performance on natural texture boundaries (shells, bark, sand), while
-                <strong>CAID</strong> measures its ability to partition architectural floor plans into semantically
-                distinct regions.
+                zero-shot segmentation performance across three diverse domains using Coarse Feature Clustering.
+                <strong>RWTD</strong> tests performance on natural texture boundaries,
+                <strong>CAID</strong> measures architectural floor plan partitioning, and
+                <strong>STLD</strong> evaluates structural and functional segmentation.
             </p>
         </section>
 
@@ -70,6 +70,28 @@
                     <!-- Loaded via JS -->
                 </div>
             </div>
+
+            <!-- STLD Card -->
+            <div class="dataset-card" id="stld-card">
+                <h3>STLD Dataset</h3>
+                <p>Structural and functional partitioning in diverse synthetic and real-world scenes.</p>
+                <div style="display: flex; gap: 40px; margin-bottom: 30px;">
+                    <div class="stat-item">
+                        <div class="stat-value" id="stld-miou">--</div>
+                        <div class="stat-label" style="font-size: 0.8rem; color: #9fb3c8; text-transform: uppercase;">
+                            mIoU</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="stld-ari">--</div>
+                        <div class="stat-label" style="font-size: 0.8rem; color: #9fb3c8; text-transform: uppercase;">
+                            ARI</div>
+                    </div>
+                </div>
+                <div class="preview-group" id="stld-previews"
+                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: auto;">
+                    <!-- Loaded via JS -->
+                </div>
+            </div>
         </div>
 
         <div style="text-align: center;">
@@ -101,6 +123,8 @@
                     document.getElementById('rwtd-ari').textContent = metrics.rwtd.ARI.toFixed(3);
                     document.getElementById('caid-miou').textContent = metrics.caid.mIoU.toFixed(3);
                     document.getElementById('caid-ari').textContent = metrics.caid.ARI.toFixed(3);
+                    document.getElementById('stld-miou').textContent = metrics.stld.mIoU.toFixed(3);
+                    document.getElementById('stld-ari').textContent = metrics.stld.ARI.toFixed(3);
                 })
                 .catch(e => console.error("Failed to load metrics:", e));
 
@@ -134,6 +158,7 @@
 
                     populatePreviews('rwtd', 'rwtd-previews');
                     populatePreviews('caid', 'caid-previews');
+                    populatePreviews('stld', 'stld-previews');
                 })
                 .catch(e => console.error("Failed to load training data:", e));
         });

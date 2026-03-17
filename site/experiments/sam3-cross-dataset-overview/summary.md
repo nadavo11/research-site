@@ -1,1 +1,1 @@
-Comprehensive cross-dataset benchmark comparing SAM 3 zero-shot segmentation on RWTD (natural texture transitions) and CAID (architectural plan partitions). Unified metrics show consistent performance patterns across domains.
+Comprehensive cross-dataset benchmark comparing SAM 3 Coarse Feature Clustering on RWTD (texture transitions), CAID (architectural plans), and STLD (structural segmentation). Unified metrics show consistent performance patterns across domains.
