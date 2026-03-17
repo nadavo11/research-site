@@ -125,7 +125,7 @@ for protocol, p_dir in protocols_config:
                 numeric_id = "".join(filter(str.isdigit, file_name_orig.replace('.png', '')))
                 
                 # Feature clustering uses different keys
-                if protocol in ['feature_cluster_global', 'fc_coarse_only']:
+                if protocol in ['feature_cluster_global', 'feature_clustering_mask_only']:
                     f1 = data.get('miou', 0)
                     precision = data.get('mask_score_mean', 0) # Fallback
                     recall = 0
@@ -142,7 +142,7 @@ for protocol, p_dir in protocols_config:
                     "sample_id": int(numeric_id) if numeric_id else 0,
                     "protocol": protocol,
                     "f1": round(f1, 4),
-                    "ari": round(data.get('sample_ari', 0), 4),
+                    "ari": round(data.get('sample_ari', data.get('ari', 0)), 4),
                     "precision": round(precision, 4),
                     "recall": round(recall, 4),
                     "threshold": round(threshold, 4),
