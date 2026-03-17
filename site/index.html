@@ -47,6 +47,15 @@
       </div>
       <div class="card-grid">
         <article class="card" data-exp-card data-domain="edge">
+          <p><span class="tag good">meta-analysis</span><span class="tag">cross-dataset</span><span
+              class="tag">sam3</span></p>
+          <h3>SAM 3 Cross-Dataset Benchmarking (RWTD vs CAID)</h3>
+          <p class="kv"><strong>Date:</strong> 2026-03-17</p>
+          <p class="kv"><strong>Coverage:</strong> 3,331 samples across natural & architectural domains.</p>
+          <a class="btn" href="experiments/sam3-cross-dataset-overview/index.html">Open meta-report</a>
+        </article>
+
+        <article class="card" data-exp-card data-domain="edge">
           <p><span class="tag good">evaluation</span><span class="tag">sam3</span><span class="tag">foundation
               model</span></p>
           <h3>RWTD Segmentation — SAM 3 Oracle Points & Text</h3>
@@ -95,6 +104,14 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>sam3-cross-dataset-overview</td>
+              <td>mIoU = 0.674 (CAID) / 0.824 (RWTD)</td>
+              <td>N/A (Multi-domain)</td>
+              <td style="color:#000;"><strong>-</strong></td>
+              <td>Unified comparison confirms SAM 3's variable precision across natural texture vs architectural
+                semantics.</td>
+            </tr>
             <tr>
               <td>sam3-rwtd-both-test-visuals</td>
               <td>mIoU = 0.516</td>

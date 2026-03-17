@@ -9,7 +9,7 @@ dest_dir = Path('/home/nada/PycharmProjects/research-site/site/experiments/sam3-
 # Create directories
 os.makedirs(dest_dir, exist_ok=True)
 os.makedirs(dest_dir / 'repro', exist_ok=True)
-for sub in ['oracle_points', 'text', 'baseline', 'feature_cluster_global', 'fc_coarse_only']:
+for sub in ['oracle_points', 'text', 'baseline', 'feature_cluster_global', 'feature_clustering_mask_only']:
     os.makedirs(dest_dir / 'assets/gallery' / sub, exist_ok=True)
     os.makedirs(dest_dir / 'assets/qc' / sub, exist_ok=True)
     os.makedirs(dest_dir / 'assets/all_previews' / sub, exist_ok=True)
@@ -108,7 +108,7 @@ protocols_config = [
     ('text', source_dir / 'text'),
     ('baseline', Path('/home/nada/PycharmProjects/research-site/experiments/test_dense')),
     ('feature_cluster_global', Path('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_global')),
-    ('fc_coarse_only', Path('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_coarse_to_fine_global_pooled_init_coarse_only'))
+    ('feature_clustering_mask_only', Path('/home/nada/PycharmProjects/research-site/experiments/test_feature_cluster_coarse_to_fine_global_pooled_init_coarse_only'))
 ]
 
 for protocol, p_dir in protocols_config:
@@ -142,6 +142,7 @@ for protocol, p_dir in protocols_config:
                     "sample_id": int(numeric_id) if numeric_id else 0,
                     "protocol": protocol,
                     "f1": round(f1, 4),
+                    "ari": round(data.get('sample_ari', 0), 4),
                     "precision": round(precision, 4),
                     "recall": round(recall, 4),
                     "threshold": round(threshold, 4),
@@ -171,6 +172,7 @@ for protocol, p_dir in protocols_config:
                 "sample_id": int(numeric_id) if numeric_id else 0,
                 "protocol": protocol,
                 "f1": round(f1, 4),
+                "ari": 0, # Baseline manifest doesn't have it easily
                 "precision": 0,
                 "recall": 0,
                 "threshold": 0,

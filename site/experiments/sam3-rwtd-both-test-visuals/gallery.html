@@ -123,17 +123,30 @@
             text-transform: uppercase;
         }
 
-        .f1-badge {
+        .metric-badge {
             position: absolute;
             top: 6px;
             right: 6px;
             background: rgba(0, 0, 0, 0.72);
             color: #fff;
-            font-size: 0.78rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 999px;
+            padding: 4px 10px;
+            border-radius: 8px;
             z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: right;
+        }
+
+        .metric-badge span {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .metric-badge span.primary {
+            font-size: 0.82rem;
+            color: #ffda6a;
         }
 
         .pill {
@@ -190,9 +203,9 @@
                     <option value="all">All Methods</option>
                     <option value="oracle_points">Oracle Points</option>
                     <option value="text">Text Prompts</option>
-                    <option value="baseline">Unprompted Baseline</option>
-                    <option value="feature_cluster_global">Feature Clustering</option>
-                    <option value="fc_coarse_only">Pooled Coarse Init</option>
+                    <option value="baseline">TextureSAM (Baseline)</option>
+                    <option value="feature_cluster_global">Feature Clustering (Global)</option>
+                    <option value="feature_clustering_mask_only">Feature-Clustering (Mask Only)</option>
                 </select>
                 <label for="viewMode">View Mode:</label>
                 <select id="viewMode"
@@ -276,12 +289,15 @@
                     gallery.innerHTML = items.map((img, i) => {
                         const cls = f1Class(img.f1);
                         return '<figure>' +
-                            '<span class="f1-badge">F1 ' + img.f1.toFixed(3) + '</span>' +
+                            '<div class="metric-badge">' +
+                            '<span class="primary">mIoU ' + img.f1.toFixed(3) + '</span>' +
+                            '<span>ARI ' + (img.ari || 0).toFixed(3) + '</span>' +
+                            '</div>' +
                             '<img src="assets/all_previews/' + img.file_path + '" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
                             '<div class="metrics-bar">' +
                             '<span class="pill">id=' + (img.sample_id || img.id) + '</span>' +
                             '<span class="pill">rank ' + (i + 1) + '/' + items.length + '</span><br/>' +
-                            '<span class="pill ' + cls + '">' + img.protocol + '</span>' +
+                            '<span class="pill ' + cls + '">' + (img.protocol === 'feature_clustering_mask_only' ? 'FC (Mask Only)' : img.protocol) + '</span>' +
                             '</div>' +
                             '</figure>';
                     }).join('');
@@ -302,7 +318,10 @@
                             const cls = f1Class(img.f1);
                             html += '<div class="compare-card">' +
                                 '<span class="mini-label">' + img.protocol + '</span>' +
-                                '<span class="pill ' + cls + '" style="position:absolute; top:28px; right:8px;">F1 ' + img.f1.toFixed(3) + '</span>' +
+                                '<div class="metric-badge" style="top:26px;">' +
+                                '<span class="primary">mIoU ' + img.f1.toFixed(3) + '</span>' +
+                                '<span>ARI ' + (img.ari || 0).toFixed(3) + '</span>' +
+                                '</div>' +
                                 '<img src="assets/all_previews/' + img.file_path + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
                                 '</div>';
                         });

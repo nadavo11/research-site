@@ -22,26 +22,34 @@
       <h2>Executive Read</h2>
       <div class="summary">
         <p class="kv"><strong>Run:</strong> <code>sam3-rwtd-both-test-visuals</code> (reported on 2026-03-12)</p>
-        <p class="kv"><strong>What was done:</strong> Zero-shot evaluation of facebook/sam3 using oracle points and text
-          descriptions, compared against a fully unprompted dense baseline.</p>
-        <p class="kv"><strong>Surprising Finding:</strong> The exhaustive unprompted "dense" baseline achieves a higher
-          aggregated mIoU (0.537) than targeted oracle points (0.516). This indicates that while point-prompting offers
-          targeted control, dense auto-generation captures more exhaustive texture boundaries by sheer volume.</p>
-        <p class="kv"><strong>What works:</strong> When restricted to prompting, points are highly effective at guiding
-          the model compared to text.</p>
-        <p class="kv"><strong>Where it fails:</strong> The text descriptions alone are sometimes not sufficient to
-          distinguish closely overlapping visual properties.</p>
+        <p class="kv"><strong>Technical Strategy:</strong> Zero-shot evaluation of facebook/sam3 comparing prompt-less
+          feature clustering against targeted prompting protocols (Oracle Points and Text descriptions).</p>
+
+        <p class="kv"><strong>Methods Overview:</strong></p>
+        <ul style="margin-left: 20px; font-size: 0.95rem; line-height: 1.6;">
+          <li><strong>Feature-Clustering (Mask Only):</strong> Our strongest variant. It extracts the coarsest backbone
+            features, average-pools them to reduce specking, and clusters the result into two regions. This raw
+            partition is upsampled directly to the image—no SAM refinement or further processing is used.</li>
+          <li><strong>Feature Clustering (Global):</strong> Clusters normalized SAM image features globally across the
+            whole image into two unlabeled groups. Both resulting masks are then processed by the official SAM
+            mask-prompt refinement hook.</li>
+          <li><strong>Oracle Points:</strong> Uses two high-confidence ground-truth points per texture (A and B) to
+            prompt the SAM 3 model directly. This represents the "perfect prompt" scenario for sparse points.</li>
+          <li><strong>Text Prompts:</strong> Uses natural language descriptions of each texture (e.g., "knitted fabric")
+            as input to the SAM 3 text encoder to guide segment generation.</li>
+          <li><strong>TextureSAM (Baseline):</strong> The original SAM-2 based baseline specifically tuned for texture
+            boundary detection on the Kaust256 dataset.</li>
+        </ul>
       </div>
 
-      <div class="card" style="margin-top:15px; background:#fff9f9; border-color:#fadbd8;">
-        <h4 style="margin:0 0 8px; color:#c0392b;">Latest: Pooled Coarse Initialized (Ablation)</h4>
-        <p style="margin:0; font-size:0.9rem; line-height:1.5;"> This variant represents a significant technical
-          ablation: it average-pools the <strong>coarsest level of the SAM 3 backbone feature pyramid</strong>
-          (backbone_fpn)
-          before performing global 2-way clustering. The resulting partition is upsampled directly to image resolution
-          without any finer-level refinement or official SAM mask-prompt passes. Despite its "coarse" nature, this
-          method achieves a breakthrough mIoU of <strong>0.824</strong>, suggesting that the lowest-frequency features
-          contain surprisingly robust semantic boundary information for RWTD textures.</p>
+      <div class="card" style="margin-top:15px; background:#f0f7ff; border-color:#d0e1f9;">
+        <h4 style="margin:0 0 8px; color:#2c3e50;">Key Finding: Feature Robustness</h4>
+        <p style="margin:0; font-size:0.9rem; line-height:1.5;">
+          The <strong>Feature-Clustering (Mask Only)</strong> protocol reveals that SAM 3's backbone contains highly
+          robust semantic boundaries at its coarsest scale. By simply pooling and clustering these features, we achieve
+          <strong>0.824 mIoU</strong>—surpassing even oracle-prompted variants. This suggests that the latent feature
+          space is more informative of texture separations than the explicit prompting interface in many complex cases.
+        </p>
       </div>
 
       <h3 style="margin-top:20px; font-size:1.1rem;">Overall Results Table</h3>
@@ -57,21 +65,21 @@
           </thead>
           <tbody>
             <tr>
-              <td><strong>Pooled Coarse Initialized (Ablation)</strong></td>
+              <td><strong>Feature-Clustering (Mask Only)</strong></td>
               <td><strong>0.824</strong></td>
               <td>0.698</td>
               <td>-</td>
             </tr>
             <tr>
               <td><strong>Feature Clustering (Global)</strong></td>
-              <td>0.671</td>
+              <td>0.617</td>
               <td>0.614</td>
               <td>-</td>
             </tr>
             <tr>
-              <td><strong>Unprompted Baseline (Dense)</strong></td>
-              <td>0.537</td>
-              <td>0.693</td>
+              <td><strong>TextureSAM (Baseline)</strong></td>
+              <td>0.725</td>
+              <td>0.578</td>
               <td>-</td>
             </tr>
             <tr>
