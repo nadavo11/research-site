@@ -1,0 +1,41 @@
+{
+  "dataset_id": "aviadcohz/RWTD",
+  "failures": [],
+  "mean_metrics": {
+    "ari": 0.6984257417319343,
+    "mask_score_mean": 0.0,
+    "mask_score_median": 0.0,
+    "miou": 0.8235121702047465,
+    "miou_agg": 0.5223718301334482,
+    "num_predicted_masks": 2.0,
+    "texture_a_agg_iou": 0.5652269949890456,
+    "texture_a_best_iou": 0.8397466063866499,
+    "texture_a_overlap_mask_count": 1.960352422907489,
+    "texture_b_agg_iou": 0.47951666527785086,
+    "texture_b_best_iou": 0.8072777340228431,
+    "texture_b_overlap_mask_count": 1.9383259911894273
+  },
+  "median_metrics": {
+    "ari": 0.8389706115177916,
+    "mask_score_mean": 0.0,
+    "mask_score_median": 0.0,
+    "miou": 0.9113848083285282,
+    "miou_agg": 0.5,
+    "num_predicted_masks": 2.0,
+    "texture_a_agg_iou": 0.5558624267578125,
+    "texture_a_best_iou": 0.9206685438247526,
+    "texture_a_overlap_mask_count": 2.0,
+    "texture_b_agg_iou": 0.475982666015625,
+    "texture_b_best_iou": 0.9085016581248115,
+    "texture_b_overlap_mask_count": 2.0
+  },
+  "model_id": "facebook/sam3",
+  "num_evaluated_samples": 227,
+  "num_failed_samples": 0,
+  "num_total_samples": 227,
+  "primary_metric_name": "miou_agg",
+  "primary_metric_reason": "This repository uses aggregated mIoU as the primary automatic-mask comparison metric.",
+  "primary_metric_value": 0.5223718301334482,
+  "split": "test",
+  "variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only"
+}
