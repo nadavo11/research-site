@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Dataset Gallery — SAM 3</title>
+    <link rel="stylesheet" href="../../assets/site.css">
+    <style>
+        .gallery-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            background: #f1f7fa;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+        }
+
+        .gallery-toolbar label {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--ink);
+        }
+
+        .gallery-toolbar select,
+        .gallery-toolbar input {
+            font: inherit;
+            border: 1px solid #7bb2c0;
+            background: #edf7fb;
+            color: #0d3b4c;
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-size: 0.86rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery figure {
+            margin: 0;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fbfdff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery figure img {
+            width: 100%;
+            display: block;
+            cursor: zoom-in;
+        }
+
+        .metrics-bar {
+            padding: 8px;
+            font-size: 0.78rem;
+            background: #f7fafd;
+            border-top: 1px solid var(--line);
+        }
+
+        .metric-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 8px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: right;
+        }
+
+        .metric-badge span {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .metric-badge span.primary {
+            font-size: 0.82rem;
+            color: #ffda6a;
+        }
+
+        .pill {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #eee;
+            border: 1px solid #ddd;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        .ds-rwtd {
+            border-color: #8ecae6;
+            color: #023047;
+            background: #e0f2f1;
+        }
+
+        .ds-caid {
+            border-color: #fb8500;
+            color: #ffb703;
+            background: #fff3e0;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <section class="hero">
+            <h1>Cross-Dataset Preview Gallery</h1>
+            <p>Unified comparison of SAM 3 on RWTD and CAID datasets</p>
+            <p style="margin-top:10px;"><a class="btn" href="index.html"
+                    style="border-color:#8ecae6;background:#edf7fc;color:#0b4f6c;">← Back to report</a></p>
+        </section>
+
+        <section class="section">
+            <div class="gallery-toolbar">
+                <label for="filterDS">Dataset:</label>
+                <select id="filterDS">
+                    <option value="all">All Datasets</option>
+                    <option value="rwtd">RWTD (Texture)</option>
+                    <option value="caid">CAID (Architectural)</option>
+                </select>
+                <label for="sortBy">Sort:</label>
+                <select id="sortBy">
+                    <option value="miou_desc">mIoU ↓ best first</option>
+                    <option value="miou_asc">mIoU ↑ worst first</option>
+                    <option value="id_asc">Sample ID ↑</option>
+                </select>
+                <label for="minMetric">Min mIoU:</label>
+                <input type="range" id="minMetric" min="0" max="100" value="0">
+                <span id="minMetricVal">0.00</span>
+                <span style="margin-left:auto; font-size:0.85rem; color:var(--muted);" id="countLabel">Loading...</span>
+            </div>
+            <div id="fullGallery" class="gallery"></div>
+        </section>
+    </main>
+
+    <dialog id="imageDialog" style="padding:0; border:none; border-radius:12px; max-width:90vw; max-height:90vh;">
+        <img id="dialogImg" style="display:block; max-width:100%; height:auto; cursor:zoom-out;">
+    </dialog>
+
+    <script>
+        (async () => {
+            const resp = await fetch('training_data.json');
+            const data = await resp.json();
+            const container = document.getElementById('fullGallery');
+            const dsSel = document.getElementById('filterDS');
+            const sortSel = document.getElementById('sortBy');
+            const range = document.getElementById('minMetric');
+            const rangeVal = document.getElementById('minMetricVal');
+            const countLabel = document.getElementById('countLabel');
+            const dialog = document.getElementById('imageDialog');
+            const dialogImg = document.getElementById('dialogImg');
+
+            function render() {
+                const ds = dsSel.value;
+                const sort = sortSel.value;
+                const minVal = range.value / 100;
+                rangeVal.textContent = minVal.toFixed(2);
+
+                let items = data.per_image.filter(i => {
+                    if (ds !== 'all' && i.dataset !== ds) return false;
+                    if (i.mIoU < minVal) return false;
+                    return true;
+                });
+
+                items.sort((a, b) => {
+                    if (sort === 'miou_desc') return b.mIoU - a.mIoU;
+                    if (sort === 'miou_asc') return a.mIoU - b.mIoU;
+                    return a.id.localeCompare(b.id);
+                });
+
+                container.innerHTML = items.map(img => `
+                    <figure>
+                        <div class="metric-badge">
+                            <span class="primary">mIoU ${img.mIoU.toFixed(3)}</span>
+                            <span>ARI ${img.ARI.toFixed(3)}</span>
+                        </div>
+                        <img src="assets/all_previews/${img.file_path}" loading="lazy" onclick="openZoom(this.src)">
+                        <div class="metrics-bar">
+                            <span class="pill ds-${img.dataset}">${img.dataset.toUpperCase()}</span>
+                            <span class="pill">id: ${img.sample_id}</span>
+                        </div>
+                    </figure>
+                `).join('');
+                countLabel.textContent = `Showing ${items.length} of ${data.per_image.length}`;
+            }
+
+            window.openZoom = (src) => { dialogImg.src = src; dialog.showModal(); };
+            dialogImg.onclick = () => dialog.close();
+
+            dsSel.onchange = render;
+            sortSel.onchange = render;
+            range.oninput = render;
+            render();
+        })();
+    </script>
+</body>
+
+</html>

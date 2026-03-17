@@ -1,0 +1,11 @@
+title: "SAM 3 Cross-Dataset Benchmarking"
+model_id: "facebook/sam3"
+datasets: ["aviadcohz/RWTD", "architexture:caid"]
+date: "2026-03-17"
+description: "Unified evaluation of SAM 3 performance across texture-rich datasets (RWTD) and architectural partitions (CAID)."
+asset_summary:
+  rwtd_samples: 454
+  caid_samples: 3104
+evaluation:
+  metrics: ["mIoU", "ARI"]
+  metrics_file: "metrics.json"
