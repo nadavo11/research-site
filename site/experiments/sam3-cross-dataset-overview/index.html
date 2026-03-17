@@ -134,7 +134,7 @@
                         const samples = data.per_image.filter(s => s.dataset === ds).slice(0, 4);
                         samples.forEach(s => {
                             const img = document.createElement('img');
-                            img.src = `assets/gallery/${s.file_path}`;
+                            img.src = `assets/all_previews/${s.file_path}`;
                             container.appendChild(img);
                         });
                     };
