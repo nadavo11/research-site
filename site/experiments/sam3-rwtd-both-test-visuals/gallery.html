@@ -41,8 +41,10 @@
             outline: none;
             transition: border-color 0.2s;
         }
-        
-        .gallery-toolbar select:focus { border-color: var(--brand); }
+
+        .gallery-toolbar select:focus {
+            border-color: var(--brand);
+        }
 
         #fullGallery {
             display: grid;
@@ -55,11 +57,13 @@
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid var(--line);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             transition: transform 0.3s ease;
         }
 
-        #fullGallery figure:hover { transform: translateY(-5px); }
+        #fullGallery figure:hover {
+            transform: translateY(-5px);
+        }
 
         .f1-badge {
             position: absolute;
@@ -82,7 +86,8 @@
         <header style="text-align: center; margin-bottom: 40px;">
             <div class="subtitle">Visual Evidence</div>
             <h1 class="title-gradient">Full Prediction Gallery</h1>
-            <p style="color: var(--muted); margin-top: 10px; font-weight: 300;">SAM 3 RWTD Both Protocols — 454 predictions with exhaustive metrics.</p>
+            <p style="color: var(--muted); margin-top: 10px; font-weight: 300;">SAM 3 RWTD Both Protocols — 454
+                predictions with exhaustive metrics.</p>
             <div style="margin-top: 20px;">
                 <a class="btn secondary" href="index.html">← Return to Report</a>
             </div>
@@ -99,11 +104,12 @@
                         <option value="id_asc">ID ↑</option>
                     </select>
                 </div>
-                
+
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <label for="filterF1">Min mIoU:</label>
                     <input type="range" id="filterF1" min="0" max="100" value="0" />
-                    <span id="filterF1Val" style="font-family: var(--font-accent); font-weight: 700; color: var(--brand);">0.00</span>
+                    <span id="filterF1Val"
+                        style="font-family: var(--font-accent); font-weight: 700; color: var(--brand);">0.00</span>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 10px;">
@@ -116,9 +122,18 @@
                     </select>
                 </div>
 
-                <div class="count" id="countLabel" style="margin-left: auto; font-family: var(--font-accent); font-weight: 600; color: var(--muted);">454 / 454</div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <label for="comparisonMode" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                        <input type="checkbox" id="comparisonMode" style="width:18px; height:18px;" />
+                        1-to-1 Comparison
+                    </label>
+                </div>
+
+                <div class="count" id="countLabel"
+                    style="margin-left: auto; font-family: var(--font-accent); font-weight: 600; color: var(--muted);">
+                    454 / 454</div>
             </div>
-            
+
             <div id="fullGallery"></div>
         </section>
 
@@ -140,6 +155,7 @@
             const filterSlider = document.getElementById('filterF1');
             const filterVal = document.getElementById('filterF1Val');
             const filterQual = document.getElementById('filterQuality');
+            const comparisonToggle = document.getElementById('comparisonMode');
             const countLabel = document.getElementById('countLabel');
             const total = data.per_image.length;
 
@@ -159,6 +175,7 @@
                 const sortKey = sortSel.value;
                 const minF1 = parseFloat(filterSlider.value) / 100;
                 const qualFilter = filterQual.value;
+                const compareMode = comparisonToggle.checked;
                 filterVal.textContent = minF1.toFixed(2);
 
                 let items = data.per_image.filter(img => {
@@ -177,24 +194,74 @@
 
                 countLabel.textContent = items.length + ' / ' + total;
 
-                gallery.innerHTML = items.map((img, i) => {
-                    const cls = f1Class(img.f1);
-                    return '<figure style="position:relative;">' +
-                        '<span class="f1-badge">mIoU ' + img.f1.toFixed(3) + '</span>' +
-                        '<img src="assets/all_previews/' + img.file_path + '" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.file_path + '" />' +
-                        '<div style="padding: 15px; border-top: 1px solid var(--line);">' +
-                        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">' +
-                        '<span class="pill">id=' + img.id.split('_').slice(-1)[0] + '</span>' +
-                        '<span class="' + cls + '">mIoU ' + img.f1.toFixed(3) + '</span>' +
-                        '</div>' +
-                        '<div style="font-size: 0.75rem; color: var(--muted);">' +
-                        '<strong>Mode:</strong> ' + img.protocol + ' · ' +
-                        '<strong>P:</strong> ' + img.precision.toFixed(3) + ' · ' +
-                        '<strong>R:</strong> ' + img.recall.toFixed(3) +
-                        '</div>' +
-                        '</div>' +
-                        '</figure>';
-                }).join('');
+                if (!compareMode) {
+                    gallery.style.display = 'grid';
+                    gallery.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+                    gallery.innerHTML = items.map((img, i) => {
+                        const cls = f1Class(img.f1);
+                        return '<figure style="position:relative;">' +
+                            '<span class="f1-badge">mIoU ' + img.f1.toFixed(3) + '</span>' +
+                            '<img src="assets/all_previews/' + img.file_path + '" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.file_path + '" style="width:100%; display:block; cursor:pointer;" />' +
+                            '<div style="padding: 15px; border-top: 1px solid var(--line);">' +
+                            '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">' +
+                            '<span class="pill">id=' + img.sample_id + '</span>' +
+                            '<span class="' + cls + '">mIoU ' + img.f1.toFixed(3) + '</span>' +
+                            '</div>' +
+                            '<div style="font-size: 0.75rem; color: var(--muted);">' +
+                            '<strong>Mode:</strong> ' + img.protocol + ' · ' +
+                            '<strong>P:</strong> ' + img.precision.toFixed(3) + ' · ' +
+                            '<strong>R:</strong> ' + img.recall.toFixed(3) +
+                            '</div>' +
+                            '</div>' +
+                            '</figure>';
+                    }).join('');
+                } else {
+                    // Comparison Mode: Group by sample_id
+                    const groups = {};
+                    items.forEach(item => {
+                        if (!groups[item.sample_id]) groups[item.sample_id] = [];
+                        groups[item.sample_id].push(item);
+                    });
+
+                    // Order groups by the first item's rank in sorted items
+                    const groupIds = [];
+                    items.forEach(item => {
+                        if (!groupIds.includes(item.sample_id)) groupIds.push(item.sample_id);
+                    });
+
+                    gallery.style.display = 'flex';
+                    gallery.style.flexDirection = 'column';
+                    gallery.style.gap = '30px';
+
+                    gallery.innerHTML = groupIds.map(sid => {
+                        const groupItems = groups[sid];
+                        // Sort group items by protocol to keep columns consistent
+                        groupItems.sort((a, b) => a.protocol.localeCompare(b.protocol));
+
+                        return '<div class="comparison-row" style="background:#fff; border-radius:20px; border:1px solid var(--line); overflow:hidden;">' +
+                            '<div style="padding:15px; background:rgba(0,0,0,0.02); border-bottom:1px solid var(--line); font-weight:700; font-family:var(--font-accent);">' +
+                            'Sample ID: ' + sid +
+                            '</div>' +
+                            '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); padding:20px; gap:20px;">' +
+                            groupItems.map(img => {
+                                const cls = f1Class(img.f1);
+                                return '<div style="display:flex; flex-direction:column; gap:10px;">' +
+                                    '<div style="font-size:0.8rem; font-weight:700; color:var(--brand); text-transform:uppercase; letter-spacing:0.05em;">' + img.protocol.replace(/_/g, ' ') + '</div>' +
+                                    '<div style="position:relative;">' +
+                                    '<span class="f1-badge">mIoU ' + img.f1.toFixed(3) + '</span>' +
+                                    '<img src="assets/all_previews/' + img.file_path + '" alt="sample ' + img.id + '" data-zoom-src="assets/all_previews/' + img.file_path + '" style="width:100%; border-radius:12px; border:1px solid var(--line); cursor:pointer;" />' +
+                                    '</div>' +
+                                    '<div style="font-size: 0.75rem; color: var(--muted);">' +
+                                    '<strong>mIoU:</strong> ' + img.f1.toFixed(3) + ' · ' +
+                                    '<strong>P:</strong> ' + img.precision.toFixed(3) + ' · ' +
+                                    '<strong>R:</strong> ' + img.recall.toFixed(3) +
+                                    '</div>' +
+                                    '</div>';
+                            }).join('') +
+                            '</div>' +
+                            '</div>';
+                    }).join('');
+                }
 
                 // Rebind zoom
                 const dialog = document.getElementById('imageDialog');
@@ -210,6 +277,7 @@
             sortSel.addEventListener('change', render);
             filterSlider.addEventListener('input', render);
             filterQual.addEventListener('change', render);
+            comparisonToggle.addEventListener('change', render);
             render();
 
             const dialog = document.getElementById('imageDialog');
@@ -220,4 +288,5 @@
         })();
     </script>
 </body>
+
 </html>
