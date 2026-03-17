@@ -1,0 +1,40 @@
+{
+  "benchmark_root": "datasets/architexture/caid_test",
+  "command": "eval-architexture-binary",
+  "dataset_id": "architexture:caid",
+  "device": "cuda",
+  "evaluation_view": "partition_invariant",
+  "failure_policy": "abort",
+  "feature_cluster_coarse_to_fine_global_pooled_init_settings": {
+    "boundary_band_radius": 2,
+    "coarsest_init_pool_kernel_size": 3,
+    "coarsest_init_pool_stride": 3,
+    "feature_source": "backbone_fpn",
+    "kmeans_convergence_tolerance": 0.0001,
+    "kmeans_max_iterations": 25,
+    "refine_confidence_threshold": 0.0,
+    "refinement_iterations_per_level": 2
+  },
+  "generated_at_utc": "2026-03-16T18:38:11Z",
+  "limit": null,
+  "model_id": "facebook/sam3",
+  "num_examples": 3104,
+  "official_checkpoint_path": null,
+  "primary_metric_name": "miou",
+  "primary_metric_reason": "The CAID paper route uses partition-invariant mIoU/ARI, so this run scores both cluster-to-region assignments and reports the better one.",
+  "resolved_benchmark_root": "/home/nada/PycharmProjects/texture representations/datasets/architexture/caid_test",
+  "resolved_image_dir": "/home/nada/PycharmProjects/texture representations/datasets/architexture/caid_test/images",
+  "resolved_label_dir": "/home/nada/PycharmProjects/texture representations/datasets/architexture/caid_test/labels",
+  "route": "caid",
+  "save_visuals": true,
+  "variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only",
+  "versions": {
+    "Pillow": "12.1.1",
+    "datasets": "4.7.0",
+    "numpy": "1.26.4",
+    "torch": "2.10.0",
+    "transformers": "5.3.0",
+    "wandb": null
+  },
+  "wandb": false
+}
