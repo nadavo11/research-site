@@ -58,16 +58,16 @@
         <article class="dataset-card" data-exp-card data-domain="edge" style="grid-column: span 2;">
           <div class="subtitle" style="color: var(--good);">Top Analysis</div>
           <h3>SAM 3 Cross-Dataset Benchmarking</h3>
-          <p>Comprehensive meta-analysis across natural texture (RWTD) and architectural (CAID) domains, revealing the
-            core generalization boundaries of adaptive foundation models.</p>
+          <p>Flavor-aware benchmarking across RWTD, CAID, and STLD comparing the original CFC coarse-only path against
+            the new <code>flip_averaged</code> flavor under one shared binary evaluator.</p>
           <div style="display: flex; gap: 30px; margin: 20px 0;">
             <div class="stat-item">
-              <div class="stat-value" style="font-size: 1.8rem; color: var(--brand);">3,331</div>
-              <div class="pill">Samples</div>
+              <div class="stat-value" style="font-size: 1.8rem; color: var(--brand);">3,531</div>
+              <div class="pill">Paired Samples</div>
             </div>
             <div class="stat-item">
-              <div class="stat-value" style="font-size: 1.8rem; color: var(--brand);">0.824</div>
-              <div class="pill">mIoU (RWTD)</div>
+              <div class="stat-value" style="font-size: 1.8rem; color: var(--brand);">2 / 3</div>
+              <div class="pill">Flip Avg Leads</div>
             </div>
           </div>
           <a class="btn" href="experiments/sam3-cross-dataset-overview/index.html">Inspect Meta-Report</a>

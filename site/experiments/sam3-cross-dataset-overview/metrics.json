@@ -1,14 +1,141 @@
 {
-  "rwtd": {
-    "mIoU": 0.824,
-    "ARI": 0.698
+  "metric_contract": "architexture_binary_v1",
+  "metric_note": "Cross-flavor comparison is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort the page.",
+  "dataset_order": [
+    "rwtd",
+    "caid",
+    "stld"
+  ],
+  "flavor_order": [
+    "coarse_only",
+    "flip_averaged"
+  ],
+  "datasets": {
+    "rwtd": {
+      "label": "RWTD",
+      "title": "RWTD Dataset",
+      "description": "Natural texture transitions and high-frequency boundary detection in organic scenes.",
+      "dataset_id": "aviadcohz/RWTD",
+      "sample_count": 227,
+      "leader_flavor": "flip_averaged",
+      "leader_mIoU": 0.839748,
+      "leader_ARI": 0.725812,
+      "delta_mIoU_flip_vs_coarse": 0.016236,
+      "delta_ARI_flip_vs_coarse": 0.027386,
+      "sample_wins": {
+        "coarse_only": 100,
+        "flip_averaged": 113,
+        "ties": 14
+      },
+      "flavors": {
+        "coarse_only": {
+          "mIoU": 0.823512,
+          "ARI": 0.698426,
+          "mIoU_agg": 0.522372,
+          "variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only",
+          "evaluation_contract": "legacy_summary_metric",
+          "evaluation_view": "",
+          "source_path": "experiments/Coarse Feature Clustering/rwtd"
+        },
+        "flip_averaged": {
+          "mIoU": 0.839748,
+          "ARI": 0.725812,
+          "mIoU_agg": 0.513749,
+          "variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
+          "evaluation_contract": "architexture_binary_v1",
+          "evaluation_view": "partition_invariant",
+          "source_path": "experiments/Coarse Feature Clustering/flip_averaged/rwtd/2026-03-17_flipavg_eval"
+        }
+      },
+      "gallery_preview_count": 4
+    },
+    "caid": {
+      "label": "CAID",
+      "title": "CAID Dataset",
+      "description": "Architectural plan partitions and region clustering in structured manifold domains.",
+      "dataset_id": "architexture:caid",
+      "sample_count": 3104,
+      "leader_flavor": "coarse_only",
+      "leader_mIoU": 0.674265,
+      "leader_ARI": 0.495585,
+      "delta_mIoU_flip_vs_coarse": -0.015437,
+      "delta_ARI_flip_vs_coarse": -0.044916,
+      "sample_wins": {
+        "coarse_only": 1538,
+        "flip_averaged": 1523,
+        "ties": 43
+      },
+      "flavors": {
+        "coarse_only": {
+          "mIoU": 0.674265,
+          "ARI": 0.495585,
+          "mIoU_agg": 0.547827,
+          "variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only",
+          "evaluation_contract": "legacy_summary_metric",
+          "evaluation_view": "partition_invariant",
+          "source_path": "experiments/Coarse Feature Clustering/caid"
+        },
+        "flip_averaged": {
+          "mIoU": 0.658828,
+          "ARI": 0.45067,
+          "mIoU_agg": 0.53166,
+          "variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
+          "evaluation_contract": "architexture_binary_v1",
+          "evaluation_view": "partition_invariant",
+          "source_path": "experiments/Coarse Feature Clustering/flip_averaged/caid/2026-03-17_flipavg_eval"
+        }
+      },
+      "gallery_preview_count": 4
+    },
+    "stld": {
+      "label": "STLD",
+      "title": "STLD Dataset",
+      "description": "Structural and functional partitioning in diverse synthetic and real-world scenes.",
+      "dataset_id": "architexture:stld",
+      "sample_count": 200,
+      "leader_flavor": "flip_averaged",
+      "leader_mIoU": 0.753395,
+      "leader_ARI": 0.619408,
+      "delta_mIoU_flip_vs_coarse": 0.28519,
+      "delta_ARI_flip_vs_coarse": 0.433543,
+      "sample_wins": {
+        "coarse_only": 26,
+        "flip_averaged": 174,
+        "ties": 0
+      },
+      "flavors": {
+        "coarse_only": {
+          "mIoU": 0.468205,
+          "ARI": 0.185865,
+          "mIoU_agg": 0.501241,
+          "variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only",
+          "evaluation_contract": "legacy_summary_metric",
+          "evaluation_view": "direct_foreground",
+          "source_path": "experiments/Coarse Feature Clustering/stld"
+        },
+        "flip_averaged": {
+          "mIoU": 0.753395,
+          "ARI": 0.619408,
+          "mIoU_agg": 0.500825,
+          "variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
+          "evaluation_contract": "architexture_binary_v1",
+          "evaluation_view": "direct_foreground",
+          "source_path": "experiments/Coarse Feature Clustering/flip_averaged/stld/2026-03-"
+        }
+      },
+      "gallery_preview_count": 4
+    }
   },
-  "caid": {
-    "mIoU": 0.674,
-    "ARI": 0.496
-  },
-  "stld": {
-    "mIoU": 0.468,
-    "ARI": 0.186
+  "summary": {
+    "paired_samples": 3531,
+    "datasets_led": {
+      "flip_averaged": 2,
+      "coarse_only": 1
+    },
+    "datasets_led_by": "flip_averaged",
+    "best_gain_dataset_mIoU": "stld",
+    "best_gain_dataset_ARI": "stld",
+    "best_gain_mIoU": 0.28519,
+    "best_gain_ARI": 0.433543
   }
 }

@@ -1,1 +1,18 @@
-{}
+{
+  "source_runs": {
+    "rwtd": {
+      "coarse_only": "experiments/Coarse Feature Clustering/rwtd",
+      "flip_averaged": "experiments/Coarse Feature Clustering/flip_averaged/rwtd/2026-03-17_flipavg_eval"
+    },
+    "caid": {
+      "coarse_only": "experiments/Coarse Feature Clustering/caid",
+      "flip_averaged": "experiments/Coarse Feature Clustering/flip_averaged/caid/2026-03-17_flipavg_eval"
+    },
+    "stld": {
+      "coarse_only": "experiments/Coarse Feature Clustering/stld",
+      "flip_averaged": "experiments/Coarse Feature Clustering/flip_averaged/stld/2026-03-"
+    }
+  },
+  "metric_contract": "architexture_binary_v1",
+  "metric_note": "Cross-flavor comparison is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort the page."
+}

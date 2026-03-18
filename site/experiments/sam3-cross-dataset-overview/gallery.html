@@ -2,218 +2,370 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cross-Dataset Gallery — SAM 3</title>
-    <link rel="stylesheet" href="../../assets/site.css">
-    <style>
-        .gallery-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            background: #f1f7fa;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 12px 14px;
-            margin-bottom: 12px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cross-Flavor Gallery — SAM 3</title>
+  <link rel="stylesheet" href="../../assets/site.css" />
+  <style>
+    .gallery-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: var(--premium-shadow);
+      margin-bottom: 26px;
+    }
 
-        .gallery-toolbar label {
-            font-weight: 700;
-            font-size: 0.88rem;
-            color: var(--ink);
-        }
+    .gallery-toolbar label {
+      font-family: var(--font-accent);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
 
-        .gallery-toolbar select,
-        .gallery-toolbar input {
-            font: inherit;
-            border: 1px solid #7bb2c0;
-            background: #edf7fb;
-            color: #0d3b4c;
-            border-radius: 999px;
-            padding: 5px 12px;
-            font-size: 0.86rem;
-        }
+    .gallery-toolbar select {
+      font: inherit;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: #fff;
+    }
 
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
+    .toolbar-count {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
 
-        .gallery figure {
-            margin: 0;
-            border: 1px solid var(--line);
-            border-radius: 10px;
-            background: #fbfdff;
-            overflow: hidden;
-            position: relative;
-        }
+    .toolbar-note {
+      width: 100%;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-top: 2px;
+    }
 
-        .gallery figure img {
-            width: 100%;
-            display: block;
-            cursor: zoom-in;
-        }
+    .gallery-stack {
+      display: grid;
+      gap: 20px;
+    }
 
-        .metrics-bar {
-            padding: 8px;
-            font-size: 0.78rem;
-            background: #f7fafd;
-            border-top: 1px solid var(--line);
-        }
+    .single-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
 
-        .metric-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(0, 0, 0, 0.75);
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 8px;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            text-align: right;
-        }
+    .single-card,
+    .pair-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.82);
+      overflow: hidden;
+      box-shadow: 0 8px 18px rgba(18, 32, 51, 0.05);
+    }
 
-        .metric-badge span {
-            display: block;
-            font-size: 0.72rem;
-            font-weight: 700;
-        }
+    .pair-card {
+      padding: 18px;
+    }
 
-        .metric-badge span.primary {
-            font-size: 0.82rem;
-            color: #ffda6a;
-        }
+    .pair-head,
+    .single-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 16px 18px 0;
+    }
 
-        .pill {
-            display: inline-block;
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 4px;
-            background: #eee;
-            border: 1px solid #ddd;
-            margin-right: 4px;
-            margin-bottom: 4px;
-        }
+    .pair-head {
+      padding: 0 0 14px;
+    }
 
-        .ds-rwtd {
-            border-color: #8ecae6;
-            color: #023047;
-            background: #e0f2f1;
-        }
+    .pair-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
 
-        .ds-caid {
-            border-color: #fb8500;
-            color: #ffb703;
-            background: #fff3e0;
-        }
+    .pair-grid figure,
+    .single-card figure {
+      margin: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
 
-        .ds-stld {
-            border-color: #219ebc;
-            color: #023047;
-            background: #e1f5fe;
-        }
-    </style>
+    .single-card figure img,
+    .pair-grid figure img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 1;
+      object-fit: cover;
+      cursor: zoom-in;
+    }
+
+    .panel-label {
+      padding: 10px 12px 0;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .metric-bar {
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: #fbfdff;
+    }
+
+    .delta-positive {
+      color: var(--good);
+    }
+
+    .delta-negative {
+      color: var(--bad);
+    }
+
+    .pill.dataset-pill {
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .pair-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <main>
-        <section class="hero">
-            <h1>Cross-Dataset Preview Gallery</h1>
-            <p>Unified comparison of SAM 3 Coarse Feature Clustering on RWTD, CAID, and STLD datasets</p>
-            <p style="margin-top:10px;"><a class="btn" href="index.html"
-                    style="border-color:#8ecae6;background:#edf7fc;color:#0b4f6c;">← Back to report</a></p>
-        </section>
+  <div class="container animate-fade-in-down">
+    <header style="text-align: center; margin-bottom: 42px;">
+      <div class="subtitle">Interactive Gallery</div>
+      <h1 class="title-gradient">Cross-Flavor 1:1 Comparison</h1>
+      <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
+        Browse a curated publication slice of the same sample across flavors, or isolate a single flavor per
+        dataset. The headline metrics on the overview page still reflect the full benchmark.
+      </p>
+    </header>
 
-        <section class="section">
-            <div class="gallery-toolbar">
-                <label for="filterDS">Dataset:</label>
-                <select id="filterDS">
-                    <option value="all">All Datasets</option>
-                    <option value="rwtd">RWTD (Texture)</option>
-                    <option value="caid">CAID (Architectural)</option>
-                    <option value="stld">STLD (Structural)</option>
-                </select>
-                <label for="sortBy">Sort:</label>
-                <select id="sortBy">
-                    <option value="miou_desc">mIoU ↓ best first</option>
-                    <option value="miou_asc">mIoU ↑ worst first</option>
-                    <option value="id_asc">Sample ID ↑</option>
-                </select>
-                <label for="minMetric">Min mIoU:</label>
-                <input type="range" id="minMetric" min="0" max="100" value="0">
-                <span id="minMetricVal">0.00</span>
-                <span style="margin-left:auto; font-size:0.85rem; color:var(--muted);" id="countLabel">Loading...</span>
+    <section class="section">
+      <div class="gallery-toolbar">
+        <label for="datasetSelect">Dataset</label>
+        <select id="datasetSelect"><option value="all">All Datasets</option><option value="rwtd">RWTD (aviadcohz/RWTD)</option><option value="caid">CAID (architexture:caid)</option><option value="stld">STLD (architexture:stld)</option></select>
+
+        <label for="flavorSelect">Flavor</label>
+        <select id="flavorSelect">
+          <option value="paired">1:1 Comparison</option>
+          <option value="coarse_only">Coarse Only</option>
+          <option value="flip_averaged">Flip Averaged</option>
+        </select>
+
+        <label for="sortSelect">Sort</label>
+        <select id="sortSelect">
+          <option value="delta_desc">ΔmIoU ↓ biggest first</option>
+          <option value="score_desc">Score ↓ best first</option>
+          <option value="score_asc">Score ↑ worst first</option>
+          <option value="sample_id_asc">Sample ID ↑</option>
+        </select>
+
+        <div class="toolbar-count" id="countLabel">Loading…</div>
+        <div class="toolbar-note" id="toolbarNote"></div>
+      </div>
+
+      <div id="galleryRoot" class="gallery-stack"></div>
+    </section>
+
+    <footer style="margin-top: 60px; text-align: center;">
+      <p><a href="index.html" style="text-decoration: none; color: var(--brand); font-weight: 600;">← Back to report</a></p>
+    </footer>
+  </div>
+
+  <dialog class="image-dialog" id="imageDialog">
+    <img id="imageDialogImg" alt="Expanded preview" />
+  </dialog>
+
+  <script>
+    (async () => {
+      const data = await fetch('training_data.json').then((response) => response.json());
+      const recordMap = new Map(data.per_image.map((record) => [record.id, record]));
+      const root = document.getElementById('galleryRoot');
+      const datasetSelect = document.getElementById('datasetSelect');
+      const flavorSelect = document.getElementById('flavorSelect');
+      const sortSelect = document.getElementById('sortSelect');
+      const countLabel = document.getElementById('countLabel');
+      const toolbarNote = document.getElementById('toolbarNote');
+      const dialog = document.getElementById('imageDialog');
+      const dialogImg = document.getElementById('imageDialogImg');
+      const params = new URLSearchParams(window.location.search);
+
+      const initialDataset = params.get('dataset');
+      if (initialDataset && [...datasetSelect.options].some((option) => option.value === initialDataset)) {
+        datasetSelect.value = initialDataset;
+      } else {
+        datasetSelect.value = 'rwtd';
+      }
+
+      const initialView = params.get('view');
+      if (initialView && [...flavorSelect.options].some((option) => option.value === initialView)) {
+        flavorSelect.value = initialView;
+      } else {
+        flavorSelect.value = 'paired';
+      }
+
+      function syncUrl() {
+        const next = new URLSearchParams(window.location.search);
+        next.set('dataset', datasetSelect.value);
+        next.set('view', flavorSelect.value);
+        history.replaceState({}, '', `${window.location.pathname}?${next.toString()}`);
+      }
+
+      function deltaClass(value) {
+        if (value > 0) return 'delta-positive';
+        if (value < 0) return 'delta-negative';
+        return '';
+      }
+
+      function sortItems(items, mode) {
+        const sorted = items.slice();
+        sorted.sort((left, right) => {
+          if (mode === 'sample_id_asc') {
+            return (left.sample_numeric || 0) - (right.sample_numeric || 0) || String(left.sample_id).localeCompare(String(right.sample_id));
+          }
+          if (mode === 'score_asc') {
+            const leftScore = left.leader_mIoU ?? left.mIoU ?? 0;
+            const rightScore = right.leader_mIoU ?? right.mIoU ?? 0;
+            return leftScore - rightScore;
+          }
+          if (mode === 'score_desc') {
+            const leftScore = left.leader_mIoU ?? left.mIoU ?? 0;
+            const rightScore = right.leader_mIoU ?? right.mIoU ?? 0;
+            return rightScore - leftScore;
+          }
+          const leftDelta = left.delta_mIoU_flip_vs_coarse ?? 0;
+          const rightDelta = right.delta_mIoU_flip_vs_coarse ?? 0;
+          return rightDelta - leftDelta;
+        });
+        return sorted;
+      }
+
+      function renderPairCard(pair) {
+        const coarse = recordMap.get(pair.record_ids.coarse_only);
+        const flip = recordMap.get(pair.record_ids.flip_averaged);
+        return `
+          <article class="pair-card">
+            <div class="pair-head">
+              <span class="pill dataset-pill">${data.datasets[pair.dataset].label}</span>
+              <span class="pill">id ${pair.sample_id}</span>
+              <span class="pill ${pair.leader_flavor === 'flip_averaged' ? 'good' : pair.leader_flavor === 'coarse_only' ? 'warn' : ''}">
+                Leader: ${pair.leader_flavor === 'tie' ? 'Tie' : data.flavors[pair.leader_flavor].label}
+              </span>
+              <span class="pill ${deltaClass(pair.delta_mIoU_flip_vs_coarse)}">ΔmIoU ${pair.delta_mIoU_flip_vs_coarse.toFixed(3)}</span>
+              <span class="pill ${deltaClass(pair.delta_ARI_flip_vs_coarse)}">ΔARI ${pair.delta_ARI_flip_vs_coarse.toFixed(3)}</span>
             </div>
-            <div id="fullGallery" class="gallery"></div>
-        </section>
-    </main>
+            <div class="pair-grid">
+              ${renderPanel(coarse)}
+              ${renderPanel(flip)}
+            </div>
+          </article>
+        `;
+      }
 
-    <dialog id="imageDialog" style="padding:0; border:none; border-radius:12px; max-width:90vw; max-height:90vh;">
-        <img id="dialogImg" style="display:block; max-width:100%; height:auto; cursor:zoom-out;">
-    </dialog>
+      function renderPanel(record) {
+        return `
+          <figure>
+            <div class="panel-label">${data.flavors[record.flavor].label}</div>
+            <img src="assets/all_previews/${record.file_path}" alt="${data.datasets[record.dataset].label} sample ${record.sample_id}"
+              data-zoom-src="assets/all_previews/${record.file_path}" loading="lazy" />
+            <div class="metric-bar">
+              <span class="pill">mIoU ${record.mIoU.toFixed(3)}</span>
+              <span class="pill">ARI ${record.ARI.toFixed(3)}</span>
+            </div>
+          </figure>
+        `;
+      }
 
-    <script>
-        (async () => {
-            const resp = await fetch('training_data.json');
-            const data = await resp.json();
-            const container = document.getElementById('fullGallery');
-            const dsSel = document.getElementById('filterDS');
-            const sortSel = document.getElementById('sortBy');
-            const range = document.getElementById('minMetric');
-            const rangeVal = document.getElementById('minMetricVal');
-            const countLabel = document.getElementById('countLabel');
-            const dialog = document.getElementById('imageDialog');
-            const dialogImg = document.getElementById('dialogImg');
+      function renderSingleCard(record) {
+        const deltaValue = typeof record.delta_mIoU_flip_vs_coarse === 'number'
+          ? `<span class="pill ${deltaClass(record.delta_mIoU_flip_vs_coarse)}">ΔmIoU ${record.delta_mIoU_flip_vs_coarse.toFixed(3)}</span>`
+          : '';
+        return `
+          <article class="single-card">
+            <div class="single-head">
+              <span class="pill dataset-pill">${data.datasets[record.dataset].label}</span>
+              <span class="pill">${data.flavors[record.flavor].label}</span>
+              <span class="pill">id ${record.sample_id}</span>
+              ${deltaValue}
+            </div>
+            <figure>
+              <img src="assets/all_previews/${record.file_path}" alt="${data.datasets[record.dataset].label} sample ${record.sample_id}"
+                data-zoom-src="assets/all_previews/${record.file_path}" loading="lazy" />
+              <div class="metric-bar">
+                <span class="pill">mIoU ${record.mIoU.toFixed(3)}</span>
+                <span class="pill">ARI ${record.ARI.toFixed(3)}</span>
+                <span class="pill">Leader ${record.leader_flavor_for_sample === 'tie' ? 'Tie' : data.flavors[record.leader_flavor_for_sample].label}</span>
+              </div>
+            </figure>
+          </article>
+        `;
+      }
 
-            function render() {
-                const ds = dsSel.value;
-                const sort = sortSel.value;
-                const minVal = range.value / 100;
-                rangeVal.textContent = minVal.toFixed(2);
+      function render() {
+        syncUrl();
+        const dataset = datasetSelect.value;
+        const view = flavorSelect.value;
+        const sort = sortSelect.value;
 
-                let items = data.per_image.filter(i => {
-                    if (ds !== 'all' && i.dataset !== ds) return false;
-                    if (i.mIoU < minVal) return false;
-                    return true;
-                });
+        if (view === 'paired') {
+          const filteredPairs = data.pairs.filter((pair) => dataset === 'all' || pair.dataset === dataset);
+          const items = sortItems(filteredPairs, sort);
+          root.className = 'gallery-stack';
+          root.innerHTML = items.map(renderPairCard).join('');
+          countLabel.textContent = `Showing ${items.length} paired samples`;
+          toolbarNote.textContent = dataset === 'all'
+            ? 'This is the curated publication subset across all datasets. Narrow to one dataset for faster inspection.'
+            : 'Paired mode keeps Coarse Only on the left and Flip Averaged on the right for the same curated sample.';
+          return;
+        }
 
-                items.sort((a, b) => {
-                    if (sort === 'miou_desc') return b.mIoU - a.mIoU;
-                    if (sort === 'miou_asc') return a.mIoU - b.mIoU;
-                    return a.id.localeCompare(b.id);
-                });
+        const filteredRecords = data.per_image.filter((record) => {
+          if (dataset !== 'all' && record.dataset !== dataset) return false;
+          return record.flavor === view;
+        });
+        const items = sortItems(filteredRecords, sort);
+        root.className = 'single-grid';
+        root.innerHTML = items.map(renderSingleCard).join('');
+        countLabel.textContent = `Showing ${items.length} ${data.flavors[view].label.toLowerCase()} samples`;
+        toolbarNote.textContent = 'Single-flavor mode uses the same curated publication subset as the paired gallery.';
+      }
 
-                container.innerHTML = items.map(img => `
-                    <figure>
-                        <div class="metric-badge">
-                            <span class="primary">mIoU ${img.mIoU.toFixed(3)}</span>
-                            <span>ARI ${img.ARI.toFixed(3)}</span>
-                        </div>
-                        <img src="assets/all_previews/${img.file_path}" loading="lazy" onclick="openZoom(this.src)">
-                        <div class="metrics-bar">
-                            <span class="pill ds-${img.dataset}">${img.dataset.toUpperCase()}</span>
-                            <span class="pill">id: ${img.sample_id}</span>
-                        </div>
-                    </figure>
-                `).join('');
-                countLabel.textContent = `Showing ${items.length} of ${data.per_image.length}`;
-            }
+      root.addEventListener('click', (event) => {
+        const target = event.target.closest('[data-zoom-src]');
+        if (!target) return;
+        dialogImg.src = target.getAttribute('data-zoom-src');
+        dialog.showModal();
+      });
 
-            window.openZoom = (src) => { dialogImg.src = src; dialog.showModal(); };
-            dialogImg.onclick = () => dialog.close();
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      });
 
-            dsSel.onchange = render;
-            sortSel.onchange = render;
-            range.oninput = render;
-            render();
-        })();
-    </script>
+      datasetSelect.addEventListener('change', render);
+      flavorSelect.addEventListener('change', render);
+      sortSelect.addEventListener('change', render);
+      render();
+    })();
+  </script>
 </body>
 
 </html>

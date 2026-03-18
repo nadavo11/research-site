@@ -1,12 +1,28 @@
 title: "SAM 3 Cross-Dataset Benchmarking"
 model_id: "facebook/sam3"
-datasets: ["aviadcohz/RWTD", "architexture:caid", "architexture:stld"]
-date: "2026-03-17"
-description: "Unified evaluation of SAM 3 Coarse Feature Clustering performance across RWTD, CAID, and STLD datasets."
-asset_summary:
-  rwtd_samples: 227
-  caid_samples: 3104
-  stld_samples: 200
+ui_standard: "premium"
+date: "2026-03-18"
+comparison_contract: "architexture_binary_v1"
+description: "Flavor-aware benchmarking for SAM 3 Coarse Feature Clustering across RWTD, CAID, and STLD."
+datasets:
+  - slug: "rwtd"
+    id: "aviadcohz/RWTD"
+    samples: 227
+    leader_flavor: "flip_averaged"
+  - slug: "caid"
+    id: "architexture:caid"
+    samples: 3104
+    leader_flavor: "coarse_only"
+  - slug: "stld"
+    id: "architexture:stld"
+    samples: 200
+    leader_flavor: "flip_averaged"
+assets:
+  published_preview_records: 96
+  published_paired_samples: 48
+  available_paired_samples: 3531
+  gallery_preview_count: 12
 evaluation:
-  metrics: ["mIoU", "ARI"]
+  primary_metrics: ["mIoU", "ARI"]
   metrics_file: "metrics.json"
+  training_data_file: "training_data.json"
