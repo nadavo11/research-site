@@ -1,16 +1,16 @@
 {
   "source_runs": {
     "rwtd": {
-      "coarse_only": "experiments/Coarse Feature Clustering/rwtd",
-      "flip_averaged": "experiments/Coarse Feature Clustering/flip_averaged/rwtd/2026-03-17_flipavg_eval"
+      "coarse_only": "experiments/Coarse Feature Clustering/rwtd/default",
+      "flip_averaged": "experiments/Coarse Feature Clustering/rwtd/flip_averaged"
     },
     "caid": {
-      "coarse_only": "experiments/Coarse Feature Clustering/caid",
-      "flip_averaged": "experiments/Coarse Feature Clustering/flip_averaged/caid/2026-03-17_flipavg_eval"
+      "coarse_only": "experiments/Coarse Feature Clustering/caid/default",
+      "flip_averaged": "experiments/Coarse Feature Clustering/caid/flip_averaged"
     },
     "stld": {
-      "coarse_only": "experiments/Coarse Feature Clustering/stld",
-      "flip_averaged": "experiments/Coarse Feature Clustering/flip_averaged/stld/2026-03-"
+      "coarse_only": "experiments/Coarse Feature Clustering/stld/default",
+      "flip_averaged": "experiments/Coarse Feature Clustering/stld/flip_averaged"
     }
   },
   "metric_contract": "architexture_binary_v1",

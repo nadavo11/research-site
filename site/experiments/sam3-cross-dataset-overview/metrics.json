@@ -35,7 +35,7 @@
           "variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only",
           "evaluation_contract": "legacy_summary_metric",
           "evaluation_view": "",
-          "source_path": "experiments/Coarse Feature Clustering/rwtd"
+          "source_path": "experiments/Coarse Feature Clustering/rwtd/default"
         },
         "flip_averaged": {
           "mIoU": 0.839748,
@@ -44,7 +44,7 @@
           "variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
           "evaluation_contract": "architexture_binary_v1",
           "evaluation_view": "partition_invariant",
-          "source_path": "experiments/Coarse Feature Clustering/flip_averaged/rwtd/2026-03-17_flipavg_eval"
+          "source_path": "experiments/Coarse Feature Clustering/rwtd/flip_averaged"
         }
       },
       "gallery_preview_count": 4
@@ -73,7 +73,7 @@
           "variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only",
           "evaluation_contract": "legacy_summary_metric",
           "evaluation_view": "partition_invariant",
-          "source_path": "experiments/Coarse Feature Clustering/caid"
+          "source_path": "experiments/Coarse Feature Clustering/caid/default"
         },
         "flip_averaged": {
           "mIoU": 0.658828,
@@ -82,7 +82,7 @@
           "variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
           "evaluation_contract": "architexture_binary_v1",
           "evaluation_view": "partition_invariant",
-          "source_path": "experiments/Coarse Feature Clustering/flip_averaged/caid/2026-03-17_flipavg_eval"
+          "source_path": "experiments/Coarse Feature Clustering/caid/flip_averaged"
         }
       },
       "gallery_preview_count": 4
@@ -111,7 +111,7 @@
           "variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only",
           "evaluation_contract": "legacy_summary_metric",
           "evaluation_view": "direct_foreground",
-          "source_path": "experiments/Coarse Feature Clustering/stld"
+          "source_path": "experiments/Coarse Feature Clustering/stld/default"
         },
         "flip_averaged": {
           "mIoU": 0.753395,
@@ -120,7 +120,7 @@
           "variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
           "evaluation_contract": "architexture_binary_v1",
           "evaluation_view": "direct_foreground",
-          "source_path": "experiments/Coarse Feature Clustering/flip_averaged/stld/2026-03-"
+          "source_path": "experiments/Coarse Feature Clustering/stld/flip_averaged"
         }
       },
       "gallery_preview_count": 4
