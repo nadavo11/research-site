@@ -100,17 +100,22 @@ def asset_relpath(dataset: str, flavor: str, file_name: str) -> Path:
 
 
 def resolve_run_dir(dataset: str, flavor: str) -> Path:
+    dataset_root = LEGACY_SOURCE_ROOT / dataset
     if flavor == "coarse_only":
-        return LEGACY_SOURCE_ROOT / dataset
+        candidate_roots = [dataset_root, dataset_root / "default"]
+    else:
+        candidate_roots = [LEGACY_SOURCE_ROOT / "flip_averaged" / dataset, dataset_root / "flip_averaged"]
 
-    flavor_root = LEGACY_SOURCE_ROOT / "flip_averaged" / dataset
-    if (flavor_root / "summary.json").exists():
-        return flavor_root
-
-    candidates = sorted(path for path in flavor_root.iterdir() if path.is_dir())
-    for candidate in candidates:
+    for candidate in candidate_roots:
         if (candidate / "summary.json").exists():
             return candidate
+
+    for root in candidate_roots:
+        if not root.exists() or not root.is_dir():
+            continue
+        for candidate in sorted(path for path in root.iterdir() if path.is_dir()):
+            if (candidate / "summary.json").exists():
+                return candidate
 
     raise FileNotFoundError(f"Could not resolve run dir for {dataset=} {flavor=}")
 
@@ -637,6 +642,20 @@ def build_gallery_html() -> str:
               margin-top: 2px;
             }
 
+            .gallery-controls {
+              display: flex;
+              justify-content: center;
+              margin-top: 24px;
+            }
+
+            .gallery-controls[hidden] {
+              display: none;
+            }
+
+            .gallery-controls .btn {
+              min-width: 180px;
+            }
+
             .gallery-stack {
               display: grid;
               gap: 20px;
@@ -767,11 +786,24 @@ def build_gallery_html() -> str:
                   <option value="sample_id_asc">Sample ID ↑</option>
                 </select>
 
+                <label for="pageSizeSelect">Per Page</label>
+                <select id="pageSizeSelect">
+                  <option value="8">8</option>
+                  <option value="12">12</option>
+                  <option value="16" selected>16</option>
+                  <option value="24">24</option>
+                  <option value="48">48</option>
+                  <option value="all">All</option>
+                </select>
+
                 <div class="toolbar-count" id="countLabel">Loading…</div>
                 <div class="toolbar-note" id="toolbarNote"></div>
               </div>
 
               <div id="galleryRoot" class="gallery-stack"></div>
+              <div class="gallery-controls" id="galleryControls" hidden>
+                <button class="btn secondary" id="loadMoreBtn" type="button">Load More</button>
+              </div>
             </section>
 
             <footer style="margin-top: 60px; text-align: center;">
@@ -791,11 +823,15 @@ def build_gallery_html() -> str:
               const datasetSelect = document.getElementById('datasetSelect');
               const flavorSelect = document.getElementById('flavorSelect');
               const sortSelect = document.getElementById('sortSelect');
+              const pageSizeSelect = document.getElementById('pageSizeSelect');
               const countLabel = document.getElementById('countLabel');
               const toolbarNote = document.getElementById('toolbarNote');
+              const galleryControls = document.getElementById('galleryControls');
+              const loadMoreBtn = document.getElementById('loadMoreBtn');
               const dialog = document.getElementById('imageDialog');
               const dialogImg = document.getElementById('imageDialogImg');
               const params = new URLSearchParams(window.location.search);
+              let visibleCount = 16;
 
               const initialDataset = params.get('dataset');
               if (initialDataset && [...datasetSelect.options].some((option) => option.value === initialDataset)) {
@@ -811,10 +847,39 @@ def build_gallery_html() -> str:
                 flavorSelect.value = 'paired';
               }
 
+              const initialPageSize = params.get('page_size');
+              if (initialPageSize && [...pageSizeSelect.options].some((option) => option.value === initialPageSize)) {
+                pageSizeSelect.value = initialPageSize;
+              } else {
+                pageSizeSelect.value = '16';
+              }
+
+              function currentPageSize() {
+                return pageSizeSelect.value === 'all' ? Number.POSITIVE_INFINITY : Number(pageSizeSelect.value);
+              }
+
+              function resetVisibleCount() {
+                visibleCount = currentPageSize();
+              }
+
+              const initialShown = Number(params.get('shown'));
+              if (Number.isFinite(initialShown) && initialShown > 0) {
+                visibleCount = initialShown;
+              } else {
+                resetVisibleCount();
+              }
+
               function syncUrl() {
                 const next = new URLSearchParams(window.location.search);
                 next.set('dataset', datasetSelect.value);
                 next.set('view', flavorSelect.value);
+                next.set('sort', sortSelect.value);
+                next.set('page_size', pageSizeSelect.value);
+                if (Number.isFinite(visibleCount)) {
+                  next.set('shown', String(visibleCount));
+                } else {
+                  next.delete('shown');
+                }
                 history.replaceState({}, '', `${window.location.pathname}?${next.toString()}`);
               }
 
@@ -845,6 +910,29 @@ def build_gallery_html() -> str:
                   return rightDelta - leftDelta;
                 });
                 return sorted;
+              }
+
+              const initialSort = params.get('sort');
+              if (initialSort && [...sortSelect.options].some((option) => option.value === initialSort)) {
+                sortSelect.value = initialSort;
+              }
+
+              function visibleSlice(items) {
+                if (!Number.isFinite(visibleCount)) return items;
+                return items.slice(0, Math.min(visibleCount, items.length));
+              }
+
+              function updateLoadMore(items, noun) {
+                if (!Number.isFinite(visibleCount) || visibleCount >= items.length) {
+                  galleryControls.hidden = true;
+                  return;
+                }
+
+                galleryControls.hidden = false;
+                const remaining = items.length - visibleCount;
+                const increment = currentPageSize();
+                const nextCount = Number.isFinite(increment) ? Math.min(increment, remaining) : remaining;
+                loadMoreBtn.textContent = `Load ${nextCount} More ${noun}`;
               }
 
               function renderPairCard(pair) {
@@ -909,7 +997,6 @@ def build_gallery_html() -> str:
               }
 
               function render() {
-                syncUrl();
                 const dataset = datasetSelect.value;
                 const view = flavorSelect.value;
                 const sort = sortSelect.value;
@@ -917,12 +1004,15 @@ def build_gallery_html() -> str:
                 if (view === 'paired') {
                   const filteredPairs = data.pairs.filter((pair) => dataset === 'all' || pair.dataset === dataset);
                   const items = sortItems(filteredPairs, sort);
+                  const visibleItems = visibleSlice(items);
                   root.className = 'gallery-stack';
-                  root.innerHTML = items.map(renderPairCard).join('');
-                  countLabel.textContent = `Showing ${items.length} paired samples`;
+                  root.innerHTML = visibleItems.map(renderPairCard).join('');
+                  countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} paired samples`;
                   toolbarNote.textContent = dataset === 'all'
                     ? 'This is the curated publication subset across all datasets. Narrow to one dataset for faster inspection.'
                     : 'Paired mode keeps Coarse Only on the left and Flip Averaged on the right for the same curated sample.';
+                  updateLoadMore(items, 'Pairs');
+                  syncUrl();
                   return;
                 }
 
@@ -931,10 +1021,13 @@ def build_gallery_html() -> str:
                   return record.flavor === view;
                 });
                 const items = sortItems(filteredRecords, sort);
+                const visibleItems = visibleSlice(items);
                 root.className = 'single-grid';
-                root.innerHTML = items.map(renderSingleCard).join('');
-                countLabel.textContent = `Showing ${items.length} ${data.flavors[view].label.toLowerCase()} samples`;
+                root.innerHTML = visibleItems.map(renderSingleCard).join('');
+                countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} ${data.flavors[view].label.toLowerCase()} samples`;
                 toolbarNote.textContent = 'Single-flavor mode uses the same curated publication subset as the paired gallery.';
+                updateLoadMore(items, 'Samples');
+                syncUrl();
               }
 
               root.addEventListener('click', (event) => {
@@ -948,9 +1041,21 @@ def build_gallery_html() -> str:
                 if (event.target === dialog) dialog.close();
               });
 
-              datasetSelect.addEventListener('change', render);
-              flavorSelect.addEventListener('change', render);
-              sortSelect.addEventListener('change', render);
+              function rerenderFromFirstPage() {
+                resetVisibleCount();
+                render();
+              }
+
+              datasetSelect.addEventListener('change', rerenderFromFirstPage);
+              flavorSelect.addEventListener('change', rerenderFromFirstPage);
+              sortSelect.addEventListener('change', rerenderFromFirstPage);
+              pageSizeSelect.addEventListener('change', rerenderFromFirstPage);
+              loadMoreBtn.addEventListener('click', () => {
+                if (Number.isFinite(visibleCount)) {
+                  visibleCount += currentPageSize();
+                }
+                render();
+              });
               render();
             })();
           </script>
