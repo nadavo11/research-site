@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import os
 import shutil
 from collections import Counter
 from datetime import date
@@ -68,15 +67,6 @@ GALLERY_PAIR_QUOTAS = {
 
 def ensure_parent(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-
-
-def relative_symlink(src: Path, dst: Path, *, preserve_existing: bool = False) -> None:
-    ensure_parent(dst)
-    if preserve_existing and (dst.exists() or dst.is_symlink()):
-        return
-    if dst.exists() or dst.is_symlink():
-        dst.unlink()
-    dst.symlink_to(os.path.relpath(src, dst.parent))
 
 
 def to_public_record(record: dict) -> dict:
@@ -157,12 +147,6 @@ def load_visual_records(dataset: str, flavor: str, run_dir: Path) -> dict[str, d
             visual_name = Path(raw["visual_path"]).name
             source_file = run_dir / raw["visual_path"]
             asset_rel = asset_relpath(dataset, flavor, visual_name)
-            if flavor == "coarse_only":
-                relative_symlink(
-                    source_file,
-                    DEST_DIR / "assets" / "all_previews" / asset_rel,
-                    preserve_existing=True,
-                )
             record_id = f"{dataset}:{flavor}:{sample_id}"
             records[sample_id] = {
                 "id": record_id,
@@ -189,9 +173,6 @@ def copy_asset(src: Path, dst: Path) -> None:
 
 def materialize_web_asset(record: dict) -> None:
     dst = DEST_DIR / "assets" / "all_previews" / record["file_path"]
-    if record["flavor"] == "coarse_only":
-        relative_symlink(record["_source_path"], dst, preserve_existing=True)
-        return
     copy_asset(record["_source_path"], dst)
 
 
@@ -1115,8 +1096,10 @@ def build_summary_md(metrics_payload: dict) -> str:
 
 
 def build_report() -> tuple[dict, dict, str, str, str, dict]:
+    # GitHub Pages artifact uploads reject symlinks, so the published overview
+    # must be rebuilt as a self-contained asset tree each time.
+    shutil.rmtree(DEST_DIR / "assets", ignore_errors=True)
     (DEST_DIR / "assets" / "all_previews").mkdir(parents=True, exist_ok=True)
-    shutil.rmtree(DEST_DIR / "assets" / "all_previews" / "flip_averaged", ignore_errors=True)
 
     summaries: dict[str, dict] = {}
     all_records: list[dict] = []

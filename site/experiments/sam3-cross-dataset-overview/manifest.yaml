@@ -1,7 +1,7 @@
 title: "SAM 3 Cross-Dataset Benchmarking"
 model_id: "facebook/sam3"
 ui_standard: "premium"
-date: "2026-03-18"
+date: "2026-03-19"
 comparison_contract: "architexture_binary_v1"
 description: "Flavor-aware benchmarking for SAM 3 Coarse Feature Clustering across RWTD, CAID, and STLD."
 datasets:
