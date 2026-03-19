@@ -58,11 +58,13 @@ FLAVORS = {
 }
 
 GALLERY_PAIR_QUOTAS = {
-    "featured": 4,
-    "delta_gain": 4,
-    "delta_loss": 4,
-    "leader_score": 4,
+    "featured": 8,
+    "delta_gain": 8,
+    "delta_loss": 8,
+    "leader_score": 8,
 }
+
+CARD_PREVIEW_LIMIT = 2
 
 
 def ensure_parent(path: Path) -> None:
@@ -283,18 +285,11 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
         delta_miou = info["delta_mIoU_flip_vs_coarse"]
         delta_ari = info["delta_ARI_flip_vs_coarse"]
         if delta_miou >= 0:
-            delta_copy = (
-                f"Flip Averaged improves over Coarse Only by {signed(delta_miou)} mIoU and "
-                f"{signed(delta_ari)} ARI on the shared evaluator."
-            )
+            summary_copy = f"Flip Averaged leads by {signed(delta_miou)} mIoU and {signed(delta_ari)} ARI."
         else:
-            delta_copy = (
-                f"Flip Averaged trails Coarse Only by {abs(delta_miou):.3f} mIoU and "
-                f"{abs(delta_ari):.3f} ARI here, so Coarse Only remains the leader."
-            )
+            summary_copy = f"Coarse Only holds the lead by {abs(delta_miou):.3f} mIoU and {abs(delta_ari):.3f} ARI."
         previews = []
-        for record in featured[dataset]:
-            badge = "good" if record["mIoU"] >= 0.75 else "warn" if record["mIoU"] >= 0.5 else "bad"
+        for record in featured[dataset][:CARD_PREVIEW_LIMIT]:
             src = f"assets/all_previews/{record['file_path']}"
             previews.append(
                 f"""
@@ -303,9 +298,7 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
                     data-zoom-src="{escape(src)}" />
                   <figcaption>
                     <span class="pill">id {escape(record["sample_id"])}</span>
-                    <span class="pill">{escape(FLAVORS[record["flavor"]]["label"])}</span>
-                    <span class="tag {badge}">mIoU {record["mIoU"]:.3f}</span>
-                    <span class="pill">ARI {record["ARI"]:.3f}</span>
+                    <span class="pill">mIoU {record["mIoU"]:.3f}</span>
                   </figcaption>
                 </figure>
                 """
@@ -319,29 +312,12 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
                 <span class="tag {leader_tag}">Leader: {escape(leader_label)}</span>
               </div>
               <h3>{escape(info["title"])}</h3>
-              <p>{escape(info["description"])}</p>
-              <div class="metric-grid compact-grid">
-                <article class="metric">
-                  <div class="k">Leader mIoU</div>
-                  <div class="v">{info["leader_mIoU"]:.3f}</div>
-                </article>
-                <article class="metric">
-                  <div class="k">Leader ARI</div>
-                  <div class="v">{info["leader_ARI"]:.3f}</div>
-                </article>
-                <article class="metric">
-                  <div class="k">Flip Avg ΔmIoU</div>
-                  <div class="v delta-copy {'delta-positive' if delta_miou > 0 else 'delta-negative' if delta_miou < 0 else ''}">{signed(delta_miou)}</div>
-                </article>
-                <article class="metric">
-                  <div class="k">Flip Avg ΔARI</div>
-                  <div class="v delta-copy {'delta-positive' if delta_ari > 0 else 'delta-negative' if delta_ari < 0 else ''}">{signed(delta_ari)}</div>
-                </article>
+              <p class="kv card-summary">{escape(summary_copy)}</p>
+              <div class="leader-stats">
+                <span class="pill">Leader mIoU {info["leader_mIoU"]:.3f}</span>
+                <span class="pill">Leader ARI {info["leader_ARI"]:.3f}</span>
+                <span class="pill">Wins F/C/T {win_counts["flip_averaged"]}/{win_counts["coarse_only"]}/{win_counts["ties"]}</span>
               </div>
-              <p class="kv card-note">{escape(delta_copy)}</p>
-              <p class="kv card-note">
-                Sample wins: Flip Averaged {win_counts["flip_averaged"]} | Coarse Only {win_counts["coarse_only"]} | Ties {win_counts["ties"]}.
-              </p>
               <div class="preview-grid">
                 {"".join(previews)}
               </div>
@@ -408,7 +384,7 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
             .cfc-card {
               display: flex;
               flex-direction: column;
-              gap: 18px;
+              gap: 14px;
             }
 
             .card-topline {
@@ -417,8 +393,14 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
               gap: 10px;
             }
 
-            .card-note {
+            .card-summary {
               margin: 0;
+            }
+
+            .leader-stats {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 10px;
             }
 
             .preview-grid {
@@ -500,7 +482,7 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
               <div style="display: flex; justify-content: space-between; gap: 20px; align-items: end; flex-wrap: wrap;">
                 <div>
                   <h2>Dataset Leaders</h2>
-                  <p class="kv">Each card now calls out the current leader flavor and its headline metrics.</p>
+                  <p class="kv">Fast read: who leads, by how much, and two representative samples.</p>
                 </div>
                 <a class="btn" href="gallery.html">Open Cross-Flavor Gallery</a>
               </div>
@@ -812,13 +794,13 @@ def build_gallery_html() -> str:
               const dialog = document.getElementById('imageDialog');
               const dialogImg = document.getElementById('imageDialogImg');
               const params = new URLSearchParams(window.location.search);
-              let visibleCount = 16;
+              let loadedPages = 1;
 
               const initialDataset = params.get('dataset');
               if (initialDataset && [...datasetSelect.options].some((option) => option.value === initialDataset)) {
                 datasetSelect.value = initialDataset;
               } else {
-                datasetSelect.value = 'rwtd';
+                datasetSelect.value = 'all';
               }
 
               const initialView = params.get('view');
@@ -839,15 +821,18 @@ def build_gallery_html() -> str:
                 return pageSizeSelect.value === 'all' ? Number.POSITIVE_INFINITY : Number(pageSizeSelect.value);
               }
 
-              function resetVisibleCount() {
-                visibleCount = currentPageSize();
+              function resetPaging() {
+                loadedPages = 1;
               }
 
+              const initialPages = Number(params.get('pages'));
               const initialShown = Number(params.get('shown'));
-              if (Number.isFinite(initialShown) && initialShown > 0) {
-                visibleCount = initialShown;
+              if (Number.isFinite(initialPages) && initialPages > 0) {
+                loadedPages = Math.max(1, Math.floor(initialPages));
+              } else if (Number.isFinite(initialShown) && initialShown > 0 && Number.isFinite(currentPageSize())) {
+                loadedPages = Math.max(1, Math.ceil(initialShown / currentPageSize()));
               } else {
-                resetVisibleCount();
+                resetPaging();
               }
 
               function syncUrl() {
@@ -856,11 +841,12 @@ def build_gallery_html() -> str:
                 next.set('view', flavorSelect.value);
                 next.set('sort', sortSelect.value);
                 next.set('page_size', pageSizeSelect.value);
-                if (Number.isFinite(visibleCount)) {
-                  next.set('shown', String(visibleCount));
+                if (Number.isFinite(currentPageSize()) && loadedPages > 1) {
+                  next.set('pages', String(loadedPages));
                 } else {
-                  next.delete('shown');
+                  next.delete('pages');
                 }
+                next.delete('shown');
                 history.replaceState({}, '', `${window.location.pathname}?${next.toString()}`);
               }
 
@@ -898,21 +884,26 @@ def build_gallery_html() -> str:
                 sortSelect.value = initialSort;
               }
 
+              function visibleCountFor(itemsLength) {
+                if (!Number.isFinite(currentPageSize())) return itemsLength;
+                return Math.min(itemsLength, currentPageSize() * loadedPages);
+              }
+
               function visibleSlice(items) {
-                if (!Number.isFinite(visibleCount)) return items;
-                return items.slice(0, Math.min(visibleCount, items.length));
+                return items.slice(0, visibleCountFor(items.length));
               }
 
               function updateLoadMore(items, noun) {
-                if (!Number.isFinite(visibleCount) || visibleCount >= items.length) {
+                const pageSize = currentPageSize();
+                const shown = visibleCountFor(items.length);
+                if (!Number.isFinite(pageSize) || shown >= items.length) {
                   galleryControls.hidden = true;
                   return;
                 }
 
                 galleryControls.hidden = false;
-                const remaining = items.length - visibleCount;
-                const increment = currentPageSize();
-                const nextCount = Number.isFinite(increment) ? Math.min(increment, remaining) : remaining;
+                const remaining = items.length - shown;
+                const nextCount = Math.min(pageSize, remaining);
                 loadMoreBtn.textContent = `Load ${nextCount} More ${noun}`;
               }
 
@@ -990,8 +981,8 @@ def build_gallery_html() -> str:
                   root.innerHTML = visibleItems.map(renderPairCard).join('');
                   countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} paired samples`;
                   toolbarNote.textContent = dataset === 'all'
-                    ? 'This is the curated publication subset across all datasets. Narrow to one dataset for faster inspection.'
-                    : 'Paired mode keeps Coarse Only on the left and Flip Averaged on the right for the same curated sample.';
+                    ? `This gallery publishes ${data.counts.paired_samples} paired samples drawn from ${data.counts.available_paired_samples} available benchmark pairs.`
+                    : `Paired mode keeps Coarse Only on the left and Flip Averaged on the right. Use Load More to continue through the published ${data.datasets[dataset].label} slice.`;
                   updateLoadMore(items, 'Pairs');
                   syncUrl();
                   return;
@@ -1006,7 +997,7 @@ def build_gallery_html() -> str:
                 root.className = 'single-grid';
                 root.innerHTML = visibleItems.map(renderSingleCard).join('');
                 countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} ${data.flavors[view].label.toLowerCase()} samples`;
-                toolbarNote.textContent = 'Single-flavor mode uses the same curated publication subset as the paired gallery.';
+                toolbarNote.textContent = `Single-flavor mode uses the same published gallery slice: ${data.counts.records} total records across both flavors.`;
                 updateLoadMore(items, 'Samples');
                 syncUrl();
               }
@@ -1023,7 +1014,7 @@ def build_gallery_html() -> str:
               });
 
               function rerenderFromFirstPage() {
-                resetVisibleCount();
+                resetPaging();
                 render();
               }
 
@@ -1032,8 +1023,8 @@ def build_gallery_html() -> str:
               sortSelect.addEventListener('change', rerenderFromFirstPage);
               pageSizeSelect.addEventListener('change', rerenderFromFirstPage);
               loadMoreBtn.addEventListener('click', () => {
-                if (Number.isFinite(visibleCount)) {
-                  visibleCount += currentPageSize();
+                if (Number.isFinite(currentPageSize())) {
+                  loadedPages += 1;
                 }
                 render();
               });

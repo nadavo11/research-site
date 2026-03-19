@@ -18,8 +18,8 @@ datasets:
     samples: 200
     leader_flavor: "flip_averaged"
 assets:
-  published_preview_records: 96
-  published_paired_samples: 48
+  published_preview_records: 168
+  published_paired_samples: 84
   available_paired_samples: 3531
   gallery_preview_count: 12
 evaluation:

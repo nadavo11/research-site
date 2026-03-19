@@ -238,13 +238,13 @@
       const dialog = document.getElementById('imageDialog');
       const dialogImg = document.getElementById('imageDialogImg');
       const params = new URLSearchParams(window.location.search);
-      let visibleCount = 16;
+      let loadedPages = 1;
 
       const initialDataset = params.get('dataset');
       if (initialDataset && [...datasetSelect.options].some((option) => option.value === initialDataset)) {
         datasetSelect.value = initialDataset;
       } else {
-        datasetSelect.value = 'rwtd';
+        datasetSelect.value = 'all';
       }
 
       const initialView = params.get('view');
@@ -265,15 +265,18 @@
         return pageSizeSelect.value === 'all' ? Number.POSITIVE_INFINITY : Number(pageSizeSelect.value);
       }
 
-      function resetVisibleCount() {
-        visibleCount = currentPageSize();
+      function resetPaging() {
+        loadedPages = 1;
       }
 
+      const initialPages = Number(params.get('pages'));
       const initialShown = Number(params.get('shown'));
-      if (Number.isFinite(initialShown) && initialShown > 0) {
-        visibleCount = initialShown;
+      if (Number.isFinite(initialPages) && initialPages > 0) {
+        loadedPages = Math.max(1, Math.floor(initialPages));
+      } else if (Number.isFinite(initialShown) && initialShown > 0 && Number.isFinite(currentPageSize())) {
+        loadedPages = Math.max(1, Math.ceil(initialShown / currentPageSize()));
       } else {
-        resetVisibleCount();
+        resetPaging();
       }
 
       function syncUrl() {
@@ -282,11 +285,12 @@
         next.set('view', flavorSelect.value);
         next.set('sort', sortSelect.value);
         next.set('page_size', pageSizeSelect.value);
-        if (Number.isFinite(visibleCount)) {
-          next.set('shown', String(visibleCount));
+        if (Number.isFinite(currentPageSize()) && loadedPages > 1) {
+          next.set('pages', String(loadedPages));
         } else {
-          next.delete('shown');
+          next.delete('pages');
         }
+        next.delete('shown');
         history.replaceState({}, '', `${window.location.pathname}?${next.toString()}`);
       }
 
@@ -324,21 +328,26 @@
         sortSelect.value = initialSort;
       }
 
+      function visibleCountFor(itemsLength) {
+        if (!Number.isFinite(currentPageSize())) return itemsLength;
+        return Math.min(itemsLength, currentPageSize() * loadedPages);
+      }
+
       function visibleSlice(items) {
-        if (!Number.isFinite(visibleCount)) return items;
-        return items.slice(0, Math.min(visibleCount, items.length));
+        return items.slice(0, visibleCountFor(items.length));
       }
 
       function updateLoadMore(items, noun) {
-        if (!Number.isFinite(visibleCount) || visibleCount >= items.length) {
+        const pageSize = currentPageSize();
+        const shown = visibleCountFor(items.length);
+        if (!Number.isFinite(pageSize) || shown >= items.length) {
           galleryControls.hidden = true;
           return;
         }
 
         galleryControls.hidden = false;
-        const remaining = items.length - visibleCount;
-        const increment = currentPageSize();
-        const nextCount = Number.isFinite(increment) ? Math.min(increment, remaining) : remaining;
+        const remaining = items.length - shown;
+        const nextCount = Math.min(pageSize, remaining);
         loadMoreBtn.textContent = `Load ${nextCount} More ${noun}`;
       }
 
@@ -416,8 +425,8 @@
           root.innerHTML = visibleItems.map(renderPairCard).join('');
           countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} paired samples`;
           toolbarNote.textContent = dataset === 'all'
-            ? 'This is the curated publication subset across all datasets. Narrow to one dataset for faster inspection.'
-            : 'Paired mode keeps Coarse Only on the left and Flip Averaged on the right for the same curated sample.';
+            ? `This gallery publishes ${data.counts.paired_samples} paired samples drawn from ${data.counts.available_paired_samples} available benchmark pairs.`
+            : `Paired mode keeps Coarse Only on the left and Flip Averaged on the right. Use Load More to continue through the published ${data.datasets[dataset].label} slice.`;
           updateLoadMore(items, 'Pairs');
           syncUrl();
           return;
@@ -432,7 +441,7 @@
         root.className = 'single-grid';
         root.innerHTML = visibleItems.map(renderSingleCard).join('');
         countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} ${data.flavors[view].label.toLowerCase()} samples`;
-        toolbarNote.textContent = 'Single-flavor mode uses the same curated publication subset as the paired gallery.';
+        toolbarNote.textContent = `Single-flavor mode uses the same published gallery slice: ${data.counts.records} total records across both flavors.`;
         updateLoadMore(items, 'Samples');
         syncUrl();
       }
@@ -449,7 +458,7 @@
       });
 
       function rerenderFromFirstPage() {
-        resetVisibleCount();
+        resetPaging();
         render();
       }
 
@@ -458,8 +467,8 @@
       sortSelect.addEventListener('change', rerenderFromFirstPage);
       pageSizeSelect.addEventListener('change', rerenderFromFirstPage);
       loadMoreBtn.addEventListener('click', () => {
-        if (Number.isFinite(visibleCount)) {
-          visibleCount += currentPageSize();
+        if (Number.isFinite(currentPageSize())) {
+          loadedPages += 1;
         }
         render();
       });
