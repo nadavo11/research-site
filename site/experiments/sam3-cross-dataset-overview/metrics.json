@@ -5,7 +5,8 @@
     "rwtd",
     "caid",
     "stld",
-    "cstd"
+    "cstd",
+    "detexture"
   ],
   "flavor_order": [
     "coarse_only",
@@ -178,20 +179,56 @@
         }
       },
       "gallery_preview_count": 4
+    },
+    "detexture": {
+      "label": "DeTexture",
+      "title": "DeTexture ADE20K",
+      "description": "Binary texture-boundary crops from ADE20K evaluated as mask_a versus mask_b under the DeTexture benchmark.",
+      "dataset_id": "detexture_ade20k",
+      "sample_count": 2201,
+      "available_flavors": [
+        "flip_averaged"
+      ],
+      "comparable": false,
+      "leader_flavor": "flip_averaged",
+      "leader_mIoU": 0.626535,
+      "leader_ARI": 0.40637,
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null,
+      "single_flavor_note": "Flip Averaged is published for DeTexture ADE20K, but there is no Coarse Only baseline yet.",
+      "sample_wins": {
+        "coarse_only": 0,
+        "flip_averaged": 0,
+        "ties": 0
+      },
+      "flavors": {
+        "coarse_only": null,
+        "flip_averaged": {
+          "mIoU": 0.626535,
+          "ARI": 0.40637,
+          "mIoU_agg": 0.490175,
+          "variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
+          "evaluation_contract": "architexture_binary_v1",
+          "evaluation_view": "partition_invariant",
+          "source_path": "experiments/Coarse Feature Clustering/detexture/flip_averaged"
+        }
+      },
+      "gallery_preview_count": 4
     }
   },
   "summary": {
     "paired_samples": 3531,
-    "datasets_total": 4,
+    "datasets_total": 5,
     "comparable_dataset_count": 3,
     "comparable_datasets": [
       "rwtd",
       "caid",
       "stld"
     ],
-    "single_flavor_count": 1,
+    "single_flavor_count": 2,
     "single_flavor_datasets": [
-      "cstd"
+      "cstd",
+      "detexture"
     ],
     "datasets_led": {
       "coarse_only": 1,

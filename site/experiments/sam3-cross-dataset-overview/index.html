@@ -99,13 +99,13 @@
       <div class="subtitle">Unified Analysis</div>
       <h1 class="title-gradient">SAM 3 Cross-Dataset Benchmarking</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
-        Flavor-aware benchmarking for Coarse Feature Clustering across RWTD, CAID, STLD, and CSTD. CSTD currently publishes Flip Averaged only.
+        Flavor-aware benchmarking for Coarse Feature Clustering across RWTD, CAID, STLD, CSTD, and DeTexture. CSTD currently publishes Flip Averaged only; DeTexture currently publishes Flip Averaged only.
       </p>
     </header>
 
     <section class="executive-summary">
       <h2>Executive Synopsis</h2>
-      <p>Across the paired datasets, Flip Averaged leads RWTD and STLD, with the largest jump on STLD, while Coarse Only still leads CAID. CSTD is included as a flip-only slice, so it expands coverage without affecting the paired deltas.</p>
+      <p>Across the paired datasets, Flip Averaged leads RWTD and STLD, with the largest jump on STLD, while Coarse Only still leads CAID. CSTD and DeTexture are included as flip-only slices, so they expand coverage without affecting the paired deltas.</p>
       <p class="insight-note">Cross-flavor comparison is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort the page.</p>
     </section>
 
@@ -116,7 +116,7 @@
         <article class="metric">
           <div class="k">Paired Samples</div>
           <div class="v">3,531</div>
-          <div class="mini-note">3 paired datasets + 1 single-flavor</div>
+          <div class="mini-note">3 paired datasets + 2 single-flavor</div>
         </article>
         <article class="metric">
           <div class="k">Flavor Lead Split</div>
@@ -223,6 +223,24 @@
               <td>
                 <strong>0.745</strong>
                 <div class="mini-note">ARI 0.578</div>
+            </td>
+              <td><span class="delta-pill">n/a</span></td>
+              <td><span class="delta-pill">n/a</span></td>
+              <td><span class="tag good">Flip Averaged</span><div class="mini-note">single-flavor only</div></td>
+            </tr>
+            
+            <tr>
+              <td>
+                <strong>DeTexture</strong>
+                <div class="mini-note">detexture_ade20k</div>
+              </td>
+              <td>
+                <strong>—</strong>
+                <div class="mini-note">not published</div>
+            </td>
+              <td>
+                <strong>0.627</strong>
+                <div class="mini-note">ARI 0.406</div>
             </td>
               <td><span class="delta-pill">n/a</span></td>
               <td><span class="delta-pill">n/a</span></td>
@@ -405,6 +423,47 @@
               </div>
               <div class="card-actions">
                 <a class="btn secondary" href="gallery.html?dataset=cstd&view=flip_averaged">Open CSTD Flip Averaged Gallery</a>
+              </div>
+            </article>
+            
+            <article class="dataset-card cfc-card">
+              <div class="card-topline">
+                <span class="tag">DeTexture</span>
+                <span class="tag good">Leader: Flip Averaged</span>
+                <span class="tag">Published: Flip Averaged only</span>
+              </div>
+              <h3>DeTexture ADE20K</h3>
+              <p class="kv card-summary">Flip Averaged is published for DeTexture ADE20K, but there is no Coarse Only baseline yet.</p>
+              
+              <div class="leader-stats">
+                <span class="pill">mIoU 0.627</span>
+                <span class="pill">ARI 0.406</span>
+                <span class="pill">Samples 2,201</span>
+              </div>
+                
+              <div class="preview-grid">
+                
+                <figure>
+                  <img src="assets/all_previews/flip_averaged/detexture/training_ADE_train_00016162_t2_crop2.png" alt="DeTexture sample training_ADE_train_00016162_t2_crop2"
+                    data-zoom-src="assets/all_previews/flip_averaged/detexture/training_ADE_train_00016162_t2_crop2.png" />
+                  <figcaption>
+                    <span class="pill">id training_ADE_train_00016162_t2_crop2</span>
+                    <span class="pill">mIoU 0.998</span>
+                  </figcaption>
+                </figure>
+                
+                <figure>
+                  <img src="assets/all_previews/flip_averaged/detexture/training_ADE_train_00016162_t2_crop1.png" alt="DeTexture sample training_ADE_train_00016162_t2_crop1"
+                    data-zoom-src="assets/all_previews/flip_averaged/detexture/training_ADE_train_00016162_t2_crop1.png" />
+                  <figcaption>
+                    <span class="pill">id training_ADE_train_00016162_t2_crop1</span>
+                    <span class="pill">mIoU 0.995</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+              <div class="card-actions">
+                <a class="btn secondary" href="gallery.html?dataset=detexture&view=flip_averaged">Open DeTexture Flip Averaged Gallery</a>
               </div>
             </article>
             

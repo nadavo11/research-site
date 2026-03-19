@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent
 LEGACY_SOURCE_ROOT = ROOT / "experiments" / "Coarse Feature Clustering"
 DEST_DIR = ROOT / "site" / "experiments" / "sam3-cross-dataset-overview"
 
-DATASET_ORDER = ["rwtd", "caid", "stld", "cstd"]
+DATASET_ORDER = ["rwtd", "caid", "stld", "cstd", "detexture"]
 FLAVOR_ORDER = ["coarse_only", "flip_averaged"]
 
 METRIC_CONTRACT = "architexture_binary_v1"
@@ -54,6 +54,14 @@ DATASETS = {
             "flip_averaged": ["cstd"],
         },
         "single_flavor_note": "Flip Averaged is published for CSTD, but there is no Coarse Only baseline yet.",
+    },
+    "detexture": {
+        "label": "DeTexture",
+        "title": "DeTexture ADE20K",
+        "dataset_id": "detexture_ade20k",
+        "description": "Binary texture-boundary crops from ADE20K evaluated as mask_a versus mask_b under the DeTexture benchmark.",
+        "available_flavors": ["flip_averaged"],
+        "single_flavor_note": "Flip Averaged is published for DeTexture ADE20K, but there is no Coarse Only baseline yet.",
     },
 }
 
@@ -100,6 +108,16 @@ def parse_sample_numeric(sample_id: str) -> int:
 
 def signed(value: float) -> str:
     return f"{value:+.3f}"
+
+
+def human_join(items: list[str]) -> str:
+    if not items:
+        return ""
+    if len(items) == 1:
+        return items[0]
+    if len(items) == 2:
+        return f"{items[0]} and {items[1]}"
+    return f"{', '.join(items[:-1])}, and {items[-1]}"
 
 
 def asset_relpath(dataset: str, flavor: str, file_name: str) -> Path:
@@ -333,6 +351,7 @@ def select_single_flavor_records(records: list[dict], featured_sample_ids: list[
 def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]) -> str:
     summary = metrics_payload["summary"]
     single_flavor_datasets = summary["single_flavor_datasets"]
+    all_dataset_labels = [metrics_payload["datasets"][dataset]["label"] for dataset in DATASET_ORDER]
     if single_flavor_datasets:
         single_flavor_blurbs = []
         for dataset in single_flavor_datasets:
@@ -340,11 +359,13 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
             flavor_labels = ", ".join(FLAVORS[flavor]["label"] for flavor in info["available_flavors"])
             single_flavor_blurbs.append(f'{info["label"]} currently publishes {flavor_labels} only')
         coverage_copy = (
-            "Flavor-aware benchmarking for Coarse Feature Clustering across RWTD, CAID, STLD, and CSTD. "
+            f"Flavor-aware benchmarking for Coarse Feature Clustering across {human_join(all_dataset_labels)}. "
             + "; ".join(single_flavor_blurbs)
             + "."
         )
-        single_label_copy = ", ".join(metrics_payload["datasets"][dataset]["label"] for dataset in single_flavor_datasets)
+        single_label_copy = human_join(
+            [metrics_payload["datasets"][dataset]["label"] for dataset in single_flavor_datasets]
+        )
         singular = len(single_flavor_datasets) == 1
         executive_copy = (
             "Across the paired datasets, Flip Averaged leads RWTD and STLD, with the largest jump on STLD, "
@@ -355,7 +376,7 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
         )
     else:
         coverage_copy = (
-            "Flavor-aware benchmarking for Coarse Feature Clustering across RWTD, CAID, and STLD, now including the "
+            f"Flavor-aware benchmarking for Coarse Feature Clustering across {human_join(all_dataset_labels)}, now including the "
             "new <code>flip_averaged</code> variant."
         )
         executive_copy = (
@@ -905,7 +926,7 @@ def build_gallery_html() -> str:
               <h1 class="title-gradient">Cross-Flavor / Single-Flavor Gallery</h1>
               <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
                 Browse paired same-sample comparisons where both flavors exist, or switch into a single-flavor slice
-                for datasets like CSTD that currently publish only <code>flip_averaged</code>. The headline metrics on
+                for datasets that currently publish only <code>flip_averaged</code>. The headline metrics on
                 the overview page still reflect the full benchmark.
               </p>
             </header>
@@ -1290,13 +1311,21 @@ def build_manifest(metrics_payload: dict, public_records: list[dict], pairs_payl
     available_flavors: [{available_flavors}]
 """
         )
+    all_labels = human_join([metrics_payload["datasets"][dataset]["label"] for dataset in DATASET_ORDER])
+    single_flavor_labels = [
+        metrics_payload["datasets"][dataset]["label"] for dataset in metrics_payload["summary"]["single_flavor_datasets"]
+    ]
+    single_flavor_suffix = ""
+    if single_flavor_labels:
+        verb = "publishes" if len(single_flavor_labels) == 1 else "publish"
+        single_flavor_suffix = f" {human_join(single_flavor_labels)} currently {verb} flip_averaged only."
     return (
         "title: \"SAM 3 Cross-Dataset Benchmarking\"\n"
         "model_id: \"facebook/sam3\"\n"
         "ui_standard: \"premium\"\n"
         f"date: \"{date.today().isoformat()}\"\n"
         f"comparison_contract: \"{METRIC_CONTRACT}\"\n"
-        "description: \"Flavor-aware benchmarking for SAM 3 Coarse Feature Clustering across RWTD, CAID, STLD, and CSTD. CSTD currently publishes flip_averaged only.\"\n"
+        f"description: \"Flavor-aware benchmarking for SAM 3 Coarse Feature Clustering across {all_labels}.{single_flavor_suffix}\"\n"
         "datasets:\n"
         f"{''.join(dataset_lines)}"
         "assets:\n"

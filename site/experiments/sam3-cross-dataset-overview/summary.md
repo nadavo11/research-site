@@ -6,4 +6,4 @@ This page compares the published Coarse Feature Clustering flavors under the sha
         gain on STLD (`+0.285` mIoU, `+0.434` ARI).
         CAID still favors `coarse_only` (`0.674` mIoU, `0.496` ARI).
 
-CSTD is currently published as `flip_averaged` only (`0.745` mIoU, `0.578` ARI), so it expands coverage without a coarse-only delta yet.
+CSTD is currently published as `flip_averaged` only (`0.745` mIoU, `0.578` ARI), so it expands coverage without a coarse-only delta yet. DeTexture is currently published as `flip_averaged` only (`0.627` mIoU, `0.406` ARI), so it expands coverage without a coarse-only delta yet.
