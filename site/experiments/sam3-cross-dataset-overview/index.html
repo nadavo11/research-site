@@ -99,18 +99,13 @@
       <div class="subtitle">Unified Analysis</div>
       <h1 class="title-gradient">SAM 3 Cross-Dataset Benchmarking</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
-        Flavor-aware benchmarking for Coarse Feature Clustering across RWTD, CAID, and STLD, now including the
-        new <code>flip_averaged</code> variant.
+        Flavor-aware benchmarking for Coarse Feature Clustering across RWTD, CAID, STLD, and CSTD. CSTD currently publishes Flip Averaged only.
       </p>
     </header>
 
     <section class="executive-summary">
       <h2>Executive Synopsis</h2>
-      <p>
-        The new <strong>Flip Averaged</strong> flavor changes the cross-dataset picture materially. It takes the
-        lead on <strong>RWTD</strong> and <strong>STLD</strong>, with the largest jump on STLD, while the
-        original <strong>Coarse Only</strong> flavor still leads CAID.
-      </p>
+      <p>Across the paired datasets, Flip Averaged leads RWTD and STLD, with the largest jump on STLD, while Coarse Only still leads CAID. CSTD is included as a flip-only slice, so it expands coverage without affecting the paired deltas.</p>
       <p class="insight-note">Cross-flavor comparison is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort the page.</p>
     </section>
 
@@ -121,11 +116,12 @@
         <article class="metric">
           <div class="k">Paired Samples</div>
           <div class="v">3,531</div>
+          <div class="mini-note">3 paired datasets + 1 single-flavor</div>
         </article>
         <article class="metric">
           <div class="k">Flavor Lead Split</div>
           <div class="v">2/3</div>
-          <div class="mini-note">Flip Averaged leads more datasets.</div>
+          <div class="mini-note">Flip Averaged leads more paired datasets.</div>
         </article>
         <article class="metric">
           <div class="k">Best mIoU Gain</div>
@@ -145,7 +141,7 @@
       <h2>Flavor Comparison</h2>
       <p class="kv" style="margin-bottom: 18px;">
         All rows use the shared <code>mIoU</code>/<code>ARI</code> contract. Deltas are
-        <code>flip_averaged - coarse_only</code>.
+        <code>flip_averaged - coarse_only</code>; rows without a baseline are marked <code>n/a</code>.
       </p>
       <div class="table-wrap">
         <table>
@@ -169,11 +165,11 @@
               <td>
                 <strong>0.824</strong>
                 <div class="mini-note">ARI 0.698</div>
-              </td>
+            </td>
               <td>
                 <strong>0.840</strong>
                 <div class="mini-note">ARI 0.726</div>
-              </td>
+            </td>
               <td><span class="delta-pill good">+0.016</span></td>
               <td><span class="delta-pill good">+0.027</span></td>
               <td><span class="tag good">Flip Averaged</span></td>
@@ -187,11 +183,11 @@
               <td>
                 <strong>0.674</strong>
                 <div class="mini-note">ARI 0.496</div>
-              </td>
+            </td>
               <td>
                 <strong>0.659</strong>
                 <div class="mini-note">ARI 0.451</div>
-              </td>
+            </td>
               <td><span class="delta-pill bad">-0.015</span></td>
               <td><span class="delta-pill bad">-0.045</span></td>
               <td><span class="tag warn">Coarse Only</span></td>
@@ -205,14 +201,32 @@
               <td>
                 <strong>0.468</strong>
                 <div class="mini-note">ARI 0.186</div>
-              </td>
+            </td>
               <td>
                 <strong>0.753</strong>
                 <div class="mini-note">ARI 0.619</div>
-              </td>
+            </td>
               <td><span class="delta-pill good">+0.285</span></td>
               <td><span class="delta-pill good">+0.434</span></td>
               <td><span class="tag good">Flip Averaged</span></td>
+            </tr>
+            
+            <tr>
+              <td>
+                <strong>CSTD</strong>
+                <div class="mini-note">cstd</div>
+              </td>
+              <td>
+                <strong>—</strong>
+                <div class="mini-note">not published</div>
+            </td>
+              <td>
+                <strong>0.745</strong>
+                <div class="mini-note">ARI 0.578</div>
+            </td>
+              <td><span class="delta-pill">n/a</span></td>
+              <td><span class="delta-pill">n/a</span></td>
+              <td><span class="tag good">Flip Averaged</span><div class="mini-note">single-flavor only</div></td>
             </tr>
             
           </tbody>
@@ -226,7 +240,7 @@
           <h2>Dataset Leaders</h2>
           <p class="kv">Fast read: who leads, by how much, and two representative samples.</p>
         </div>
-        <a class="btn" href="gallery.html">Open Cross-Flavor Gallery</a>
+        <a class="btn" href="gallery.html">Open Gallery</a>
       </div>
       <div class="dataset-grid" style="margin-top: 22px;">
         
@@ -234,14 +248,17 @@
               <div class="card-topline">
                 <span class="tag">RWTD</span>
                 <span class="tag good">Leader: Flip Averaged</span>
+                
               </div>
               <h3>RWTD Dataset</h3>
               <p class="kv card-summary">Flip Averaged leads by +0.016 mIoU and +0.027 ARI.</p>
+              
               <div class="leader-stats">
                 <span class="pill">Leader mIoU 0.840</span>
                 <span class="pill">Leader ARI 0.726</span>
                 <span class="pill">Wins F/C/T 113/100/14</span>
               </div>
+                
               <div class="preview-grid">
                 
                 <figure>
@@ -272,14 +289,17 @@
               <div class="card-topline">
                 <span class="tag">CAID</span>
                 <span class="tag warn">Leader: Coarse Only</span>
+                
               </div>
               <h3>CAID Dataset</h3>
               <p class="kv card-summary">Coarse Only holds the lead by 0.015 mIoU and 0.045 ARI.</p>
+              
               <div class="leader-stats">
                 <span class="pill">Leader mIoU 0.674</span>
                 <span class="pill">Leader ARI 0.496</span>
                 <span class="pill">Wins F/C/T 1523/1538/43</span>
               </div>
+                
               <div class="preview-grid">
                 
                 <figure>
@@ -310,14 +330,17 @@
               <div class="card-topline">
                 <span class="tag">STLD</span>
                 <span class="tag good">Leader: Flip Averaged</span>
+                
               </div>
               <h3>STLD Dataset</h3>
               <p class="kv card-summary">Flip Averaged leads by +0.285 mIoU and +0.434 ARI.</p>
+              
               <div class="leader-stats">
                 <span class="pill">Leader mIoU 0.753</span>
                 <span class="pill">Leader ARI 0.619</span>
                 <span class="pill">Wins F/C/T 174/26/0</span>
               </div>
+                
               <div class="preview-grid">
                 
                 <figure>
@@ -341,6 +364,47 @@
               </div>
               <div class="card-actions">
                 <a class="btn secondary" href="gallery.html?dataset=stld&view=paired">Open STLD 1:1 Gallery</a>
+              </div>
+            </article>
+            
+            <article class="dataset-card cfc-card">
+              <div class="card-topline">
+                <span class="tag">CSTD</span>
+                <span class="tag good">Leader: Flip Averaged</span>
+                <span class="tag">Published: Flip Averaged only</span>
+              </div>
+              <h3>CSTD Dataset</h3>
+              <p class="kv card-summary">Flip Averaged is published for CSTD, but there is no Coarse Only baseline yet.</p>
+              
+              <div class="leader-stats">
+                <span class="pill">mIoU 0.745</span>
+                <span class="pill">ARI 0.578</span>
+                <span class="pill">Samples 500</span>
+              </div>
+                
+              <div class="preview-grid">
+                
+                <figure>
+                  <img src="assets/all_previews/flip_averaged/cstd/000383.png" alt="CSTD sample 000383"
+                    data-zoom-src="assets/all_previews/flip_averaged/cstd/000383.png" />
+                  <figcaption>
+                    <span class="pill">id 000383</span>
+                    <span class="pill">mIoU 0.978</span>
+                  </figcaption>
+                </figure>
+                
+                <figure>
+                  <img src="assets/all_previews/flip_averaged/cstd/000344.png" alt="CSTD sample 000344"
+                    data-zoom-src="assets/all_previews/flip_averaged/cstd/000344.png" />
+                  <figcaption>
+                    <span class="pill">id 000344</span>
+                    <span class="pill">mIoU 0.975</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+              <div class="card-actions">
+                <a class="btn secondary" href="gallery.html?dataset=cstd&view=flip_averaged">Open CSTD Flip Averaged Gallery</a>
               </div>
             </article>
             

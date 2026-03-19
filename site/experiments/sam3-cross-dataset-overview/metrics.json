@@ -4,7 +4,8 @@
   "dataset_order": [
     "rwtd",
     "caid",
-    "stld"
+    "stld",
+    "cstd"
   ],
   "flavor_order": [
     "coarse_only",
@@ -17,11 +18,17 @@
       "description": "Natural texture transitions and high-frequency boundary detection in organic scenes.",
       "dataset_id": "aviadcohz/RWTD",
       "sample_count": 227,
+      "available_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
+      "comparable": true,
       "leader_flavor": "flip_averaged",
       "leader_mIoU": 0.839748,
       "leader_ARI": 0.725812,
       "delta_mIoU_flip_vs_coarse": 0.016236,
       "delta_ARI_flip_vs_coarse": 0.027386,
+      "single_flavor_note": null,
       "sample_wins": {
         "coarse_only": 100,
         "flip_averaged": 113,
@@ -55,11 +62,17 @@
       "description": "Architectural plan partitions and region clustering in structured manifold domains.",
       "dataset_id": "architexture:caid",
       "sample_count": 3104,
+      "available_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
+      "comparable": true,
       "leader_flavor": "coarse_only",
       "leader_mIoU": 0.674265,
       "leader_ARI": 0.495585,
       "delta_mIoU_flip_vs_coarse": -0.015437,
       "delta_ARI_flip_vs_coarse": -0.044916,
+      "single_flavor_note": null,
       "sample_wins": {
         "coarse_only": 1538,
         "flip_averaged": 1523,
@@ -93,11 +106,17 @@
       "description": "Structural and functional partitioning in diverse synthetic and real-world scenes.",
       "dataset_id": "architexture:stld",
       "sample_count": 200,
+      "available_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
+      "comparable": true,
       "leader_flavor": "flip_averaged",
       "leader_mIoU": 0.753395,
       "leader_ARI": 0.619408,
       "delta_mIoU_flip_vs_coarse": 0.28519,
       "delta_ARI_flip_vs_coarse": 0.433543,
+      "single_flavor_note": null,
       "sample_wins": {
         "coarse_only": 26,
         "flip_averaged": 174,
@@ -124,13 +143,59 @@
         }
       },
       "gallery_preview_count": 4
+    },
+    "cstd": {
+      "label": "CSTD",
+      "title": "CSTD Dataset",
+      "description": "Binary region-versus-complement partitioning under the CSTD streaming benchmark.",
+      "dataset_id": "cstd",
+      "sample_count": 500,
+      "available_flavors": [
+        "flip_averaged"
+      ],
+      "comparable": false,
+      "leader_flavor": "flip_averaged",
+      "leader_mIoU": 0.744914,
+      "leader_ARI": 0.578429,
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null,
+      "single_flavor_note": "Flip Averaged is published for CSTD, but there is no Coarse Only baseline yet.",
+      "sample_wins": {
+        "coarse_only": 0,
+        "flip_averaged": 0,
+        "ties": 0
+      },
+      "flavors": {
+        "coarse_only": null,
+        "flip_averaged": {
+          "mIoU": 0.744914,
+          "ARI": 0.578429,
+          "mIoU_agg": 0.5,
+          "variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
+          "evaluation_contract": "architexture_binary_v1",
+          "evaluation_view": "partition_invariant",
+          "source_path": "experiments/Coarse Feature Clustering/cstd"
+        }
+      },
+      "gallery_preview_count": 4
     }
   },
   "summary": {
     "paired_samples": 3531,
+    "datasets_total": 4,
+    "comparable_dataset_count": 3,
+    "comparable_datasets": [
+      "rwtd",
+      "caid",
+      "stld"
+    ],
+    "single_flavor_count": 1,
+    "single_flavor_datasets": [
+      "cstd"
+    ],
     "datasets_led": {
-      "flip_averaged": 2,
-      "coarse_only": 1
+      "coarse_only": 1,
+      "flip_averaged": 2
     },
     "datasets_led_by": "flip_averaged",
     "best_gain_dataset_mIoU": "stld",

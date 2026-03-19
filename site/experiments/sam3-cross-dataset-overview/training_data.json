@@ -4,7 +4,8 @@
   "dataset_order": [
     "rwtd",
     "caid",
-    "stld"
+    "stld",
+    "cstd"
   ],
   "flavor_order": [
     "coarse_only",
@@ -14,17 +15,61 @@
     "rwtd": {
       "label": "RWTD",
       "dataset_id": "aviadcohz/RWTD",
-      "description": "Natural texture transitions and high-frequency boundary detection in organic scenes."
+      "description": "Natural texture transitions and high-frequency boundary detection in organic scenes.",
+      "available_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
+      "has_paired_comparison": true,
+      "single_flavor_note": null,
+      "published_record_count": 56,
+      "available_record_count": 454,
+      "published_pair_count": 28,
+      "available_pair_count": 227
     },
     "caid": {
       "label": "CAID",
       "dataset_id": "architexture:caid",
-      "description": "Architectural plan partitions and region clustering in structured manifold domains."
+      "description": "Architectural plan partitions and region clustering in structured manifold domains.",
+      "available_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
+      "has_paired_comparison": true,
+      "single_flavor_note": null,
+      "published_record_count": 56,
+      "available_record_count": 6208,
+      "published_pair_count": 28,
+      "available_pair_count": 3104
     },
     "stld": {
       "label": "STLD",
       "dataset_id": "architexture:stld",
-      "description": "Structural and functional partitioning in diverse synthetic and real-world scenes."
+      "description": "Structural and functional partitioning in diverse synthetic and real-world scenes.",
+      "available_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
+      "has_paired_comparison": true,
+      "single_flavor_note": null,
+      "published_record_count": 56,
+      "available_record_count": 400,
+      "published_pair_count": 28,
+      "available_pair_count": 200
+    },
+    "cstd": {
+      "label": "CSTD",
+      "dataset_id": "cstd",
+      "description": "Binary region-versus-complement partitioning under the CSTD streaming benchmark.",
+      "available_flavors": [
+        "flip_averaged"
+      ],
+      "has_paired_comparison": false,
+      "single_flavor_note": "Flip Averaged is published for CSTD, but there is no Coarse Only baseline yet.",
+      "published_record_count": 20,
+      "available_record_count": 500,
+      "published_pair_count": 0,
+      "available_pair_count": 0
     }
   },
   "flavors": {
@@ -38,9 +83,11 @@
     }
   },
   "counts": {
-    "records": 168,
+    "records": 188,
     "paired_samples": 84,
-    "available_paired_samples": 3531
+    "available_paired_samples": 3531,
+    "single_flavor_records": 20,
+    "available_single_flavor_records": 500
   },
   "per_image": [
     {
@@ -2394,6 +2441,286 @@
       "leader_flavor_for_sample": "coarse_only",
       "delta_mIoU_flip_vs_coarse": -0.0483,
       "delta_ARI_flip_vs_coarse": -0.0613
+    },
+    {
+      "id": "cstd:flip_averaged:000000",
+      "pair_id": "cstd:000000",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000000",
+      "sample_numeric": 0,
+      "mIoU": 0.9679,
+      "ARI": 0.9406,
+      "file_path": "flip_averaged/cstd/000000.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000005",
+      "pair_id": "cstd:000005",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000005",
+      "sample_numeric": 5,
+      "mIoU": 0.9717,
+      "ARI": 0.9473,
+      "file_path": "flip_averaged/cstd/000005.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000109",
+      "pair_id": "cstd:000109",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000109",
+      "sample_numeric": 109,
+      "mIoU": 0.974,
+      "ARI": 0.9535,
+      "file_path": "flip_averaged/cstd/000109.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000110",
+      "pair_id": "cstd:000110",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000110",
+      "sample_numeric": 110,
+      "mIoU": 0.3043,
+      "ARI": -0.0644,
+      "file_path": "flip_averaged/cstd/000110.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000123",
+      "pair_id": "cstd:000123",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000123",
+      "sample_numeric": 123,
+      "mIoU": 0.975,
+      "ARI": 0.9501,
+      "file_path": "flip_averaged/cstd/000123.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000127",
+      "pair_id": "cstd:000127",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000127",
+      "sample_numeric": 127,
+      "mIoU": 0.9725,
+      "ARI": 0.945,
+      "file_path": "flip_averaged/cstd/000127.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000143",
+      "pair_id": "cstd:000143",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000143",
+      "sample_numeric": 143,
+      "mIoU": 0.9711,
+      "ARI": 0.9528,
+      "file_path": "flip_averaged/cstd/000143.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000166",
+      "pair_id": "cstd:000166",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000166",
+      "sample_numeric": 166,
+      "mIoU": 0.9571,
+      "ARI": 0.916,
+      "file_path": "flip_averaged/cstd/000166.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000273",
+      "pair_id": "cstd:000273",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000273",
+      "sample_numeric": 273,
+      "mIoU": 0.9748,
+      "ARI": 0.9498,
+      "file_path": "flip_averaged/cstd/000273.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000287",
+      "pair_id": "cstd:000287",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000287",
+      "sample_numeric": 287,
+      "mIoU": 0.2963,
+      "ARI": 0.0005,
+      "file_path": "flip_averaged/cstd/000287.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000333",
+      "pair_id": "cstd:000333",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000333",
+      "sample_numeric": 333,
+      "mIoU": 0.3387,
+      "ARI": -0.0185,
+      "file_path": "flip_averaged/cstd/000333.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000342",
+      "pair_id": "cstd:000342",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000342",
+      "sample_numeric": 342,
+      "mIoU": 0.3008,
+      "ARI": -0.0639,
+      "file_path": "flip_averaged/cstd/000342.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000344",
+      "pair_id": "cstd:000344",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000344",
+      "sample_numeric": 344,
+      "mIoU": 0.9754,
+      "ARI": 0.9551,
+      "file_path": "flip_averaged/cstd/000344.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000366",
+      "pair_id": "cstd:000366",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000366",
+      "sample_numeric": 366,
+      "mIoU": 0.9751,
+      "ARI": 0.9525,
+      "file_path": "flip_averaged/cstd/000366.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000383",
+      "pair_id": "cstd:000383",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000383",
+      "sample_numeric": 383,
+      "mIoU": 0.9778,
+      "ARI": 0.9605,
+      "file_path": "flip_averaged/cstd/000383.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000414",
+      "pair_id": "cstd:000414",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000414",
+      "sample_numeric": 414,
+      "mIoU": 0.971,
+      "ARI": 0.9421,
+      "file_path": "flip_averaged/cstd/000414.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000448",
+      "pair_id": "cstd:000448",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000448",
+      "sample_numeric": 448,
+      "mIoU": 0.301,
+      "ARI": -0.0018,
+      "file_path": "flip_averaged/cstd/000448.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000475",
+      "pair_id": "cstd:000475",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000475",
+      "sample_numeric": 475,
+      "mIoU": 0.9712,
+      "ARI": 0.9488,
+      "file_path": "flip_averaged/cstd/000475.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000477",
+      "pair_id": "cstd:000477",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000477",
+      "sample_numeric": 477,
+      "mIoU": 0.9709,
+      "ARI": 0.957,
+      "file_path": "flip_averaged/cstd/000477.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
+    },
+    {
+      "id": "cstd:flip_averaged:000499",
+      "pair_id": "cstd:000499",
+      "dataset": "cstd",
+      "flavor": "flip_averaged",
+      "sample_id": "000499",
+      "sample_numeric": 499,
+      "mIoU": 0.9373,
+      "ARI": 0.887,
+      "file_path": "flip_averaged/cstd/000499.png",
+      "leader_flavor_for_sample": "flip_averaged",
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null
     }
   ],
   "pairs": [

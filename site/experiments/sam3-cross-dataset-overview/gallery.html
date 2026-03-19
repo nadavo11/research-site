@@ -154,6 +154,15 @@
       font-weight: 700;
     }
 
+    .empty-state {
+      padding: 28px;
+      border: 1px dashed var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--muted);
+      text-align: center;
+    }
+
     @media (max-width: 900px) {
       .pair-grid {
         grid-template-columns: 1fr;
@@ -166,17 +175,18 @@
   <div class="container animate-fade-in-down">
     <header style="text-align: center; margin-bottom: 42px;">
       <div class="subtitle">Interactive Gallery</div>
-      <h1 class="title-gradient">Cross-Flavor 1:1 Comparison</h1>
+      <h1 class="title-gradient">Cross-Flavor / Single-Flavor Gallery</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
-        Browse a curated publication slice of the same sample across flavors, or isolate a single flavor per
-        dataset. The headline metrics on the overview page still reflect the full benchmark.
+        Browse paired same-sample comparisons where both flavors exist, or switch into a single-flavor slice
+        for datasets like CSTD that currently publish only <code>flip_averaged</code>. The headline metrics on
+        the overview page still reflect the full benchmark.
       </p>
     </header>
 
     <section class="section">
       <div class="gallery-toolbar">
         <label for="datasetSelect">Dataset</label>
-        <select id="datasetSelect"><option value="all">All Datasets</option><option value="rwtd">RWTD (aviadcohz/RWTD)</option><option value="caid">CAID (architexture:caid)</option><option value="stld">STLD (architexture:stld)</option></select>
+        <select id="datasetSelect"><option value="all">All Datasets</option><option value="rwtd">RWTD (aviadcohz/RWTD)</option><option value="caid">CAID (architexture:caid)</option><option value="stld">STLD (architexture:stld)</option><option value="cstd">CSTD (cstd)</option></select>
 
         <label for="flavorSelect">Flavor</label>
         <select id="flavorSelect">
@@ -269,6 +279,32 @@
         loadedPages = 1;
       }
 
+      function syncFlavorAvailability() {
+        const dataset = datasetSelect.value;
+        const datasetInfo = dataset === 'all' ? null : data.datasets[dataset];
+        const availableFlavors = datasetInfo ? new Set(datasetInfo.available_flavors) : new Set(Object.keys(data.flavors));
+        const pairedEnabled = datasetInfo ? datasetInfo.has_paired_comparison : data.counts.paired_samples > 0;
+
+        [...flavorSelect.options].forEach((option) => {
+          if (option.value === 'paired') {
+            option.disabled = !pairedEnabled;
+            return;
+          }
+          option.disabled = dataset !== 'all' && !availableFlavors.has(option.value);
+        });
+
+        if (flavorSelect.selectedOptions[0]?.disabled) {
+          if (pairedEnabled) {
+            flavorSelect.value = 'paired';
+          } else if (availableFlavors.has('flip_averaged')) {
+            flavorSelect.value = 'flip_averaged';
+          } else {
+            const fallback = [...flavorSelect.options].find((option) => !option.disabled);
+            if (fallback) flavorSelect.value = fallback.value;
+          }
+        }
+      }
+
       const initialPages = Number(params.get('pages'));
       const initialShown = Number(params.get('shown'));
       if (Number.isFinite(initialPages) && initialPages > 0) {
@@ -351,6 +387,12 @@
         loadMoreBtn.textContent = `Load ${nextCount} More ${noun}`;
       }
 
+      function renderEmptyState(message) {
+        root.className = 'gallery-stack';
+        root.innerHTML = `<article class="empty-state">${message}</article>`;
+        galleryControls.hidden = true;
+      }
+
       function renderPairCard(pair) {
         const coarse = recordMap.get(pair.record_ids.coarse_only);
         const flip = recordMap.get(pair.record_ids.flip_averaged);
@@ -388,6 +430,9 @@
       }
 
       function renderSingleCard(record) {
+        const leaderLabel = record.leader_flavor_for_sample
+          ? (record.leader_flavor_for_sample === 'tie' ? 'Tie' : data.flavors[record.leader_flavor_for_sample].label)
+          : null;
         const deltaValue = typeof record.delta_mIoU_flip_vs_coarse === 'number'
           ? `<span class="pill ${deltaClass(record.delta_mIoU_flip_vs_coarse)}">ΔmIoU ${record.delta_mIoU_flip_vs_coarse.toFixed(3)}</span>`
           : '';
@@ -405,7 +450,7 @@
               <div class="metric-bar">
                 <span class="pill">mIoU ${record.mIoU.toFixed(3)}</span>
                 <span class="pill">ARI ${record.ARI.toFixed(3)}</span>
-                <span class="pill">Leader ${record.leader_flavor_for_sample === 'tie' ? 'Tie' : data.flavors[record.leader_flavor_for_sample].label}</span>
+                ${leaderLabel ? `<span class="pill">Leader ${leaderLabel}</span>` : ''}
               </div>
             </figure>
           </article>
@@ -414,6 +459,8 @@
 
       function render() {
         const dataset = datasetSelect.value;
+        const datasetInfo = dataset === 'all' ? null : data.datasets[dataset];
+        syncFlavorAvailability();
         const view = flavorSelect.value;
         const sort = sortSelect.value;
 
@@ -421,12 +468,22 @@
           const filteredPairs = data.pairs.filter((pair) => dataset === 'all' || pair.dataset === dataset);
           const items = sortItems(filteredPairs, sort);
           const visibleItems = visibleSlice(items);
-          root.className = 'gallery-stack';
-          root.innerHTML = visibleItems.map(renderPairCard).join('');
+          if (visibleItems.length) {
+            root.className = 'gallery-stack';
+            root.innerHTML = visibleItems.map(renderPairCard).join('');
+          } else if (datasetInfo && !datasetInfo.has_paired_comparison) {
+            renderEmptyState(`${datasetInfo.label} currently publishes only Flip Averaged. Switch the Flavor control to browse its curated single-flavor slice.`);
+          } else {
+            renderEmptyState('No paired samples match the current filters.');
+          }
           countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} paired samples`;
-          toolbarNote.textContent = dataset === 'all'
-            ? `This gallery publishes ${data.counts.paired_samples} paired samples drawn from ${data.counts.available_paired_samples} available benchmark pairs.`
-            : `Paired mode keeps Coarse Only on the left and Flip Averaged on the right. Use Load More to continue through the published ${data.datasets[dataset].label} slice.`;
+          if (dataset === 'all') {
+            toolbarNote.textContent = `This gallery publishes ${data.counts.paired_samples} paired samples drawn from ${data.counts.available_paired_samples} available benchmark pairs, plus ${data.counts.single_flavor_records} curated single-flavor records for datasets without a vanilla baseline.`;
+          } else if (datasetInfo && datasetInfo.has_paired_comparison) {
+            toolbarNote.textContent = `Paired mode keeps Coarse Only on the left and Flip Averaged on the right. Use Load More to continue through the published ${datasetInfo.label} slice.`;
+          } else {
+            toolbarNote.textContent = `${datasetInfo.single_flavor_note} Switch Flavor to Flip Averaged to browse the published slice.`;
+          }
           updateLoadMore(items, 'Pairs');
           syncUrl();
           return;
@@ -438,10 +495,20 @@
         });
         const items = sortItems(filteredRecords, sort);
         const visibleItems = visibleSlice(items);
-        root.className = 'single-grid';
-        root.innerHTML = visibleItems.map(renderSingleCard).join('');
+        if (visibleItems.length) {
+          root.className = 'single-grid';
+          root.innerHTML = visibleItems.map(renderSingleCard).join('');
+        } else {
+          renderEmptyState(`No published ${data.flavors[view].label.toLowerCase()} records match this filter.`);
+        }
         countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} ${data.flavors[view].label.toLowerCase()} samples`;
-        toolbarNote.textContent = `Single-flavor mode uses the same published gallery slice: ${data.counts.records} total records across both flavors.`;
+        if (datasetInfo && !datasetInfo.has_paired_comparison) {
+          toolbarNote.textContent = `${datasetInfo.single_flavor_note} This gallery publishes ${datasetInfo.published_record_count} curated records from ${datasetInfo.available_record_count} available ${datasetInfo.label} samples.`;
+        } else if (datasetInfo) {
+          toolbarNote.textContent = `Single-flavor mode uses the published ${datasetInfo.label} slice: ${datasetInfo.published_record_count} records from ${datasetInfo.available_record_count} available sample renders.`;
+        } else {
+          toolbarNote.textContent = `Single-flavor mode uses the same published gallery slice: ${data.counts.records} total records across all published datasets.`;
+        }
         updateLoadMore(items, 'Samples');
         syncUrl();
       }

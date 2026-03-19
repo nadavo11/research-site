@@ -11,6 +11,9 @@
     "stld": {
       "coarse_only": "experiments/Coarse Feature Clustering/stld/default",
       "flip_averaged": "experiments/Coarse Feature Clustering/stld/flip_averaged"
+    },
+    "cstd": {
+      "flip_averaged": "experiments/Coarse Feature Clustering/cstd"
     }
   },
   "metric_contract": "architexture_binary_v1",
