@@ -1,0 +1,62 @@
+{
+  "command": "eval-detexture-multi",
+  "dataset_id": "detexture_ade20k_multi",
+  "dataset_partition": null,
+  "dataset_root": "datasets/detexture_ADE20K",
+  "device": "cuda",
+  "evaluation_contract": "detexture_multi_partition_v1",
+  "evaluation_view": "multi_partition_invariant",
+  "failure_policy": "abort",
+  "feature_cluster_coarse_global_pooled_multi_settings": {
+    "boundary_band_radius": 2,
+    "coarsest_init_pool_kernel_size": 3,
+    "coarsest_init_pool_stride": 3,
+    "feature_source": "backbone_fpn",
+    "kmeans_convergence_tolerance": 0.0001,
+    "kmeans_max_iterations": 25,
+    "predicted_k_max": 8,
+    "predicted_k_min": 1,
+    "refine_confidence_threshold": 0.0,
+    "refinement_iterations_per_level": 2
+  },
+  "generated_at_utc": "2026-03-22T14:29:03Z",
+  "gt_decode_settings": {
+    "decode_metric": "euclidean",
+    "kmeans_convergence_tolerance": 0.0001,
+    "kmeans_max_iterations": 40,
+    "max_decode_clusters": 8,
+    "selection_criterion": "bic"
+  },
+  "gt_region_filter_settings": {
+    "joker_label_value": -1,
+    "minimum_region_pixel_fraction": 0.12
+  },
+  "hardware_compatibility_description": "DeTexture multi evaluation must stream decoded image/labelmap samples instead of preloading the dataset, must resolve the detecture_data root once per run, and must persist the active sample-loading mode into run artifacts.",
+  "hardware_compatibility_standard": "detexture_multi_streaming_eval_v1",
+  "limit": null,
+  "model_id": "facebook/sam3",
+  "num_examples": 525,
+  "official_checkpoint_path": null,
+  "primary_metric_name": "eval_miou",
+  "primary_metric_reason": "This multi-region route uses Hungarian-matched mIoU on valid pixels so cluster label identities remain permutation-invariant across variable-K partitions. Pixels belonging to GT regions smaller than the configured joker threshold are excluded through valid-pixel masking and do not affect the metrics.",
+  "resolved_dataset_root": "/home/nada/PycharmProjects/texture representations/datasets/detexture_ADE20K",
+  "resolved_detecture_data_root": "/home/nada/PycharmProjects/texture representations/datasets/detexture_ADE20K/detecture_data",
+  "resolved_image_dir": "/home/nada/PycharmProjects/texture representations/datasets/detexture_ADE20K/detecture_data/images",
+  "resolved_mask_dir": "/home/nada/PycharmProjects/texture representations/datasets/detexture_ADE20K/detecture_data/masks",
+  "sample_loading_mode": "streamed_iter",
+  "save_visuals": true,
+  "secondary_metric_name": "eval_ari",
+  "split": "all",
+  "variant": "feature_cluster_coarse_global_pooled_predicted_k",
+  "variant_summary": "Predicted-K prompt-free pooled coarsest clustering on frozen SAM features using deterministic silhouette selection over a small K range.",
+  "versions": {
+    "Pillow": "12.1.1",
+    "datasets": "4.7.0",
+    "numpy": "1.26.4",
+    "torch": "2.10.0",
+    "transformers": "5.3.0",
+    "wandb": null
+  },
+  "visual_contract": "input|gt_labelmap|pred_labelmap|pred_boundaries",
+  "wandb": false
+}

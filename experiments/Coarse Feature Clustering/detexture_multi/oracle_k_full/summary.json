@@ -1,0 +1,43 @@
+{
+  "dataset_id": "detexture_ade20k_multi",
+  "dataset_partition": null,
+  "dataset_root": "/home/nada/PycharmProjects/texture representations/datasets/detexture_ADE20K",
+  "evaluation_contract": "detexture_multi_partition_v1",
+  "evaluation_view": "multi_partition_invariant",
+  "failures": [],
+  "full_dataset_num_examples": 525,
+  "hardware_compatibility_standard": "detexture_multi_streaming_eval_v1",
+  "max_joker_pixel_fraction": 0.4055938720703125,
+  "mean_joker_pixel_fraction": 0.12853217548071863,
+  "mean_metrics": {
+    "count_accuracy": 1.0,
+    "coverage": 0.8714678245192814,
+    "eval_ari": 0.6456184228375175,
+    "eval_miou": 0.7146214229705853,
+    "eval_nmi": 0.6497988306136938,
+    "k_gt": 2.9523809523809526,
+    "k_pred": 2.9523809523809526
+  },
+  "median_metrics": {
+    "count_accuracy": 1.0,
+    "coverage": 0.880157470703125,
+    "eval_ari": 0.6902351175842308,
+    "eval_miou": 0.7471284546183626,
+    "eval_nmi": 0.6812288347664266,
+    "k_gt": 3.0,
+    "k_pred": 3.0
+  },
+  "model_id": "facebook/sam3",
+  "num_failures": 0,
+  "num_samples_with_joker_regions": 525,
+  "num_successes": 525,
+  "num_total_samples": 525,
+  "primary_metric_name": "eval_miou",
+  "primary_metric_value": 0.7146214229705853,
+  "secondary_metric_name": "eval_ari",
+  "secondary_metric_value": 0.6456184228375175,
+  "split": "all",
+  "variant": "feature_cluster_coarse_global_pooled_oracle_k",
+  "variant_summary": "Oracle-K prompt-free pooled coarsest clustering on frozen SAM features. GT supplies only the region count K; the clustering itself uses no prompts or GT geometry.",
+  "visual_contract": "input|gt_labelmap|pred_labelmap|pred_boundaries"
+}
