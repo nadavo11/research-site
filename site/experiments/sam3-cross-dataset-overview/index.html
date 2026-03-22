@@ -99,14 +99,14 @@
       <div class="subtitle">Unified Analysis</div>
       <h1 class="title-gradient">SAM 3 Cross-Dataset Benchmarking</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
-        Flavor-aware benchmarking for Coarse Feature Clustering across RWTD, CAID, STLD, CSTD, and DeTexture. CSTD currently publishes Flip Averaged only; DeTexture currently publishes Flip Averaged only.
+        Flavor-aware benchmarking for Coarse Feature Clustering across RWTD, CAID, STLD, CSTD, and DeTexture. CSTD currently publishes Flip Averaged only; DeTexture currently publishes Flip Averaged only. A separate multi-texture DeTexture slice compares Oracle K against Predicted K.
       </p>
     </header>
 
     <section class="executive-summary">
       <h2>Executive Synopsis</h2>
-      <p>Across the paired datasets, Flip Averaged leads RWTD and STLD, with the largest jump on STLD, while Coarse Only still leads CAID. CSTD and DeTexture are included as flip-only slices, so they expand coverage without affecting the paired deltas.</p>
-      <p class="insight-note">Cross-flavor comparison is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort the page.</p>
+      <p>Across the paired datasets, Flip Averaged leads RWTD and STLD, with the largest jump on STLD, while Coarse Only still leads CAID. CSTD and DeTexture are included as flip-only slices, so they expand coverage without affecting the paired deltas. Separately, DeTexture Multi favors <strong>Oracle K</strong> (0.715 mIoU, 0.646 ARI) over Predicted K (0.543 mIoU, 0.612 ARI).</p>
+      <p class="insight-note">The Coarse Feature Clustering flavor table is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort that comparison. The multi-texture table uses the DeTexture multi-partition contract instead.</p>
     </section>
 
     <section class="section">
@@ -150,8 +150,8 @@
               <th>Dataset</th>
               <th>Coarse Only</th>
               <th>Flip Averaged</th>
-              <th>ΔmIoU</th>
-              <th>ΔARI</th>
+              <th>Delta mIoU</th>
+              <th>Delta ARI</th>
               <th>Leader</th>
             </tr>
           </thead>
@@ -217,7 +217,7 @@
                 <div class="mini-note">cstd</div>
               </td>
               <td>
-                <strong>—</strong>
+                <strong>-</strong>
                 <div class="mini-note">not published</div>
             </td>
               <td>
@@ -235,7 +235,7 @@
                 <div class="mini-note">detexture_ade20k</div>
               </td>
               <td>
-                <strong>—</strong>
+                <strong>-</strong>
                 <div class="mini-note">not published</div>
             </td>
               <td>
@@ -252,11 +252,58 @@
       </div>
     </section>
 
+    <section class="section comparison-table">
+  <h2>Multi-Texture Segmentation</h2>
+  <p class="kv" style="margin-bottom: 18px;">
+    Rows use the <code>detexture_multi_partition_v1</code> evaluator (<code>mIoU</code>, <code>ARI</code>).
+    Deltas are <code>predicted_k_full - oracle_k_full</code>.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Dataset</th>
+          <th>Oracle K</th>
+          <th>Predicted K</th>
+          <th>Delta mIoU</th>
+          <th>Delta ARI</th>
+          <th>Leader</th>
+        </tr>
+      </thead>
+      <tbody>
+
+<tr>
+  <td>
+    <strong>DeTexture Multi</strong>
+    <div class="mini-note">detexture_ade20k_multi</div>
+  </td>
+  <td>
+    <strong>0.715</strong>
+    <div class="mini-note">ARI 0.646</div>
+  </td>
+  <td>
+    <strong>0.543</strong>
+    <div class="mini-note">ARI 0.612</div>
+  </td>
+  <td><span class="delta-pill bad">-0.172</span></td>
+  <td><span class="delta-pill bad">-0.034</span></td>
+  <td>
+    <span class="tag good">Oracle K</span>
+    <div class="mini-note">525 paired samples</div>
+  </td>
+</tr>
+
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
     <section class="section">
       <div style="display: flex; justify-content: space-between; gap: 20px; align-items: end; flex-wrap: wrap;">
         <div>
           <h2>Dataset Leaders</h2>
-          <p class="kv">Fast read: who leads, by how much, and two representative samples.</p>
+          <p class="kv">Fast read: who leads, by how much, and representative samples.</p>
         </div>
         <a class="btn" href="gallery.html">Open Gallery</a>
       </div>
@@ -276,7 +323,7 @@
                 <span class="pill">Leader ARI 0.726</span>
                 <span class="pill">Wins F/C/T 113/100/14</span>
               </div>
-                
+            
               <div class="preview-grid">
                 
                 <figure>
@@ -317,7 +364,7 @@
                 <span class="pill">Leader ARI 0.496</span>
                 <span class="pill">Wins F/C/T 1523/1538/43</span>
               </div>
-                
+            
               <div class="preview-grid">
                 
                 <figure>
@@ -358,7 +405,7 @@
                 <span class="pill">Leader ARI 0.619</span>
                 <span class="pill">Wins F/C/T 174/26/0</span>
               </div>
-                
+            
               <div class="preview-grid">
                 
                 <figure>
@@ -399,7 +446,7 @@
                 <span class="pill">ARI 0.578</span>
                 <span class="pill">Samples 500</span>
               </div>
-                
+            
               <div class="preview-grid">
                 
                 <figure>
@@ -440,7 +487,7 @@
                 <span class="pill">ARI 0.406</span>
                 <span class="pill">Samples 2,201</span>
               </div>
-                
+            
               <div class="preview-grid">
                 
                 <figure>
@@ -470,8 +517,65 @@
       </div>
     </section>
 
+    <section class="section">
+  <div style="display: flex; justify-content: space-between; gap: 20px; align-items: end; flex-wrap: wrap;">
+    <div>
+      <h2>Multi-Texture Leader</h2>
+      <p class="kv">Same-sample Oracle-K vs Predicted-K comparisons on DeTexture multi-region crops.</p>
+    </div>
+    <a class="btn secondary" href="gallery.html?dataset=detexture_multi&view=paired">Open Multi-Texture Gallery</a>
+  </div>
+  <div class="dataset-grid" style="margin-top: 22px;">
+    
+            <article class="dataset-card cfc-card">
+              <div class="card-topline">
+                <span class="tag">DeTexture Multi</span>
+                <span class="tag good">Leader: Oracle K</span>
+                <span class="tag">Paired: Oracle K vs Predicted K</span>
+              </div>
+              <h3>DeTexture Multi-Texture</h3>
+              <p class="kv card-summary">Oracle K remains ahead by 0.172 mIoU and 0.034 ARI.</p>
+              
+          <div class="leader-stats">
+            <span class="pill">Leader mIoU 0.715</span>
+            <span class="pill">Leader ARI 0.646</span>
+            <span class="pill">Oracle K wins 326</span>
+            <span class="pill">Predicted K wins 57</span>
+            <span class="pill">Ties 142</span>
+          </div>
+        
+              <div class="preview-grid">
+                
+                <figure>
+                  <img src="assets/all_previews/oracle_k_full/detexture_multi/training_ADE_train_00007856.png" alt="DeTexture Multi sample training_ADE_train_00007856"
+                    data-zoom-src="assets/all_previews/oracle_k_full/detexture_multi/training_ADE_train_00007856.png" />
+                  <figcaption>
+                    <span class="pill">id training_ADE_train_00007856</span>
+                    <span class="pill">mIoU 1.000</span>
+                  </figcaption>
+                </figure>
+                
+                <figure>
+                  <img src="assets/all_previews/oracle_k_full/detexture_multi/training_ADE_train_00014168.png" alt="DeTexture Multi sample training_ADE_train_00014168"
+                    data-zoom-src="assets/all_previews/oracle_k_full/detexture_multi/training_ADE_train_00014168.png" />
+                  <figcaption>
+                    <span class="pill">id training_ADE_train_00014168</span>
+                    <span class="pill">mIoU 1.000</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+              <div class="card-actions">
+                <a class="btn secondary" href="gallery.html?dataset=detexture_multi&view=paired">Open DeTexture Multi 1:1 Gallery</a>
+              </div>
+            </article>
+            
+  </div>
+</section>
+
+
     <footer style="margin-top: 80px; text-align: center;">
-      <p><a href="../../index.html" style="text-decoration: none; color: var(--brand); font-weight: 600;">← Back to Dashboard</a></p>
+      <p><a href="../../index.html" style="text-decoration: none; color: var(--brand); font-weight: 600;">Back to Dashboard</a></p>
       <p style="margin-top: 12px;">Research Analytics by <strong>Antigravity</strong></p>
     </footer>
   </div>

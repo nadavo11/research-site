@@ -1,16 +1,38 @@
 {
   "metric_contract": "architexture_binary_v1",
-  "metric_note": "Cross-flavor comparison is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort the page.",
+  "multi_texture_metric_contract": "detexture_multi_partition_v1",
+  "metric_note": "The Coarse Feature Clustering flavor table is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort that comparison. The multi-texture table uses the DeTexture multi-partition contract instead.",
   "dataset_order": [
+    "rwtd",
+    "caid",
+    "stld",
+    "cstd",
+    "detexture",
+    "detexture_multi"
+  ],
+  "cfc_dataset_order": [
     "rwtd",
     "caid",
     "stld",
     "cstd",
     "detexture"
   ],
+  "multi_texture_order": [
+    "detexture_multi"
+  ],
   "flavor_order": [
     "coarse_only",
+    "flip_averaged",
+    "oracle_k_full",
+    "predicted_k_full"
+  ],
+  "cfc_flavor_order": [
+    "coarse_only",
     "flip_averaged"
+  ],
+  "multi_texture_flavor_order": [
+    "oracle_k_full",
+    "predicted_k_full"
   ],
   "datasets": {
     "rwtd": {
@@ -18,6 +40,12 @@
       "title": "RWTD Dataset",
       "description": "Natural texture transitions and high-frequency boundary detection in organic scenes.",
       "dataset_id": "aviadcohz/RWTD",
+      "comparison_kind": "cfc",
+      "comparison_note": null,
+      "pair_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
       "sample_count": 227,
       "available_flavors": [
         "coarse_only",
@@ -27,6 +55,8 @@
       "leader_flavor": "flip_averaged",
       "leader_mIoU": 0.839748,
       "leader_ARI": 0.725812,
+      "delta_mIoU": 0.016236,
+      "delta_ARI": 0.027386,
       "delta_mIoU_flip_vs_coarse": 0.016236,
       "delta_ARI_flip_vs_coarse": 0.027386,
       "single_flavor_note": null,
@@ -53,7 +83,9 @@
           "evaluation_contract": "architexture_binary_v1",
           "evaluation_view": "partition_invariant",
           "source_path": "experiments/Coarse Feature Clustering/rwtd/flip_averaged"
-        }
+        },
+        "oracle_k_full": null,
+        "predicted_k_full": null
       },
       "gallery_preview_count": 4
     },
@@ -62,6 +94,12 @@
       "title": "CAID Dataset",
       "description": "Architectural plan partitions and region clustering in structured manifold domains.",
       "dataset_id": "architexture:caid",
+      "comparison_kind": "cfc",
+      "comparison_note": null,
+      "pair_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
       "sample_count": 3104,
       "available_flavors": [
         "coarse_only",
@@ -71,6 +109,8 @@
       "leader_flavor": "coarse_only",
       "leader_mIoU": 0.674265,
       "leader_ARI": 0.495585,
+      "delta_mIoU": -0.015437,
+      "delta_ARI": -0.044916,
       "delta_mIoU_flip_vs_coarse": -0.015437,
       "delta_ARI_flip_vs_coarse": -0.044916,
       "single_flavor_note": null,
@@ -97,7 +137,9 @@
           "evaluation_contract": "architexture_binary_v1",
           "evaluation_view": "partition_invariant",
           "source_path": "experiments/Coarse Feature Clustering/caid/flip_averaged"
-        }
+        },
+        "oracle_k_full": null,
+        "predicted_k_full": null
       },
       "gallery_preview_count": 4
     },
@@ -106,6 +148,12 @@
       "title": "STLD Dataset",
       "description": "Structural and functional partitioning in diverse synthetic and real-world scenes.",
       "dataset_id": "architexture:stld",
+      "comparison_kind": "cfc",
+      "comparison_note": null,
+      "pair_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
       "sample_count": 200,
       "available_flavors": [
         "coarse_only",
@@ -115,6 +163,8 @@
       "leader_flavor": "flip_averaged",
       "leader_mIoU": 0.753395,
       "leader_ARI": 0.619408,
+      "delta_mIoU": 0.28519,
+      "delta_ARI": 0.433543,
       "delta_mIoU_flip_vs_coarse": 0.28519,
       "delta_ARI_flip_vs_coarse": 0.433543,
       "single_flavor_note": null,
@@ -141,7 +191,9 @@
           "evaluation_contract": "architexture_binary_v1",
           "evaluation_view": "direct_foreground",
           "source_path": "experiments/Coarse Feature Clustering/stld/flip_averaged"
-        }
+        },
+        "oracle_k_full": null,
+        "predicted_k_full": null
       },
       "gallery_preview_count": 4
     },
@@ -150,6 +202,12 @@
       "title": "CSTD Dataset",
       "description": "Binary region-versus-complement partitioning under the CSTD streaming benchmark.",
       "dataset_id": "cstd",
+      "comparison_kind": "cfc",
+      "comparison_note": null,
+      "pair_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
       "sample_count": 500,
       "available_flavors": [
         "flip_averaged"
@@ -158,6 +216,8 @@
       "leader_flavor": "flip_averaged",
       "leader_mIoU": 0.744914,
       "leader_ARI": 0.578429,
+      "delta_mIoU": null,
+      "delta_ARI": null,
       "delta_mIoU_flip_vs_coarse": null,
       "delta_ARI_flip_vs_coarse": null,
       "single_flavor_note": "Flip Averaged is published for CSTD, but there is no Coarse Only baseline yet.",
@@ -176,7 +236,9 @@
           "evaluation_contract": "architexture_binary_v1",
           "evaluation_view": "partition_invariant",
           "source_path": "experiments/Coarse Feature Clustering/cstd"
-        }
+        },
+        "oracle_k_full": null,
+        "predicted_k_full": null
       },
       "gallery_preview_count": 4
     },
@@ -185,6 +247,12 @@
       "title": "DeTexture ADE20K",
       "description": "Binary texture-boundary crops from ADE20K evaluated as mask_a versus mask_b under the DeTexture benchmark.",
       "dataset_id": "detexture_ade20k",
+      "comparison_kind": "cfc",
+      "comparison_note": null,
+      "pair_flavors": [
+        "coarse_only",
+        "flip_averaged"
+      ],
       "sample_count": 2201,
       "available_flavors": [
         "flip_averaged"
@@ -193,6 +261,8 @@
       "leader_flavor": "flip_averaged",
       "leader_mIoU": 0.626535,
       "leader_ARI": 0.40637,
+      "delta_mIoU": null,
+      "delta_ARI": null,
       "delta_mIoU_flip_vs_coarse": null,
       "delta_ARI_flip_vs_coarse": null,
       "single_flavor_note": "Flip Averaged is published for DeTexture ADE20K, but there is no Coarse Only baseline yet.",
@@ -211,6 +281,62 @@
           "evaluation_contract": "architexture_binary_v1",
           "evaluation_view": "partition_invariant",
           "source_path": "experiments/Coarse Feature Clustering/detexture/flip_averaged"
+        },
+        "oracle_k_full": null,
+        "predicted_k_full": null
+      },
+      "gallery_preview_count": 4
+    },
+    "detexture_multi": {
+      "label": "DeTexture Multi",
+      "title": "DeTexture Multi-Texture",
+      "description": "Multi-region DeTexture ADE20K crops evaluated under the order-invariant multi-partition contract.",
+      "dataset_id": "detexture_ade20k_multi",
+      "comparison_kind": "multi_texture",
+      "comparison_note": "Oracle K supplies only the GT region count K, while Predicted K infers K automatically before the same pooled coarse clustering step.",
+      "pair_flavors": [
+        "oracle_k_full",
+        "predicted_k_full"
+      ],
+      "sample_count": 525,
+      "available_flavors": [
+        "oracle_k_full",
+        "predicted_k_full"
+      ],
+      "comparable": true,
+      "leader_flavor": "oracle_k_full",
+      "leader_mIoU": 0.714621,
+      "leader_ARI": 0.645618,
+      "delta_mIoU": -0.171864,
+      "delta_ARI": -0.033857,
+      "delta_mIoU_flip_vs_coarse": null,
+      "delta_ARI_flip_vs_coarse": null,
+      "single_flavor_note": null,
+      "sample_wins": {
+        "oracle_k_full": 326,
+        "predicted_k_full": 57,
+        "ties": 142
+      },
+      "flavors": {
+        "coarse_only": null,
+        "flip_averaged": null,
+        "oracle_k_full": {
+          "mIoU": 0.714621,
+          "ARI": 0.645618,
+          "mIoU_agg": 0.0,
+          "variant": "feature_cluster_coarse_global_pooled_oracle_k",
+          "evaluation_contract": "detexture_multi_partition_v1",
+          "evaluation_view": "multi_partition_invariant",
+          "source_path": "experiments/Coarse Feature Clustering/detexture_multi/oracle_k_full"
+        },
+        "predicted_k_full": {
+          "mIoU": 0.542757,
+          "ARI": 0.611762,
+          "mIoU_agg": 0.0,
+          "variant": "feature_cluster_coarse_global_pooled_predicted_k",
+          "evaluation_contract": "detexture_multi_partition_v1",
+          "evaluation_view": "multi_partition_invariant",
+          "source_path": "experiments/Coarse Feature Clustering/detexture_multi/predicted_k_full"
         }
       },
       "gallery_preview_count": 4
@@ -239,5 +365,20 @@
     "best_gain_dataset_ARI": "stld",
     "best_gain_mIoU": 0.28519,
     "best_gain_ARI": 0.433543
+  },
+  "multi_texture_summary": {
+    "datasets_total": 1,
+    "comparable_dataset_count": 1,
+    "paired_samples": 525,
+    "datasets": [
+      "detexture_multi"
+    ]
+  },
+  "gallery_summary": {
+    "records": 264,
+    "paired_samples": 112,
+    "available_paired_samples": 4056,
+    "single_flavor_records": 40,
+    "available_single_flavor_records": 2701
   }
 }

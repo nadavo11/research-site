@@ -17,8 +17,13 @@
     },
     "detexture": {
       "flip_averaged": "experiments/Coarse Feature Clustering/detexture/flip_averaged"
+    },
+    "detexture_multi": {
+      "oracle_k_full": "experiments/Coarse Feature Clustering/detexture_multi/oracle_k_full",
+      "predicted_k_full": "experiments/Coarse Feature Clustering/detexture_multi/predicted_k_full"
     }
   },
   "metric_contract": "architexture_binary_v1",
-  "metric_note": "Cross-flavor comparison is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort the page."
+  "metric_note": "The Coarse Feature Clustering flavor table is normalized onto the shared ArchiTexture binary evaluator (mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort that comparison. The multi-texture table uses the DeTexture multi-partition contract instead.",
+  "multi_texture_metric_contract": "detexture_multi_partition_v1"
 }

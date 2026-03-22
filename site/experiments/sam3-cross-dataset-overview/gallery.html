@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cross-Flavor Gallery — SAM 3</title>
+  <title>Comparison Gallery - SAM 3</title>
   <link rel="stylesheet" href="../../assets/site.css" />
   <style>
     .gallery-toolbar {
@@ -175,32 +175,29 @@
   <div class="container animate-fade-in-down">
     <header style="text-align: center; margin-bottom: 42px;">
       <div class="subtitle">Interactive Gallery</div>
-      <h1 class="title-gradient">Cross-Flavor / Single-Flavor Gallery</h1>
+      <h1 class="title-gradient">Comparison Gallery</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
-        Browse paired same-sample comparisons where both flavors exist, or switch into a single-flavor slice
-        for datasets that currently publish only <code>flip_averaged</code>. The headline metrics on
-        the overview page still reflect the full benchmark.
+        Browse paired same-sample comparisons for both Coarse Feature Clustering and the new multi-texture
+        Oracle-K versus Predicted-K benchmark, or switch into single-flavor slices for datasets that
+        currently publish only one flavor. The overview page metrics still reflect the full benchmark behind
+        each section.
       </p>
     </header>
 
     <section class="section">
       <div class="gallery-toolbar">
         <label for="datasetSelect">Dataset</label>
-        <select id="datasetSelect"><option value="all">All Datasets</option><option value="rwtd">RWTD (aviadcohz/RWTD)</option><option value="caid">CAID (architexture:caid)</option><option value="stld">STLD (architexture:stld)</option><option value="cstd">CSTD (cstd)</option><option value="detexture">DeTexture (detexture_ade20k)</option></select>
+        <select id="datasetSelect"><option value="all">All Datasets</option><option value="rwtd">RWTD (aviadcohz/RWTD)</option><option value="caid">CAID (architexture:caid)</option><option value="stld">STLD (architexture:stld)</option><option value="cstd">CSTD (cstd)</option><option value="detexture">DeTexture (detexture_ade20k)</option><option value="detexture_multi">DeTexture Multi (detexture_ade20k_multi)</option></select>
 
         <label for="flavorSelect">Flavor</label>
-        <select id="flavorSelect">
-          <option value="paired">1:1 Comparison</option>
-          <option value="coarse_only">Coarse Only</option>
-          <option value="flip_averaged">Flip Averaged</option>
-        </select>
+        <select id="flavorSelect"><option value="paired">1:1 Comparison</option><option value="coarse_only">Coarse Only</option><option value="flip_averaged">Flip Averaged</option><option value="oracle_k_full">Oracle K</option><option value="predicted_k_full">Predicted K</option></select>
 
         <label for="sortSelect">Sort</label>
         <select id="sortSelect">
-          <option value="delta_desc">ΔmIoU ↓ biggest first</option>
-          <option value="score_desc">Score ↓ best first</option>
-          <option value="score_asc">Score ↑ worst first</option>
-          <option value="sample_id_asc">Sample ID ↑</option>
+          <option value="delta_desc">Delta mIoU down</option>
+          <option value="score_desc">Score down</option>
+          <option value="score_asc">Score up</option>
+          <option value="sample_id_asc">Sample ID up</option>
         </select>
 
         <label for="pageSizeSelect">Per Page</label>
@@ -213,7 +210,7 @@
           <option value="all">All</option>
         </select>
 
-        <div class="toolbar-count" id="countLabel">Loading…</div>
+        <div class="toolbar-count" id="countLabel">Loading...</div>
         <div class="toolbar-note" id="toolbarNote"></div>
       </div>
 
@@ -224,7 +221,7 @@
     </section>
 
     <footer style="margin-top: 60px; text-align: center;">
-      <p><a href="index.html" style="text-decoration: none; color: var(--brand); font-weight: 600;">← Back to report</a></p>
+      <p><a href="index.html" style="text-decoration: none; color: var(--brand); font-weight: 600;">Back to report</a></p>
     </footer>
   </div>
 
@@ -279,6 +276,11 @@
         loadedPages = 1;
       }
 
+      function pairFlavorLabels(datasetInfo) {
+        if (!datasetInfo || !datasetInfo.pair_flavors || !datasetInfo.pair_flavors.length) return [];
+        return datasetInfo.pair_flavors.map((flavor) => data.flavors[flavor]?.label || flavor);
+      }
+
       function syncFlavorAvailability() {
         const dataset = datasetSelect.value;
         const datasetInfo = dataset === 'all' ? null : data.datasets[dataset];
@@ -296,8 +298,6 @@
         if (flavorSelect.selectedOptions[0]?.disabled) {
           if (pairedEnabled) {
             flavorSelect.value = 'paired';
-          } else if (availableFlavors.has('flip_averaged')) {
-            flavorSelect.value = 'flip_averaged';
           } else {
             const fallback = [...flavorSelect.options].find((option) => !option.disabled);
             if (fallback) flavorSelect.value = fallback.value;
@@ -352,8 +352,8 @@
             const rightScore = right.leader_mIoU ?? right.mIoU ?? 0;
             return rightScore - leftScore;
           }
-          const leftDelta = left.delta_mIoU_flip_vs_coarse ?? 0;
-          const rightDelta = right.delta_mIoU_flip_vs_coarse ?? 0;
+          const leftDelta = left.delta_mIoU ?? left.pair_delta_mIoU ?? 0;
+          const rightDelta = right.delta_mIoU ?? right.pair_delta_mIoU ?? 0;
           return rightDelta - leftDelta;
         });
         return sorted;
@@ -394,22 +394,24 @@
       }
 
       function renderPairCard(pair) {
-        const coarse = recordMap.get(pair.record_ids.coarse_only);
-        const flip = recordMap.get(pair.record_ids.flip_averaged);
+        const left = recordMap.get(pair.record_ids[pair.left_flavor]);
+        const right = recordMap.get(pair.record_ids[pair.right_flavor]);
+        const comparisonLabel = `${data.flavors[pair.left_flavor].label} vs ${data.flavors[pair.right_flavor].label}`;
         return `
           <article class="pair-card">
             <div class="pair-head">
               <span class="pill dataset-pill">${data.datasets[pair.dataset].label}</span>
+              <span class="pill">${comparisonLabel}</span>
               <span class="pill">id ${pair.sample_id}</span>
-              <span class="pill ${pair.leader_flavor === 'flip_averaged' ? 'good' : pair.leader_flavor === 'coarse_only' ? 'warn' : ''}">
+              <span class="pill ${pair.leader_flavor === 'tie' ? '' : 'good'}">
                 Leader: ${pair.leader_flavor === 'tie' ? 'Tie' : data.flavors[pair.leader_flavor].label}
               </span>
-              <span class="pill ${deltaClass(pair.delta_mIoU_flip_vs_coarse)}">ΔmIoU ${pair.delta_mIoU_flip_vs_coarse.toFixed(3)}</span>
-              <span class="pill ${deltaClass(pair.delta_ARI_flip_vs_coarse)}">ΔARI ${pair.delta_ARI_flip_vs_coarse.toFixed(3)}</span>
+              <span class="pill ${deltaClass(pair.delta_mIoU)}">Delta mIoU ${pair.delta_mIoU.toFixed(3)}</span>
+              <span class="pill ${deltaClass(pair.delta_ARI)}">Delta ARI ${pair.delta_ARI.toFixed(3)}</span>
             </div>
             <div class="pair-grid">
-              ${renderPanel(coarse)}
-              ${renderPanel(flip)}
+              ${renderPanel(left)}
+              ${renderPanel(right)}
             </div>
           </article>
         `;
@@ -433,8 +435,8 @@
         const leaderLabel = record.leader_flavor_for_sample
           ? (record.leader_flavor_for_sample === 'tie' ? 'Tie' : data.flavors[record.leader_flavor_for_sample].label)
           : null;
-        const deltaValue = typeof record.delta_mIoU_flip_vs_coarse === 'number'
-          ? `<span class="pill ${deltaClass(record.delta_mIoU_flip_vs_coarse)}">ΔmIoU ${record.delta_mIoU_flip_vs_coarse.toFixed(3)}</span>`
+        const deltaValue = typeof record.pair_delta_mIoU === 'number'
+          ? `<span class="pill ${deltaClass(record.pair_delta_mIoU)}">Delta mIoU ${record.pair_delta_mIoU.toFixed(3)}</span>`
           : '';
         return `
           <article class="single-card">
@@ -472,17 +474,20 @@
             root.className = 'gallery-stack';
             root.innerHTML = visibleItems.map(renderPairCard).join('');
           } else if (datasetInfo && !datasetInfo.has_paired_comparison) {
-            renderEmptyState(`${datasetInfo.label} currently publishes only Flip Averaged. Switch the Flavor control to browse its curated single-flavor slice.`);
+            const fallbackFlavor = datasetInfo.available_flavors[0];
+            const fallbackLabel = fallbackFlavor ? data.flavors[fallbackFlavor].label : 'the published flavor';
+            renderEmptyState(`${datasetInfo.label} currently publishes single-flavor records only. Switch the Flavor control to ${fallbackLabel} to browse the published slice.`);
           } else {
             renderEmptyState('No paired samples match the current filters.');
           }
           countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} paired samples`;
           if (dataset === 'all') {
-            toolbarNote.textContent = `This gallery publishes ${data.counts.paired_samples} paired samples drawn from ${data.counts.available_paired_samples} available benchmark pairs, plus ${data.counts.single_flavor_records} curated single-flavor records for datasets without a vanilla baseline.`;
+            toolbarNote.textContent = `This gallery publishes ${data.counts.paired_samples} paired samples drawn from ${data.counts.available_paired_samples} available comparisons across both CFC flavors and the multi-texture oracle-vs-predicted slice, plus ${data.counts.single_flavor_records} curated single-flavor records for datasets without a paired baseline.`;
           } else if (datasetInfo && datasetInfo.has_paired_comparison) {
-            toolbarNote.textContent = `Paired mode keeps Coarse Only on the left and Flip Averaged on the right. Use Load More to continue through the published ${datasetInfo.label} slice.`;
+            const labels = pairFlavorLabels(datasetInfo);
+            toolbarNote.textContent = `Paired mode keeps ${labels[0]} on the left and ${labels[1]} on the right. Deltas are ${labels[1]} - ${labels[0]}. Use Load More to continue through the published ${datasetInfo.label} slice.`;
           } else {
-            toolbarNote.textContent = `${datasetInfo.single_flavor_note} Switch Flavor to Flip Averaged to browse the published slice.`;
+            toolbarNote.textContent = datasetInfo.single_flavor_note || `${datasetInfo.label} currently publishes a single-flavor slice only.`;
           }
           updateLoadMore(items, 'Pairs');
           syncUrl();

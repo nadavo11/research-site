@@ -7,3 +7,5 @@ This page compares the published Coarse Feature Clustering flavors under the sha
         CAID still favors `coarse_only` (`0.674` mIoU, `0.496` ARI).
 
 CSTD is currently published as `flip_averaged` only (`0.745` mIoU, `0.578` ARI), so it expands coverage without a coarse-only delta yet. DeTexture is currently published as `flip_averaged` only (`0.627` mIoU, `0.406` ARI), so it expands coverage without a coarse-only delta yet.
+
+Separately, `DeTexture Multi` compares `oracle_k_full` against `predicted_k_full` under `detexture_multi_partition_v1`. `Oracle K` leads (`0.715` mIoU, `0.646` ARI), and the published delta for `predicted_k_full` relative to `oracle_k_full` is `-0.172` mIoU and `-0.034` ARI.

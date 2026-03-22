@@ -17,12 +17,19 @@ LEGACY_SOURCE_ROOT = ROOT / "experiments" / "Coarse Feature Clustering"
 DEST_DIR = ROOT / "site" / "experiments" / "sam3-cross-dataset-overview"
 
 DATASET_ORDER = ["rwtd", "caid", "stld", "cstd", "detexture"]
+MULTI_TEXTURE_ORDER = ["detexture_multi"]
+ALL_DATASET_ORDER = DATASET_ORDER + MULTI_TEXTURE_ORDER
+
 FLAVOR_ORDER = ["coarse_only", "flip_averaged"]
+MULTI_TEXTURE_FLAVOR_ORDER = ["oracle_k_full", "predicted_k_full"]
+GALLERY_FLAVOR_ORDER = FLAVOR_ORDER + MULTI_TEXTURE_FLAVOR_ORDER
 
 METRIC_CONTRACT = "architexture_binary_v1"
+MULTI_TEXTURE_METRIC_CONTRACT = "detexture_multi_partition_v1"
 METRIC_NOTE = (
-    "Cross-flavor comparison is normalized onto the shared ArchiTexture binary evaluator "
-    "(mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort the page."
+    "The Coarse Feature Clustering flavor table is normalized onto the shared ArchiTexture binary evaluator "
+    "(mIoU, ARI) so RWTD legacy aggregate-only summaries do not distort that comparison. "
+    "The multi-texture table uses the DeTexture multi-partition contract instead."
 )
 
 DATASETS = {
@@ -65,6 +72,25 @@ DATASETS = {
     },
 }
 
+MULTI_TEXTURE_DATASETS = {
+    "detexture_multi": {
+        "label": "DeTexture Multi",
+        "title": "DeTexture Multi-Texture",
+        "dataset_id": "detexture_ade20k_multi",
+        "description": "Multi-region DeTexture ADE20K crops evaluated under the order-invariant multi-partition contract.",
+        "available_flavors": MULTI_TEXTURE_FLAVOR_ORDER,
+        "comparison_flavors": MULTI_TEXTURE_FLAVOR_ORDER,
+        "run_dir_candidates": {
+            "oracle_k_full": ["detexture_multi/oracle_k_full"],
+            "predicted_k_full": ["detexture_multi/predicted_k_full"],
+        },
+        "comparison_note": (
+            "Oracle K supplies only the GT region count K, while Predicted K infers K automatically "
+            "before the same pooled coarse clustering step."
+        ),
+    },
+}
+
 FLAVORS = {
     "coarse_only": {
         "label": "Coarse Only",
@@ -73,6 +99,14 @@ FLAVORS = {
     "flip_averaged": {
         "label": "Flip Averaged",
         "summary": "Average the coarsest features across identity, hflip, vflip, and hvflip before clustering.",
+    },
+    "oracle_k_full": {
+        "label": "Oracle K",
+        "summary": "Use the GT region count K while keeping clustering itself prompt-free and geometry-agnostic.",
+    },
+    "predicted_k_full": {
+        "label": "Predicted K",
+        "summary": "Predict K automatically, then run the same pooled coarse clustering without GT count access.",
     },
 }
 
@@ -127,12 +161,26 @@ def asset_relpath(dataset: str, flavor: str, file_name: str) -> Path:
     return Path(flavor) / dataset / file_name
 
 
+def dataset_catalog(dataset: str) -> dict:
+    if dataset in DATASETS:
+        return DATASETS[dataset]
+    if dataset in MULTI_TEXTURE_DATASETS:
+        return MULTI_TEXTURE_DATASETS[dataset]
+    raise KeyError(f"Unknown dataset slug: {dataset}")
+
+
+def pair_flavors_for_dataset(dataset: str) -> list[str]:
+    return list(dataset_catalog(dataset).get("comparison_flavors", FLAVOR_ORDER))
+
+
 def available_flavors_for_dataset(dataset: str) -> list[str]:
-    return list(DATASETS[dataset].get("available_flavors", FLAVOR_ORDER))
+    info = dataset_catalog(dataset)
+    return list(info.get("available_flavors", info.get("comparison_flavors", FLAVOR_ORDER)))
 
 
 def resolve_run_dir(dataset: str, flavor: str) -> Path:
-    override_candidates = DATASETS[dataset].get("run_dir_candidates", {}).get(flavor)
+    info = dataset_catalog(dataset)
+    override_candidates = info.get("run_dir_candidates", {}).get(flavor)
     if override_candidates:
         candidate_roots = [LEGACY_SOURCE_ROOT / relative_path for relative_path in override_candidates]
     else:
@@ -156,29 +204,39 @@ def resolve_run_dir(dataset: str, flavor: str) -> Path:
     raise FileNotFoundError(f"Could not resolve run dir for {dataset=} {flavor=}")
 
 
-def leader_flavor_from_scores(left_miou: float, left_ari: float, right_miou: float, right_ari: float) -> str:
+
+def leader_flavor_from_scores(
+    left_flavor: str,
+    left_miou: float,
+    left_ari: float,
+    right_flavor: str,
+    right_miou: float,
+    right_ari: float,
+) -> str:
     if right_miou > left_miou:
-        return "flip_averaged"
+        return right_flavor
     if right_miou < left_miou:
-        return "coarse_only"
+        return left_flavor
     if right_ari > left_ari:
-        return "flip_averaged"
+        return right_flavor
     if right_ari < left_ari:
-        return "coarse_only"
+        return left_flavor
     return "tie"
 
 
 def load_summary(run_dir: Path) -> dict:
     payload = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
     metrics = payload["mean_metrics"]
+    miou_value = metrics["eval_miou"] if "eval_miou" in metrics else metrics["miou"]
+    ari_value = metrics["eval_ari"] if "eval_ari" in metrics else metrics["ari"]
     return {
-        "mIoU": float(metrics.get("eval_miou", metrics["miou"])),
-        "ARI": float(metrics.get("eval_ari", metrics["ari"])),
+        "mIoU": float(miou_value),
+        "ARI": float(ari_value),
         "mIoU_agg": float(metrics.get("miou_agg", 0.0)),
         "variant": payload.get("variant", ""),
         "evaluation_contract": payload.get("evaluation_contract", "legacy_summary_metric"),
         "evaluation_view": payload.get("evaluation_view", ""),
-        "sample_count": int(payload.get("num_evaluated_samples", 0)),
+        "sample_count": int(payload.get("num_evaluated_samples") or payload.get("num_total_samples") or payload.get("num_successes") or 0),
         "source_path": run_dir.relative_to(ROOT).as_posix(),
     }
 
@@ -205,8 +263,8 @@ def load_visual_records(dataset: str, flavor: str, run_dir: Path) -> dict[str, d
                 "ARI": round(float(raw.get("eval_ari", raw.get("ari", raw.get("sample_ari", 0.0)))), 4),
                 "file_path": asset_rel.as_posix(),
                 "leader_flavor_for_sample": None,
-                "delta_mIoU_flip_vs_coarse": None,
-                "delta_ARI_flip_vs_coarse": None,
+                "pair_delta_mIoU": None,
+                "pair_delta_ARI": None,
                 "_source_path": source_file,
             }
     return records
@@ -251,7 +309,7 @@ def select_gallery_pairs(dataset_pairs: list[dict], featured_sample_ids: list[st
         sorted(
             dataset_pairs,
             key=lambda pair: (
-                -pair["delta_mIoU_flip_vs_coarse"],
+                -pair["delta_mIoU"],
                 -pair["leader_mIoU"],
                 pair["sample_numeric"],
                 pair["sample_id"],
@@ -265,7 +323,7 @@ def select_gallery_pairs(dataset_pairs: list[dict], featured_sample_ids: list[st
         sorted(
             dataset_pairs,
             key=lambda pair: (
-                pair["delta_mIoU_flip_vs_coarse"],
+                pair["delta_mIoU"],
                 pair["leader_mIoU"],
                 pair["sample_numeric"],
                 pair["sample_id"],
@@ -280,7 +338,7 @@ def select_gallery_pairs(dataset_pairs: list[dict], featured_sample_ids: list[st
             dataset_pairs,
             key=lambda pair: (
                 -pair["leader_mIoU"],
-                -abs(pair["delta_mIoU_flip_vs_coarse"]),
+                -abs(pair["delta_mIoU"]),
                 pair["sample_numeric"],
                 pair["sample_id"],
             ),
@@ -385,79 +443,12 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
             "original <strong>Coarse Only</strong> flavor still leads CAID."
         )
 
-    rows = []
-    for dataset in DATASET_ORDER:
-        info = metrics_payload["datasets"][dataset]
-        coarse = info["flavors"].get("coarse_only")
-        flip = info["flavors"].get("flip_averaged")
-        leader = FLAVORS[info["leader_flavor"]]["label"]
-        delta_miou = info["delta_mIoU_flip_vs_coarse"]
-        delta_ari = info["delta_ARI_flip_vs_coarse"]
-        delta_class = "good" if (delta_miou or 0) > 0 else "bad" if (delta_miou or 0) < 0 else ""
-        coarse_cell = (
-            f"""
-                <strong>{coarse["mIoU"]:.3f}</strong>
-                <div class="mini-note">ARI {coarse["ARI"]:.3f}</div>
-            """
-            if coarse
-            else """
-                <strong>—</strong>
-                <div class="mini-note">not published</div>
-            """
-        )
-        flip_cell = (
-            f"""
-                <strong>{flip["mIoU"]:.3f}</strong>
-                <div class="mini-note">ARI {flip["ARI"]:.3f}</div>
-            """
-            if flip
-            else """
-                <strong>—</strong>
-                <div class="mini-note">not published</div>
-            """
-        )
-        if delta_miou is None or delta_ari is None:
-            delta_miou_cell = '<span class="delta-pill">n/a</span>'
-            delta_ari_cell = '<span class="delta-pill">n/a</span>'
-        else:
-            delta_miou_cell = f'<span class="delta-pill {delta_class}">{signed(delta_miou)}</span>'
-            delta_ari_cell = f'<span class="delta-pill {delta_class}">{signed(delta_ari)}</span>'
-        leader_note = '<div class="mini-note">single-flavor only</div>' if not info["comparable"] else ""
-        rows.append(
-            f"""
-            <tr>
-              <td>
-                <strong>{escape(info["label"])}</strong>
-                <div class="mini-note">{escape(DATASETS[dataset]["dataset_id"])}</div>
-              </td>
-              <td>{coarse_cell}</td>
-              <td>{flip_cell}</td>
-              <td>{delta_miou_cell}</td>
-              <td>{delta_ari_cell}</td>
-              <td><span class="tag {'good' if info["leader_flavor"] == 'flip_averaged' else 'warn'}">{escape(leader)}</span>{leader_note}</td>
-            </tr>
-            """
-        )
-
-    cards = []
-    for dataset in DATASET_ORDER:
-        info = metrics_payload["datasets"][dataset]
-        leader_flavor = info["leader_flavor"]
-        leader_label = FLAVORS[leader_flavor]["label"]
-        leader_tag = "good" if leader_flavor == "flip_averaged" else "warn"
-        delta_miou = info["delta_mIoU_flip_vs_coarse"]
-        delta_ari = info["delta_ARI_flip_vs_coarse"]
-        if info["comparable"] and delta_miou is not None and delta_ari is not None and delta_miou >= 0:
-            summary_copy = f"Flip Averaged leads by {signed(delta_miou)} mIoU and {signed(delta_ari)} ARI."
-        elif info["comparable"] and delta_miou is not None and delta_ari is not None:
-            summary_copy = f"Coarse Only holds the lead by {abs(delta_miou):.3f} mIoU and {abs(delta_ari):.3f} ARI."
-        else:
-            summary_copy = info["single_flavor_note"]
+    def preview_figures(dataset: str, info: dict) -> str:
         previews = []
         for record in featured[dataset][:CARD_PREVIEW_LIMIT]:
             src = f"assets/all_previews/{record['file_path']}"
             previews.append(
-                f"""
+                f'''
                 <figure>
                   <img src="{escape(src)}" alt="{escape(info["label"])} sample {escape(record["sample_id"])}"
                     data-zoom-src="{escape(src)}" />
@@ -466,60 +457,253 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
                     <span class="pill">mIoU {record["mIoU"]:.3f}</span>
                   </figcaption>
                 </figure>
-                """
+                '''
             )
+        return ''.join(previews)
+
+    rows = []
+    cards = []
+    for dataset in DATASET_ORDER:
+        info = metrics_payload["datasets"][dataset]
+        coarse = info["flavors"].get("coarse_only")
+        flip = info["flavors"].get("flip_averaged")
+        leader = FLAVORS[info["leader_flavor"]]["label"]
+        delta_miou = info["delta_mIoU"]
+        delta_ari = info["delta_ARI"]
+        delta_class = "good" if (delta_miou or 0) > 0 else "bad" if (delta_miou or 0) < 0 else ""
+        coarse_cell = (
+            f'''
+                <strong>{coarse["mIoU"]:.3f}</strong>
+                <div class="mini-note">ARI {coarse["ARI"]:.3f}</div>
+            '''
+            if coarse
+            else '''
+                <strong>-</strong>
+                <div class="mini-note">not published</div>
+            '''
+        )
+        flip_cell = (
+            f'''
+                <strong>{flip["mIoU"]:.3f}</strong>
+                <div class="mini-note">ARI {flip["ARI"]:.3f}</div>
+            '''
+            if flip
+            else '''
+                <strong>-</strong>
+                <div class="mini-note">not published</div>
+            '''
+        )
+        if delta_miou is None or delta_ari is None:
+            delta_miou_cell = '<span class="delta-pill">n/a</span>'
+            delta_ari_cell = '<span class="delta-pill">n/a</span>'
+        else:
+            delta_miou_cell = f'<span class="delta-pill {delta_class}">{signed(delta_miou)}</span>'
+            delta_ari_cell = f'<span class="delta-pill {delta_class}">{signed(delta_ari)}</span>'
+        leader_note = '<div class="mini-note">single-flavor only</div>' if not info["comparable"] else ''
+        rows.append(
+            f'''
+            <tr>
+              <td>
+                <strong>{escape(info["label"])}</strong>
+                <div class="mini-note">{escape(info["dataset_id"])}</div>
+              </td>
+              <td>{coarse_cell}</td>
+              <td>{flip_cell}</td>
+              <td>{delta_miou_cell}</td>
+              <td>{delta_ari_cell}</td>
+              <td><span class="tag {'good' if info["leader_flavor"] == 'flip_averaged' else 'warn'}">{escape(leader)}</span>{leader_note}</td>
+            </tr>
+            '''
+        )
+
+        leader_tag = "good" if info["leader_flavor"] == "flip_averaged" else "warn"
+        if info["comparable"] and delta_miou is not None and delta_ari is not None and delta_miou >= 0:
+            summary_copy = f"Flip Averaged leads by {signed(delta_miou)} mIoU and {signed(delta_ari)} ARI."
+        elif info["comparable"] and delta_miou is not None and delta_ari is not None:
+            summary_copy = f"Coarse Only holds the lead by {abs(delta_miou):.3f} mIoU and {abs(delta_ari):.3f} ARI."
+        else:
+            summary_copy = info["single_flavor_note"]
         if info["comparable"]:
             win_counts = info["sample_wins"]
-            stats_html = (
-                f"""
+            stats_html = f'''
               <div class="leader-stats">
                 <span class="pill">Leader mIoU {info["leader_mIoU"]:.3f}</span>
                 <span class="pill">Leader ARI {info["leader_ARI"]:.3f}</span>
                 <span class="pill">Wins F/C/T {win_counts["flip_averaged"]}/{win_counts["coarse_only"]}/{win_counts["ties"]}</span>
               </div>
-                """
-            )
-            availability_tag = ""
+            '''
+            availability_tag = ''
             action_href = f"gallery.html?dataset={dataset}&view=paired"
             action_label = f"Open {escape(info['label'])} 1:1 Gallery"
         else:
             published_flavors = ", ".join(FLAVORS[flavor]["label"] for flavor in info["available_flavors"])
-            stats_html = (
-                f"""
+            stats_html = f'''
               <div class="leader-stats">
                 <span class="pill">mIoU {info["leader_mIoU"]:.3f}</span>
                 <span class="pill">ARI {info["leader_ARI"]:.3f}</span>
                 <span class="pill">Samples {info["sample_count"]:,}</span>
               </div>
-                """
-            )
+            '''
             availability_tag = f'<span class="tag">Published: {escape(published_flavors)} only</span>'
             action_href = f"gallery.html?dataset={dataset}&view={info['available_flavors'][0]}"
             action_label = f"Open {escape(info['label'])} {escape(FLAVORS[info['available_flavors'][0]]['label'])} Gallery"
         cards.append(
-            f"""
+            f'''
             <article class="dataset-card cfc-card">
               <div class="card-topline">
                 <span class="tag">{escape(info["label"])}</span>
-                <span class="tag {leader_tag}">Leader: {escape(leader_label)}</span>
+                <span class="tag {leader_tag}">Leader: {escape(leader)}</span>
                 {availability_tag}
               </div>
               <h3>{escape(info["title"])}</h3>
               <p class="kv card-summary">{escape(summary_copy)}</p>
               {stats_html}
               <div class="preview-grid">
-                {"".join(previews)}
+                {preview_figures(dataset, info)}
               </div>
               <div class="card-actions">
                 <a class="btn secondary" href="{action_href}">{action_label}</a>
               </div>
             </article>
-            """
+            '''
         )
 
+    multi_rows = []
+    multi_cards = []
+    multi_summary_bits = []
+    for dataset in MULTI_TEXTURE_ORDER:
+        info = metrics_payload["datasets"][dataset]
+        if not info["comparable"]:
+            continue
+        left_flavor, right_flavor = info["pair_flavors"]
+        left = info["flavors"][left_flavor]
+        right = info["flavors"][right_flavor]
+        leader_label = FLAVORS[info["leader_flavor"]]["label"]
+        delta_miou = info["delta_mIoU"]
+        delta_ari = info["delta_ARI"]
+        delta_class = "good" if (delta_miou or 0) > 0 else "bad" if (delta_miou or 0) < 0 else ""
+        multi_rows.append(
+            f'''
+            <tr>
+              <td>
+                <strong>{escape(info["label"])}</strong>
+                <div class="mini-note">{escape(info["dataset_id"])}</div>
+              </td>
+              <td>
+                <strong>{left["mIoU"]:.3f}</strong>
+                <div class="mini-note">ARI {left["ARI"]:.3f}</div>
+              </td>
+              <td>
+                <strong>{right["mIoU"]:.3f}</strong>
+                <div class="mini-note">ARI {right["ARI"]:.3f}</div>
+              </td>
+              <td><span class="delta-pill {delta_class}">{signed(delta_miou)}</span></td>
+              <td><span class="delta-pill {delta_class}">{signed(delta_ari)}</span></td>
+              <td>
+                <span class="tag good">{escape(leader_label)}</span>
+                <div class="mini-note">{info["sample_count"]:,} paired samples</div>
+              </td>
+            </tr>
+            '''
+        )
+        if delta_miou is not None and delta_ari is not None and delta_miou >= 0:
+            summary_copy = f"{FLAVORS[right_flavor]['label']} leads by {signed(delta_miou)} mIoU and {signed(delta_ari)} ARI."
+            multi_summary_bits.append(
+                f"{info['label']} favors <strong>{escape(FLAVORS[right_flavor]['label'])}</strong> "
+                f"({right['mIoU']:.3f} mIoU, {right['ARI']:.3f} ARI) over {escape(FLAVORS[left_flavor]['label'])}."
+            )
+        else:
+            summary_copy = f"{FLAVORS[left_flavor]['label']} remains ahead by {abs(delta_miou):.3f} mIoU and {abs(delta_ari):.3f} ARI."
+            multi_summary_bits.append(
+                f"{info['label']} favors <strong>{escape(FLAVORS[left_flavor]['label'])}</strong> "
+                f"({left['mIoU']:.3f} mIoU, {left['ARI']:.3f} ARI) over {escape(FLAVORS[right_flavor]['label'])} "
+                f"({right['mIoU']:.3f} mIoU, {right['ARI']:.3f} ARI)."
+            )
+        win_counts = info["sample_wins"]
+        stats_html = f'''
+          <div class="leader-stats">
+            <span class="pill">Leader mIoU {info["leader_mIoU"]:.3f}</span>
+            <span class="pill">Leader ARI {info["leader_ARI"]:.3f}</span>
+            <span class="pill">{escape(FLAVORS[left_flavor]['label'])} wins {win_counts[left_flavor]}</span>
+            <span class="pill">{escape(FLAVORS[right_flavor]['label'])} wins {win_counts[right_flavor]}</span>
+            <span class="pill">Ties {win_counts['ties']}</span>
+          </div>
+        '''
+        multi_cards.append(
+            f'''
+            <article class="dataset-card cfc-card">
+              <div class="card-topline">
+                <span class="tag">{escape(info["label"])}</span>
+                <span class="tag good">Leader: {escape(leader_label)}</span>
+                <span class="tag">Paired: {escape(FLAVORS[left_flavor]['label'])} vs {escape(FLAVORS[right_flavor]['label'])}</span>
+              </div>
+              <h3>{escape(info["title"])}</h3>
+              <p class="kv card-summary">{escape(summary_copy)}</p>
+              {stats_html}
+              <div class="preview-grid">
+                {preview_figures(dataset, info)}
+              </div>
+              <div class="card-actions">
+                <a class="btn secondary" href="gallery.html?dataset={dataset}&view=paired">Open {escape(info['label'])} 1:1 Gallery</a>
+              </div>
+            </article>
+            '''
+        )
+
+    if multi_summary_bits:
+        coverage_copy += " A separate multi-texture DeTexture slice compares Oracle K against Predicted K."
+        executive_copy += " Separately, " + " ".join(multi_summary_bits)
+
+    multi_table_section = ''
+    if multi_rows:
+        multi_table_section = dedent(
+            f'''            <section class="section comparison-table">
+              <h2>Multi-Texture Segmentation</h2>
+              <p class="kv" style="margin-bottom: 18px;">
+                Rows use the <code>{MULTI_TEXTURE_METRIC_CONTRACT}</code> evaluator (<code>mIoU</code>, <code>ARI</code>).
+                Deltas are <code>{MULTI_TEXTURE_FLAVOR_ORDER[1]} - {MULTI_TEXTURE_FLAVOR_ORDER[0]}</code>.
+              </p>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Dataset</th>
+                      <th>Oracle K</th>
+                      <th>Predicted K</th>
+                      <th>Delta mIoU</th>
+                      <th>Delta ARI</th>
+                      <th>Leader</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {''.join(multi_rows)}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            '''
+        )
+
+    multi_card_section = ''
+    if multi_cards:
+        multi_card_section = dedent(
+            '''            <section class="section">
+              <div style="display: flex; justify-content: space-between; gap: 20px; align-items: end; flex-wrap: wrap;">
+                <div>
+                  <h2>Multi-Texture Leader</h2>
+                  <p class="kv">Same-sample Oracle-K vs Predicted-K comparisons on DeTexture multi-region crops.</p>
+                </div>
+                <a class="btn secondary" href="gallery.html?dataset=detexture_multi&view=paired">Open Multi-Texture Gallery</a>
+              </div>
+              <div class="dataset-grid" style="margin-top: 22px;">
+                __MULTI_TEXTURE_CARDS__
+              </div>
+            </section>
+            '''
+        ).replace('__MULTI_TEXTURE_CARDS__', ''.join(multi_cards))
+
     page = dedent(
-        """\
-        <!DOCTYPE html>
+        '''        <!DOCTYPE html>
         <html lang="en">
 
         <head>
@@ -650,8 +834,8 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
                       <th>Dataset</th>
                       <th>Coarse Only</th>
                       <th>Flip Averaged</th>
-                      <th>ΔmIoU</th>
-                      <th>ΔARI</th>
+                      <th>Delta mIoU</th>
+                      <th>Delta ARI</th>
                       <th>Leader</th>
                     </tr>
                   </thead>
@@ -662,11 +846,13 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
               </div>
             </section>
 
+            __MULTI_TEXTURE_TABLE_SECTION__
+
             <section class="section">
               <div style="display: flex; justify-content: space-between; gap: 20px; align-items: end; flex-wrap: wrap;">
                 <div>
                   <h2>Dataset Leaders</h2>
-                  <p class="kv">Fast read: who leads, by how much, and two representative samples.</p>
+                  <p class="kv">Fast read: who leads, by how much, and representative samples.</p>
                 </div>
                 <a class="btn" href="gallery.html">Open Gallery</a>
               </div>
@@ -675,8 +861,10 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
               </div>
             </section>
 
+            __MULTI_TEXTURE_CARD_SECTION__
+
             <footer style="margin-top: 80px; text-align: center;">
-              <p><a href="../../index.html" style="text-decoration: none; color: var(--brand); font-weight: 600;">← Back to Dashboard</a></p>
+              <p><a href="../../index.html" style="text-decoration: none; color: var(--brand); font-weight: 600;">Back to Dashboard</a></p>
               <p style="margin-top: 12px;">Research Analytics by <strong>Antigravity</strong></p>
             </footer>
           </div>
@@ -688,15 +876,17 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
         </body>
 
         </html>
-        """
+        '''
     )
     return (
         page.replace("__METRIC_NOTE__", escape(METRIC_NOTE))
         .replace("__COVERAGE_COPY__", coverage_copy)
         .replace("__EXECUTIVE_COPY__", executive_copy)
         .replace("__HEADLINE_CARDS__", build_headline_cards(metrics_payload))
-        .replace("__TABLE_ROWS__", "".join(rows))
-        .replace("__DATASET_CARDS__", "".join(cards))
+        .replace("__TABLE_ROWS__", ''.join(rows))
+        .replace("__MULTI_TEXTURE_TABLE_SECTION__", multi_table_section)
+        .replace("__DATASET_CARDS__", ''.join(cards))
+        .replace("__MULTI_TEXTURE_CARD_SECTION__", multi_card_section)
     )
 
 
@@ -740,19 +930,25 @@ def build_gallery_html() -> str:
     dataset_options = [
         '<option value="all">All Datasets</option>',
         *[
-            f'<option value="{dataset}">{escape(DATASETS[dataset]["label"])} ({DATASETS[dataset]["dataset_id"]})</option>'
-            for dataset in DATASET_ORDER
+            f'<option value="{dataset}">{escape(dataset_catalog(dataset)["label"])} ({dataset_catalog(dataset)["dataset_id"]})</option>'
+            for dataset in ALL_DATASET_ORDER
+        ],
+    ]
+    flavor_options = [
+        '<option value="paired">1:1 Comparison</option>',
+        *[
+            f'<option value="{flavor}">{escape(FLAVORS[flavor]["label"])}</option>'
+            for flavor in GALLERY_FLAVOR_ORDER
         ],
     ]
     gallery = dedent(
-        """\
-        <!DOCTYPE html>
+        '''        <!DOCTYPE html>
         <html lang="en">
 
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Cross-Flavor Gallery — SAM 3</title>
+          <title>Comparison Gallery - SAM 3</title>
           <link rel="stylesheet" href="../../assets/site.css" />
           <style>
             .gallery-toolbar {
@@ -923,11 +1119,12 @@ def build_gallery_html() -> str:
           <div class="container animate-fade-in-down">
             <header style="text-align: center; margin-bottom: 42px;">
               <div class="subtitle">Interactive Gallery</div>
-              <h1 class="title-gradient">Cross-Flavor / Single-Flavor Gallery</h1>
+              <h1 class="title-gradient">Comparison Gallery</h1>
               <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
-                Browse paired same-sample comparisons where both flavors exist, or switch into a single-flavor slice
-                for datasets that currently publish only <code>flip_averaged</code>. The headline metrics on
-                the overview page still reflect the full benchmark.
+                Browse paired same-sample comparisons for both Coarse Feature Clustering and the new multi-texture
+                Oracle-K versus Predicted-K benchmark, or switch into single-flavor slices for datasets that
+                currently publish only one flavor. The overview page metrics still reflect the full benchmark behind
+                each section.
               </p>
             </header>
 
@@ -937,18 +1134,14 @@ def build_gallery_html() -> str:
                 <select id="datasetSelect">__DATASET_OPTIONS__</select>
 
                 <label for="flavorSelect">Flavor</label>
-                <select id="flavorSelect">
-                  <option value="paired">1:1 Comparison</option>
-                  <option value="coarse_only">Coarse Only</option>
-                  <option value="flip_averaged">Flip Averaged</option>
-                </select>
+                <select id="flavorSelect">__FLAVOR_OPTIONS__</select>
 
                 <label for="sortSelect">Sort</label>
                 <select id="sortSelect">
-                  <option value="delta_desc">ΔmIoU ↓ biggest first</option>
-                  <option value="score_desc">Score ↓ best first</option>
-                  <option value="score_asc">Score ↑ worst first</option>
-                  <option value="sample_id_asc">Sample ID ↑</option>
+                  <option value="delta_desc">Delta mIoU down</option>
+                  <option value="score_desc">Score down</option>
+                  <option value="score_asc">Score up</option>
+                  <option value="sample_id_asc">Sample ID up</option>
                 </select>
 
                 <label for="pageSizeSelect">Per Page</label>
@@ -961,7 +1154,7 @@ def build_gallery_html() -> str:
                   <option value="all">All</option>
                 </select>
 
-                <div class="toolbar-count" id="countLabel">Loading…</div>
+                <div class="toolbar-count" id="countLabel">Loading...</div>
                 <div class="toolbar-note" id="toolbarNote"></div>
               </div>
 
@@ -972,7 +1165,7 @@ def build_gallery_html() -> str:
             </section>
 
             <footer style="margin-top: 60px; text-align: center;">
-              <p><a href="index.html" style="text-decoration: none; color: var(--brand); font-weight: 600;">← Back to report</a></p>
+              <p><a href="index.html" style="text-decoration: none; color: var(--brand); font-weight: 600;">Back to report</a></p>
             </footer>
           </div>
 
@@ -1027,6 +1220,11 @@ def build_gallery_html() -> str:
                 loadedPages = 1;
               }
 
+              function pairFlavorLabels(datasetInfo) {
+                if (!datasetInfo || !datasetInfo.pair_flavors || !datasetInfo.pair_flavors.length) return [];
+                return datasetInfo.pair_flavors.map((flavor) => data.flavors[flavor]?.label || flavor);
+              }
+
               function syncFlavorAvailability() {
                 const dataset = datasetSelect.value;
                 const datasetInfo = dataset === 'all' ? null : data.datasets[dataset];
@@ -1044,8 +1242,6 @@ def build_gallery_html() -> str:
                 if (flavorSelect.selectedOptions[0]?.disabled) {
                   if (pairedEnabled) {
                     flavorSelect.value = 'paired';
-                  } else if (availableFlavors.has('flip_averaged')) {
-                    flavorSelect.value = 'flip_averaged';
                   } else {
                     const fallback = [...flavorSelect.options].find((option) => !option.disabled);
                     if (fallback) flavorSelect.value = fallback.value;
@@ -1100,8 +1296,8 @@ def build_gallery_html() -> str:
                     const rightScore = right.leader_mIoU ?? right.mIoU ?? 0;
                     return rightScore - leftScore;
                   }
-                  const leftDelta = left.delta_mIoU_flip_vs_coarse ?? 0;
-                  const rightDelta = right.delta_mIoU_flip_vs_coarse ?? 0;
+                  const leftDelta = left.delta_mIoU ?? left.pair_delta_mIoU ?? 0;
+                  const rightDelta = right.delta_mIoU ?? right.pair_delta_mIoU ?? 0;
                   return rightDelta - leftDelta;
                 });
                 return sorted;
@@ -1142,22 +1338,24 @@ def build_gallery_html() -> str:
               }
 
               function renderPairCard(pair) {
-                const coarse = recordMap.get(pair.record_ids.coarse_only);
-                const flip = recordMap.get(pair.record_ids.flip_averaged);
+                const left = recordMap.get(pair.record_ids[pair.left_flavor]);
+                const right = recordMap.get(pair.record_ids[pair.right_flavor]);
+                const comparisonLabel = `${data.flavors[pair.left_flavor].label} vs ${data.flavors[pair.right_flavor].label}`;
                 return `
                   <article class="pair-card">
                     <div class="pair-head">
                       <span class="pill dataset-pill">${data.datasets[pair.dataset].label}</span>
+                      <span class="pill">${comparisonLabel}</span>
                       <span class="pill">id ${pair.sample_id}</span>
-                      <span class="pill ${pair.leader_flavor === 'flip_averaged' ? 'good' : pair.leader_flavor === 'coarse_only' ? 'warn' : ''}">
+                      <span class="pill ${pair.leader_flavor === 'tie' ? '' : 'good'}">
                         Leader: ${pair.leader_flavor === 'tie' ? 'Tie' : data.flavors[pair.leader_flavor].label}
                       </span>
-                      <span class="pill ${deltaClass(pair.delta_mIoU_flip_vs_coarse)}">ΔmIoU ${pair.delta_mIoU_flip_vs_coarse.toFixed(3)}</span>
-                      <span class="pill ${deltaClass(pair.delta_ARI_flip_vs_coarse)}">ΔARI ${pair.delta_ARI_flip_vs_coarse.toFixed(3)}</span>
+                      <span class="pill ${deltaClass(pair.delta_mIoU)}">Delta mIoU ${pair.delta_mIoU.toFixed(3)}</span>
+                      <span class="pill ${deltaClass(pair.delta_ARI)}">Delta ARI ${pair.delta_ARI.toFixed(3)}</span>
                     </div>
                     <div class="pair-grid">
-                      ${renderPanel(coarse)}
-                      ${renderPanel(flip)}
+                      ${renderPanel(left)}
+                      ${renderPanel(right)}
                     </div>
                   </article>
                 `;
@@ -1181,8 +1379,8 @@ def build_gallery_html() -> str:
                 const leaderLabel = record.leader_flavor_for_sample
                   ? (record.leader_flavor_for_sample === 'tie' ? 'Tie' : data.flavors[record.leader_flavor_for_sample].label)
                   : null;
-                const deltaValue = typeof record.delta_mIoU_flip_vs_coarse === 'number'
-                  ? `<span class="pill ${deltaClass(record.delta_mIoU_flip_vs_coarse)}">ΔmIoU ${record.delta_mIoU_flip_vs_coarse.toFixed(3)}</span>`
+                const deltaValue = typeof record.pair_delta_mIoU === 'number'
+                  ? `<span class="pill ${deltaClass(record.pair_delta_mIoU)}">Delta mIoU ${record.pair_delta_mIoU.toFixed(3)}</span>`
                   : '';
                 return `
                   <article class="single-card">
@@ -1220,17 +1418,20 @@ def build_gallery_html() -> str:
                     root.className = 'gallery-stack';
                     root.innerHTML = visibleItems.map(renderPairCard).join('');
                   } else if (datasetInfo && !datasetInfo.has_paired_comparison) {
-                    renderEmptyState(`${datasetInfo.label} currently publishes only Flip Averaged. Switch the Flavor control to browse its curated single-flavor slice.`);
+                    const fallbackFlavor = datasetInfo.available_flavors[0];
+                    const fallbackLabel = fallbackFlavor ? data.flavors[fallbackFlavor].label : 'the published flavor';
+                    renderEmptyState(`${datasetInfo.label} currently publishes single-flavor records only. Switch the Flavor control to ${fallbackLabel} to browse the published slice.`);
                   } else {
                     renderEmptyState('No paired samples match the current filters.');
                   }
                   countLabel.textContent = `Showing ${visibleItems.length} of ${items.length} paired samples`;
                   if (dataset === 'all') {
-                    toolbarNote.textContent = `This gallery publishes ${data.counts.paired_samples} paired samples drawn from ${data.counts.available_paired_samples} available benchmark pairs, plus ${data.counts.single_flavor_records} curated single-flavor records for datasets without a vanilla baseline.`;
+                    toolbarNote.textContent = `This gallery publishes ${data.counts.paired_samples} paired samples drawn from ${data.counts.available_paired_samples} available comparisons across both CFC flavors and the multi-texture oracle-vs-predicted slice, plus ${data.counts.single_flavor_records} curated single-flavor records for datasets without a paired baseline.`;
                   } else if (datasetInfo && datasetInfo.has_paired_comparison) {
-                    toolbarNote.textContent = `Paired mode keeps Coarse Only on the left and Flip Averaged on the right. Use Load More to continue through the published ${datasetInfo.label} slice.`;
+                    const labels = pairFlavorLabels(datasetInfo);
+                    toolbarNote.textContent = `Paired mode keeps ${labels[0]} on the left and ${labels[1]} on the right. Deltas are ${labels[1]} - ${labels[0]}. Use Load More to continue through the published ${datasetInfo.label} slice.`;
                   } else {
-                    toolbarNote.textContent = `${datasetInfo.single_flavor_note} Switch Flavor to Flip Averaged to browse the published slice.`;
+                    toolbarNote.textContent = datasetInfo.single_flavor_note || `${datasetInfo.label} currently publishes a single-flavor slice only.`;
                   }
                   updateLoadMore(items, 'Pairs');
                   syncUrl();
@@ -1293,25 +1494,30 @@ def build_gallery_html() -> str:
         </body>
 
         </html>
-        """
+        '''
     )
-    return gallery.replace("__DATASET_OPTIONS__", "".join(dataset_options))
+    return gallery.replace('__DATASET_OPTIONS__', ''.join(dataset_options)).replace('__FLAVOR_OPTIONS__', ''.join(flavor_options))
 
 
-def build_manifest(metrics_payload: dict, public_records: list[dict], pairs_payload: list[dict]) -> str:
+def build_manifest(metrics_payload: dict, training_payload: dict) -> str:
     dataset_lines = []
-    for dataset in DATASET_ORDER:
+    for dataset in ALL_DATASET_ORDER:
         info = metrics_payload["datasets"][dataset]
         available_flavors = ", ".join(f'"{flavor}"' for flavor in info["available_flavors"])
-        dataset_lines.append(
-            f"""  - slug: "{dataset}"
-    id: "{info['dataset_id']}"
-    samples: {info['sample_count']}
-    leader_flavor: "{info['leader_flavor']}"
-    available_flavors: [{available_flavors}]
-"""
+        pair_flavors = ", ".join(f'"{flavor}"' for flavor in info["pair_flavors"])
+        dataset_lines.extend(
+            [
+                f'  - slug: "{dataset}"',
+                f'    id: "{info["dataset_id"]}"',
+                f'    samples: {info["sample_count"]}',
+                f'    leader_flavor: "{info["leader_flavor"]}"',
+                f'    available_flavors: [{available_flavors}]',
+                f'    pair_flavors: [{pair_flavors}]',
+                f'    comparison_kind: "{info["comparison_kind"]}"',
+            ]
         )
-    all_labels = human_join([metrics_payload["datasets"][dataset]["label"] for dataset in DATASET_ORDER])
+    cfc_labels = human_join([metrics_payload["datasets"][dataset]["label"] for dataset in DATASET_ORDER])
+    multi_labels = human_join([metrics_payload["datasets"][dataset]["label"] for dataset in MULTI_TEXTURE_ORDER])
     single_flavor_labels = [
         metrics_payload["datasets"][dataset]["label"] for dataset in metrics_payload["summary"]["single_flavor_datasets"]
     ]
@@ -1319,25 +1525,31 @@ def build_manifest(metrics_payload: dict, public_records: list[dict], pairs_payl
     if single_flavor_labels:
         verb = "publishes" if len(single_flavor_labels) == 1 else "publish"
         single_flavor_suffix = f" {human_join(single_flavor_labels)} currently {verb} flip_averaged only."
-    return (
-        "title: \"SAM 3 Cross-Dataset Benchmarking\"\n"
-        "model_id: \"facebook/sam3\"\n"
-        "ui_standard: \"premium\"\n"
-        f"date: \"{date.today().isoformat()}\"\n"
-        f"comparison_contract: \"{METRIC_CONTRACT}\"\n"
-        f"description: \"Flavor-aware benchmarking for SAM 3 Coarse Feature Clustering across {all_labels}.{single_flavor_suffix}\"\n"
-        "datasets:\n"
-        f"{''.join(dataset_lines)}"
-        "assets:\n"
-        f"  published_preview_records: {len(public_records)}\n"
-        f"  published_paired_samples: {len(pairs_payload)}\n"
-        f"  available_paired_samples: {metrics_payload['summary']['paired_samples']}\n"
-        f"  gallery_preview_count: {sum(metrics_payload['datasets'][dataset]['gallery_preview_count'] for dataset in DATASET_ORDER)}\n"
-        "evaluation:\n"
-        "  primary_metrics: [\"mIoU\", \"ARI\"]\n"
-        "  metrics_file: \"metrics.json\"\n"
-        "  training_data_file: \"training_data.json\"\n"
-    )
+    multi_suffix = ""
+    if multi_labels:
+        multi_suffix = f" A separate multi-texture section compares Oracle K versus Predicted K on {multi_labels}."
+    counts = training_payload["counts"]
+    lines = [
+        'title: "SAM 3 Cross-Dataset Benchmarking"',
+        'model_id: "facebook/sam3"',
+        'ui_standard: "premium"',
+        f'date: "{date.today().isoformat()}"',
+        f'comparison_contract: "{METRIC_CONTRACT}"',
+        f'multi_texture_comparison_contract: "{MULTI_TEXTURE_METRIC_CONTRACT}"',
+        f'description: "Flavor-aware benchmarking for SAM 3 Coarse Feature Clustering across {cfc_labels}.{single_flavor_suffix}{multi_suffix}"',
+        'datasets:',
+        *dataset_lines,
+        'assets:',
+        f'  published_preview_records: {counts["records"]}',
+        f'  published_paired_samples: {counts["paired_samples"]}',
+        f'  available_paired_samples: {counts["available_paired_samples"]}',
+        f'  gallery_preview_count: {sum(metrics_payload["datasets"][dataset]["gallery_preview_count"] for dataset in ALL_DATASET_ORDER)}',
+        'evaluation:',
+        '  primary_metrics: ["mIoU", "ARI"]',
+        '  metrics_file: "metrics.json"',
+        '  training_data_file: "training_data.json"',
+    ]
+    return "\n".join(lines) + "\n"
 
 
 def build_summary_md(metrics_payload: dict) -> str:
@@ -1353,16 +1565,30 @@ def build_summary_md(metrics_payload: dict) -> str:
                 "so it expands coverage without a coarse-only delta yet."
             )
         single_flavor_note = "\n\n" + " ".join(single_dataset_bits)
+
+    multi_texture_note = ""
+    if MULTI_TEXTURE_ORDER:
+        multi = info[MULTI_TEXTURE_ORDER[0]]
+        if multi["comparable"]:
+            left_flavor, right_flavor = multi["pair_flavors"]
+            multi_texture_note = (
+                "\n\n"
+                f"Separately, `{multi['label']}` compares `{left_flavor}` against `{right_flavor}` under "
+                f"`{MULTI_TEXTURE_METRIC_CONTRACT}`. `{FLAVORS[multi['leader_flavor']]['label']}` leads "
+                f"(`{multi['leader_mIoU']:.3f}` mIoU, `{multi['leader_ARI']:.3f}` ARI), and the published delta "
+                f"for `{right_flavor}` relative to `{left_flavor}` is `{signed(multi['delta_mIoU'])}` mIoU and "
+                f"`{signed(multi['delta_ARI'])}` ARI."
+            )
     return dedent(
-        f"""\
+        f'''\
         This page compares the published Coarse Feature Clustering flavors under the shared
         `{METRIC_CONTRACT}` evaluator (`mIoU`, `ARI`).
 
         Across the paired datasets, `flip_averaged` now leads RWTD (`{info['rwtd']['leader_mIoU']:.3f}` mIoU, `{info['rwtd']['leader_ARI']:.3f}` ARI)
         and STLD (`{info['stld']['leader_mIoU']:.3f}` mIoU, `{info['stld']['leader_ARI']:.3f}` ARI), with the largest
-        gain on STLD (`{signed(info['stld']['delta_mIoU_flip_vs_coarse'])}` mIoU, `{signed(info['stld']['delta_ARI_flip_vs_coarse'])}` ARI).
-        CAID still favors `coarse_only` (`{info['caid']['leader_mIoU']:.3f}` mIoU, `{info['caid']['leader_ARI']:.3f}` ARI).{single_flavor_note}
-        """
+        gain on STLD (`{signed(info['stld']['delta_mIoU'])}` mIoU, `{signed(info['stld']['delta_ARI'])}` ARI).
+        CAID still favors `coarse_only` (`{info['caid']['leader_mIoU']:.3f}` mIoU, `{info['caid']['leader_ARI']:.3f}` ARI).{single_flavor_note}{multi_texture_note}
+        '''
     ).strip()
 
 
@@ -1372,7 +1598,6 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
     shutil.rmtree(DEST_DIR / "assets", ignore_errors=True)
     (DEST_DIR / "assets" / "all_previews").mkdir(parents=True, exist_ok=True)
 
-    summaries: dict[str, dict] = {}
     all_records: list[dict] = []
     featured_by_dataset: dict[str, list[dict]] = {}
     all_pairs_payload: list[dict] = []
@@ -1382,14 +1607,21 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
     available_pair_counts: dict[str, int] = {}
 
     dataset_metrics: dict[str, dict] = {}
-    links_payload = {"source_runs": {}, "metric_contract": METRIC_CONTRACT, "metric_note": METRIC_NOTE}
+    links_payload = {
+        "source_runs": {},
+        "metric_contract": METRIC_CONTRACT,
+        "metric_note": METRIC_NOTE,
+        "multi_texture_metric_contract": MULTI_TEXTURE_METRIC_CONTRACT,
+    }
 
-    for dataset in DATASET_ORDER:
+    for dataset in ALL_DATASET_ORDER:
+        info = dataset_catalog(dataset)
         links_payload["source_runs"][dataset] = {}
         summary_by_flavor: dict[str, dict] = {}
         records_by_flavor: dict[str, dict[str, dict]] = {}
         dataset_pairs: list[dict] = []
         available_flavors = available_flavors_for_dataset(dataset)
+        pair_flavors = pair_flavors_for_dataset(dataset)
 
         for flavor in available_flavors:
             run_dir = resolve_run_dir(dataset, flavor)
@@ -1399,66 +1631,77 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
             links_payload["source_runs"][dataset][flavor] = summary["source_path"]
 
         sample_wins = Counter()
-        comparable = all(flavor in summary_by_flavor for flavor in FLAVOR_ORDER)
+        comparable = all(flavor in summary_by_flavor for flavor in pair_flavors)
 
         if comparable:
+            left_flavor, right_flavor = pair_flavors
             common_sample_ids = sorted(
-                set(records_by_flavor["coarse_only"]) & set(records_by_flavor["flip_averaged"]),
+                set(records_by_flavor[left_flavor]) & set(records_by_flavor[right_flavor]),
                 key=lambda sample_id: (parse_sample_numeric(sample_id), sample_id),
             )
 
             for sample_id in common_sample_ids:
-                coarse = records_by_flavor["coarse_only"][sample_id]
-                flip = records_by_flavor["flip_averaged"][sample_id]
-                delta_miou = round(flip["mIoU"] - coarse["mIoU"], 4)
-                delta_ari = round(flip["ARI"] - coarse["ARI"], 4)
-                winner = leader_flavor_from_scores(coarse["mIoU"], coarse["ARI"], flip["mIoU"], flip["ARI"])
+                left = records_by_flavor[left_flavor][sample_id]
+                right = records_by_flavor[right_flavor][sample_id]
+                delta_miou = round(right["mIoU"] - left["mIoU"], 4)
+                delta_ari = round(right["ARI"] - left["ARI"], 4)
+                winner = leader_flavor_from_scores(
+                    left_flavor,
+                    left["mIoU"],
+                    left["ARI"],
+                    right_flavor,
+                    right["mIoU"],
+                    right["ARI"],
+                )
                 sample_wins[winner] += 1
-                coarse["delta_mIoU_flip_vs_coarse"] = delta_miou
-                coarse["delta_ARI_flip_vs_coarse"] = delta_ari
-                coarse["leader_flavor_for_sample"] = winner
-                flip["delta_mIoU_flip_vs_coarse"] = delta_miou
-                flip["delta_ARI_flip_vs_coarse"] = delta_ari
-                flip["leader_flavor_for_sample"] = winner
+                left["pair_delta_mIoU"] = delta_miou
+                left["pair_delta_ARI"] = delta_ari
+                left["leader_flavor_for_sample"] = winner
+                right["pair_delta_mIoU"] = delta_miou
+                right["pair_delta_ARI"] = delta_ari
+                right["leader_flavor_for_sample"] = winner
                 pair_record = {
-                    "pair_id": coarse["pair_id"],
+                    "pair_id": left["pair_id"],
                     "dataset": dataset,
                     "sample_id": sample_id,
-                    "sample_numeric": coarse["sample_numeric"],
+                    "sample_numeric": left["sample_numeric"],
+                    "left_flavor": left_flavor,
+                    "right_flavor": right_flavor,
                     "leader_flavor": winner,
-                    "leader_mIoU": max(coarse["mIoU"], flip["mIoU"]),
-                    "delta_mIoU_flip_vs_coarse": delta_miou,
-                    "delta_ARI_flip_vs_coarse": delta_ari,
+                    "leader_mIoU": max(left["mIoU"], right["mIoU"]),
+                    "delta_mIoU": delta_miou,
+                    "delta_ARI": delta_ari,
                     "record_ids": {
-                        "coarse_only": coarse["id"],
-                        "flip_averaged": flip["id"],
+                        left_flavor: left["id"],
+                        right_flavor: right["id"],
                     },
                 }
+                if pair_flavors == FLAVOR_ORDER:
+                    pair_record["delta_mIoU_flip_vs_coarse"] = delta_miou
+                    pair_record["delta_ARI_flip_vs_coarse"] = delta_ari
                 dataset_pairs.append(pair_record)
                 all_pairs_payload.append(pair_record)
 
             leader = leader_flavor_from_scores(
-                summary_by_flavor["coarse_only"]["mIoU"],
-                summary_by_flavor["coarse_only"]["ARI"],
-                summary_by_flavor["flip_averaged"]["mIoU"],
-                summary_by_flavor["flip_averaged"]["ARI"],
+                left_flavor,
+                summary_by_flavor[left_flavor]["mIoU"],
+                summary_by_flavor[left_flavor]["ARI"],
+                right_flavor,
+                summary_by_flavor[right_flavor]["mIoU"],
+                summary_by_flavor[right_flavor]["ARI"],
             )
             if leader == "tie":
-                leader = "flip_averaged"
+                leader = right_flavor
 
-            delta_miou = round(
-                summary_by_flavor["flip_averaged"]["mIoU"] - summary_by_flavor["coarse_only"]["mIoU"], 6
-            )
-            delta_ari = round(
-                summary_by_flavor["flip_averaged"]["ARI"] - summary_by_flavor["coarse_only"]["ARI"], 6
-            )
+            delta_miou = round(summary_by_flavor[right_flavor]["mIoU"] - summary_by_flavor[left_flavor]["mIoU"], 6)
+            delta_ari = round(summary_by_flavor[right_flavor]["ARI"] - summary_by_flavor[left_flavor]["ARI"], 6)
         else:
             leader = max(
                 available_flavors,
                 key=lambda flavor: (
                     summary_by_flavor[flavor]["mIoU"],
                     summary_by_flavor[flavor]["ARI"],
-                    -FLAVOR_ORDER.index(flavor),
+                    -GALLERY_FLAVOR_ORDER.index(flavor),
                 ),
             )
             delta_miou = None
@@ -1467,25 +1710,28 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
                 for record in records_by_flavor[flavor].values():
                     record["leader_flavor_for_sample"] = flavor
 
+        sample_wins_payload = {flavor: sample_wins.get(flavor, 0) for flavor in pair_flavors}
+        sample_wins_payload["ties"] = sample_wins.get("tie", 0)
         dataset_metrics[dataset] = {
-            "label": DATASETS[dataset]["label"],
-            "title": DATASETS[dataset]["title"],
-            "description": DATASETS[dataset]["description"],
-            "dataset_id": DATASETS[dataset]["dataset_id"],
+            "label": info["label"],
+            "title": info["title"],
+            "description": info["description"],
+            "dataset_id": info["dataset_id"],
+            "comparison_kind": "multi_texture" if dataset in MULTI_TEXTURE_DATASETS else "cfc",
+            "comparison_note": info.get("comparison_note"),
+            "pair_flavors": pair_flavors,
             "sample_count": max(summary_by_flavor[flavor]["sample_count"] for flavor in available_flavors),
             "available_flavors": available_flavors,
             "comparable": comparable,
             "leader_flavor": leader,
             "leader_mIoU": round(summary_by_flavor[leader]["mIoU"], 6),
             "leader_ARI": round(summary_by_flavor[leader]["ARI"], 6),
-            "delta_mIoU_flip_vs_coarse": delta_miou,
-            "delta_ARI_flip_vs_coarse": delta_ari,
-            "single_flavor_note": DATASETS[dataset].get("single_flavor_note"),
-            "sample_wins": {
-                "coarse_only": sample_wins.get("coarse_only", 0),
-                "flip_averaged": sample_wins.get("flip_averaged", 0),
-                "ties": sample_wins.get("tie", 0),
-            },
+            "delta_mIoU": delta_miou,
+            "delta_ARI": delta_ari,
+            "delta_mIoU_flip_vs_coarse": delta_miou if pair_flavors == FLAVOR_ORDER and comparable else None,
+            "delta_ARI_flip_vs_coarse": delta_ari if pair_flavors == FLAVOR_ORDER and comparable else None,
+            "single_flavor_note": info.get("single_flavor_note"),
+            "sample_wins": sample_wins_payload,
             "flavors": {
                 flavor: {
                     "mIoU": round(summary_by_flavor[flavor]["mIoU"], 6),
@@ -1498,7 +1744,7 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
                 }
                 if flavor in summary_by_flavor
                 else None
-                for flavor in FLAVOR_ORDER
+                for flavor in GALLERY_FLAVOR_ORDER
             },
         }
 
@@ -1508,7 +1754,6 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
         )[:4]
         featured_by_dataset[dataset] = list(leader_records)
 
-        summaries[dataset] = summary_by_flavor
         pairs_by_dataset[dataset] = dataset_pairs
         for flavor in available_flavors:
             all_records.extend(records_by_flavor[flavor].values())
@@ -1529,7 +1774,7 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
     published_pair_counts = Counter()
     published_single_records = 0
 
-    for dataset in DATASET_ORDER:
+    for dataset in ALL_DATASET_ORDER:
         if dataset_metrics[dataset]["comparable"]:
             featured_sample_ids = [record["sample_id"] for record in featured_by_dataset[dataset]]
             dataset_publish_pairs = select_gallery_pairs(pairs_by_dataset[dataset], featured_sample_ids)
@@ -1537,7 +1782,7 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
             published_pair_counts[dataset] = len(dataset_publish_pairs)
 
             for pair in dataset_publish_pairs:
-                for flavor in FLAVOR_ORDER:
+                for flavor in pair["record_ids"]:
                     record = record_lookup[pair["record_ids"][flavor]]
                     if record["id"] in published_record_ids:
                         continue
@@ -1568,8 +1813,8 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
         for record in sorted(
             published_records,
             key=lambda record: (
-                DATASET_ORDER.index(record["dataset"]),
-                FLAVOR_ORDER.index(record["flavor"]),
+                ALL_DATASET_ORDER.index(record["dataset"]),
+                GALLERY_FLAVOR_ORDER.index(record["flavor"]),
                 record["sample_numeric"],
                 record["sample_id"],
             ),
@@ -1577,14 +1822,17 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
     ]
     published_pairs = sorted(
         published_pairs,
-        key=lambda pair: (DATASET_ORDER.index(pair["dataset"]), pair["sample_numeric"], pair["sample_id"]),
+        key=lambda pair: (ALL_DATASET_ORDER.index(pair["dataset"]), pair["sample_numeric"], pair["sample_id"]),
     )
+
     comparable_datasets = [dataset for dataset in DATASET_ORDER if dataset_metrics[dataset]["comparable"]]
     single_flavor_datasets = [dataset for dataset in DATASET_ORDER if not dataset_metrics[dataset]["comparable"]]
     datasets_led = Counter(dataset_metrics[dataset]["leader_flavor"] for dataset in comparable_datasets)
+    cfc_available_pairs = sum(available_pair_counts[dataset] for dataset in DATASET_ORDER)
+    multi_texture_comparable = [dataset for dataset in MULTI_TEXTURE_ORDER if dataset_metrics[dataset]["comparable"]]
 
     summary_payload = {
-        "paired_samples": len(all_pairs_payload),
+        "paired_samples": cfc_available_pairs,
         "datasets_total": len(DATASET_ORDER),
         "comparable_dataset_count": len(comparable_datasets),
         "comparable_datasets": comparable_datasets,
@@ -1596,36 +1844,66 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
             key=lambda flavor: datasets_led.get(flavor, 0),
         ),
         "best_gain_dataset_mIoU": max(
-            comparable_datasets, key=lambda dataset: dataset_metrics[dataset]["delta_mIoU_flip_vs_coarse"]
+            comparable_datasets, key=lambda dataset: dataset_metrics[dataset]["delta_mIoU"]
         ),
         "best_gain_dataset_ARI": max(
-            comparable_datasets, key=lambda dataset: dataset_metrics[dataset]["delta_ARI_flip_vs_coarse"]
+            comparable_datasets, key=lambda dataset: dataset_metrics[dataset]["delta_ARI"]
         ),
-        "best_gain_mIoU": max(
-            dataset_metrics[dataset]["delta_mIoU_flip_vs_coarse"] for dataset in comparable_datasets
+        "best_gain_mIoU": max(dataset_metrics[dataset]["delta_mIoU"] for dataset in comparable_datasets),
+        "best_gain_ARI": max(dataset_metrics[dataset]["delta_ARI"] for dataset in comparable_datasets),
+    }
+    multi_texture_summary = {
+        "datasets_total": len(MULTI_TEXTURE_ORDER),
+        "comparable_dataset_count": len(multi_texture_comparable),
+        "paired_samples": sum(available_pair_counts[dataset] for dataset in MULTI_TEXTURE_ORDER),
+        "datasets": multi_texture_comparable,
+    }
+    gallery_summary = {
+        "records": len(public_records),
+        "paired_samples": len(published_pairs),
+        "available_paired_samples": len(all_pairs_payload),
+        "single_flavor_records": published_single_records,
+        "available_single_flavor_records": sum(
+            available_record_counts[dataset]
+            for dataset in ALL_DATASET_ORDER
+            if not dataset_metrics[dataset]["comparable"]
         ),
-        "best_gain_ARI": max(dataset_metrics[dataset]["delta_ARI_flip_vs_coarse"] for dataset in comparable_datasets),
     }
 
     metrics_payload = {
         "metric_contract": METRIC_CONTRACT,
+        "multi_texture_metric_contract": MULTI_TEXTURE_METRIC_CONTRACT,
         "metric_note": METRIC_NOTE,
-        "dataset_order": DATASET_ORDER,
-        "flavor_order": FLAVOR_ORDER,
+        "dataset_order": ALL_DATASET_ORDER,
+        "cfc_dataset_order": DATASET_ORDER,
+        "multi_texture_order": MULTI_TEXTURE_ORDER,
+        "flavor_order": GALLERY_FLAVOR_ORDER,
+        "cfc_flavor_order": FLAVOR_ORDER,
+        "multi_texture_flavor_order": MULTI_TEXTURE_FLAVOR_ORDER,
         "datasets": dataset_metrics,
         "summary": summary_payload,
+        "multi_texture_summary": multi_texture_summary,
+        "gallery_summary": gallery_summary,
     }
 
     training_payload = {
         "metric_contract": METRIC_CONTRACT,
+        "multi_texture_metric_contract": MULTI_TEXTURE_METRIC_CONTRACT,
         "metric_note": METRIC_NOTE,
-        "dataset_order": DATASET_ORDER,
-        "flavor_order": FLAVOR_ORDER,
+        "dataset_order": ALL_DATASET_ORDER,
+        "cfc_dataset_order": DATASET_ORDER,
+        "multi_texture_order": MULTI_TEXTURE_ORDER,
+        "flavor_order": GALLERY_FLAVOR_ORDER,
+        "cfc_flavor_order": FLAVOR_ORDER,
+        "multi_texture_flavor_order": MULTI_TEXTURE_FLAVOR_ORDER,
         "datasets": {
             dataset: {
-                "label": DATASETS[dataset]["label"],
-                "dataset_id": DATASETS[dataset]["dataset_id"],
-                "description": DATASETS[dataset]["description"],
+                "label": dataset_catalog(dataset)["label"],
+                "dataset_id": dataset_catalog(dataset)["dataset_id"],
+                "description": dataset_catalog(dataset)["description"],
+                "comparison_kind": dataset_metrics[dataset]["comparison_kind"],
+                "comparison_note": dataset_metrics[dataset]["comparison_note"],
+                "pair_flavors": dataset_metrics[dataset]["pair_flavors"],
                 "available_flavors": dataset_metrics[dataset]["available_flavors"],
                 "has_paired_comparison": dataset_metrics[dataset]["comparable"],
                 "single_flavor_note": dataset_metrics[dataset]["single_flavor_note"],
@@ -1634,18 +1912,10 @@ def build_report() -> tuple[dict, dict, str, str, str, dict]:
                 "published_pair_count": published_pair_counts[dataset],
                 "available_pair_count": available_pair_counts[dataset],
             }
-            for dataset in DATASET_ORDER
+            for dataset in ALL_DATASET_ORDER
         },
-        "flavors": {flavor: FLAVORS[flavor] for flavor in FLAVOR_ORDER},
-        "counts": {
-            "records": len(public_records),
-            "paired_samples": len(published_pairs),
-            "available_paired_samples": len(all_pairs_payload),
-            "single_flavor_records": published_single_records,
-            "available_single_flavor_records": sum(
-                available_record_counts[dataset] for dataset in single_flavor_datasets
-            ),
-        },
+        "flavors": {flavor: FLAVORS[flavor] for flavor in GALLERY_FLAVOR_ORDER},
+        "counts": gallery_summary,
         "per_image": public_records,
         "pairs": published_pairs,
     }
@@ -1676,7 +1946,7 @@ def main() -> None:
     (DEST_DIR / "gallery.html").write_text(gallery_html, encoding="utf-8")
     (DEST_DIR / "summary.md").write_text(summary_md + "\n", encoding="utf-8")
     (DEST_DIR / "manifest.yaml").write_text(
-        build_manifest(metrics_payload, public_records, pairs_payload),
+        build_manifest(metrics_payload, training_payload),
         encoding="utf-8",
     )
     (DEST_DIR / "links.json").write_text(json.dumps(links_payload, indent=2), encoding="utf-8")
