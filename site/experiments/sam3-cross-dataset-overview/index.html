@@ -5,6 +5,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SAM 3 Cross-Dataset Benchmarking</title>
+  <script>
+    (() => {
+      const storageKey = 'research-site-theme';
+      let theme = null;
+      try {
+        const stored = window.localStorage.getItem(storageKey);
+        if (stored === 'dark' || stored === 'light') theme = stored;
+      } catch (_) {}
+      if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        theme = 'dark';
+      }
+      document.documentElement.dataset.theme = theme || 'light';
+      document.documentElement.style.colorScheme = theme || 'light';
+    })();
+  </script>
   <link rel="stylesheet" href="../../assets/site.css" />
   <style>
     .insight-note {
@@ -36,7 +51,7 @@
       font-size: 0.82rem;
       font-weight: 700;
       border: 1px solid var(--line);
-      background: #fff;
+      background: var(--surface-strong);
     }
 
     .delta-pill.good,
@@ -95,6 +110,11 @@
 
 <body>
   <div class="container animate-fade-in-down">
+    <div class="page-tools">
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+        <span data-theme-toggle-label>Dark mode</span>
+      </button>
+    </div>
     <header style="text-align: center; margin-bottom: 60px;">
       <div class="subtitle">Unified Analysis</div>
       <h1 class="title-gradient">SAM 3 Cross-Dataset Benchmarking</h1>

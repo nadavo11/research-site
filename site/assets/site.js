@@ -1,4 +1,72 @@
 (() => {
+  const storageKey = 'research-site-theme';
+  const root = document.documentElement;
+  const themeQuery = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-color-scheme: dark)')
+    : null;
+
+  function readStoredTheme() {
+    try {
+      const stored = window.localStorage.getItem(storageKey);
+      return stored === 'dark' || stored === 'light' ? stored : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeStoredTheme(theme) {
+    try {
+      window.localStorage.setItem(storageKey, theme);
+    } catch {
+      // Ignore storage failures and keep the active theme for this page view.
+    }
+  }
+
+  function preferredTheme() {
+    return themeQuery?.matches ? 'dark' : 'light';
+  }
+
+  function buttonLabel(theme) {
+    return theme === 'dark' ? 'Light mode' : 'Dark mode';
+  }
+
+  function applyTheme(theme) {
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+    document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(theme === 'dark'));
+      button.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      const label = button.querySelector('[data-theme-toggle-label]');
+      if (label) {
+        label.textContent = buttonLabel(theme);
+      } else {
+        button.textContent = buttonLabel(theme);
+      }
+    });
+  }
+
+  applyTheme(root.dataset.theme === 'dark' || root.dataset.theme === 'light' ? root.dataset.theme : readStoredTheme() || preferredTheme());
+
+  document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      writeStoredTheme(nextTheme);
+      applyTheme(nextTheme);
+    });
+  });
+
+  if (themeQuery) {
+    const handleThemeChange = (event) => {
+      if (readStoredTheme()) return;
+      applyTheme(event.matches ? 'dark' : 'light');
+    };
+    if (typeof themeQuery.addEventListener === 'function') {
+      themeQuery.addEventListener('change', handleThemeChange);
+    } else if (typeof themeQuery.addListener === 'function') {
+      themeQuery.addListener(handleThemeChange);
+    }
+  }
+
   const detailButtons = document.querySelectorAll('[data-toggle-target]');
   detailButtons.forEach((btn) => {
     const targetId = btn.getAttribute('data-toggle-target');
@@ -38,7 +106,6 @@
     });
   }
 
-  /* Gallery sort by data-score */
   document.querySelectorAll('[data-sort-gallery]').forEach((sel) => {
     const galleryId = sel.getAttribute('data-sort-gallery');
     const gallery = document.getElementById(galleryId);

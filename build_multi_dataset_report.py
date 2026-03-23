@@ -710,6 +710,21 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>SAM 3 Cross-Dataset Benchmarking</title>
+          <script>
+            (() => {
+              const storageKey = 'research-site-theme';
+              let theme = null;
+              try {
+                const stored = window.localStorage.getItem(storageKey);
+                if (stored === 'dark' || stored === 'light') theme = stored;
+              } catch (_) {}
+              if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                theme = 'dark';
+              }
+              document.documentElement.dataset.theme = theme || 'light';
+              document.documentElement.style.colorScheme = theme || 'light';
+            })();
+          </script>
           <link rel="stylesheet" href="../../assets/site.css" />
           <style>
             .insight-note {
@@ -741,7 +756,7 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
               font-size: 0.82rem;
               font-weight: 700;
               border: 1px solid var(--line);
-              background: #fff;
+              background: var(--surface-strong);
             }
 
             .delta-pill.good,
@@ -800,6 +815,11 @@ def build_dataset_metrics(metrics_payload: dict, featured: dict[str, list[dict]]
 
         <body>
           <div class="container animate-fade-in-down">
+            <div class="page-tools">
+              <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+                <span data-theme-toggle-label>Dark mode</span>
+              </button>
+            </div>
             <header style="text-align: center; margin-bottom: 60px;">
               <div class="subtitle">Unified Analysis</div>
               <h1 class="title-gradient">SAM 3 Cross-Dataset Benchmarking</h1>
@@ -949,6 +969,21 @@ def build_gallery_html() -> str:
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Comparison Gallery - SAM 3</title>
+          <script>
+            (() => {
+              const storageKey = 'research-site-theme';
+              let theme = null;
+              try {
+                const stored = window.localStorage.getItem(storageKey);
+                if (stored === 'dark' || stored === 'light') theme = stored;
+              } catch (_) {}
+              if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                theme = 'dark';
+              }
+              document.documentElement.dataset.theme = theme || 'light';
+              document.documentElement.style.colorScheme = theme || 'light';
+            })();
+          </script>
           <link rel="stylesheet" href="../../assets/site.css" />
           <style>
             .gallery-toolbar {
@@ -977,7 +1012,8 @@ def build_gallery_html() -> str:
               border: 1px solid var(--line);
               border-radius: 999px;
               padding: 9px 14px;
-              background: #fff;
+              background: var(--surface-strong);
+              color: var(--ink);
             }
 
             .toolbar-count {
@@ -1022,7 +1058,7 @@ def build_gallery_html() -> str:
             .pair-card {
               border: 1px solid var(--line);
               border-radius: 20px;
-              background: rgba(255, 255, 255, 0.82);
+              background: var(--surface-card-hover);
               overflow: hidden;
               box-shadow: 0 8px 18px rgba(18, 32, 51, 0.05);
             }
@@ -1055,7 +1091,7 @@ def build_gallery_html() -> str:
               margin: 0;
               border-radius: 16px;
               overflow: hidden;
-              background: #fff;
+              background: var(--surface-strong);
               border: 1px solid var(--line);
             }
 
@@ -1083,7 +1119,7 @@ def build_gallery_html() -> str:
               display: flex;
               flex-wrap: wrap;
               gap: 8px;
-              background: #fbfdff;
+              background: var(--surface-soft);
             }
 
             .delta-positive {
@@ -1102,7 +1138,7 @@ def build_gallery_html() -> str:
               padding: 28px;
               border: 1px dashed var(--line);
               border-radius: 20px;
-              background: rgba(255, 255, 255, 0.82);
+              background: var(--surface-card-hover);
               color: var(--muted);
               text-align: center;
             }
@@ -1117,6 +1153,11 @@ def build_gallery_html() -> str:
 
         <body>
           <div class="container animate-fade-in-down">
+            <div class="page-tools">
+              <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+                <span data-theme-toggle-label>Dark mode</span>
+              </button>
+            </div>
             <header style="text-align: center; margin-bottom: 42px;">
               <div class="subtitle">Interactive Gallery</div>
               <h1 class="title-gradient">Comparison Gallery</h1>
@@ -1173,6 +1214,7 @@ def build_gallery_html() -> str:
             <img id="imageDialogImg" alt="Expanded preview" />
           </dialog>
 
+          <script src="../../assets/site.js"></script>
           <script>
             (async () => {
               const data = await fetch('training_data.json').then((response) => response.json());

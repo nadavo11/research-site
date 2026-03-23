@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 :root {
+  color-scheme: light;
   /* Legacy Color Palette */
   --bg: #eef4f8;
   --panel: #ffffff;
@@ -20,6 +21,66 @@
   --font-main: 'Space Grotesk', sans-serif;
   --font-accent: 'Outfit', sans-serif;
   --brand-gradient: linear-gradient(135deg, #005f73 0%, #0a9396 100%);
+  --body-gradient-start: #f0f4f8;
+  --body-gradient-end: #d9e2ec;
+  --body-glow-brand: rgba(0, 95, 115, 0.05);
+  --body-glow-accent: rgba(202, 103, 2, 0.05);
+  --surface-card: rgba(255, 255, 255, 0.4);
+  --surface-card-hover: rgba(255, 255, 255, 0.8);
+  --surface-strong: #ffffff;
+  --surface-soft: #fbfdff;
+  --surface-muted: #f1f7fa;
+  --table-row-border: #f1f4f8;
+  --footer-line: rgba(0, 0, 0, 0.05);
+  --button-secondary-bg: #ffffff;
+  --button-secondary-hover: #f1f7fa;
+  --button-secondary-ink: var(--brand);
+  --tag-bg: #f1f7fa;
+  --tag-good-bg: #edf9f1;
+  --tag-good-border: #a6dfb8;
+  --tag-warn-bg: #fff7ec;
+  --tag-warn-border: #ffd29b;
+  --tag-bad-bg: #fce8e8;
+  --tag-bad-border: #e8a0a0;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #08131b;
+  --panel: #10202c;
+  --ink: #ecf3f8;
+  --muted: #a7bac8;
+  --line: #30495a;
+  --brand: #69d2dc;
+  --accent: #f4b367;
+  --good: #84d8a0;
+  --bad: #ff9ca0;
+  --shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+  --glass-bg: rgba(11, 23, 32, 0.78);
+  --glass-border: rgba(120, 148, 166, 0.2);
+  --premium-shadow: 0 20px 40px rgba(0, 0, 0, 0.32);
+  --brand-gradient: linear-gradient(135deg, #0a9396 0%, #69d2dc 100%);
+  --body-gradient-start: #08131b;
+  --body-gradient-end: #102432;
+  --body-glow-brand: rgba(10, 147, 150, 0.2);
+  --body-glow-accent: rgba(244, 179, 103, 0.14);
+  --surface-card: rgba(13, 28, 39, 0.82);
+  --surface-card-hover: rgba(18, 38, 52, 0.94);
+  --surface-strong: #112532;
+  --surface-soft: #0d1d28;
+  --surface-muted: #163342;
+  --table-row-border: rgba(120, 148, 166, 0.18);
+  --footer-line: rgba(255, 255, 255, 0.08);
+  --button-secondary-bg: #112532;
+  --button-secondary-hover: #163342;
+  --button-secondary-ink: #c9eef2;
+  --tag-bg: #112532;
+  --tag-good-bg: rgba(132, 216, 160, 0.14);
+  --tag-good-border: rgba(132, 216, 160, 0.34);
+  --tag-warn-bg: rgba(244, 179, 103, 0.14);
+  --tag-warn-border: rgba(244, 179, 103, 0.34);
+  --tag-bad-bg: rgba(255, 156, 160, 0.14);
+  --tag-bad-border: rgba(255, 156, 160, 0.34);
 }
 
 * {
@@ -37,11 +98,11 @@ body {
   font-family: var(--font-main);
   color: var(--ink);
   background:
-    linear-gradient(120deg, #f0f4f8 0%, #d9e2ec 100%),
-    radial-gradient(at 0% 0%, rgba(0, 95, 115, 0.05) 0%, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(202, 103, 2, 0.05) 0%, transparent 50%);
+    linear-gradient(120deg, var(--body-gradient-start) 0%, var(--body-gradient-end) 100%),
+    radial-gradient(at 0% 0%, var(--body-glow-brand) 0%, transparent 50%),
+    radial-gradient(at 100% 0%, var(--body-glow-accent) 0%, transparent 50%);
   line-height: 1.5;
-  transition: background 0.5s ease;
+  transition: background 0.5s ease, color 0.3s ease;
 }
 
 main,
@@ -153,7 +214,7 @@ h4 {
 .dataset-card {
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--surface-card);
   padding: 24px;
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
 }
@@ -162,7 +223,7 @@ h4 {
 .dataset-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--surface-card-hover);
 }
 
 /* Metrics & Stats */
@@ -211,13 +272,37 @@ button:hover {
 }
 
 .btn.secondary {
-  background: #fff;
-  color: var(--brand);
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-ink);
   border: 1px solid var(--line);
 }
 
 .btn.secondary:hover {
-  background: #f1f7fa;
+  background: var(--button-secondary-hover);
+}
+
+.page-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+
+.theme-toggle {
+  background: var(--surface-strong);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: none;
+  padding: 10px 18px;
+}
+
+.theme-toggle:hover {
+  background: var(--surface-muted);
+  box-shadow: none;
+  filter: none;
+}
+
+.theme-toggle[aria-pressed="true"] {
+  color: var(--brand);
 }
 
 /* Gallery & Figures */
@@ -231,7 +316,7 @@ figure {
   margin: 0;
   border-radius: 16px;
   overflow: hidden;
-  background: #fff;
+  background: var(--surface-strong);
   border: 1px solid var(--line);
   transition: transform 0.2s ease;
 }
@@ -252,7 +337,7 @@ figure img {
 figcaption {
   padding: 12px;
   font-size: 0.85rem;
-  background: #fbfdff;
+  background: var(--surface-soft);
   border-top: 1px solid var(--line);
 }
 
@@ -260,7 +345,7 @@ figcaption {
 .pill,
 .tag {
   display: inline-block;
-  background: #f1f7fa;
+  background: var(--tag-bg);
   border: 1px solid var(--line);
   color: var(--muted);
   border-radius: 999px;
@@ -272,20 +357,20 @@ figcaption {
 }
 
 .tag.good {
-  background: #edf9f1;
-  border-color: #a6dfb8;
+  background: var(--tag-good-bg);
+  border-color: var(--tag-good-border);
   color: var(--good);
 }
 
 .tag.warn {
-  background: #fff7ec;
-  border-color: #ffd29b;
+  background: var(--tag-warn-bg);
+  border-color: var(--tag-warn-border);
   color: var(--accent);
 }
 
 .tag.bad {
-  background: #fce8e8;
-  border-color: #e8a0a0;
+  background: var(--tag-bad-bg);
+  border-color: var(--tag-bad-border);
   color: var(--bad);
 }
 
@@ -300,18 +385,18 @@ figcaption {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: var(--surface-strong);
 }
 
 th,
 td {
   padding: 16px;
   text-align: left;
-  border-bottom: 1px solid #f1f4f8;
+  border-bottom: 1px solid var(--table-row-border);
 }
 
 th {
-  background: #f8fafc;
+  background: var(--surface-soft);
   font-family: var(--font-accent);
   color: var(--muted);
   font-size: 0.85rem;
@@ -342,7 +427,7 @@ th {
 footer {
   margin-top: 60px;
   padding-top: 40px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--footer-line);
   text-align: center;
   color: var(--muted);
   font-weight: 300;
