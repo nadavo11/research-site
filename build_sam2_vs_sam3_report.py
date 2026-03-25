@@ -31,6 +31,7 @@ PAGE_DESCRIPTION = (
 
 PRIMARY_METRICS = ("eval_miou", "eval_ari")
 CAUTION_METRIC = "miou_agg"
+GALLERY_PAIRS_PER_SLICE = 16
 
 DATASET_ORDER = ["rwtd", "caid", "stld"]
 DATASET_LABELS = {
@@ -471,6 +472,118 @@ def build_story_blocks(runs: dict[str, dict]) -> list[dict]:
     return blocks
 
 
+def select_gallery_pairs(runs: dict[str, dict], per_slice: int = GALLERY_PAIRS_PER_SLICE) -> dict[tuple[str, str], dict]:
+    featured_by_slice: dict[tuple[str, str], list[str]] = {}
+    for story in MAIN_STORIES:
+        run_spec = RUN_SPEC_BY_ID[story["variant_order"][0]]
+        key = (story["dataset"], run_spec.flavor)
+        featured_by_slice.setdefault(key, []).append(story["sample_id"])
+
+    selected: dict[tuple[str, str], dict] = {}
+    for dataset in DATASET_ORDER:
+        for flavor in FLAVOR_ORDER:
+            sam2 = runs[RUN_LOOKUP[(dataset, "sam2", flavor)]]
+            sam3 = runs[RUN_LOOKUP[(dataset, "sam3", flavor)]]
+            pair_rows = []
+            for sample_id, sam2_row in sam2["sample_lookup"].items():
+                sam3_row = sam3["sample_lookup"][sample_id]
+                pair_rows.append(
+                    {
+                        "sample_id": sample_id,
+                        "sample_index": min(sam2_row["sample_index"], sam3_row["sample_index"]),
+                        "sam2_miou": sam2_row["eval_miou"],
+                        "sam2_ari": sam2_row["eval_ari"],
+                        "sam3_miou": sam3_row["eval_miou"],
+                        "sam3_ari": sam3_row["eval_ari"],
+                        "delta_miou": sam2_row["eval_miou"] - sam3_row["eval_miou"],
+                        "delta_ari": sam2_row["eval_ari"] - sam3_row["eval_ari"],
+                        "best_miou": max(sam2_row["eval_miou"], sam3_row["eval_miou"]),
+                        "worst_miou": min(sam2_row["eval_miou"], sam3_row["eval_miou"]),
+                    }
+                )
+
+            pair_rows.sort(key=lambda row: row["sample_index"])
+            by_id = {row["sample_id"]: row for row in pair_rows}
+            picked: list[dict] = []
+            seen: set[str] = set()
+
+            def add_rows(rows: list[dict]) -> None:
+                for row in rows:
+                    sample_id = row["sample_id"]
+                    if sample_id in seen:
+                        continue
+                    picked.append(row)
+                    seen.add(sample_id)
+                    if len(picked) >= per_slice:
+                        return
+
+            add_rows([by_id[sample_id] for sample_id in featured_by_slice.get((dataset, flavor), []) if sample_id in by_id])
+            add_rows(sorted(pair_rows, key=lambda row: (row["delta_miou"], row["delta_ari"], -row["sample_index"]), reverse=True)[:4])
+            add_rows(sorted(pair_rows, key=lambda row: (row["delta_miou"], row["delta_ari"], row["sample_index"]))[:4])
+            add_rows(sorted(pair_rows, key=lambda row: (row["best_miou"], row["sam2_ari"] + row["sam3_ari"], -row["sample_index"]), reverse=True)[:4])
+            add_rows(sorted(pair_rows, key=lambda row: (row["worst_miou"], abs(row["delta_miou"]), row["sample_index"]))[:4])
+            add_rows(pair_rows)
+
+            selected[(dataset, flavor)] = {
+                "available_count": len(pair_rows),
+                "pairs": picked[:per_slice],
+            }
+    return selected
+
+
+def build_gallery_payload(runs: dict[str, dict]) -> dict:
+    selected_pairs = select_gallery_pairs(runs)
+    records: list[dict] = []
+    published_pair_count = 0
+    available_pair_count = 0
+
+    for dataset in DATASET_ORDER:
+        for flavor in FLAVOR_ORDER:
+            selection = selected_pairs[(dataset, flavor)]
+            pair_rows = selection["pairs"]
+            published_pair_count += len(pair_rows)
+            available_pair_count += selection["available_count"]
+            for pair in pair_rows:
+                sample_id = pair["sample_id"]
+                for model_key in ["sam2", "sam3"]:
+                    run = runs[RUN_LOOKUP[(dataset, model_key, flavor)]]
+                    row = run["sample_lookup"][sample_id]
+                    peer_model = "sam3" if model_key == "sam2" else "sam2"
+                    peer_row = runs[RUN_LOOKUP[(dataset, peer_model, flavor)]]["sample_lookup"][sample_id]
+                    asset_rel = Path("assets") / "all_previews" / run["run_id"] / f"{sample_id}.webp"
+                    write_thumbnail(row["source_visual_path"], DEST_DIR / asset_rel)
+                    records.append(
+                        {
+                            "sample_id": sample_id,
+                            "sample_index": pair["sample_index"],
+                            "dataset": dataset,
+                            "dataset_label": DATASET_LABELS[dataset],
+                            "flavor": flavor,
+                            "flavor_label": FLAVOR_META[flavor]["label"],
+                            "model": model_key,
+                            "model_label": MODEL_META[model_key]["label"],
+                            "peer_model": peer_model,
+                            "run_id": run["run_id"],
+                            "variant_label": run["short_label"],
+                            "miou": row["eval_miou"],
+                            "ari": row["eval_ari"],
+                            "delta_vs_peer": row["eval_miou"] - peer_row["eval_miou"],
+                            "thumb_path": asset_rel.as_posix(),
+                        }
+                    )
+
+    records.sort(key=lambda row: (DATASET_ORDER.index(row["dataset"]), FLAVOR_ORDER.index(row["flavor"]), row["sample_index"], row["model"]))
+    return {
+        "available_pair_count": available_pair_count,
+        "published_pair_count": published_pair_count,
+        "record_count": len(records),
+        "datasets": [{"id": dataset, "label": DATASET_LABELS[dataset]} for dataset in DATASET_ORDER],
+        "flavors": [{"id": flavor, "label": FLAVOR_META[flavor]["label"]} for flavor in FLAVOR_ORDER],
+        "models": [{"id": model, "label": MODEL_META[model]["label"]} for model in ["sam2", "sam3"]],
+        "records": records,
+    }
+
+
 def render_grouped_parity_chart(title: str, subtitle: str, comparison_rows: dict[str, list[dict]], metric_key: str) -> str:
     groups = [row for flavor in FLAVOR_ORDER for row in comparison_rows[flavor]]
     width = 1120
@@ -689,7 +802,7 @@ def build_metrics_payload(runs: dict[str, dict], comparison_rows: dict[str, list
     }
 
 
-def build_training_data(story_blocks: list[dict], comparison_rows: dict[str, list[dict]]) -> dict:
+def build_training_data(story_blocks: list[dict], comparison_rows: dict[str, list[dict]], gallery_payload: dict) -> dict:
     return {
         "page": {
             "title": PAGE_TITLE,
@@ -711,6 +824,7 @@ def build_training_data(story_blocks: list[dict], comparison_rows: dict[str, lis
             }
             for block in story_blocks
         ],
+        "gallery": gallery_payload,
     }
 
 
@@ -726,7 +840,7 @@ def build_links_payload(table_paths: dict[str, str]) -> dict:
     }
 
 
-def build_manifest(story_blocks: list[dict]) -> str:
+def build_manifest(story_blocks: list[dict], gallery_payload: dict) -> str:
     return dedent(
         f"""\
         title: "{PAGE_TITLE}"
@@ -743,6 +857,8 @@ def build_manifest(story_blocks: list[dict]) -> str:
         assets:
           story_block_count: {sum(1 for block in story_blocks if block['show_on_index'])}
           gallery_block_count: {len(story_blocks)}
+          gallery_preview_count: {gallery_payload['record_count']}
+          gallery_pair_count: {gallery_payload['published_pair_count']}
           plot_count: 2
         evaluation:
           primary_metrics:
@@ -1135,9 +1251,9 @@ def render_index_html(
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
         <div>
           <h2>Qualitative Comparison</h2>
-          <p class="interpretation-copy">The qualitative panels are still curated rather than exhaustive. They now follow the same-flavor parity framing used by the main tables.</p>
+          <p class="interpretation-copy">The report keeps a few narrative examples inline, while the gallery now uses the same lightweight browser pattern as the Stage-2 page for a wider same-flavor parity subset.</p>
         </div>
-        <a class="btn" href="gallery.html">Open Curated Gallery →</a>
+        <a class="btn" href="gallery.html">Open Lightweight Gallery →</a>
       </div>
       <div style="margin-top: 24px;">
         {render_story_blocks(story_blocks, index_only=True)}
@@ -1181,7 +1297,7 @@ def render_index_html(
     return html
 
 
-def render_gallery_html(story_blocks: list[dict]) -> str:
+def render_gallery_html() -> str:
     return f"""<!DOCTYPE html>
 <html lang="en">
 
@@ -1206,46 +1322,84 @@ def render_gallery_html(story_blocks: list[dict]) -> str:
   </script>
   <link rel="stylesheet" href="../../assets/site.css" />
   <style>
-    .story-block {{
-      background: var(--surface-card);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 22px;
+    .controls {{
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       margin-bottom: 20px;
     }}
 
-    .story-head {{
+    .control {{
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 8px;
-      margin-bottom: 8px;
     }}
 
-    .story-summary {{
-      margin: 0;
+    .control label {{
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
       color: var(--muted);
     }}
 
-    .story-grid {{
-      display: grid;
-      gap: 14px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      margin-top: 18px;
+    .control select,
+    .control input {{
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: var(--surface-strong);
+      color: var(--ink);
+      font: inherit;
     }}
 
-    .story-grid img {{
-      width: 100%;
-      display: block;
-      border-radius: 14px;
-      border: 1px solid var(--line);
+    .gallery-card {{
+      border-radius: 18px;
+      overflow: hidden;
       background: var(--surface-strong);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+    }}
+
+    .gallery-card img {{
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
       cursor: zoom-in;
+    }}
+
+    .gallery-card .body {{
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }}
+
+    .gallery-meta {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }}
+
+    .status-row {{
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      color: var(--muted);
+    }}
+
+    .load-more-wrap {{
+      margin-top: 24px;
+      text-align: center;
     }}
 
     .mini-note {{
       font-size: 0.78rem;
       color: var(--muted);
-      margin-top: 4px;
     }}
   </style>
 </head>
@@ -1258,11 +1412,11 @@ def render_gallery_html(story_blocks: list[dict]) -> str:
       </button>
     </div>
 
-    <header style="text-align: center; margin-bottom: 44px;">
-      <div class="subtitle">Curated Gallery</div>
-      <h1 class="title-gradient">{PAGE_TITLE}</h1>
+    <header style="text-align: center; margin-bottom: 42px;">
+      <div class="subtitle">Full Gallery</div>
+      <h1 class="title-gradient">SAM2 vs SAM3 Frozen Feature Clustering — Lightweight Gallery</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
-        A lightweight qualitative subset built from the run-emitted visual triptychs. The gallery follows the same-flavor parity framing used by the main report.
+        Published web previews for a wider same-flavor parity subset across RWTD, CAID, and STLD. Metrics come from the full run bundles; the published images are downscaled previews to keep the Pages payload lightweight.
       </p>
       <div style="margin-top: 18px;">
         <a class="btn secondary" href="index.html">← Back to Report</a>
@@ -1270,11 +1424,54 @@ def render_gallery_html(story_blocks: list[dict]) -> str:
     </header>
 
     <section class="section">
-      {render_story_blocks(story_blocks, index_only=False)}
+      <div class="controls">
+        <div class="control">
+          <label for="datasetFilter">Dataset</label>
+          <select id="datasetFilter"></select>
+        </div>
+        <div class="control">
+          <label for="flavorFilter">Flavor</label>
+          <select id="flavorFilter"></select>
+        </div>
+        <div class="control">
+          <label for="modelFilter">Model</label>
+          <select id="modelFilter"></select>
+        </div>
+        <div class="control">
+          <label for="sortBy">Sort</label>
+          <select id="sortBy">
+            <option value="sample">Sample order</option>
+            <option value="miou_desc">mIoU ↓</option>
+            <option value="miou_asc">mIoU ↑</option>
+            <option value="ari_desc">ARI ↓</option>
+            <option value="delta_desc">Δ vs peer ↓</option>
+            <option value="delta_asc">Δ vs peer ↑</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="pageSize">Per page</label>
+          <select id="pageSize">
+            <option value="24">24</option>
+            <option value="48">48</option>
+            <option value="96">96</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div id="gallerySummary">Loading gallery…</div>
+        <div id="galleryHint">Click any preview to expand.</div>
+      </div>
+
+      <div class="gallery" id="fullGallery"></div>
+
+      <div class="load-more-wrap">
+        <button id="loadMoreButton" type="button" class="btn">Load More</button>
+      </div>
     </section>
 
     <footer>
-      <p>Curated comparison subset | Lightweight previews only</p>
+      <p>SAM2 vs SAM3 gallery bundle | Lightweight previews only</p>
     </footer>
   </div>
 
@@ -1283,6 +1480,152 @@ def render_gallery_html(story_blocks: list[dict]) -> str:
   </dialog>
 
   <script src="../../assets/site.js"></script>
+  <script>
+    (async () => {{
+      const response = await fetch('training_data.json');
+      if (!response.ok) {{
+        throw new Error(`Failed to load training_data.json: ${{response.status}}`);
+      }}
+      const data = await response.json();
+      const records = data.gallery.records.slice();
+      const datasetFilter = document.getElementById('datasetFilter');
+      const flavorFilter = document.getElementById('flavorFilter');
+      const modelFilter = document.getElementById('modelFilter');
+      const sortBy = document.getElementById('sortBy');
+      const pageSize = document.getElementById('pageSize');
+      const gallery = document.getElementById('fullGallery');
+      const summary = document.getElementById('gallerySummary');
+      const loadMoreButton = document.getElementById('loadMoreButton');
+      const params = new URLSearchParams(window.location.search);
+
+      datasetFilter.innerHTML = [
+        '<option value="all">All datasets</option>',
+        ...data.gallery.datasets.map((item) => `<option value="${{item.id}}">${{item.label}}</option>`)
+      ].join('');
+      flavorFilter.innerHTML = [
+        '<option value="all">All flavors</option>',
+        ...data.gallery.flavors.map((item) => `<option value="${{item.id}}">${{item.label}}</option>`)
+      ].join('');
+      modelFilter.innerHTML = [
+        '<option value="all">Both models</option>',
+        ...data.gallery.models.map((item) => `<option value="${{item.id}}">${{item.label}}</option>`)
+      ].join('');
+
+      datasetFilter.value = params.get('dataset') || 'all';
+      flavorFilter.value = params.get('flavor') || 'all';
+      modelFilter.value = params.get('model') || 'all';
+      sortBy.value = params.get('sort') || 'sample';
+      pageSize.value = params.get('page_size') || '24';
+      let shown = Number(params.get('shown')) || Number(pageSize.value);
+
+      function syncUrl() {{
+        const next = new URLSearchParams();
+        if (datasetFilter.value !== 'all') next.set('dataset', datasetFilter.value);
+        if (flavorFilter.value !== 'all') next.set('flavor', flavorFilter.value);
+        if (modelFilter.value !== 'all') next.set('model', modelFilter.value);
+        if (sortBy.value !== 'sample') next.set('sort', sortBy.value);
+        if (pageSize.value !== '24') next.set('page_size', pageSize.value);
+        if (shown > Number(pageSize.value)) next.set('shown', String(shown));
+        const query = next.toString();
+        history.replaceState(null, '', query ? `?${{query}}` : 'gallery.html');
+      }}
+
+      function filteredRecords() {{
+        let items = records.slice();
+        if (datasetFilter.value !== 'all') {{
+          items = items.filter((item) => item.dataset === datasetFilter.value);
+        }}
+        if (flavorFilter.value !== 'all') {{
+          items = items.filter((item) => item.flavor === flavorFilter.value);
+        }}
+        if (modelFilter.value !== 'all') {{
+          items = items.filter((item) => item.model === modelFilter.value);
+        }}
+        if (sortBy.value === 'miou_desc') {{
+          items.sort((a, b) => b.miou - a.miou || a.sample_index - b.sample_index);
+        }} else if (sortBy.value === 'miou_asc') {{
+          items.sort((a, b) => a.miou - b.miou || a.sample_index - b.sample_index);
+        }} else if (sortBy.value === 'ari_desc') {{
+          items.sort((a, b) => b.ari - a.ari || a.sample_index - b.sample_index);
+        }} else if (sortBy.value === 'delta_desc') {{
+          items.sort((a, b) => b.delta_vs_peer - a.delta_vs_peer || a.sample_index - b.sample_index);
+        }} else if (sortBy.value === 'delta_asc') {{
+          items.sort((a, b) => a.delta_vs_peer - b.delta_vs_peer || a.sample_index - b.sample_index);
+        }} else {{
+          items.sort((a, b) =>
+            a.dataset.localeCompare(b.dataset) ||
+            a.flavor.localeCompare(b.flavor) ||
+            a.sample_index - b.sample_index ||
+            a.model.localeCompare(b.model)
+          );
+        }}
+        return items;
+      }}
+
+      function card(item) {{
+        const deltaTag = item.delta_vs_peer > 0.0005
+          ? `<span class="tag good">Δ vs peer +${{item.delta_vs_peer.toFixed(4)}}</span>`
+          : item.delta_vs_peer < -0.0005
+            ? `<span class="tag bad">Δ vs peer ${{item.delta_vs_peer.toFixed(4)}}</span>`
+            : '<span class="tag">Δ vs peer 0.0000</span>';
+        return `
+          <article class="gallery-card">
+            <img src="${{item.thumb_path}}" alt="${{item.dataset_label}} sample ${{item.sample_id}} — ${{item.variant_label}}" data-zoom-src="${{item.thumb_path}}" />
+            <div class="body">
+              <div class="gallery-meta">
+                <span class="pill">${{item.dataset_label}} · sample ${{item.sample_id}}</span>
+                <span class="tag">${{item.flavor_label}}</span>
+                <span class="tag">${{item.model_label}}</span>
+                ${{deltaTag}}
+              </div>
+              <div><strong>mIoU ${{item.miou.toFixed(4)}}</strong> · ARI ${{item.ari.toFixed(4)}}</div>
+              <div class="mini-note">${{item.variant_label}} · peer ${{item.peer_model.toUpperCase()}}</div>
+            </div>
+          </article>
+        `;
+      }}
+
+      function render() {{
+        const items = filteredRecords();
+        const limit = Math.min(shown, items.length);
+        gallery.innerHTML = items.slice(0, limit).map(card).join('');
+        summary.textContent = `Showing ${{limit}} of ${{items.length}} published previews from ${{data.gallery.published_pair_count}} curated same-flavor pairs (${{data.gallery.available_pair_count}} aligned pairs available in the source runs).`;
+        loadMoreButton.hidden = limit >= items.length;
+        loadMoreButton.disabled = limit >= items.length;
+        syncUrl();
+      }}
+
+      datasetFilter.addEventListener('change', () => {{
+        shown = Number(pageSize.value);
+        render();
+      }});
+      flavorFilter.addEventListener('change', () => {{
+        shown = Number(pageSize.value);
+        render();
+      }});
+      modelFilter.addEventListener('change', () => {{
+        shown = Number(pageSize.value);
+        render();
+      }});
+      sortBy.addEventListener('change', () => {{
+        shown = Number(pageSize.value);
+        render();
+      }});
+      pageSize.addEventListener('change', () => {{
+        shown = Number(pageSize.value);
+        render();
+      }});
+      loadMoreButton.addEventListener('click', () => {{
+        shown += Number(pageSize.value);
+        render();
+      }});
+
+      render();
+    }})().catch((error) => {{
+      document.getElementById('gallerySummary').textContent = error.message;
+      document.getElementById('loadMoreButton').hidden = true;
+    }});
+  </script>
 </body>
 
 </html>
@@ -1321,19 +1664,20 @@ def main() -> None:
 
     comparison_rows = build_comparison_rows(runs)
     story_blocks = build_story_blocks(runs)
+    gallery_payload = build_gallery_payload(runs)
     plot_paths = write_plot_assets(comparison_rows)
     table_paths = write_table_csvs(comparison_rows)
     metrics_payload = build_metrics_payload(runs, comparison_rows)
-    training_data = build_training_data(story_blocks, comparison_rows)
+    training_data = build_training_data(story_blocks, comparison_rows, gallery_payload)
     links_payload = build_links_payload(table_paths)
 
     write_text(DEST_DIR / "index.html", render_index_html(runs, comparison_rows, story_blocks, plot_paths, table_paths))
-    write_text(DEST_DIR / "gallery.html", render_gallery_html(story_blocks))
+    write_text(DEST_DIR / "gallery.html", render_gallery_html())
     write_text(DEST_DIR / "metrics.json", json.dumps(metrics_payload, indent=2))
     write_text(DEST_DIR / "training_data.json", json.dumps(training_data, indent=2))
     write_text(DEST_DIR / "links.json", json.dumps(links_payload, indent=2))
     write_text(DEST_DIR / "summary.md", render_summary_md(comparison_rows))
-    write_text(DEST_DIR / "manifest.yaml", build_manifest(story_blocks))
+    write_text(DEST_DIR / "manifest.yaml", build_manifest(story_blocks, gallery_payload))
 
 
 if __name__ == "__main__":

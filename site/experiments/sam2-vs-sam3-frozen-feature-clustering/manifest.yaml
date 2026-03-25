@@ -12,6 +12,8 @@ status: "reviewed"
 assets:
   story_block_count: 3
   gallery_block_count: 4
+  gallery_preview_count: 192
+  gallery_pair_count: 96
   plot_count: 2
 evaluation:
   primary_metrics:
