@@ -1014,6 +1014,7 @@ def render_index_html(
       border-radius: 14px;
       border: 1px solid var(--line);
       background: var(--surface-strong);
+      cursor: zoom-in;
     }}
 
     .comparison-stack {{
@@ -1156,6 +1157,10 @@ def render_index_html(
         <span class="tag">caid</span>
         <span class="tag">stld</span>
       </div>
+      <div style="margin-top: 18px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
+        <a class="btn" href="gallery.html">Open Lightweight Gallery →</a>
+      </div>
     </header>
 
     <section class="executive-summary">
@@ -1229,10 +1234,10 @@ def render_index_html(
       <h2>Bigger-Picture Visuals</h2>
       <div class="chart-grid">
         <article class="chart-card">
-          <img src="{plot_paths['eval_miou_parity.svg']}" alt="Same-flavor eval_mIoU grouped chart" />
+          <img src="{plot_paths['eval_miou_parity.svg']}" alt="Same-flavor eval_mIoU grouped chart" data-zoom-src="{plot_paths['eval_miou_parity.svg']}" />
         </article>
         <article class="chart-card">
-          <img src="{plot_paths['eval_ari_parity.svg']}" alt="Same-flavor eval_ARI grouped chart" />
+          <img src="{plot_paths['eval_ari_parity.svg']}" alt="Same-flavor eval_ARI grouped chart" data-zoom-src="{plot_paths['eval_ari_parity.svg']}" />
         </article>
       </div>
     </section>
@@ -1277,6 +1282,9 @@ def render_index_html(
         <a class="btn secondary" href="metrics.json">metrics.json</a>
         <a class="btn secondary" href="training_data.json">training_data.json</a>
         <a class="btn secondary" href="summary.md">summary.md</a>
+      </div>
+      <div style="margin-top: 28px; text-align: center;">
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
       </div>
     </section>
 
@@ -1418,8 +1426,9 @@ def render_gallery_html() -> str:
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
         Published web previews for a wider same-flavor parity subset across RWTD, CAID, and STLD. Metrics come from the full run bundles; the published images are downscaled previews to keep the Pages payload lightweight.
       </p>
-      <div style="margin-top: 18px;">
+      <div style="margin-top: 18px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
         <a class="btn secondary" href="index.html">← Back to Report</a>
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
       </div>
     </header>
 
@@ -1469,6 +1478,10 @@ def render_gallery_html() -> str:
         <button id="loadMoreButton" type="button" class="btn">Load More</button>
       </div>
     </section>
+
+    <div style="margin-top: 8px; text-align: center;">
+      <a class="btn secondary" href="index.html">← Back to Report</a>
+    </div>
 
     <footer>
       <p>SAM2 vs SAM3 gallery bundle | Lightweight previews only</p>

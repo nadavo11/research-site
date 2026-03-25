@@ -53,6 +53,7 @@
       border-radius: 14px;
       border: 1px solid var(--line);
       background: var(--surface-strong);
+      cursor: zoom-in;
     }
 
     .comparison-stack {
@@ -194,6 +195,10 @@
         <span class="tag">rwtd</span>
         <span class="tag">caid</span>
         <span class="tag">stld</span>
+      </div>
+      <div style="margin-top: 18px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
+        <a class="btn" href="gallery.html">Open Lightweight Gallery →</a>
       </div>
     </header>
 
@@ -347,10 +352,10 @@
       <h2>Bigger-Picture Visuals</h2>
       <div class="chart-grid">
         <article class="chart-card">
-          <img src="assets/plots/eval_miou_parity.svg" alt="Same-flavor eval_mIoU grouped chart" />
+          <img src="assets/plots/eval_miou_parity.svg" alt="Same-flavor eval_mIoU grouped chart" data-zoom-src="assets/plots/eval_miou_parity.svg" />
         </article>
         <article class="chart-card">
-          <img src="assets/plots/eval_ari_parity.svg" alt="Same-flavor eval_ARI grouped chart" />
+          <img src="assets/plots/eval_ari_parity.svg" alt="Same-flavor eval_ARI grouped chart" data-zoom-src="assets/plots/eval_ari_parity.svg" />
         </article>
       </div>
     </section>
@@ -488,6 +493,9 @@
         <a class="btn secondary" href="metrics.json">metrics.json</a>
         <a class="btn secondary" href="training_data.json">training_data.json</a>
         <a class="btn secondary" href="summary.md">summary.md</a>
+      </div>
+      <div style="margin-top: 28px; text-align: center;">
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
       </div>
     </section>
 
