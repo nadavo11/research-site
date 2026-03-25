@@ -55,15 +55,14 @@
       background: var(--surface-strong);
     }
 
-    .delta-grid {
+    .comparison-stack {
       display: grid;
-      gap: 20px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      margin-top: 22px;
+      gap: 26px;
     }
 
-    .delta-positive {
-      color: var(--good) !important;
+    .comparison-table table td,
+    .comparison-table table th {
+      vertical-align: top;
     }
 
     .delta-pill {
@@ -75,7 +74,18 @@
       font-weight: 700;
       border: 1px solid var(--line);
       background: var(--surface-strong);
+    }
+
+    .delta-pill.good {
       color: var(--good);
+    }
+
+    .delta-pill.bad {
+      color: var(--bad);
+    }
+
+    .delta-positive {
+      color: var(--good) !important;
     }
 
     .story-head {
@@ -174,123 +184,162 @@
     <header style="text-align: center; margin-bottom: 54px;">
       <div class="subtitle">Experiment Report</div>
       <h1 class="title-gradient">SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitioning</h1>
-      <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 900px; margin-inline: auto;">
-        Automatic binary texture partitioning with frozen features and coarse clustering on RWTD and STLD. In this narrow unsupervised route, the SAM2 variants outperform the comparable SAM3 variants on the headline evaluation metrics, while STLD aggregate mIoU stays nearly flat around 0.5 and is better treated as a caution metric than as the main story.
+      <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 940px; margin-inline: auto;">
+        Same-flavor frozen-feature binary partitioning comparisons across RWTD, CAID, and STLD. The cleaner parity view is coarse-only first, flip-averaged second: SAM2 leads every published coarse-only row, keeps the flip-avg lead on STLD and CAID, and RWTD flip-avg remains the lone SAM3 holdout. On STLD, aggregate mIoU stays essentially flat around 0.5 and is better treated as a caution metric than as the headline signal.
       </p>
       <div style="margin-top: 18px;">
         <span class="tag good">reviewed</span>
         <span class="tag">sam2</span>
         <span class="tag">sam3</span>
-        <span class="tag">unsupervised</span>
-        <span class="tag">coarse clustering</span>
+        <span class="tag">rwtd</span>
+        <span class="tag">caid</span>
+        <span class="tag">stld</span>
       </div>
     </header>
 
     <section class="executive-summary">
       <h2>Executive Synopsis</h2>
-      <p>This page compares automatic binary partitioning from frozen SAM features on <strong>RWTD</strong> and <strong>STLD</strong>. The compared route is deliberately narrow: no prompts, no supervised decoder, and no learned downstream segmentation head, just coarse clustering over frozen features.</p>
-      <p>Within that route, the requested SAM2 rows outperform the comparable SAM3 rows on the main evaluation metrics. The page also marks a caution explicitly: on STLD, <code>miou_agg</code> stays nearly flat around <code>0.5</code>, so it should be treated as a low-signal aggregate view rather than the main story.</p>
+      <p>This page now uses the cleaner parity view: <strong>same dataset, same flavor, model columns side by side</strong>. Under that framing, SAM2 leads all three <strong>coarse-only</strong> rows and keeps the <strong>flip-avg</strong> lead on STLD and CAID, while RWTD flip-avg remains the lone SAM3 exception.</p>
+      <p>The important caution is unchanged. On STLD, <code>miou_agg</code> stays clustered around <code>0.5</code> across both flavors and both models, so the main interpretable signal is still <code>eval_miou</code> and <code>eval_ari</code>.</p>
     </section>
 
     <section class="section">
       <h2>Headline Readout</h2>
       <div class="metric-grid compact-grid">
   <article class="metric">
-    <div class="k">RWTD Winner</div>
-    <div class="v">0.8561</div>
-    <div class="mini-note">SAM2 coarse · ARI 0.7472</div>
+    <div class="k">Coarse-Only Lead Split</div>
+    <div class="v">3/3</div>
+    <div class="mini-note">SAM2 leads all published coarse-only datasets.</div>
   </article>
   <article class="metric">
-    <div class="k">STLD Winner</div>
-    <div class="v">0.8064</div>
-    <div class="mini-note">SAM2 flip · ARI 0.7089</div>
+    <div class="k">Flip-Avg Lead Split</div>
+    <div class="v">2/3</div>
+    <div class="mini-note">SAM2 leads STLD and CAID; RWTD is the holdout.</div>
   </article>
   <article class="metric">
-    <div class="k">Largest Uplift vs SAM3</div>
-    <div class="v delta-positive">+0.0530</div>
-    <div class="mini-note">STLD SAM2 flip · ARI +0.0895</div>
+    <div class="k">Largest Same-Flavor Gain</div>
+    <div class="v delta-positive">+0.3226</div>
+    <div class="mini-note">STLD Coarse Only · ARI +0.5005</div>
   </article>
   <article class="metric">
     <div class="k">STLD miou_agg Span</div>
-    <div class="v caution-readout">0.000825</div>
-    <div class="mini-note">All three STLD rows stay ~0.5000</div>
+    <div class="v caution-readout">0.001241</div>
+    <div class="mini-note">All four STLD rows stay clustered around 0.5000.</div>
   </article>
 </div>
     </section>
 
-    <section class="section">
-      <h2>What Was Compared</h2>
-      <p class="interpretation-copy">This table uses the exact published bundle metrics for the five requested rows. CAID is intentionally left out of this page because the matching CAID SAM2 flip-avg row is still missing for the focused SAM2-vs-SAM3 story.</p>
-      <div class="table-wrap" style="margin-top: 22px;">
-        <table>
-          <thead>
-            <tr>
-              <th>Route</th>
-              <th>Dataset / Split</th>
-              <th>Variant</th>
-              <th>Model</th>
-              <th>Evaluated Samples</th>
-              <th>eval_miou</th>
-              <th>eval_ari</th>
-              <th>miou_agg</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-  <td><strong>RWTD</strong></td>
-  <td><code>aviadcohz/RWTD</code><div class="mini-note">test</div></td>
-  <td><code>feature_cluster_coarse_to_fine_global_pooled_init_coarse_only_sam2</code></td>
-  <td><code>facebook/sam2-hiera-small</code></td>
-  <td>227</td>
-  <td><strong>0.856065</strong></td>
-  <td><strong>0.747178</strong></td>
-  <td><strong>0.528148</strong></td>
-</tr>
+    <section class="section comparison-table">
+      <h2>Same-Flavor Model Comparison</h2>
+      <p class="interpretation-copy">Dataset rows are intentionally minimal for readability. Each model cell shows <code>mIoU</code> on the first line and <code>ARI</code> below it, following the cross-dataset benchmark style.</p>
+      <div class="comparison-stack" style="margin-top: 22px;">
+        <div>
+          <h3>Coarse-Only Model Comparison</h3>
+          <p class="mini-note">Direct same-flavor parity on the original coarse-only clustering route.</p>
+          <div class="table-wrap" style="margin-top: 14px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dataset</th>
+                  <th>SAM2</th>
+                  <th>SAM3</th>
+                  <th>Δ mIoU</th>
+                  <th>Δ ARI</th>
+                  <th>Leader</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>RWTD</strong></td>
+                  <td><strong>0.856</strong>
+<div class="mini-note">ARI 0.747</div></td>
+                  <td><strong>0.824</strong>
+<div class="mini-note">ARI 0.698</div></td>
+                  <td><span class="delta-pill good">+0.033</span></td>
+                  <td><span class="delta-pill good">+0.049</span></td>
+                  <td><span class="tag good">SAM2</span></td>
+                </tr>
 <tr>
-  <td><strong>RWTD</strong></td>
-  <td><code>aviadcohz/RWTD</code><div class="mini-note">test</div></td>
-  <td><code>feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only</code></td>
-  <td><code>facebook/sam3</code></td>
-  <td>227</td>
-  <td><strong>0.839748</strong></td>
-  <td><strong>0.725812</strong></td>
-  <td><strong>0.513749</strong></td>
-</tr>
+                  <td><strong>CAID</strong></td>
+                  <td><strong>0.726</strong>
+<div class="mini-note">ARI 0.567</div></td>
+                  <td><strong>0.674</strong>
+<div class="mini-note">ARI 0.496</div></td>
+                  <td><span class="delta-pill good">+0.052</span></td>
+                  <td><span class="delta-pill good">+0.072</span></td>
+                  <td><span class="tag good">SAM2</span></td>
+                </tr>
 <tr>
-  <td><strong>STLD</strong></td>
-  <td><code>architexture:stld</code><div class="mini-note">benchmark</div></td>
-  <td><code>feature_cluster_coarse_to_fine_global_pooled_init_coarse_only_sam2</code></td>
-  <td><code>facebook/sam2-hiera-small</code></td>
-  <td>200</td>
-  <td><strong>0.790776</strong></td>
-  <td><strong>0.686396</strong></td>
-  <td><strong>0.500000</strong><div class="mini-note">flat / low-signal on STLD</div></td>
-</tr>
+                  <td><strong>STLD</strong></td>
+                  <td><strong>0.791</strong>
+<div class="mini-note">ARI 0.686</div></td>
+                  <td><strong>0.468</strong>
+<div class="mini-note">ARI 0.186</div></td>
+                  <td><span class="delta-pill good">+0.323</span></td>
+                  <td><span class="delta-pill good">+0.501</span></td>
+                  <td><span class="tag good">SAM2</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="artifact-row">
+            <a class="btn secondary" href="assets/tables/coarse_only_model_parity.csv">Open Coarse-Only CSV</a>
+          </div>
+        </div>
+
+        <div>
+          <h3>Flip-Averaged Model Comparison</h3>
+          <p class="mini-note">Same-flavor parity after the flip-averaged coarse clustering variant.</p>
+          <div class="table-wrap" style="margin-top: 14px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dataset</th>
+                  <th>SAM2</th>
+                  <th>SAM3</th>
+                  <th>Δ mIoU</th>
+                  <th>Δ ARI</th>
+                  <th>Leader</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>RWTD</strong></td>
+                  <td><strong>0.828</strong>
+<div class="mini-note">ARI 0.701</div></td>
+                  <td><strong>0.840</strong>
+<div class="mini-note">ARI 0.726</div></td>
+                  <td><span class="delta-pill bad">-0.012</span></td>
+                  <td><span class="delta-pill bad">-0.025</span></td>
+                  <td><span class="tag warn">SAM3</span></td>
+                </tr>
 <tr>
-  <td><strong>STLD</strong></td>
-  <td><code>architexture:stld</code><div class="mini-note">benchmark</div></td>
-  <td><code>feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only</code></td>
-  <td><code>facebook/sam3</code></td>
-  <td>200</td>
-  <td><strong>0.753395</strong></td>
-  <td><strong>0.619408</strong></td>
-  <td><strong>0.500825</strong><div class="mini-note">flat / low-signal on STLD</div></td>
-</tr>
+                  <td><strong>CAID</strong></td>
+                  <td><strong>0.662</strong>
+<div class="mini-note">ARI 0.461</div></td>
+                  <td><strong>0.659</strong>
+<div class="mini-note">ARI 0.451</div></td>
+                  <td><span class="delta-pill good">+0.003</span></td>
+                  <td><span class="delta-pill good">+0.010</span></td>
+                  <td><span class="tag good">SAM2</span></td>
+                </tr>
 <tr>
-  <td><strong>STLD</strong></td>
-  <td><code>architexture:stld</code><div class="mini-note">benchmark</div></td>
-  <td><code>feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only_sam2</code></td>
-  <td><code>facebook/sam2-hiera-small</code></td>
-  <td>200</td>
-  <td><strong>0.806408</strong></td>
-  <td><strong>0.708896</strong></td>
-  <td><strong>0.500000</strong><div class="mini-note">flat / low-signal on STLD</div></td>
-</tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="artifact-row">
-        <a class="btn secondary" href="assets/tables/what_was_compared.csv">Open Table CSV</a>
+                  <td><strong>STLD</strong></td>
+                  <td><strong>0.806</strong>
+<div class="mini-note">ARI 0.709</div></td>
+                  <td><strong>0.753</strong>
+<div class="mini-note">ARI 0.619</div></td>
+                  <td><span class="delta-pill good">+0.053</span></td>
+                  <td><span class="delta-pill good">+0.089</span></td>
+                  <td><span class="tag good">SAM2</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="artifact-row">
+            <a class="btn secondary" href="assets/tables/flip_averaged_model_parity.csv">Open Flip-Averaged CSV</a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -298,73 +347,11 @@
       <h2>Bigger-Picture Visuals</h2>
       <div class="chart-grid">
         <article class="chart-card">
-          <img src="assets/plots/eval_miou_grouped.svg" alt="Grouped eval_mIoU chart" />
+          <img src="assets/plots/eval_miou_parity.svg" alt="Same-flavor eval_mIoU grouped chart" />
         </article>
         <article class="chart-card">
-          <img src="assets/plots/eval_ari_grouped.svg" alt="Grouped eval_ARI chart" />
+          <img src="assets/plots/eval_ari_parity.svg" alt="Same-flavor eval_ARI grouped chart" />
         </article>
-      </div>
-
-      <div class="delta-grid">
-        <article class="metric">
-  <div class="k">RWTD: SAM2 coarse vs SAM3 flip</div>
-  <div class="v delta-positive">+0.0163</div>
-  <div class="mini-note">mIoU uplift · ARI +0.0214</div>
-</article>
-<article class="metric">
-  <div class="k">STLD: SAM2 coarse vs SAM3 flip</div>
-  <div class="v delta-positive">+0.0374</div>
-  <div class="mini-note">mIoU uplift · ARI +0.0670</div>
-</article>
-<article class="metric">
-  <div class="k">STLD: SAM2 flip vs SAM3 flip</div>
-  <div class="v delta-positive">+0.0530</div>
-  <div class="mini-note">mIoU uplift · ARI +0.0895</div>
-</article>
-      </div>
-
-      <div class="table-wrap" style="margin-top: 24px;">
-        <table>
-          <thead>
-            <tr>
-              <th>Comparison</th>
-              <th>Improved Row</th>
-              <th>SAM3 Baseline</th>
-              <th>Δ mIoU</th>
-              <th>Δ ARI</th>
-              <th>Reading</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-  <td><strong>RWTD: SAM2 coarse vs SAM3 flip</strong></td>
-  <td><code>RWTD · SAM2 coarse_only</code></td>
-  <td><code>RWTD · SAM3 flip_avg</code></td>
-  <td><span class="delta-pill good">+0.016317</span></td>
-  <td><span class="delta-pill good">+0.021366</span></td>
-  <td>Positive direction, but smaller than STLD and still worth reading cautiously until parity questions are locked down.</td>
-</tr>
-<tr>
-  <td><strong>STLD: SAM2 coarse vs SAM3 flip</strong></td>
-  <td><code>STLD · SAM2 coarse_only</code></td>
-  <td><code>STLD · SAM3 flip_avg</code></td>
-  <td><span class="delta-pill good">+0.037381</span></td>
-  <td><span class="delta-pill good">+0.066988</span></td>
-  <td>Clear STLD uplift in both headline metrics.</td>
-</tr>
-<tr>
-  <td><strong>STLD: SAM2 flip vs SAM3 flip</strong></td>
-  <td><code>STLD · SAM2 flip_avg</code></td>
-  <td><code>STLD · SAM3 flip_avg</code></td>
-  <td><span class="delta-pill good">+0.053013</span></td>
-  <td><span class="delta-pill good">+0.089487</span></td>
-  <td>Largest in-page gain. The SAM2 flip-avg variant is the strongest STLD row in this slice.</td>
-</tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="artifact-row">
-        <a class="btn secondary" href="assets/tables/delta_vs_sam3_baseline.csv">Open Delta CSV</a>
       </div>
     </section>
 
@@ -373,29 +360,32 @@
       <div class="caution-panel">
   <div>
     <span class="tag warn">metric caution</span>
-    <h3>STLD <code>miou_agg</code> is Essentially Flat</h3>
-    <p class="interpretation-copy">The STLD aggregate mIoU values are <code>0.500000</code>, <code>0.500825</code>, and <code>0.500000</code>. That spread is only <strong>0.000825</strong>, so this aggregate view is low-signal for the STLD route and should not carry the interpretation.</p>
+    <h3>STLD <code>miou_agg</code> Is Effectively Flat</h3>
+    <p class="interpretation-copy">Across all four STLD rows, the aggregate mIoU values are <code>0.500000</code>, <code>0.501241</code>, <code>0.500000</code>, and <code>0.500825</code>. The total spread is only <strong>0.001241</strong>, so this aggregate view is low-signal for the STLD route.</p>
   </div>
   <div class="caution-list">
     <div><strong>Main readout</strong><span><code>eval_miou</code> and <code>eval_ari</code></span></div>
-    <div><strong>Why</strong><span>They separate the variants clearly where <code>miou_agg</code> barely moves.</span></div>
-    <div><strong>Takeaway</strong><span>Treat <code>miou_agg</code> as a caution metric here, not the headline metric.</span></div>
+    <div><strong>Why</strong><span>Those metrics separate the models clearly where <code>miou_agg</code> barely moves.</span></div>
+    <div><strong>Takeaway</strong><span>Do not over-interpret STLD aggregate mIoU for this route.</span></div>
   </div>
 </div>
     </section>
 
     <section class="section">
-      <h2>Route-Level Takeaways</h2>
+      <h2>Dataset-Level Takeaways</h2>
       <div class="card-grid compact-grid">
   <article class="card">
     <h3>RWTD Takeaway</h3>
-    <p class="interpretation-copy">On the requested RWTD pair, <strong>SAM2 coarse_only</strong> beats the comparable <strong>SAM3 flip_avg</strong> row by <strong>+0.016317</strong> mIoU and <strong>+0.021366</strong> ARI across 227 test crops.</p>
-    <p class="mini-note">Direction is favorable, but this route should still be read carefully until evaluator and preprocessing parity are fully locked.</p>
+    <p class="interpretation-copy">RWTD is split by flavor. In <strong>coarse-only parity</strong>, SAM2 leads by <strong>+0.032553</strong> mIoU / <strong>+0.048752</strong> ARI. In <strong>flip-avg parity</strong>, SAM3 retains a small edge of <strong>+0.011973</strong> / <strong>+0.024500</strong>.</p>
+  </article>
+  <article class="card">
+    <h3>CAID Takeaway</h3>
+    <p class="interpretation-copy">CAID now has both flavors published for both models. SAM2 leads in <strong>coarse-only</strong> by <strong>+0.052070</strong> mIoU / <strong>+0.071687</strong> ARI and still keeps a smaller <strong>flip-avg</strong> edge of <strong>+0.003212</strong> / <strong>+0.009848</strong>.</p>
   </article>
   <article class="card">
     <h3>STLD Takeaway</h3>
-    <p class="interpretation-copy">STLD shows the clearer separation. SAM2 coarse beats the SAM3 flip baseline by <strong>+0.037381</strong> mIoU / <strong>+0.066988</strong> ARI, and SAM2 flip extends that to <strong>+0.053013</strong> / <strong>+0.089487</strong>.</p>
-    <p class="mini-note"><code>miou_agg</code> stays nearly flat around 0.5, so <code>eval_miou</code> and <code>eval_ari</code> are the operative signal here.</p>
+    <p class="interpretation-copy">STLD is the clearest same-flavor win. SAM2 leads in <strong>coarse-only</strong> by <strong>+0.322570</strong> mIoU / <strong>+0.500531</strong> ARI and in <strong>flip-avg</strong> by <strong>+0.053013</strong> / <strong>+0.089487</strong>.</p>
+    <p class="mini-note"><code>miou_agg</code> is nearly flat across all STLD rows, so it stays a caution metric rather than the headline metric.</p>
   </article>
 </div>
     </section>
@@ -404,58 +394,52 @@
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
         <div>
           <h2>Qualitative Comparison</h2>
-          <p class="interpretation-copy">The panels below reuse the run-emitted triptychs. They are chosen to make the route-level story visible quickly rather than to present an exhaustive gallery.</p>
+          <p class="interpretation-copy">The qualitative panels are still curated rather than exhaustive. They now follow the same-flavor parity framing used by the main tables.</p>
         </div>
         <a class="btn" href="gallery.html">Open Curated Gallery →</a>
       </div>
       <div style="margin-top: 24px;">
         <article class="story-block">
                   <div class="story-head">
-                    <span class="tag good">clear win</span>
-                    <span class="pill">RWTD · crop 237</span>
+                    <span class="tag good">coarse parity</span>
+                    <span class="pill">RWTD · crop 240</span>
                   </div>
-                  <h3>RWTD: SAM2 Preserves the Three-Band Split</h3>
-                  <p class="story-summary">This granular crop has a narrow central light band flanked by two different coarse textures. SAM2 coarse tracks the split cleanly, while the comparable SAM3 flip-avg run collapses the center into a broad blob.</p>
+                  <h3>RWTD: SAM2 Wins the Coarse-Only Parity Check</h3>
+                  <p class="story-summary">On this tile-and-grout crop, the same-flavor coarse-only comparison is visually clear. SAM2 coarse tracks the diagonal split cleanly, while SAM3 coarse breaks the scene into broad horizontal bands.</p>
                   <div class="story-grid">
                     <figure>
-  <img src="assets/gallery/rwtd_granular_bands__rwtd_sam3_flip.webp" alt="RWTD: SAM2 Preserves the Three-Band Split — RWTD · SAM3 flip_avg" data-zoom-src="assets/gallery/rwtd_granular_bands__rwtd_sam3_flip.webp" />
+  <img src="assets/gallery/rwtd_coarse_parity__rwtd_sam3_coarse.webp" alt="RWTD: SAM2 Wins the Coarse-Only Parity Check — SAM3 coarse" data-zoom-src="assets/gallery/rwtd_coarse_parity__rwtd_sam3_coarse.webp" />
   <figcaption>
-    <strong>RWTD · SAM3 flip_avg</strong>
-    <div class="mini-note">mIoU 0.2957 · ARI -0.0009</div>
+    <strong>SAM3 coarse</strong>
+    <div class="mini-note">mIoU 0.3796 · ARI 0.0216</div>
   </figcaption>
 </figure> <figure>
-  <img src="assets/gallery/rwtd_granular_bands__rwtd_sam2_coarse.webp" alt="RWTD: SAM2 Preserves the Three-Band Split — RWTD · SAM2 coarse_only" data-zoom-src="assets/gallery/rwtd_granular_bands__rwtd_sam2_coarse.webp" />
+  <img src="assets/gallery/rwtd_coarse_parity__rwtd_sam2_coarse.webp" alt="RWTD: SAM2 Wins the Coarse-Only Parity Check — SAM2 coarse" data-zoom-src="assets/gallery/rwtd_coarse_parity__rwtd_sam2_coarse.webp" />
   <figcaption>
-    <strong>RWTD · SAM2 coarse_only</strong>
-    <div class="mini-note">mIoU 0.9705 · ARI 0.9411</div>
+    <strong>SAM2 coarse</strong>
+    <div class="mini-note">mIoU 0.9611 · ARI 0.9244</div>
   </figcaption>
 </figure>
                   </div>
                 </article>
 <article class="story-block">
                   <div class="story-head">
-                    <span class="tag good">stld gain</span>
+                    <span class="tag good">coarse parity</span>
                     <span class="pill">STLD · crop 66</span>
                   </div>
-                  <h3>STLD: Both SAM2 Variants Recover the Object</h3>
-                  <p class="story-summary">On this compact synthetic foreground, both SAM2 variants recover the object cleanly. The SAM3 flip baseline expands into a large false-positive disk instead.</p>
+                  <h3>STLD: Coarse-Only Still Favors SAM2 Decisively</h3>
+                  <p class="story-summary">This compact synthetic foreground is representative of the coarse-only gap on STLD. SAM2 coarse recovers the object cleanly, while SAM3 coarse overfills a much larger false-positive region.</p>
                   <div class="story-grid">
                     <figure>
-  <img src="assets/gallery/stld_compact_foreground__stld_sam3_flip.webp" alt="STLD: Both SAM2 Variants Recover the Object — STLD · SAM3 flip_avg" data-zoom-src="assets/gallery/stld_compact_foreground__stld_sam3_flip.webp" />
+  <img src="assets/gallery/stld_coarse_parity__stld_sam3_coarse.webp" alt="STLD: Coarse-Only Still Favors SAM2 Decisively — SAM3 coarse" data-zoom-src="assets/gallery/stld_coarse_parity__stld_sam3_coarse.webp" />
   <figcaption>
-    <strong>STLD · SAM3 flip_avg</strong>
-    <div class="mini-note">mIoU 0.2680 · ARI -0.0421</div>
+    <strong>SAM3 coarse</strong>
+    <div class="mini-note">mIoU 0.3379 · ARI 0.0098</div>
   </figcaption>
 </figure> <figure>
-  <img src="assets/gallery/stld_compact_foreground__stld_sam2_coarse.webp" alt="STLD: Both SAM2 Variants Recover the Object — STLD · SAM2 coarse_only" data-zoom-src="assets/gallery/stld_compact_foreground__stld_sam2_coarse.webp" />
+  <img src="assets/gallery/stld_coarse_parity__stld_sam2_coarse.webp" alt="STLD: Coarse-Only Still Favors SAM2 Decisively — SAM2 coarse" data-zoom-src="assets/gallery/stld_coarse_parity__stld_sam2_coarse.webp" />
   <figcaption>
-    <strong>STLD · SAM2 coarse_only</strong>
-    <div class="mini-note">mIoU 0.8555 · ARI 0.8099</div>
-  </figcaption>
-</figure> <figure>
-  <img src="assets/gallery/stld_compact_foreground__stld_sam2_flip.webp" alt="STLD: Both SAM2 Variants Recover the Object — STLD · SAM2 flip_avg" data-zoom-src="assets/gallery/stld_compact_foreground__stld_sam2_flip.webp" />
-  <figcaption>
-    <strong>STLD · SAM2 flip_avg</strong>
+    <strong>SAM2 coarse</strong>
     <div class="mini-note">mIoU 0.8555 · ARI 0.8099</div>
   </figcaption>
 </figure>
@@ -463,28 +447,22 @@
                 </article>
 <article class="story-block">
                   <div class="story-head">
-                    <span class="tag good">thin structure</span>
+                    <span class="tag good">flip parity</span>
                     <span class="pill">STLD · crop 41</span>
                   </div>
-                  <h3>STLD: Thin Structure Favors the SAM2 Variants</h3>
-                  <p class="story-summary">The thin oblique strip is a harder shape. SAM2 coarse recovers part of it, SAM2 flip captures more of it, and the SAM3 flip baseline nearly collapses the signal.</p>
+                  <h3>STLD: Flip-Averaged Parity Still Favors SAM2</h3>
+                  <p class="story-summary">The thin oblique strip is harder, but the same-flavor flip-avg comparison still separates the models. SAM2 flip captures far more of the structure, while SAM3 flip nearly collapses the signal.</p>
                   <div class="story-grid">
                     <figure>
-  <img src="assets/gallery/stld_thin_strip__stld_sam3_flip.webp" alt="STLD: Thin Structure Favors the SAM2 Variants — STLD · SAM3 flip_avg" data-zoom-src="assets/gallery/stld_thin_strip__stld_sam3_flip.webp" />
+  <img src="assets/gallery/stld_flip_parity__stld_sam3_flip.webp" alt="STLD: Flip-Averaged Parity Still Favors SAM2 — SAM3 flip" data-zoom-src="assets/gallery/stld_flip_parity__stld_sam3_flip.webp" />
   <figcaption>
-    <strong>STLD · SAM3 flip_avg</strong>
+    <strong>SAM3 flip</strong>
     <div class="mini-note">mIoU 0.0764 · ARI -0.0241</div>
   </figcaption>
 </figure> <figure>
-  <img src="assets/gallery/stld_thin_strip__stld_sam2_coarse.webp" alt="STLD: Thin Structure Favors the SAM2 Variants — STLD · SAM2 coarse_only" data-zoom-src="assets/gallery/stld_thin_strip__stld_sam2_coarse.webp" />
+  <img src="assets/gallery/stld_flip_parity__stld_sam2_flip.webp" alt="STLD: Flip-Averaged Parity Still Favors SAM2 — SAM2 flip" data-zoom-src="assets/gallery/stld_flip_parity__stld_sam2_flip.webp" />
   <figcaption>
-    <strong>STLD · SAM2 coarse_only</strong>
-    <div class="mini-note">mIoU 0.5386 · ARI 0.2118</div>
-  </figcaption>
-</figure> <figure>
-  <img src="assets/gallery/stld_thin_strip__stld_sam2_flip.webp" alt="STLD: Thin Structure Favors the SAM2 Variants — STLD · SAM2 flip_avg" data-zoom-src="assets/gallery/stld_thin_strip__stld_sam2_flip.webp" />
-  <figcaption>
-    <strong>STLD · SAM2 flip_avg</strong>
+    <strong>SAM2 flip</strong>
     <div class="mini-note">mIoU 0.6885 · ARI 0.5477</div>
   </figcaption>
 </figure>
@@ -495,16 +473,16 @@
 
     <section class="section">
       <h2>Interpretation</h2>
-      <p class="interpretation-copy">This does <strong>not</strong> mean SAM2 is the stronger model overall. It does suggest that, for this specific prompt-free frozen-feature clustering route, the SAM2 features are more cluster-friendly than the comparable SAM3 features. STLD is controlled and synthetic, so its advantage should not be over-weighted against RWTD, but the result is still strong enough to keep as a serious ablation and baseline.</p>
+      <p class="interpretation-copy">This still does <strong>not</strong> mean SAM2 is the better model overall. It does mean that, under same-flavor frozen-feature clustering parity, SAM2 appears more cluster-friendly than SAM3 in most of the published binary partition settings here. The exception matters too: RWTD flip-avg stays a slight SAM3 holdout, so the result is route-specific rather than absolute.</p>
     </section>
 
     <section class="section">
       <h2>Caveats / Notes</h2>
       <ul class="bullet-list">
-        <li>The report intentionally focuses on RWTD and STLD because that is the requested parity-closest slice for this page.</li>
-        <li>On STLD, <code>miou_agg</code> is visually marked as low-signal because it is nearly constant across variants.</li>
-        <li>CAID already has a new SAM2 coarse bundle on disk, but the matching CAID SAM2 flip-avg row is still missing, so CAID is not included here yet.</li>
-        <li>This is a frozen-feature clustering comparison, not a claim about overall SAM2-vs-SAM3 project performance.</li>
+        <li>Legacy SAM3 coarse-only summaries publish <code>miou</code>/<code>ari</code> instead of <code>eval_miou</code>/<code>eval_ari</code>; this report normalizes those fields directly from the summary bundles.</li>
+        <li>CAID is now included in both same-flavor tables, but the qualitative section remains curated around the clearest RWTD/STLD visual examples.</li>
+        <li>On STLD, <code>miou_agg</code> is visually marked as low-signal because it is nearly constant across both models and both flavors.</li>
+        <li>This is a route-specific frozen-feature clustering comparison, not a claim about overall SAM2-vs-SAM3 project performance.</li>
       </ul>
       <div class="artifact-row">
         <a class="btn secondary" href="metrics.json">metrics.json</a>

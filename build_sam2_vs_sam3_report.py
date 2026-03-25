@@ -23,204 +23,268 @@ PAGE_TITLE = "SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitio
 PAGE_SUBTITLE = "Experiment Report"
 PAGE_DATE = date.today().isoformat()
 PAGE_DESCRIPTION = (
-    "Automatic binary texture partitioning with frozen features and coarse clustering on RWTD and STLD. "
-    "In this narrow unsupervised route, the SAM2 variants outperform the comparable SAM3 variants on "
-    "the headline evaluation metrics, while STLD aggregate mIoU stays nearly flat around 0.5 and is "
-    "better treated as a caution metric than as the main story."
+    "Same-flavor frozen-feature binary partitioning comparisons across RWTD, CAID, and STLD. "
+    "The cleaner parity view is coarse-only first, flip-averaged second: SAM2 leads every published "
+    "coarse-only row, keeps the flip-avg lead on STLD and CAID, and RWTD flip-avg remains the lone SAM3 holdout. "
+    "On STLD, aggregate mIoU stays essentially flat around 0.5 and is better treated as a caution metric than as the headline signal."
 )
 
 PRIMARY_METRICS = ("eval_miou", "eval_ari")
 CAUTION_METRIC = "miou_agg"
 
-RUN_COLORS = {
-    "rwtd_sam3_flip": "#ca6702",
-    "rwtd_sam2_coarse": "#005f73",
-    "stld_sam3_flip": "#ca6702",
-    "stld_sam2_coarse": "#005f73",
-    "stld_sam2_flip": "#0a9396",
+DATASET_ORDER = ["rwtd", "caid", "stld"]
+DATASET_LABELS = {
+    "rwtd": "RWTD",
+    "caid": "CAID",
+    "stld": "STLD",
 }
 
-MODEL_LABELS = {
-    "facebook/sam2-hiera-small": "SAM2",
-    "facebook/sam3": "SAM3",
+FLAVOR_ORDER = ["coarse_only", "flip_averaged"]
+FLAVOR_META = {
+    "coarse_only": {
+        "label": "Coarse Only",
+        "section_title": "Coarse-Only Model Comparison",
+        "summary": "Direct same-flavor parity on the original coarse-only clustering route.",
+        "csv_name": "coarse_only_model_parity.csv",
+        "dataset_takeaways": {
+            "rwtd": "SAM2 wins coarse-only parity cleanly on RWTD.",
+            "caid": "CAID shows a clear SAM2 lead in coarse-only parity.",
+            "stld": "This is the largest same-flavor margin on the page.",
+        },
+    },
+    "flip_averaged": {
+        "label": "Flip Averaged",
+        "section_title": "Flip-Averaged Model Comparison",
+        "summary": "Same-flavor parity after the flip-averaged coarse clustering variant.",
+        "csv_name": "flip_averaged_model_parity.csv",
+        "dataset_takeaways": {
+            "rwtd": "RWTD flip-avg remains the one place where SAM3 still holds a small edge.",
+            "caid": "CAID flip-avg is close, but SAM2 still edges ahead.",
+            "stld": "SAM2 keeps a clear flip-avg lead on STLD.",
+        },
+    },
+}
+
+MODEL_META = {
+    "sam2": {
+        "label": "SAM2",
+        "model_id": "facebook/sam2-hiera-small",
+        "color": "#005f73",
+    },
+    "sam3": {
+        "label": "SAM3",
+        "model_id": "facebook/sam3",
+        "color": "#ca6702",
+    },
 }
 
 
 @dataclass(frozen=True)
 class RunSpec:
     run_id: str
-    route: str
-    route_label: str
+    dataset: str
     dataset_label: str
     split_label: str
     source_dir: str
+    flavor: str
+    model_key: str
     display_label: str
     short_label: str
-    note: str
 
 
 RUN_SPECS = [
     RunSpec(
         run_id="rwtd_sam2_coarse",
-        route="rwtd",
-        route_label="RWTD",
+        dataset="rwtd",
         dataset_label="aviadcohz/RWTD",
         split_label="test",
         source_dir="rwtd/sam2_vanilla_cfc",
+        flavor="coarse_only",
+        model_key="sam2",
         display_label="RWTD · SAM2 coarse_only",
         short_label="SAM2 coarse",
-        note="SAM2 coarse-only on RWTD is the requested cross-model comparator.",
+    ),
+    RunSpec(
+        run_id="rwtd_sam3_coarse",
+        dataset="rwtd",
+        dataset_label="aviadcohz/RWTD",
+        split_label="test",
+        source_dir="rwtd/default",
+        flavor="coarse_only",
+        model_key="sam3",
+        display_label="RWTD · SAM3 coarse_only",
+        short_label="SAM3 coarse",
+    ),
+    RunSpec(
+        run_id="rwtd_sam2_flip",
+        dataset="rwtd",
+        dataset_label="aviadcohz/RWTD",
+        split_label="test",
+        source_dir="rwtd/sam2_flipavg_cfc",
+        flavor="flip_averaged",
+        model_key="sam2",
+        display_label="RWTD · SAM2 flip_avg",
+        short_label="SAM2 flip",
     ),
     RunSpec(
         run_id="rwtd_sam3_flip",
-        route="rwtd",
-        route_label="RWTD",
+        dataset="rwtd",
         dataset_label="aviadcohz/RWTD",
         split_label="test",
         source_dir="rwtd/flip_averaged",
+        flavor="flip_averaged",
+        model_key="sam3",
         display_label="RWTD · SAM3 flip_avg",
         short_label="SAM3 flip",
-        note="SAM3 flip-averaged coarse-only baseline on RWTD.",
+    ),
+    RunSpec(
+        run_id="caid_sam2_coarse",
+        dataset="caid",
+        dataset_label="architexture:caid",
+        split_label="caid",
+        source_dir="caid/sam2_vanilla_cfc",
+        flavor="coarse_only",
+        model_key="sam2",
+        display_label="CAID · SAM2 coarse_only",
+        short_label="SAM2 coarse",
+    ),
+    RunSpec(
+        run_id="caid_sam3_coarse",
+        dataset="caid",
+        dataset_label="architexture:caid",
+        split_label="caid",
+        source_dir="caid/default",
+        flavor="coarse_only",
+        model_key="sam3",
+        display_label="CAID · SAM3 coarse_only",
+        short_label="SAM3 coarse",
+    ),
+    RunSpec(
+        run_id="caid_sam2_flip",
+        dataset="caid",
+        dataset_label="architexture:caid",
+        split_label="caid",
+        source_dir="caid/sam2_flipavg_cfc",
+        flavor="flip_averaged",
+        model_key="sam2",
+        display_label="CAID · SAM2 flip_avg",
+        short_label="SAM2 flip",
+    ),
+    RunSpec(
+        run_id="caid_sam3_flip",
+        dataset="caid",
+        dataset_label="architexture:caid",
+        split_label="caid",
+        source_dir="caid/flip_averaged",
+        flavor="flip_averaged",
+        model_key="sam3",
+        display_label="CAID · SAM3 flip_avg",
+        short_label="SAM3 flip",
     ),
     RunSpec(
         run_id="stld_sam2_coarse",
-        route="stld",
-        route_label="STLD",
+        dataset="stld",
         dataset_label="architexture:stld",
         split_label="benchmark",
         source_dir="stld/sam2_vanilla_cfc",
+        flavor="coarse_only",
+        model_key="sam2",
         display_label="STLD · SAM2 coarse_only",
         short_label="SAM2 coarse",
-        note="SAM2 coarse-only on STLD.",
     ),
     RunSpec(
-        run_id="stld_sam3_flip",
-        route="stld",
-        route_label="STLD",
+        run_id="stld_sam3_coarse",
+        dataset="stld",
         dataset_label="architexture:stld",
         split_label="benchmark",
-        source_dir="stld/flip_averaged",
-        display_label="STLD · SAM3 flip_avg",
-        short_label="SAM3 flip",
-        note="SAM3 flip-averaged coarse-only baseline on STLD.",
+        source_dir="stld/default",
+        flavor="coarse_only",
+        model_key="sam3",
+        display_label="STLD · SAM3 coarse_only",
+        short_label="SAM3 coarse",
     ),
     RunSpec(
         run_id="stld_sam2_flip",
-        route="stld",
-        route_label="STLD",
+        dataset="stld",
         dataset_label="architexture:stld",
         split_label="benchmark",
         source_dir="stld/sam2_flipavg_cfc",
+        flavor="flip_averaged",
+        model_key="sam2",
         display_label="STLD · SAM2 flip_avg",
         short_label="SAM2 flip",
-        note="STLD SAM2 flip-averaging improves further over the SAM3 flip-avg baseline.",
+    ),
+    RunSpec(
+        run_id="stld_sam3_flip",
+        dataset="stld",
+        dataset_label="architexture:stld",
+        split_label="benchmark",
+        source_dir="stld/flip_averaged",
+        flavor="flip_averaged",
+        model_key="sam3",
+        display_label="STLD · SAM3 flip_avg",
+        short_label="SAM3 flip",
     ),
 ]
 
 RUN_SPEC_BY_ID = {spec.run_id: spec for spec in RUN_SPECS}
-RUN_ORDER = [spec.run_id for spec in RUN_SPECS]
-ROUTE_ORDER = ["rwtd", "stld"]
-BASELINE_BY_ROUTE = {"rwtd": "rwtd_sam3_flip", "stld": "stld_sam3_flip"}
-CHART_GROUP_ORDER = {
-    "rwtd": ["rwtd_sam3_flip", "rwtd_sam2_coarse"],
-    "stld": ["stld_sam3_flip", "stld_sam2_coarse", "stld_sam2_flip"],
-}
-
-DELTA_ROWS = [
-    {
-        "delta_id": "rwtd_sam2_coarse_vs_sam3_flip",
-        "route": "rwtd",
-        "title": "RWTD: SAM2 coarse vs SAM3 flip",
-        "left_run_id": "rwtd_sam2_coarse",
-        "right_run_id": "rwtd_sam3_flip",
-        "summary": "Positive direction, but smaller than STLD and still worth reading cautiously until parity questions are locked down.",
-    },
-    {
-        "delta_id": "stld_sam2_coarse_vs_sam3_flip",
-        "route": "stld",
-        "title": "STLD: SAM2 coarse vs SAM3 flip",
-        "left_run_id": "stld_sam2_coarse",
-        "right_run_id": "stld_sam3_flip",
-        "summary": "Clear STLD uplift in both headline metrics.",
-    },
-    {
-        "delta_id": "stld_sam2_flip_vs_sam3_flip",
-        "route": "stld",
-        "title": "STLD: SAM2 flip vs SAM3 flip",
-        "left_run_id": "stld_sam2_flip",
-        "right_run_id": "stld_sam3_flip",
-        "summary": "Largest in-page gain. The SAM2 flip-avg variant is the strongest STLD row in this slice.",
-    },
-]
+RUN_LOOKUP = {(spec.dataset, spec.model_key, spec.flavor): spec.run_id for spec in RUN_SPECS}
 
 MAIN_STORIES = [
     {
-        "story_id": "rwtd_granular_bands",
-        "route": "rwtd",
-        "route_label": "RWTD",
-        "sample_id": "237",
-        "title": "RWTD: SAM2 Preserves the Three-Band Split",
+        "story_id": "rwtd_coarse_parity",
+        "dataset": "rwtd",
+        "dataset_label": "RWTD",
+        "sample_id": "240",
+        "title": "RWTD: SAM2 Wins the Coarse-Only Parity Check",
         "summary": (
-            "This granular crop has a narrow central light band flanked by two different coarse textures. "
-            "SAM2 coarse tracks the split cleanly, while the comparable SAM3 flip-avg run collapses the center into a broad blob."
+            "On this tile-and-grout crop, the same-flavor coarse-only comparison is visually clear. "
+            "SAM2 coarse tracks the diagonal split cleanly, while SAM3 coarse breaks the scene into broad horizontal bands."
         ),
-        "variant_order": ["rwtd_sam3_flip", "rwtd_sam2_coarse"],
-        "tag": "clear win",
+        "variant_order": ["rwtd_sam3_coarse", "rwtd_sam2_coarse"],
+        "tag": "coarse parity",
         "show_on_index": True,
     },
     {
-        "story_id": "stld_compact_foreground",
-        "route": "stld",
-        "route_label": "STLD",
+        "story_id": "stld_coarse_parity",
+        "dataset": "stld",
+        "dataset_label": "STLD",
         "sample_id": "66",
-        "title": "STLD: Both SAM2 Variants Recover the Object",
+        "title": "STLD: Coarse-Only Still Favors SAM2 Decisively",
         "summary": (
-            "On this compact synthetic foreground, both SAM2 variants recover the object cleanly. "
-            "The SAM3 flip baseline expands into a large false-positive disk instead."
+            "This compact synthetic foreground is representative of the coarse-only gap on STLD. "
+            "SAM2 coarse recovers the object cleanly, while SAM3 coarse overfills a much larger false-positive region."
         ),
-        "variant_order": ["stld_sam3_flip", "stld_sam2_coarse", "stld_sam2_flip"],
-        "tag": "stld gain",
+        "variant_order": ["stld_sam3_coarse", "stld_sam2_coarse"],
+        "tag": "coarse parity",
         "show_on_index": True,
     },
     {
-        "story_id": "stld_thin_strip",
-        "route": "stld",
-        "route_label": "STLD",
+        "story_id": "stld_flip_parity",
+        "dataset": "stld",
+        "dataset_label": "STLD",
         "sample_id": "41",
-        "title": "STLD: Thin Structure Favors the SAM2 Variants",
+        "title": "STLD: Flip-Averaged Parity Still Favors SAM2",
         "summary": (
-            "The thin oblique strip is a harder shape. SAM2 coarse recovers part of it, SAM2 flip captures more of it, "
-            "and the SAM3 flip baseline nearly collapses the signal."
+            "The thin oblique strip is harder, but the same-flavor flip-avg comparison still separates the models. "
+            "SAM2 flip captures far more of the structure, while SAM3 flip nearly collapses the signal."
         ),
-        "variant_order": ["stld_sam3_flip", "stld_sam2_coarse", "stld_sam2_flip"],
-        "tag": "thin structure",
+        "variant_order": ["stld_sam3_flip", "stld_sam2_flip"],
+        "tag": "flip parity",
         "show_on_index": True,
     },
     {
-        "story_id": "rwtd_concrete_gravel",
-        "route": "rwtd",
-        "route_label": "RWTD",
-        "sample_id": "261",
-        "title": "RWTD: Another Strong Texture Split",
+        "story_id": "rwtd_flip_holdout",
+        "dataset": "rwtd",
+        "dataset_label": "RWTD",
+        "sample_id": "219",
+        "title": "RWTD: Flip-Averaged Is the Main Exception",
         "summary": (
-            "SAM2 coarse separates smooth concrete from coarse gravel and the neighboring red slab cleanly; "
-            "the SAM3 flip baseline merges the scene into two broad low-fidelity regions."
+            "RWTD flip-avg is the one same-flavor slice where SAM3 keeps a slight aggregate lead. "
+            "This crop is included as a useful counterexample rather than hidden by the summary."
         ),
-        "variant_order": ["rwtd_sam3_flip", "rwtd_sam2_coarse"],
-        "tag": "gallery",
-        "show_on_index": False,
-    },
-    {
-        "story_id": "stld_diagonal_strip",
-        "route": "stld",
-        "route_label": "STLD",
-        "sample_id": "2",
-        "title": "STLD: Another Synthetic Foreground Win",
-        "summary": (
-            "A second thin foreground example. Both SAM2 rows remain stable, while the SAM3 flip baseline overfills a large surrounding region."
-        ),
-        "variant_order": ["stld_sam3_flip", "stld_sam2_coarse", "stld_sam2_flip"],
-        "tag": "gallery",
+        "variant_order": ["rwtd_sam2_flip", "rwtd_sam3_flip"],
+        "tag": "rwtd holdout",
         "show_on_index": False,
     },
 ]
@@ -254,12 +318,16 @@ def signed(value: float, digits: int = 4) -> str:
     return f"{value:+.{digits}f}"
 
 
-def model_family(model_id: str) -> str:
-    return MODEL_LABELS.get(model_id, model_id)
-
-
-def slugify(text: str) -> str:
-    return "".join(ch if ch.isalnum() else "_" for ch in text)
+def leader_model_from_scores(sam2_miou: float, sam2_ari: float, sam3_miou: float, sam3_ari: float) -> str:
+    if sam2_miou > sam3_miou:
+        return "sam2"
+    if sam3_miou > sam2_miou:
+        return "sam3"
+    if sam2_ari > sam3_ari:
+        return "sam2"
+    if sam3_ari > sam2_ari:
+        return "sam3"
+    return "tie"
 
 
 def write_thumbnail(source_path: Path, dest_path: Path, width: int = 780, quality: int = 84) -> None:
@@ -286,8 +354,8 @@ def load_visual_rows(run_dir: Path) -> list[dict]:
                 {
                     "crop_name": str(payload.get("crop_name") or visual_rel.stem),
                     "sample_index": int(payload.get("sample_index", len(rows))),
-                    "eval_miou": float(payload["eval_miou"]),
-                    "eval_ari": float(payload["eval_ari"]),
+                    "eval_miou": float(payload.get("eval_miou", payload.get("miou", 0.0))),
+                    "eval_ari": float(payload.get("eval_ari", payload.get("ari", 0.0))),
                     "miou_agg": float(payload.get("miou_agg", 0.0)),
                     "caption": payload.get("caption", ""),
                     "source_visual_path": visual_path,
@@ -301,84 +369,81 @@ def load_run(spec: RunSpec) -> dict:
     run_dir = SOURCE_ROOT / spec.source_dir
     for file_name in REQUIRED_RUN_FILES:
         require_file(run_dir / file_name)
+
     summary = load_json(run_dir / "summary.json")
     metrics = summary["mean_metrics"]
     rows = load_visual_rows(run_dir)
     sample_lookup = {row["crop_name"]: row for row in rows}
+    model_id = summary.get("model_id") or MODEL_META[spec.model_key]["model_id"]
+
     return {
         "run_id": spec.run_id,
-        "route": spec.route,
-        "route_label": spec.route_label,
-        "dataset_label": summary.get("dataset_id") or spec.dataset_label,
+        "dataset": spec.dataset,
+        "dataset_slug": spec.dataset,
+        "dataset_label": DATASET_LABELS[spec.dataset],
+        "dataset_id": summary.get("dataset_id") or spec.dataset_label,
         "split_label": summary.get("split") or spec.split_label,
+        "flavor": spec.flavor,
+        "flavor_label": FLAVOR_META[spec.flavor]["label"],
+        "model_key": spec.model_key,
+        "model_label": MODEL_META[spec.model_key]["label"],
+        "model_id": model_id,
         "display_label": spec.display_label,
         "short_label": spec.short_label,
         "exact_variant": summary.get("variant") or "",
-        "model_id": summary.get("model_id") or "",
-        "model_label": model_family(summary.get("model_id") or ""),
-        "note": spec.note,
         "num_samples": int(summary.get("num_evaluated_samples") or 0),
-        "eval_miou": float(metrics["eval_miou"]),
-        "eval_ari": float(metrics["eval_ari"]),
-        "miou_agg": float(metrics["miou_agg"]),
+        "eval_miou": float(metrics.get("eval_miou", metrics.get("miou", 0.0))),
+        "eval_ari": float(metrics.get("eval_ari", metrics.get("ari", 0.0))),
+        "miou_agg": float(metrics.get("miou_agg", 0.0)),
         "source_dir": run_dir,
         "sample_lookup": sample_lookup,
-        "rows": rows,
     }
 
 
 def enforce_alignment(runs: dict[str, dict]) -> None:
-    for route in ROUTE_ORDER:
-        route_runs = [run for run in runs.values() if run["route"] == route]
-        baseline_set = set(route_runs[0]["sample_lookup"])
+    for dataset in DATASET_ORDER:
+        dataset_runs = [run for run in runs.values() if run["dataset"] == dataset]
+        baseline = set(dataset_runs[0]["sample_lookup"])
         mismatches = []
-        for run in route_runs[1:]:
+        for run in dataset_runs[1:]:
             current = set(run["sample_lookup"])
-            if current != baseline_set:
-                mismatches.append(f"{run['run_id']} ({len(baseline_set.symmetric_difference(current))} mismatched ids)")
+            if current != baseline:
+                mismatches.append(f"{run['run_id']} ({len(baseline.symmetric_difference(current))} mismatched ids)")
         if mismatches:
-            raise RuntimeError(f"Sample alignment mismatch for {route}: {', '.join(mismatches)}")
+            raise RuntimeError(f"Sample alignment mismatch for {dataset}: {', '.join(mismatches)}")
 
 
-def build_run_rows(runs: dict[str, dict]) -> list[dict]:
-    rows = []
-    for run_id in RUN_ORDER:
-        run = runs[run_id]
-        rows.append(
-            {
-                "route_label": run["route_label"],
-                "dataset_label": run["dataset_label"],
-                "split_label": run["split_label"],
-                "display_label": run["display_label"],
-                "short_label": run["short_label"],
-                "exact_variant": run["exact_variant"],
-                "model_id": run["model_id"],
-                "num_samples": run["num_samples"],
-                "eval_miou": run["eval_miou"],
-                "eval_ari": run["eval_ari"],
-                "miou_agg": run["miou_agg"],
-                "note": run["note"],
-                "run_id": run_id,
-            }
-        )
-    return rows
-
-
-def build_delta_rows(runs: dict[str, dict]) -> list[dict]:
-    rows = []
-    for item in DELTA_ROWS:
-        left = runs[item["left_run_id"]]
-        right = runs[item["right_run_id"]]
-        rows.append(
-            {
-                **item,
-                "left_label": left["display_label"],
-                "right_label": right["display_label"],
-                "delta_miou": left["eval_miou"] - right["eval_miou"],
-                "delta_ari": left["eval_ari"] - right["eval_ari"],
-            }
-        )
-    return rows
+def build_comparison_rows(runs: dict[str, dict]) -> dict[str, list[dict]]:
+    comparisons: dict[str, list[dict]] = {}
+    for flavor in FLAVOR_ORDER:
+        rows: list[dict] = []
+        for dataset in DATASET_ORDER:
+            sam2 = runs[RUN_LOOKUP[(dataset, "sam2", flavor)]]
+            sam3 = runs[RUN_LOOKUP[(dataset, "sam3", flavor)]]
+            rows.append(
+                {
+                    "dataset": dataset,
+                    "dataset_label": DATASET_LABELS[dataset],
+                    "dataset_id": sam2["dataset_id"],
+                    "num_samples": sam2["num_samples"],
+                    "flavor": flavor,
+                    "flavor_label": FLAVOR_META[flavor]["label"],
+                    "sam2_run_id": sam2["run_id"],
+                    "sam3_run_id": sam3["run_id"],
+                    "sam2_miou": sam2["eval_miou"],
+                    "sam2_ari": sam2["eval_ari"],
+                    "sam2_agg": sam2["miou_agg"],
+                    "sam3_miou": sam3["eval_miou"],
+                    "sam3_ari": sam3["eval_ari"],
+                    "sam3_agg": sam3["miou_agg"],
+                    "delta_miou": sam2["eval_miou"] - sam3["eval_miou"],
+                    "delta_ari": sam2["eval_ari"] - sam3["eval_ari"],
+                    "leader_model": leader_model_from_scores(sam2["eval_miou"], sam2["eval_ari"], sam3["eval_miou"], sam3["eval_ari"]),
+                    "takeaway": FLAVOR_META[flavor]["dataset_takeaways"][dataset],
+                }
+            )
+        comparisons[flavor] = rows
+    return comparisons
 
 
 def build_story_blocks(runs: dict[str, dict]) -> list[dict]:
@@ -396,51 +461,42 @@ def build_story_blocks(runs: dict[str, dict]) -> list[dict]:
             images.append(
                 {
                     "run_id": run_id,
-                    "label": run["display_label"],
-                    "short_label": run["short_label"],
-                    "model_label": run["model_label"],
+                    "label": run["short_label"],
                     "asset_rel": asset_rel.as_posix(),
                     "eval_miou": row["eval_miou"],
                     "eval_ari": row["eval_ari"],
                 }
             )
-        blocks.append(
-            {
-                **spec,
-                "images": images,
-            }
-        )
+        blocks.append({**spec, "images": images})
     return blocks
 
 
-def render_grouped_bar_chart(title: str, subtitle: str, runs: dict[str, dict], metric_key: str) -> str:
-    width = 980
-    height = 470
-    top = 92
-    left = 78
-    right = 34
-    bottom = 122
+def render_grouped_parity_chart(title: str, subtitle: str, comparison_rows: dict[str, list[dict]], metric_key: str) -> str:
+    groups = [row for flavor in FLAVOR_ORDER for row in comparison_rows[flavor]]
+    width = 1120
+    height = 500
+    top = 96
+    left = 70
+    right = 28
+    bottom = 130
     chart_height = height - top - bottom
     chart_width = width - left - right
-    bar_width = 82
-    gap = 18
-    group_gap = 74
-    total_inner_width = 0
-    for route in ROUTE_ORDER:
-        group_ids = CHART_GROUP_ORDER[route]
-        total_inner_width += len(group_ids) * bar_width + max(0, len(group_ids) - 1) * gap
-    total_inner_width += group_gap * (len(ROUTE_ORDER) - 1)
-    start_x = left + max(0, (chart_width - total_inner_width) / 2)
+    bar_width = 58
+    intra_gap = 12
+    group_gap = 34
+    group_width = bar_width * 2 + intra_gap
+    total_width = len(groups) * group_width + (len(groups) - 1) * group_gap
+    start_x = left + max(0, (chart_width - total_width) / 2)
 
     lines = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(title)}">',
         '<rect width="100%" height="100%" fill="#ffffff" rx="24" />',
         f'<text x="28" y="40" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700" fill="#122033">{escape(title)}</text>',
         f'<text x="28" y="64" font-family="Space Grotesk, sans-serif" font-size="13" fill="#4c5d73">{escape(subtitle)}</text>',
-        '<rect x="720" y="24" width="14" height="14" rx="4" fill="#005f73" />',
-        '<text x="742" y="36" font-family="Space Grotesk, sans-serif" font-size="12" fill="#122033">SAM2</text>',
-        '<rect x="804" y="24" width="14" height="14" rx="4" fill="#ca6702" />',
-        '<text x="826" y="36" font-family="Space Grotesk, sans-serif" font-size="12" fill="#122033">SAM3</text>',
+        f'<rect x="{width - 190}" y="24" width="14" height="14" rx="4" fill="{MODEL_META["sam2"]["color"]}" />',
+        f'<text x="{width - 168}" y="36" font-family="Space Grotesk, sans-serif" font-size="12" fill="#122033">SAM2</text>',
+        f'<rect x="{width - 110}" y="24" width="14" height="14" rx="4" fill="{MODEL_META["sam3"]["color"]}" />',
+        f'<text x="{width - 88}" y="36" font-family="Space Grotesk, sans-serif" font-size="12" fill="#122033">SAM3</text>',
     ]
 
     for tick in [0.0, 0.25, 0.50, 0.75, 1.0]:
@@ -451,48 +507,44 @@ def render_grouped_bar_chart(title: str, subtitle: str, runs: dict[str, dict], m
         )
 
     cursor_x = start_x
-    for route in ROUTE_ORDER:
-        group_ids = CHART_GROUP_ORDER[route]
-        group_start = cursor_x
-        for run_id in group_ids:
-            run = runs[run_id]
-            value = run[metric_key]
+    for row in groups:
+        group_center = cursor_x + group_width / 2
+        for model_index, model_key in enumerate(["sam2", "sam3"]):
+            value = row[f"{model_key}_{metric_key}"]
             bar_height = chart_height * max(0.0, min(1.0, value))
-            x = cursor_x
+            x = cursor_x + model_index * (bar_width + intra_gap)
             y = top + chart_height - bar_height
             lines.extend(
                 [
-                    f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_width}" height="{bar_height:.1f}" rx="12" fill="{RUN_COLORS[run_id]}" />',
-                    f'<text x="{x + bar_width / 2:.1f}" y="{y - 10:.1f}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#122033">{value:.4f}</text>',
-                    f'<text x="{x + bar_width / 2:.1f}" y="{height - 64}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="600" fill="#122033">{escape(run["short_label"])}</text>',
-                    f'<text x="{x + bar_width / 2:.1f}" y="{height - 48}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10" fill="#4c5d73">{escape(run["model_label"])}</text>',
+                    f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_width}" height="{bar_height:.1f}" rx="10" fill="{MODEL_META[model_key]["color"]}" />',
+                    f'<text x="{x + bar_width / 2:.1f}" y="{y - 10:.1f}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">{value:.3f}</text>',
                 ]
             )
-            cursor_x += bar_width + gap
-        cursor_x -= gap
-        group_center = (group_start + cursor_x + bar_width) / 2 if len(group_ids) == 1 else (group_start + cursor_x - gap) / 2
-        lines.append(
-            f'<text x="{group_center:.1f}" y="{height - 20}" text-anchor="middle" font-family="Outfit, sans-serif" font-size="15" font-weight="700" fill="#005f73">{escape(runs[group_ids[0]]["route_label"])}</text>'
+        lines.extend(
+            [
+                f'<text x="{group_center:.1f}" y="{height - 54}" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="700" fill="#005f73">{escape(row["dataset_label"])}</text>',
+                f'<text x="{group_center:.1f}" y="{height - 36}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">{escape(FLAVOR_META[row["flavor"]]["label"])}</text>',
+            ]
         )
-        cursor_x += group_gap
+        cursor_x += group_width + group_gap
 
     lines.append("</svg>")
     return "\n".join(lines)
 
 
-def write_plot_assets(runs: dict[str, dict]) -> dict[str, str]:
+def write_plot_assets(comparison_rows: dict[str, list[dict]]) -> dict[str, str]:
     plots = {
-        "eval_miou_grouped.svg": render_grouped_bar_chart(
-            "Grouped eval_mIoU",
-            "Grouped by route. The SAM2 bars are consistently higher than the comparable SAM3 bars in this slice.",
-            runs,
-            "eval_miou",
+        "eval_miou_parity.svg": render_grouped_parity_chart(
+            "Same-Flavor eval_mIoU",
+            "Each group is a dataset+flavor parity check with SAM2 and SAM3 side by side.",
+            comparison_rows,
+            "miou",
         ),
-        "eval_ari_grouped.svg": render_grouped_bar_chart(
-            "Grouped eval_ARI",
-            "ARI tells the same route-level story as mIoU, especially on STLD.",
-            runs,
-            "eval_ari",
+        "eval_ari_parity.svg": render_grouped_parity_chart(
+            "Same-Flavor eval_ARI",
+            "ARI tracks the same dataset-by-dataset story as mIoU, especially in coarse-only parity.",
+            comparison_rows,
+            "ari",
         ),
     }
     for file_name, content in plots.items():
@@ -500,114 +552,62 @@ def write_plot_assets(runs: dict[str, dict]) -> dict[str, str]:
     return {name: f"assets/plots/{name}" for name in plots}
 
 
-def write_table_csvs(run_rows: list[dict], delta_rows: list[dict]) -> dict[str, str]:
+def write_table_csvs(comparison_rows: dict[str, list[dict]]) -> dict[str, str]:
     tables_dir = DEST_DIR / "assets" / "tables"
     tables_dir.mkdir(parents=True, exist_ok=True)
-
-    compared_path = tables_dir / "what_was_compared.csv"
-    compared_fields = [
-        "route_label",
+    paths: dict[str, str] = {}
+    fields = [
         "dataset_label",
-        "split_label",
-        "display_label",
-        "exact_variant",
-        "model_id",
+        "dataset_id",
         "num_samples",
-        "eval_miou",
-        "eval_ari",
-        "miou_agg",
-        "note",
-    ]
-    with compared_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=compared_fields)
-        writer.writeheader()
-        writer.writerows([{field: row[field] for field in compared_fields} for row in run_rows])
-
-    delta_path = tables_dir / "delta_vs_sam3_baseline.csv"
-    delta_fields = [
-        "delta_id",
-        "route",
-        "title",
-        "left_label",
-        "right_label",
+        "sam2_miou",
+        "sam2_ari",
+        "sam3_miou",
+        "sam3_ari",
         "delta_miou",
         "delta_ari",
-        "summary",
+        "leader_model",
+        "takeaway",
     ]
-    with delta_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=delta_fields)
-        writer.writeheader()
-        writer.writerows([{field: row[field] for field in delta_fields} for row in delta_rows])
+    for flavor, rows in comparison_rows.items():
+        path = tables_dir / FLAVOR_META[flavor]["csv_name"]
+        with path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows([{field: row[field] for field in fields} for row in rows])
+        paths[flavor] = path.relative_to(DEST_DIR).as_posix()
+    return paths
 
-    return {
-        "what_was_compared": compared_path.relative_to(DEST_DIR).as_posix(),
-        "delta_vs_sam3": delta_path.relative_to(DEST_DIR).as_posix(),
-    }
+
+def render_model_cell(miou: float, ari: float) -> str:
+    return dedent(
+        f"""\
+        <strong>{miou:.3f}</strong>
+        <div class="mini-note">ARI {ari:.3f}</div>
+        """
+    ).strip()
 
 
-def render_run_rows(run_rows: list[dict]) -> str:
-    html_rows = []
-    for row in run_rows:
-        caution = row["route_label"] == "STLD"
-        agg_cell = (
-            f'<strong>{row["miou_agg"]:.6f}</strong><div class="mini-note">flat / low-signal on STLD</div>'
-            if caution
-            else f'<strong>{row["miou_agg"]:.6f}</strong>'
-        )
-        html_rows.append(
+def render_comparison_table(rows: list[dict]) -> str:
+    body_rows = []
+    for row in rows:
+        leader_label = "SAM2" if row["leader_model"] == "sam2" else "SAM3" if row["leader_model"] == "sam3" else "Tie"
+        leader_class = "good" if row["leader_model"] == "sam2" else "warn" if row["leader_model"] == "sam3" else ""
+        body_rows.append(
             dedent(
                 f"""\
                 <tr>
-                  <td><strong>{escape(row['route_label'])}</strong></td>
-                  <td><code>{escape(row['dataset_label'])}</code><div class="mini-note">{escape(row['split_label'])}</div></td>
-                  <td><code>{escape(row['exact_variant'])}</code></td>
-                  <td><code>{escape(row['model_id'])}</code></td>
-                  <td>{row['num_samples']}</td>
-                  <td><strong>{row['eval_miou']:.6f}</strong></td>
-                  <td><strong>{row['eval_ari']:.6f}</strong></td>
-                  <td>{agg_cell}</td>
+                  <td><strong>{escape(row['dataset_label'])}</strong></td>
+                  <td>{render_model_cell(row['sam2_miou'], row['sam2_ari'])}</td>
+                  <td>{render_model_cell(row['sam3_miou'], row['sam3_ari'])}</td>
+                  <td><span class="delta-pill {'good' if row['delta_miou'] >= 0 else 'bad'}">{signed(row['delta_miou'], 3)}</span></td>
+                  <td><span class="delta-pill {'good' if row['delta_ari'] >= 0 else 'bad'}">{signed(row['delta_ari'], 3)}</span></td>
+                  <td><span class="tag {leader_class}">{leader_label}</span></td>
                 </tr>
                 """
             ).strip()
         )
-    return "\n".join(html_rows)
-
-
-def render_delta_cards(delta_rows: list[dict]) -> str:
-    cards = []
-    for row in delta_rows:
-        cards.append(
-            dedent(
-                f"""\
-                <article class="metric">
-                  <div class="k">{escape(row['title'])}</div>
-                  <div class="v delta-positive">{signed(row['delta_miou'])}</div>
-                  <div class="mini-note">mIoU uplift · ARI {signed(row['delta_ari'])}</div>
-                </article>
-                """
-            ).strip()
-        )
-    return "\n".join(cards)
-
-
-def render_delta_table(delta_rows: list[dict]) -> str:
-    rows = []
-    for row in delta_rows:
-        rows.append(
-            dedent(
-                f"""\
-                <tr>
-                  <td><strong>{escape(row['title'])}</strong></td>
-                  <td><code>{escape(row['left_label'])}</code></td>
-                  <td><code>{escape(row['right_label'])}</code></td>
-                  <td><span class="delta-pill good">{signed(row['delta_miou'], 6)}</span></td>
-                  <td><span class="delta-pill good">{signed(row['delta_ari'], 6)}</span></td>
-                  <td>{escape(row['summary'])}</td>
-                </tr>
-                """
-            ).strip()
-        )
-    return "\n".join(rows)
+    return "\n".join(body_rows)
 
 
 def render_story_blocks(blocks: list[dict], *, index_only: bool) -> str:
@@ -636,7 +636,7 @@ def render_story_blocks(blocks: list[dict], *, index_only: bool) -> str:
                 <article class="story-block">
                   <div class="story-head">
                     <span class="tag good">{escape(block['tag'])}</span>
-                    <span class="pill">{escape(block['route_label'])} · crop {escape(block['sample_id'])}</span>
+                    <span class="pill">{escape(block['dataset_label'])} · crop {escape(block['sample_id'])}</span>
                   </div>
                   <h3>{escape(block['title'])}</h3>
                   <p class="story-summary">{escape(block['summary'])}</p>
@@ -650,71 +650,58 @@ def render_story_blocks(blocks: list[dict], *, index_only: bool) -> str:
     return "\n".join(rendered)
 
 
-def build_metrics_payload(runs: dict[str, dict], delta_rows: list[dict]) -> dict:
-    stld_agg_values = [runs["stld_sam2_coarse"]["miou_agg"], runs["stld_sam3_flip"]["miou_agg"], runs["stld_sam2_flip"]["miou_agg"]]
+def build_metrics_payload(runs: dict[str, dict], comparison_rows: dict[str, list[dict]]) -> dict:
+    stld_agg_values = [
+        runs["stld_sam2_coarse"]["miou_agg"],
+        runs["stld_sam3_coarse"]["miou_agg"],
+        runs["stld_sam2_flip"]["miou_agg"],
+        runs["stld_sam3_flip"]["miou_agg"],
+    ]
+    all_rows = [row for flavor in FLAVOR_ORDER for row in comparison_rows[flavor]]
+    largest_gain = max(all_rows, key=lambda row: (row["delta_miou"], row["delta_ari"]))
+    rwtd_flip = next(row for row in comparison_rows["flip_averaged"] if row["dataset"] == "rwtd")
     return {
         "status": "reviewed",
         "page_title": PAGE_TITLE,
         "primary_metrics": list(PRIMARY_METRICS),
         "caution_metric": CAUTION_METRIC,
-        "runs": [
-            {
-                "run_id": run_id,
-                "route": runs[run_id]["route"],
-                "route_label": runs[run_id]["route_label"],
-                "display_label": runs[run_id]["display_label"],
-                "exact_variant": runs[run_id]["exact_variant"],
-                "model_id": runs[run_id]["model_id"],
-                "num_samples": runs[run_id]["num_samples"],
-                "eval_miou": runs[run_id]["eval_miou"],
-                "eval_ari": runs[run_id]["eval_ari"],
-                "miou_agg": runs[run_id]["miou_agg"],
-            }
-            for run_id in RUN_ORDER
-        ],
-        "delta_vs_sam3": [
-            {
-                "delta_id": row["delta_id"],
-                "route": row["route"],
-                "title": row["title"],
-                "delta_miou": row["delta_miou"],
-                "delta_ari": row["delta_ari"],
-            }
-            for row in delta_rows
-        ],
+        "comparisons": comparison_rows,
         "headline": {
-            "rwtd_winner": {
-                "run_id": "rwtd_sam2_coarse",
-                "eval_miou": runs["rwtd_sam2_coarse"]["eval_miou"],
-                "eval_ari": runs["rwtd_sam2_coarse"]["eval_ari"],
+            "coarse_sam2_leads": sum(1 for row in comparison_rows["coarse_only"] if row["leader_model"] == "sam2"),
+            "flip_sam2_leads": sum(1 for row in comparison_rows["flip_averaged"] if row["leader_model"] == "sam2"),
+            "largest_gain": {
+                "dataset": largest_gain["dataset_label"],
+                "flavor": largest_gain["flavor"],
+                "delta_miou": largest_gain["delta_miou"],
+                "delta_ari": largest_gain["delta_ari"],
             },
-            "stld_winner": {
-                "run_id": "stld_sam2_flip",
-                "eval_miou": runs["stld_sam2_flip"]["eval_miou"],
-                "eval_ari": runs["stld_sam2_flip"]["eval_ari"],
+            "rwtd_flip_exception": {
+                "delta_miou": rwtd_flip["delta_miou"],
+                "delta_ari": rwtd_flip["delta_ari"],
             },
             "stld_miou_agg_span": max(stld_agg_values) - min(stld_agg_values),
         },
         "notes": [
-            "This page is intentionally scoped to the requested RWTD/STLD comparison rows.",
-            "CAID is not included because the matching CAID SAM2 flip-avg row is still missing for this focused page.",
-            "On STLD, miou_agg is nearly constant around 0.5 and should not be treated as the main signal.",
+            "CAID is now included in both same-flavor tables.",
+            "Legacy SAM3 coarse-only summaries on RWTD, CAID, and STLD publish `miou`/`ari` instead of `eval_miou`/`eval_ari`; the loader normalizes those fields directly from the bundle summaries.",
+            "On STLD, miou_agg remains effectively flat across both flavors and both models.",
         ],
     }
 
 
-def build_training_data(story_blocks: list[dict], delta_rows: list[dict]) -> dict:
+def build_training_data(story_blocks: list[dict], comparison_rows: dict[str, list[dict]]) -> dict:
     return {
         "page": {
             "title": PAGE_TITLE,
             "date": PAGE_DATE,
             "status": "reviewed",
         },
+        "comparisons": comparison_rows,
         "stories": [
             {
                 "story_id": block["story_id"],
-                "route": block["route"],
-                "route_label": block["route_label"],
+                "dataset": block["dataset"],
+                "dataset_label": block["dataset_label"],
                 "sample_id": block["sample_id"],
                 "title": block["title"],
                 "summary": block["summary"],
@@ -723,16 +710,6 @@ def build_training_data(story_blocks: list[dict], delta_rows: list[dict]) -> dic
                 "images": block["images"],
             }
             for block in story_blocks
-        ],
-        "delta_rows": [
-            {
-                "delta_id": row["delta_id"],
-                "route": row["route"],
-                "title": row["title"],
-                "delta_miou": row["delta_miou"],
-                "delta_ari": row["delta_ari"],
-            }
-            for row in delta_rows
         ],
     }
 
@@ -754,13 +731,14 @@ def build_manifest(story_blocks: list[dict]) -> str:
         f"""\
         title: "{PAGE_TITLE}"
         model_ids:
-          - "facebook/sam2-hiera-small"
-          - "facebook/sam3"
+          - "{MODEL_META['sam2']['model_id']}"
+          - "{MODEL_META['sam3']['model_id']}"
         dataset_ids:
           - "aviadcohz/RWTD"
+          - "architexture:caid"
           - "architexture:stld"
         date: "{PAGE_DATE}"
-        description: "SAM2-vs-SAM3 frozen-feature binary texture partitioning report for RWTD and STLD."
+        description: "Same-flavor SAM2-vs-SAM3 frozen-feature binary texture partitioning report for RWTD, CAID, and STLD."
         status: "reviewed"
         assets:
           story_block_count: {sum(1 for block in story_blocks if block['show_on_index'])}
@@ -778,60 +756,71 @@ def build_manifest(story_blocks: list[dict]) -> str:
 
 def render_index_html(
     runs: dict[str, dict],
-    run_rows: list[dict],
-    delta_rows: list[dict],
+    comparison_rows: dict[str, list[dict]],
     story_blocks: list[dict],
     plot_paths: dict[str, str],
     table_paths: dict[str, str],
 ) -> str:
-    rwtd_delta = delta_rows[0]
-    stld_coarse_delta = delta_rows[1]
-    stld_flip_delta = delta_rows[2]
-    stld_agg_span = max(runs["stld_sam2_coarse"]["miou_agg"], runs["stld_sam3_flip"]["miou_agg"], runs["stld_sam2_flip"]["miou_agg"]) - min(
+    coarse_rows = comparison_rows["coarse_only"]
+    flip_rows = comparison_rows["flip_averaged"]
+    stld_agg_span = max(
         runs["stld_sam2_coarse"]["miou_agg"],
-        runs["stld_sam3_flip"]["miou_agg"],
+        runs["stld_sam3_coarse"]["miou_agg"],
         runs["stld_sam2_flip"]["miou_agg"],
+        runs["stld_sam3_flip"]["miou_agg"],
+    ) - min(
+        runs["stld_sam2_coarse"]["miou_agg"],
+        runs["stld_sam3_coarse"]["miou_agg"],
+        runs["stld_sam2_flip"]["miou_agg"],
+        runs["stld_sam3_flip"]["miou_agg"],
     )
+    coarse_leads = sum(1 for row in coarse_rows if row["leader_model"] == "sam2")
+    flip_leads = sum(1 for row in flip_rows if row["leader_model"] == "sam2")
+    largest_gain = max(coarse_rows + flip_rows, key=lambda row: (row["delta_miou"], row["delta_ari"]))
+    rwtd_flip = next(row for row in flip_rows if row["dataset"] == "rwtd")
 
     headline_cards = dedent(
         f"""\
         <div class="metric-grid compact-grid">
           <article class="metric">
-            <div class="k">RWTD Winner</div>
-            <div class="v">{runs['rwtd_sam2_coarse']['eval_miou']:.4f}</div>
-            <div class="mini-note">SAM2 coarse · ARI {runs['rwtd_sam2_coarse']['eval_ari']:.4f}</div>
+            <div class="k">Coarse-Only Lead Split</div>
+            <div class="v">{coarse_leads}/3</div>
+            <div class="mini-note">SAM2 leads all published coarse-only datasets.</div>
           </article>
           <article class="metric">
-            <div class="k">STLD Winner</div>
-            <div class="v">{runs['stld_sam2_flip']['eval_miou']:.4f}</div>
-            <div class="mini-note">SAM2 flip · ARI {runs['stld_sam2_flip']['eval_ari']:.4f}</div>
+            <div class="k">Flip-Avg Lead Split</div>
+            <div class="v">{flip_leads}/3</div>
+            <div class="mini-note">SAM2 leads STLD and CAID; RWTD is the holdout.</div>
           </article>
           <article class="metric">
-            <div class="k">Largest Uplift vs SAM3</div>
-            <div class="v delta-positive">{signed(stld_flip_delta['delta_miou'])}</div>
-            <div class="mini-note">STLD SAM2 flip · ARI {signed(stld_flip_delta['delta_ari'])}</div>
+            <div class="k">Largest Same-Flavor Gain</div>
+            <div class="v delta-positive">{signed(largest_gain['delta_miou'])}</div>
+            <div class="mini-note">{largest_gain['dataset_label']} {FLAVOR_META[largest_gain['flavor']]['label']} · ARI {signed(largest_gain['delta_ari'])}</div>
           </article>
           <article class="metric">
             <div class="k">STLD miou_agg Span</div>
             <div class="v caution-readout">{stld_agg_span:.6f}</div>
-            <div class="mini-note">All three STLD rows stay ~0.5000</div>
+            <div class="mini-note">All four STLD rows stay clustered around 0.5000.</div>
           </article>
         </div>
         """
     ).strip()
 
-    route_cards = dedent(
+    dataset_cards = dedent(
         f"""\
         <div class="card-grid compact-grid">
           <article class="card">
             <h3>RWTD Takeaway</h3>
-            <p class="interpretation-copy">On the requested RWTD pair, <strong>SAM2 coarse_only</strong> beats the comparable <strong>SAM3 flip_avg</strong> row by <strong>{signed(rwtd_delta['delta_miou'], 6)}</strong> mIoU and <strong>{signed(rwtd_delta['delta_ari'], 6)}</strong> ARI across 227 test crops.</p>
-            <p class="mini-note">Direction is favorable, but this route should still be read carefully until evaluator and preprocessing parity are fully locked.</p>
+            <p class="interpretation-copy">RWTD is split by flavor. In <strong>coarse-only parity</strong>, SAM2 leads by <strong>{signed(coarse_rows[0]['delta_miou'], 6)}</strong> mIoU / <strong>{signed(coarse_rows[0]['delta_ari'], 6)}</strong> ARI. In <strong>flip-avg parity</strong>, SAM3 retains a small edge of <strong>{signed(-rwtd_flip['delta_miou'], 6)}</strong> / <strong>{signed(-rwtd_flip['delta_ari'], 6)}</strong>.</p>
+          </article>
+          <article class="card">
+            <h3>CAID Takeaway</h3>
+            <p class="interpretation-copy">CAID now has both flavors published for both models. SAM2 leads in <strong>coarse-only</strong> by <strong>{signed(coarse_rows[1]['delta_miou'], 6)}</strong> mIoU / <strong>{signed(coarse_rows[1]['delta_ari'], 6)}</strong> ARI and still keeps a smaller <strong>flip-avg</strong> edge of <strong>{signed(flip_rows[1]['delta_miou'], 6)}</strong> / <strong>{signed(flip_rows[1]['delta_ari'], 6)}</strong>.</p>
           </article>
           <article class="card">
             <h3>STLD Takeaway</h3>
-            <p class="interpretation-copy">STLD shows the clearer separation. SAM2 coarse beats the SAM3 flip baseline by <strong>{signed(stld_coarse_delta['delta_miou'], 6)}</strong> mIoU / <strong>{signed(stld_coarse_delta['delta_ari'], 6)}</strong> ARI, and SAM2 flip extends that to <strong>{signed(stld_flip_delta['delta_miou'], 6)}</strong> / <strong>{signed(stld_flip_delta['delta_ari'], 6)}</strong>.</p>
-            <p class="mini-note"><code>miou_agg</code> stays nearly flat around 0.5, so <code>eval_miou</code> and <code>eval_ari</code> are the operative signal here.</p>
+            <p class="interpretation-copy">STLD is the clearest same-flavor win. SAM2 leads in <strong>coarse-only</strong> by <strong>{signed(coarse_rows[2]['delta_miou'], 6)}</strong> mIoU / <strong>{signed(coarse_rows[2]['delta_ari'], 6)}</strong> ARI and in <strong>flip-avg</strong> by <strong>{signed(flip_rows[2]['delta_miou'], 6)}</strong> / <strong>{signed(flip_rows[2]['delta_ari'], 6)}</strong>.</p>
+            <p class="mini-note"><code>miou_agg</code> is nearly flat across all STLD rows, so it stays a caution metric rather than the headline metric.</p>
           </article>
         </div>
         """
@@ -842,13 +831,13 @@ def render_index_html(
         <div class="caution-panel">
           <div>
             <span class="tag warn">metric caution</span>
-            <h3>STLD <code>miou_agg</code> is Essentially Flat</h3>
-            <p class="interpretation-copy">The STLD aggregate mIoU values are <code>{runs['stld_sam2_coarse']['miou_agg']:.6f}</code>, <code>{runs['stld_sam3_flip']['miou_agg']:.6f}</code>, and <code>{runs['stld_sam2_flip']['miou_agg']:.6f}</code>. That spread is only <strong>{stld_agg_span:.6f}</strong>, so this aggregate view is low-signal for the STLD route and should not carry the interpretation.</p>
+            <h3>STLD <code>miou_agg</code> Is Effectively Flat</h3>
+            <p class="interpretation-copy">Across all four STLD rows, the aggregate mIoU values are <code>{runs['stld_sam2_coarse']['miou_agg']:.6f}</code>, <code>{runs['stld_sam3_coarse']['miou_agg']:.6f}</code>, <code>{runs['stld_sam2_flip']['miou_agg']:.6f}</code>, and <code>{runs['stld_sam3_flip']['miou_agg']:.6f}</code>. The total spread is only <strong>{stld_agg_span:.6f}</strong>, so this aggregate view is low-signal for the STLD route.</p>
           </div>
           <div class="caution-list">
             <div><strong>Main readout</strong><span><code>eval_miou</code> and <code>eval_ari</code></span></div>
-            <div><strong>Why</strong><span>They separate the variants clearly where <code>miou_agg</code> barely moves.</span></div>
-            <div><strong>Takeaway</strong><span>Treat <code>miou_agg</code> as a caution metric here, not the headline metric.</span></div>
+            <div><strong>Why</strong><span>Those metrics separate the models clearly where <code>miou_agg</code> barely moves.</span></div>
+            <div><strong>Takeaway</strong><span>Do not over-interpret STLD aggregate mIoU for this route.</span></div>
           </div>
         </div>
         """
@@ -911,15 +900,14 @@ def render_index_html(
       background: var(--surface-strong);
     }}
 
-    .delta-grid {{
+    .comparison-stack {{
       display: grid;
-      gap: 20px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      margin-top: 22px;
+      gap: 26px;
     }}
 
-    .delta-positive {{
-      color: var(--good) !important;
+    .comparison-table table td,
+    .comparison-table table th {{
+      vertical-align: top;
     }}
 
     .delta-pill {{
@@ -931,7 +919,18 @@ def render_index_html(
       font-weight: 700;
       border: 1px solid var(--line);
       background: var(--surface-strong);
+    }}
+
+    .delta-pill.good {{
       color: var(--good);
+    }}
+
+    .delta-pill.bad {{
+      color: var(--bad);
+    }}
+
+    .delta-positive {{
+      color: var(--good) !important;
     }}
 
     .story-head {{
@@ -1030,22 +1029,23 @@ def render_index_html(
     <header style="text-align: center; margin-bottom: 54px;">
       <div class="subtitle">{PAGE_SUBTITLE}</div>
       <h1 class="title-gradient">{PAGE_TITLE}</h1>
-      <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 900px; margin-inline: auto;">
+      <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 940px; margin-inline: auto;">
         {escape(PAGE_DESCRIPTION)}
       </p>
       <div style="margin-top: 18px;">
         <span class="tag good">reviewed</span>
         <span class="tag">sam2</span>
         <span class="tag">sam3</span>
-        <span class="tag">unsupervised</span>
-        <span class="tag">coarse clustering</span>
+        <span class="tag">rwtd</span>
+        <span class="tag">caid</span>
+        <span class="tag">stld</span>
       </div>
     </header>
 
     <section class="executive-summary">
       <h2>Executive Synopsis</h2>
-      <p>This page compares automatic binary partitioning from frozen SAM features on <strong>RWTD</strong> and <strong>STLD</strong>. The compared route is deliberately narrow: no prompts, no supervised decoder, and no learned downstream segmentation head, just coarse clustering over frozen features.</p>
-      <p>Within that route, the requested SAM2 rows outperform the comparable SAM3 rows on the main evaluation metrics. The page also marks a caution explicitly: on STLD, <code>miou_agg</code> stays nearly flat around <code>0.5</code>, so it should be treated as a low-signal aggregate view rather than the main story.</p>
+      <p>This page now uses the cleaner parity view: <strong>same dataset, same flavor, model columns side by side</strong>. Under that framing, SAM2 leads all three <strong>coarse-only</strong> rows and keeps the <strong>flip-avg</strong> lead on STLD and CAID, while RWTD flip-avg remains the lone SAM3 exception.</p>
+      <p>The important caution is unchanged. On STLD, <code>miou_agg</code> stays clustered around <code>0.5</code> across both flavors and both models, so the main interpretable signal is still <code>eval_miou</code> and <code>eval_ari</code>.</p>
     </section>
 
     <section class="section">
@@ -1053,30 +1053,59 @@ def render_index_html(
       {headline_cards}
     </section>
 
-    <section class="section">
-      <h2>What Was Compared</h2>
-      <p class="interpretation-copy">This table uses the exact published bundle metrics for the five requested rows. CAID is intentionally left out of this page because the matching CAID SAM2 flip-avg row is still missing for the focused SAM2-vs-SAM3 story.</p>
-      <div class="table-wrap" style="margin-top: 22px;">
-        <table>
-          <thead>
-            <tr>
-              <th>Route</th>
-              <th>Dataset / Split</th>
-              <th>Variant</th>
-              <th>Model</th>
-              <th>Evaluated Samples</th>
-              <th>eval_miou</th>
-              <th>eval_ari</th>
-              <th>miou_agg</th>
-            </tr>
-          </thead>
-          <tbody>
-            {render_run_rows(run_rows)}
-          </tbody>
-        </table>
-      </div>
-      <div class="artifact-row">
-        <a class="btn secondary" href="{table_paths['what_was_compared']}">Open Table CSV</a>
+    <section class="section comparison-table">
+      <h2>Same-Flavor Model Comparison</h2>
+      <p class="interpretation-copy">Dataset rows are intentionally minimal for readability. Each model cell shows <code>mIoU</code> on the first line and <code>ARI</code> below it, following the cross-dataset benchmark style.</p>
+      <div class="comparison-stack" style="margin-top: 22px;">
+        <div>
+          <h3>{FLAVOR_META['coarse_only']['section_title']}</h3>
+          <p class="mini-note">{FLAVOR_META['coarse_only']['summary']}</p>
+          <div class="table-wrap" style="margin-top: 14px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dataset</th>
+                  <th>SAM2</th>
+                  <th>SAM3</th>
+                  <th>Δ mIoU</th>
+                  <th>Δ ARI</th>
+                  <th>Leader</th>
+                </tr>
+              </thead>
+              <tbody>
+                {render_comparison_table(coarse_rows)}
+              </tbody>
+            </table>
+          </div>
+          <div class="artifact-row">
+            <a class="btn secondary" href="{table_paths['coarse_only']}">Open Coarse-Only CSV</a>
+          </div>
+        </div>
+
+        <div>
+          <h3>{FLAVOR_META['flip_averaged']['section_title']}</h3>
+          <p class="mini-note">{FLAVOR_META['flip_averaged']['summary']}</p>
+          <div class="table-wrap" style="margin-top: 14px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dataset</th>
+                  <th>SAM2</th>
+                  <th>SAM3</th>
+                  <th>Δ mIoU</th>
+                  <th>Δ ARI</th>
+                  <th>Leader</th>
+                </tr>
+              </thead>
+              <tbody>
+                {render_comparison_table(flip_rows)}
+              </tbody>
+            </table>
+          </div>
+          <div class="artifact-row">
+            <a class="btn secondary" href="{table_paths['flip_averaged']}">Open Flip-Averaged CSV</a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1084,36 +1113,11 @@ def render_index_html(
       <h2>Bigger-Picture Visuals</h2>
       <div class="chart-grid">
         <article class="chart-card">
-          <img src="{plot_paths['eval_miou_grouped.svg']}" alt="Grouped eval_mIoU chart" />
+          <img src="{plot_paths['eval_miou_parity.svg']}" alt="Same-flavor eval_mIoU grouped chart" />
         </article>
         <article class="chart-card">
-          <img src="{plot_paths['eval_ari_grouped.svg']}" alt="Grouped eval_ARI chart" />
+          <img src="{plot_paths['eval_ari_parity.svg']}" alt="Same-flavor eval_ARI grouped chart" />
         </article>
-      </div>
-
-      <div class="delta-grid">
-        {render_delta_cards(delta_rows)}
-      </div>
-
-      <div class="table-wrap" style="margin-top: 24px;">
-        <table>
-          <thead>
-            <tr>
-              <th>Comparison</th>
-              <th>Improved Row</th>
-              <th>SAM3 Baseline</th>
-              <th>Δ mIoU</th>
-              <th>Δ ARI</th>
-              <th>Reading</th>
-            </tr>
-          </thead>
-          <tbody>
-            {render_delta_table(delta_rows)}
-          </tbody>
-        </table>
-      </div>
-      <div class="artifact-row">
-        <a class="btn secondary" href="{table_paths['delta_vs_sam3']}">Open Delta CSV</a>
       </div>
     </section>
 
@@ -1123,15 +1127,15 @@ def render_index_html(
     </section>
 
     <section class="section">
-      <h2>Route-Level Takeaways</h2>
-      {route_cards}
+      <h2>Dataset-Level Takeaways</h2>
+      {dataset_cards}
     </section>
 
     <section class="section">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
         <div>
           <h2>Qualitative Comparison</h2>
-          <p class="interpretation-copy">The panels below reuse the run-emitted triptychs. They are chosen to make the route-level story visible quickly rather than to present an exhaustive gallery.</p>
+          <p class="interpretation-copy">The qualitative panels are still curated rather than exhaustive. They now follow the same-flavor parity framing used by the main tables.</p>
         </div>
         <a class="btn" href="gallery.html">Open Curated Gallery →</a>
       </div>
@@ -1142,16 +1146,16 @@ def render_index_html(
 
     <section class="section">
       <h2>Interpretation</h2>
-      <p class="interpretation-copy">This does <strong>not</strong> mean SAM2 is the stronger model overall. It does suggest that, for this specific prompt-free frozen-feature clustering route, the SAM2 features are more cluster-friendly than the comparable SAM3 features. STLD is controlled and synthetic, so its advantage should not be over-weighted against RWTD, but the result is still strong enough to keep as a serious ablation and baseline.</p>
+      <p class="interpretation-copy">This still does <strong>not</strong> mean SAM2 is the better model overall. It does mean that, under same-flavor frozen-feature clustering parity, SAM2 appears more cluster-friendly than SAM3 in most of the published binary partition settings here. The exception matters too: RWTD flip-avg stays a slight SAM3 holdout, so the result is route-specific rather than absolute.</p>
     </section>
 
     <section class="section">
       <h2>Caveats / Notes</h2>
       <ul class="bullet-list">
-        <li>The report intentionally focuses on RWTD and STLD because that is the requested parity-closest slice for this page.</li>
-        <li>On STLD, <code>miou_agg</code> is visually marked as low-signal because it is nearly constant across variants.</li>
-        <li>CAID already has a new SAM2 coarse bundle on disk, but the matching CAID SAM2 flip-avg row is still missing, so CAID is not included here yet.</li>
-        <li>This is a frozen-feature clustering comparison, not a claim about overall SAM2-vs-SAM3 project performance.</li>
+        <li>Legacy SAM3 coarse-only summaries publish <code>miou</code>/<code>ari</code> instead of <code>eval_miou</code>/<code>eval_ari</code>; this report normalizes those fields directly from the summary bundles.</li>
+        <li>CAID is now included in both same-flavor tables, but the qualitative section remains curated around the clearest RWTD/STLD visual examples.</li>
+        <li>On STLD, <code>miou_agg</code> is visually marked as low-signal because it is nearly constant across both models and both flavors.</li>
+        <li>This is a route-specific frozen-feature clustering comparison, not a claim about overall SAM2-vs-SAM3 project performance.</li>
       </ul>
       <div class="artifact-row">
         <a class="btn secondary" href="metrics.json">metrics.json</a>
@@ -1258,7 +1262,7 @@ def render_gallery_html(story_blocks: list[dict]) -> str:
       <div class="subtitle">Curated Gallery</div>
       <h1 class="title-gradient">{PAGE_TITLE}</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
-        A lightweight qualitative subset built from the run-emitted visual triptychs. This gallery is intentionally curated to show the route-level story, not to publish every sample.
+        A lightweight qualitative subset built from the run-emitted visual triptychs. The gallery follows the same-flavor parity framing used by the main report.
       </p>
       <div style="margin-top: 18px;">
         <a class="btn secondary" href="index.html">← Back to Report</a>
@@ -1285,22 +1289,24 @@ def render_gallery_html(story_blocks: list[dict]) -> str:
 """
 
 
-def render_summary_md(runs: dict[str, dict], delta_rows: list[dict]) -> str:
+def render_summary_md(comparison_rows: dict[str, list[dict]]) -> str:
     return dedent(
         f"""\
         # {PAGE_TITLE}
 
         - Date: `{PAGE_DATE}`
-        - Scope: RWTD and STLD frozen-feature automatic binary partitioning
-        - RWTD: `rwtd_sam2_coarse` = `eval_miou={runs['rwtd_sam2_coarse']['eval_miou']:.6f}`, `eval_ari={runs['rwtd_sam2_coarse']['eval_ari']:.6f}` vs `rwtd_sam3_flip` = `eval_miou={runs['rwtd_sam3_flip']['eval_miou']:.6f}`, `eval_ari={runs['rwtd_sam3_flip']['eval_ari']:.6f}`
-        - STLD: `stld_sam2_coarse` = `eval_miou={runs['stld_sam2_coarse']['eval_miou']:.6f}`, `eval_ari={runs['stld_sam2_coarse']['eval_ari']:.6f}`
-        - STLD: `stld_sam2_flip` = `eval_miou={runs['stld_sam2_flip']['eval_miou']:.6f}`, `eval_ari={runs['stld_sam2_flip']['eval_ari']:.6f}`
-        - STLD SAM3 baseline: `stld_sam3_flip` = `eval_miou={runs['stld_sam3_flip']['eval_miou']:.6f}`, `eval_ari={runs['stld_sam3_flip']['eval_ari']:.6f}`
-        - Key deltas:
-          - RWTD SAM2 coarse vs SAM3 flip: `Δ mIoU={delta_rows[0]['delta_miou']:.6f}`, `Δ ARI={delta_rows[0]['delta_ari']:.6f}`
-          - STLD SAM2 coarse vs SAM3 flip: `Δ mIoU={delta_rows[1]['delta_miou']:.6f}`, `Δ ARI={delta_rows[1]['delta_ari']:.6f}`
-          - STLD SAM2 flip vs SAM3 flip: `Δ mIoU={delta_rows[2]['delta_miou']:.6f}`, `Δ ARI={delta_rows[2]['delta_ari']:.6f}`
-        - Caution: STLD `miou_agg` stays near `0.5`, so the page treats `eval_miou` and `eval_ari` as the main interpretable signal.
+        - Scope: RWTD, CAID, and STLD same-flavor frozen-feature binary partitioning
+        - Coarse-only lead split: `SAM2 {sum(1 for row in comparison_rows['coarse_only'] if row['leader_model'] == 'sam2')}/3`
+        - Flip-avg lead split: `SAM2 {sum(1 for row in comparison_rows['flip_averaged'] if row['leader_model'] == 'sam2')}/3`
+        - Coarse-only rows:
+          - RWTD: `SAM2 {comparison_rows['coarse_only'][0]['sam2_miou']:.6f}/{comparison_rows['coarse_only'][0]['sam2_ari']:.6f}` vs `SAM3 {comparison_rows['coarse_only'][0]['sam3_miou']:.6f}/{comparison_rows['coarse_only'][0]['sam3_ari']:.6f}`
+          - CAID: `SAM2 {comparison_rows['coarse_only'][1]['sam2_miou']:.6f}/{comparison_rows['coarse_only'][1]['sam2_ari']:.6f}` vs `SAM3 {comparison_rows['coarse_only'][1]['sam3_miou']:.6f}/{comparison_rows['coarse_only'][1]['sam3_ari']:.6f}`
+          - STLD: `SAM2 {comparison_rows['coarse_only'][2]['sam2_miou']:.6f}/{comparison_rows['coarse_only'][2]['sam2_ari']:.6f}` vs `SAM3 {comparison_rows['coarse_only'][2]['sam3_miou']:.6f}/{comparison_rows['coarse_only'][2]['sam3_ari']:.6f}`
+        - Flip-avg rows:
+          - RWTD: `SAM2 {comparison_rows['flip_averaged'][0]['sam2_miou']:.6f}/{comparison_rows['flip_averaged'][0]['sam2_ari']:.6f}` vs `SAM3 {comparison_rows['flip_averaged'][0]['sam3_miou']:.6f}/{comparison_rows['flip_averaged'][0]['sam3_ari']:.6f}`
+          - CAID: `SAM2 {comparison_rows['flip_averaged'][1]['sam2_miou']:.6f}/{comparison_rows['flip_averaged'][1]['sam2_ari']:.6f}` vs `SAM3 {comparison_rows['flip_averaged'][1]['sam3_miou']:.6f}/{comparison_rows['flip_averaged'][1]['sam3_ari']:.6f}`
+          - STLD: `SAM2 {comparison_rows['flip_averaged'][2]['sam2_miou']:.6f}/{comparison_rows['flip_averaged'][2]['sam2_ari']:.6f}` vs `SAM3 {comparison_rows['flip_averaged'][2]['sam3_miou']:.6f}/{comparison_rows['flip_averaged'][2]['sam3_ari']:.6f}`
+        - Caution: STLD `miou_agg` remains nearly flat across both models and both flavors.
         """
     )
 
@@ -1313,21 +1319,20 @@ def main() -> None:
         shutil.rmtree(DEST_DIR)
     DEST_DIR.mkdir(parents=True, exist_ok=True)
 
-    run_rows = build_run_rows(runs)
-    delta_rows = build_delta_rows(runs)
+    comparison_rows = build_comparison_rows(runs)
     story_blocks = build_story_blocks(runs)
-    plot_paths = write_plot_assets(runs)
-    table_paths = write_table_csvs(run_rows, delta_rows)
-    metrics_payload = build_metrics_payload(runs, delta_rows)
-    training_data = build_training_data(story_blocks, delta_rows)
+    plot_paths = write_plot_assets(comparison_rows)
+    table_paths = write_table_csvs(comparison_rows)
+    metrics_payload = build_metrics_payload(runs, comparison_rows)
+    training_data = build_training_data(story_blocks, comparison_rows)
     links_payload = build_links_payload(table_paths)
 
-    write_text(DEST_DIR / "index.html", render_index_html(runs, run_rows, delta_rows, story_blocks, plot_paths, table_paths))
+    write_text(DEST_DIR / "index.html", render_index_html(runs, comparison_rows, story_blocks, plot_paths, table_paths))
     write_text(DEST_DIR / "gallery.html", render_gallery_html(story_blocks))
     write_text(DEST_DIR / "metrics.json", json.dumps(metrics_payload, indent=2))
     write_text(DEST_DIR / "training_data.json", json.dumps(training_data, indent=2))
     write_text(DEST_DIR / "links.json", json.dumps(links_payload, indent=2))
-    write_text(DEST_DIR / "summary.md", render_summary_md(runs, delta_rows))
+    write_text(DEST_DIR / "summary.md", render_summary_md(comparison_rows))
     write_text(DEST_DIR / "manifest.yaml", build_manifest(story_blocks))
 
 

@@ -1,13 +1,15 @@
 # SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitioning
 
 - Date: `2026-03-25`
-- Scope: RWTD and STLD frozen-feature automatic binary partitioning
-- RWTD: `rwtd_sam2_coarse` = `eval_miou=0.856065`, `eval_ari=0.747178` vs `rwtd_sam3_flip` = `eval_miou=0.839748`, `eval_ari=0.725812`
-- STLD: `stld_sam2_coarse` = `eval_miou=0.790776`, `eval_ari=0.686396`
-- STLD: `stld_sam2_flip` = `eval_miou=0.806408`, `eval_ari=0.708896`
-- STLD SAM3 baseline: `stld_sam3_flip` = `eval_miou=0.753395`, `eval_ari=0.619408`
-- Key deltas:
-  - RWTD SAM2 coarse vs SAM3 flip: `Δ mIoU=0.016317`, `Δ ARI=0.021366`
-  - STLD SAM2 coarse vs SAM3 flip: `Δ mIoU=0.037381`, `Δ ARI=0.066988`
-  - STLD SAM2 flip vs SAM3 flip: `Δ mIoU=0.053013`, `Δ ARI=0.089487`
-- Caution: STLD `miou_agg` stays near `0.5`, so the page treats `eval_miou` and `eval_ari` as the main interpretable signal.
+- Scope: RWTD, CAID, and STLD same-flavor frozen-feature binary partitioning
+- Coarse-only lead split: `SAM2 3/3`
+- Flip-avg lead split: `SAM2 2/3`
+- Coarse-only rows:
+  - RWTD: `SAM2 0.856065/0.747178` vs `SAM3 0.823512/0.698426`
+  - CAID: `SAM2 0.726335/0.567273` vs `SAM3 0.674265/0.495585`
+  - STLD: `SAM2 0.790776/0.686396` vs `SAM3 0.468205/0.185865`
+- Flip-avg rows:
+  - RWTD: `SAM2 0.827775/0.701311` vs `SAM3 0.839748/0.725812`
+  - CAID: `SAM2 0.662040/0.460517` vs `SAM3 0.658828/0.450670`
+  - STLD: `SAM2 0.806408/0.708896` vs `SAM3 0.753395/0.619408`
+- Caution: STLD `miou_agg` remains nearly flat across both models and both flavors.

@@ -1,4 +1,0 @@
-delta_id,route,title,left_label,right_label,delta_miou,delta_ari,summary
-rwtd_sam2_coarse_vs_sam3_flip,rwtd,RWTD: SAM2 coarse vs SAM3 flip,RWTD · SAM2 coarse_only,RWTD · SAM3 flip_avg,0.01631740241848212,0.02136648291669674,"Positive direction, but smaller than STLD and still worth reading cautiously until parity questions are locked down."
-stld_sam2_coarse_vs_sam3_flip,stld,STLD: SAM2 coarse vs SAM3 flip,STLD · SAM2 coarse_only,STLD · SAM3 flip_avg,0.03738087826696712,0.06698807916244787,Clear STLD uplift in both headline metrics.
-stld_sam2_flip_vs_sam3_flip,stld,STLD: SAM2 flip vs SAM3 flip,STLD · SAM2 flip_avg,STLD · SAM3 flip_avg,0.053013426725521784,0.08948745668874503,Largest in-page gain. The SAM2 flip-avg variant is the strongest STLD row in this slice.

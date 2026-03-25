@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="500" viewBox="0 0 1120 500" role="img" aria-label="Same-Flavor eval_mIoU">
+<rect width="100%" height="100%" fill="#ffffff" rx="24" />
+<text x="28" y="40" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700" fill="#122033">Same-Flavor eval_mIoU</text>
+<text x="28" y="64" font-family="Space Grotesk, sans-serif" font-size="13" fill="#4c5d73">Each group is a dataset+flavor parity check with SAM2 and SAM3 side by side.</text>
+<rect x="930" y="24" width="14" height="14" rx="4" fill="#005f73" />
+<text x="952" y="36" font-family="Space Grotesk, sans-serif" font-size="12" fill="#122033">SAM2</text>
+<rect x="1010" y="24" width="14" height="14" rx="4" fill="#ca6702" />
+<text x="1032" y="36" font-family="Space Grotesk, sans-serif" font-size="12" fill="#122033">SAM3</text>
+<line x1="70" y1="370.0" x2="1092" y2="370.0" stroke="#e3ebf2" stroke-width="1" />
+<text x="60" y="374.0" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">0.00</text>
+<line x1="70" y1="301.5" x2="1092" y2="301.5" stroke="#e3ebf2" stroke-width="1" />
+<text x="60" y="305.5" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">0.25</text>
+<line x1="70" y1="233.0" x2="1092" y2="233.0" stroke="#e3ebf2" stroke-width="1" />
+<text x="60" y="237.0" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">0.50</text>
+<line x1="70" y1="164.5" x2="1092" y2="164.5" stroke="#e3ebf2" stroke-width="1" />
+<text x="60" y="168.5" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">0.75</text>
+<line x1="70" y1="96.0" x2="1092" y2="96.0" stroke="#e3ebf2" stroke-width="1" />
+<text x="60" y="100.0" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">1.00</text>
+<rect x="112.0" y="135.4" width="58" height="234.6" rx="10" fill="#005f73" />
+<text x="141.0" y="125.4" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.856</text>
+<rect x="182.0" y="144.4" width="58" height="225.6" rx="10" fill="#ca6702" />
+<text x="211.0" y="134.4" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.824</text>
+<text x="176.0" y="446" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="700" fill="#005f73">RWTD</text>
+<text x="176.0" y="464" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Coarse Only</text>
+<rect x="274.0" y="171.0" width="58" height="199.0" rx="10" fill="#005f73" />
+<text x="303.0" y="161.0" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.726</text>
+<rect x="344.0" y="185.3" width="58" height="184.7" rx="10" fill="#ca6702" />
+<text x="373.0" y="175.3" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.674</text>
+<text x="338.0" y="446" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="700" fill="#005f73">CAID</text>
+<text x="338.0" y="464" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Coarse Only</text>
+<rect x="436.0" y="153.3" width="58" height="216.7" rx="10" fill="#005f73" />
+<text x="465.0" y="143.3" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.791</text>
+<rect x="506.0" y="241.7" width="58" height="128.3" rx="10" fill="#ca6702" />
+<text x="535.0" y="231.7" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.468</text>
+<text x="500.0" y="446" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="700" fill="#005f73">STLD</text>
+<text x="500.0" y="464" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Coarse Only</text>
+<rect x="598.0" y="143.2" width="58" height="226.8" rx="10" fill="#005f73" />
+<text x="627.0" y="133.2" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.828</text>
+<rect x="668.0" y="139.9" width="58" height="230.1" rx="10" fill="#ca6702" />
+<text x="697.0" y="129.9" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.840</text>
+<text x="662.0" y="446" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="700" fill="#005f73">RWTD</text>
+<text x="662.0" y="464" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Flip Averaged</text>
+<rect x="760.0" y="188.6" width="58" height="181.4" rx="10" fill="#005f73" />
+<text x="789.0" y="178.6" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.662</text>
+<rect x="830.0" y="189.5" width="58" height="180.5" rx="10" fill="#ca6702" />
+<text x="859.0" y="179.5" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.659</text>
+<text x="824.0" y="446" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="700" fill="#005f73">CAID</text>
+<text x="824.0" y="464" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Flip Averaged</text>
+<rect x="922.0" y="149.0" width="58" height="221.0" rx="10" fill="#005f73" />
+<text x="951.0" y="139.0" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.806</text>
+<rect x="992.0" y="163.6" width="58" height="206.4" rx="10" fill="#ca6702" />
+<text x="1021.0" y="153.6" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#122033">0.753</text>
+<text x="986.0" y="446" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="700" fill="#005f73">STLD</text>
+<text x="986.0" y="464" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Flip Averaged</text>
+</svg>

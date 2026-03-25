@@ -6,107 +6,150 @@
     "eval_ari"
   ],
   "caution_metric": "miou_agg",
-  "runs": [
-    {
-      "run_id": "rwtd_sam2_coarse",
-      "route": "rwtd",
-      "route_label": "RWTD",
-      "display_label": "RWTD \u00b7 SAM2 coarse_only",
-      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only_sam2",
-      "model_id": "facebook/sam2-hiera-small",
-      "num_samples": 227,
-      "eval_miou": 0.8560653761519125,
-      "eval_ari": 0.7471779875922779,
-      "miou_agg": 0.5281478683607435
-    },
-    {
-      "run_id": "rwtd_sam3_flip",
-      "route": "rwtd",
-      "route_label": "RWTD",
-      "display_label": "RWTD \u00b7 SAM3 flip_avg",
-      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
-      "model_id": "facebook/sam3",
-      "num_samples": 227,
-      "eval_miou": 0.8397479737334304,
-      "eval_ari": 0.7258115046755812,
-      "miou_agg": 0.5137485707802587
-    },
-    {
-      "run_id": "stld_sam2_coarse",
-      "route": "stld",
-      "route_label": "STLD",
-      "display_label": "STLD \u00b7 SAM2 coarse_only",
-      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only_sam2",
-      "model_id": "facebook/sam2-hiera-small",
-      "num_samples": 200,
-      "eval_miou": 0.790775614405653,
-      "eval_ari": 0.6863961982271931,
-      "miou_agg": 0.5
-    },
-    {
-      "run_id": "stld_sam3_flip",
-      "route": "stld",
-      "route_label": "STLD",
-      "display_label": "STLD \u00b7 SAM3 flip_avg",
-      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
-      "model_id": "facebook/sam3",
-      "num_samples": 200,
-      "eval_miou": 0.7533947361386859,
-      "eval_ari": 0.6194081190647452,
-      "miou_agg": 0.5008249341380542
-    },
-    {
-      "run_id": "stld_sam2_flip",
-      "route": "stld",
-      "route_label": "STLD",
-      "display_label": "STLD \u00b7 SAM2 flip_avg",
-      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only_sam2",
-      "model_id": "facebook/sam2-hiera-small",
-      "num_samples": 200,
-      "eval_miou": 0.8064081628642077,
-      "eval_ari": 0.7088955757534903,
-      "miou_agg": 0.5
-    }
-  ],
-  "delta_vs_sam3": [
-    {
-      "delta_id": "rwtd_sam2_coarse_vs_sam3_flip",
-      "route": "rwtd",
-      "title": "RWTD: SAM2 coarse vs SAM3 flip",
-      "delta_miou": 0.01631740241848212,
-      "delta_ari": 0.02136648291669674
-    },
-    {
-      "delta_id": "stld_sam2_coarse_vs_sam3_flip",
-      "route": "stld",
-      "title": "STLD: SAM2 coarse vs SAM3 flip",
-      "delta_miou": 0.03738087826696712,
-      "delta_ari": 0.06698807916244787
-    },
-    {
-      "delta_id": "stld_sam2_flip_vs_sam3_flip",
-      "route": "stld",
-      "title": "STLD: SAM2 flip vs SAM3 flip",
-      "delta_miou": 0.053013426725521784,
-      "delta_ari": 0.08948745668874503
-    }
-  ],
+  "comparisons": {
+    "coarse_only": [
+      {
+        "dataset": "rwtd",
+        "dataset_label": "RWTD",
+        "dataset_id": "aviadcohz/RWTD",
+        "num_samples": 227,
+        "flavor": "coarse_only",
+        "flavor_label": "Coarse Only",
+        "sam2_run_id": "rwtd_sam2_coarse",
+        "sam3_run_id": "rwtd_sam3_coarse",
+        "sam2_miou": 0.8560653761519125,
+        "sam2_ari": 0.7471779875922779,
+        "sam2_agg": 0.5281478683607435,
+        "sam3_miou": 0.8235121702047465,
+        "sam3_ari": 0.6984257417319343,
+        "sam3_agg": 0.5223718301334482,
+        "delta_miou": 0.03255320594716593,
+        "delta_ari": 0.04875224586034366,
+        "leader_model": "sam2",
+        "takeaway": "SAM2 wins coarse-only parity cleanly on RWTD."
+      },
+      {
+        "dataset": "caid",
+        "dataset_label": "CAID",
+        "dataset_id": "architexture:caid",
+        "num_samples": 3104,
+        "flavor": "coarse_only",
+        "flavor_label": "Coarse Only",
+        "sam2_run_id": "caid_sam2_coarse",
+        "sam3_run_id": "caid_sam3_coarse",
+        "sam2_miou": 0.7263353460452877,
+        "sam2_ari": 0.5672725810874005,
+        "sam2_agg": 0.544942361783122,
+        "sam3_miou": 0.674265097502179,
+        "sam3_ari": 0.49558517031261085,
+        "sam3_agg": 0.5478271245604436,
+        "delta_miou": 0.05207024854310871,
+        "delta_ari": 0.07168741077478968,
+        "leader_model": "sam2",
+        "takeaway": "CAID shows a clear SAM2 lead in coarse-only parity."
+      },
+      {
+        "dataset": "stld",
+        "dataset_label": "STLD",
+        "dataset_id": "architexture:stld",
+        "num_samples": 200,
+        "flavor": "coarse_only",
+        "flavor_label": "Coarse Only",
+        "sam2_run_id": "stld_sam2_coarse",
+        "sam3_run_id": "stld_sam3_coarse",
+        "sam2_miou": 0.790775614405653,
+        "sam2_ari": 0.6863961982271931,
+        "sam2_agg": 0.5,
+        "sam3_miou": 0.4682051452561394,
+        "sam3_ari": 0.18586509894609848,
+        "sam3_agg": 0.501241305790163,
+        "delta_miou": 0.32257046914951365,
+        "delta_ari": 0.5005310992810946,
+        "leader_model": "sam2",
+        "takeaway": "This is the largest same-flavor margin on the page."
+      }
+    ],
+    "flip_averaged": [
+      {
+        "dataset": "rwtd",
+        "dataset_label": "RWTD",
+        "dataset_id": "aviadcohz/RWTD",
+        "num_samples": 227,
+        "flavor": "flip_averaged",
+        "flavor_label": "Flip Averaged",
+        "sam2_run_id": "rwtd_sam2_flip",
+        "sam3_run_id": "rwtd_sam3_flip",
+        "sam2_miou": 0.8277752305427438,
+        "sam2_ari": 0.7013113869746274,
+        "sam2_agg": 0.5153275880720933,
+        "sam3_miou": 0.8397479737334304,
+        "sam3_ari": 0.7258115046755812,
+        "sam3_agg": 0.5137485707802587,
+        "delta_miou": -0.01197274319068653,
+        "delta_ari": -0.02450011770095384,
+        "leader_model": "sam3",
+        "takeaway": "RWTD flip-avg remains the one place where SAM3 still holds a small edge."
+      },
+      {
+        "dataset": "caid",
+        "dataset_label": "CAID",
+        "dataset_id": "architexture:caid",
+        "num_samples": 3104,
+        "flavor": "flip_averaged",
+        "flavor_label": "Flip Averaged",
+        "sam2_run_id": "caid_sam2_flip",
+        "sam3_run_id": "caid_sam3_flip",
+        "sam2_miou": 0.6620402828938353,
+        "sam2_ari": 0.46051715742243726,
+        "sam2_agg": 0.5329046321451778,
+        "sam3_miou": 0.6588279313332459,
+        "sam3_ari": 0.45066962354106316,
+        "sam3_agg": 0.5316597003992432,
+        "delta_miou": 0.0032123515605894104,
+        "delta_ari": 0.009847533881374104,
+        "leader_model": "sam2",
+        "takeaway": "CAID flip-avg is close, but SAM2 still edges ahead."
+      },
+      {
+        "dataset": "stld",
+        "dataset_label": "STLD",
+        "dataset_id": "architexture:stld",
+        "num_samples": 200,
+        "flavor": "flip_averaged",
+        "flavor_label": "Flip Averaged",
+        "sam2_run_id": "stld_sam2_flip",
+        "sam3_run_id": "stld_sam3_flip",
+        "sam2_miou": 0.8064081628642077,
+        "sam2_ari": 0.7088955757534903,
+        "sam2_agg": 0.5,
+        "sam3_miou": 0.7533947361386859,
+        "sam3_ari": 0.6194081190647452,
+        "sam3_agg": 0.5008249341380542,
+        "delta_miou": 0.053013426725521784,
+        "delta_ari": 0.08948745668874503,
+        "leader_model": "sam2",
+        "takeaway": "SAM2 keeps a clear flip-avg lead on STLD."
+      }
+    ]
+  },
   "headline": {
-    "rwtd_winner": {
-      "run_id": "rwtd_sam2_coarse",
-      "eval_miou": 0.8560653761519125,
-      "eval_ari": 0.7471779875922779
+    "coarse_sam2_leads": 3,
+    "flip_sam2_leads": 2,
+    "largest_gain": {
+      "dataset": "STLD",
+      "flavor": "coarse_only",
+      "delta_miou": 0.32257046914951365,
+      "delta_ari": 0.5005310992810946
     },
-    "stld_winner": {
-      "run_id": "stld_sam2_flip",
-      "eval_miou": 0.8064081628642077,
-      "eval_ari": 0.7088955757534903
+    "rwtd_flip_exception": {
+      "delta_miou": -0.01197274319068653,
+      "delta_ari": -0.02450011770095384
     },
-    "stld_miou_agg_span": 0.0008249341380541786
+    "stld_miou_agg_span": 0.0012413057901630165
   },
   "notes": [
-    "This page is intentionally scoped to the requested RWTD/STLD comparison rows.",
-    "CAID is not included because the matching CAID SAM2 flip-avg row is still missing for this focused page.",
-    "On STLD, miou_agg is nearly constant around 0.5 and should not be treated as the main signal."
+    "CAID is now included in both same-flavor tables.",
+    "Legacy SAM3 coarse-only summaries on RWTD, CAID, and STLD publish `miou`/`ari` instead of `eval_miou`/`eval_ari`; the loader normalizes those fields directly from the bundle summaries.",
+    "On STLD, miou_agg remains effectively flat across both flavors and both models."
   ]
 }

@@ -6,7 +6,7 @@
   "summary": "summary.md",
   "manifest": "manifest.yaml",
   "tables": {
-    "what_was_compared": "assets/tables/what_was_compared.csv",
-    "delta_vs_sam3": "assets/tables/delta_vs_sam3_baseline.csv"
+    "coarse_only": "assets/tables/coarse_only_model_parity.csv",
+    "flip_averaged": "assets/tables/flip_averaged_model_parity.csv"
   }
 }

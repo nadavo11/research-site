@@ -78,7 +78,7 @@
       <div class="subtitle">Curated Gallery</div>
       <h1 class="title-gradient">SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitioning</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
-        A lightweight qualitative subset built from the run-emitted visual triptychs. This gallery is intentionally curated to show the route-level story, not to publish every sample.
+        A lightweight qualitative subset built from the run-emitted visual triptychs. The gallery follows the same-flavor parity framing used by the main report.
       </p>
       <div style="margin-top: 18px;">
         <a class="btn secondary" href="index.html">← Back to Report</a>
@@ -88,51 +88,45 @@
     <section class="section">
       <article class="story-block">
                   <div class="story-head">
-                    <span class="tag good">clear win</span>
-                    <span class="pill">RWTD · crop 237</span>
+                    <span class="tag good">coarse parity</span>
+                    <span class="pill">RWTD · crop 240</span>
                   </div>
-                  <h3>RWTD: SAM2 Preserves the Three-Band Split</h3>
-                  <p class="story-summary">This granular crop has a narrow central light band flanked by two different coarse textures. SAM2 coarse tracks the split cleanly, while the comparable SAM3 flip-avg run collapses the center into a broad blob.</p>
+                  <h3>RWTD: SAM2 Wins the Coarse-Only Parity Check</h3>
+                  <p class="story-summary">On this tile-and-grout crop, the same-flavor coarse-only comparison is visually clear. SAM2 coarse tracks the diagonal split cleanly, while SAM3 coarse breaks the scene into broad horizontal bands.</p>
                   <div class="story-grid">
                     <figure>
-  <img src="assets/gallery/rwtd_granular_bands__rwtd_sam3_flip.webp" alt="RWTD: SAM2 Preserves the Three-Band Split — RWTD · SAM3 flip_avg" data-zoom-src="assets/gallery/rwtd_granular_bands__rwtd_sam3_flip.webp" />
+  <img src="assets/gallery/rwtd_coarse_parity__rwtd_sam3_coarse.webp" alt="RWTD: SAM2 Wins the Coarse-Only Parity Check — SAM3 coarse" data-zoom-src="assets/gallery/rwtd_coarse_parity__rwtd_sam3_coarse.webp" />
   <figcaption>
-    <strong>RWTD · SAM3 flip_avg</strong>
-    <div class="mini-note">mIoU 0.2957 · ARI -0.0009</div>
+    <strong>SAM3 coarse</strong>
+    <div class="mini-note">mIoU 0.3796 · ARI 0.0216</div>
   </figcaption>
 </figure> <figure>
-  <img src="assets/gallery/rwtd_granular_bands__rwtd_sam2_coarse.webp" alt="RWTD: SAM2 Preserves the Three-Band Split — RWTD · SAM2 coarse_only" data-zoom-src="assets/gallery/rwtd_granular_bands__rwtd_sam2_coarse.webp" />
+  <img src="assets/gallery/rwtd_coarse_parity__rwtd_sam2_coarse.webp" alt="RWTD: SAM2 Wins the Coarse-Only Parity Check — SAM2 coarse" data-zoom-src="assets/gallery/rwtd_coarse_parity__rwtd_sam2_coarse.webp" />
   <figcaption>
-    <strong>RWTD · SAM2 coarse_only</strong>
-    <div class="mini-note">mIoU 0.9705 · ARI 0.9411</div>
+    <strong>SAM2 coarse</strong>
+    <div class="mini-note">mIoU 0.9611 · ARI 0.9244</div>
   </figcaption>
 </figure>
                   </div>
                 </article>
 <article class="story-block">
                   <div class="story-head">
-                    <span class="tag good">stld gain</span>
+                    <span class="tag good">coarse parity</span>
                     <span class="pill">STLD · crop 66</span>
                   </div>
-                  <h3>STLD: Both SAM2 Variants Recover the Object</h3>
-                  <p class="story-summary">On this compact synthetic foreground, both SAM2 variants recover the object cleanly. The SAM3 flip baseline expands into a large false-positive disk instead.</p>
+                  <h3>STLD: Coarse-Only Still Favors SAM2 Decisively</h3>
+                  <p class="story-summary">This compact synthetic foreground is representative of the coarse-only gap on STLD. SAM2 coarse recovers the object cleanly, while SAM3 coarse overfills a much larger false-positive region.</p>
                   <div class="story-grid">
                     <figure>
-  <img src="assets/gallery/stld_compact_foreground__stld_sam3_flip.webp" alt="STLD: Both SAM2 Variants Recover the Object — STLD · SAM3 flip_avg" data-zoom-src="assets/gallery/stld_compact_foreground__stld_sam3_flip.webp" />
+  <img src="assets/gallery/stld_coarse_parity__stld_sam3_coarse.webp" alt="STLD: Coarse-Only Still Favors SAM2 Decisively — SAM3 coarse" data-zoom-src="assets/gallery/stld_coarse_parity__stld_sam3_coarse.webp" />
   <figcaption>
-    <strong>STLD · SAM3 flip_avg</strong>
-    <div class="mini-note">mIoU 0.2680 · ARI -0.0421</div>
+    <strong>SAM3 coarse</strong>
+    <div class="mini-note">mIoU 0.3379 · ARI 0.0098</div>
   </figcaption>
 </figure> <figure>
-  <img src="assets/gallery/stld_compact_foreground__stld_sam2_coarse.webp" alt="STLD: Both SAM2 Variants Recover the Object — STLD · SAM2 coarse_only" data-zoom-src="assets/gallery/stld_compact_foreground__stld_sam2_coarse.webp" />
+  <img src="assets/gallery/stld_coarse_parity__stld_sam2_coarse.webp" alt="STLD: Coarse-Only Still Favors SAM2 Decisively — SAM2 coarse" data-zoom-src="assets/gallery/stld_coarse_parity__stld_sam2_coarse.webp" />
   <figcaption>
-    <strong>STLD · SAM2 coarse_only</strong>
-    <div class="mini-note">mIoU 0.8555 · ARI 0.8099</div>
-  </figcaption>
-</figure> <figure>
-  <img src="assets/gallery/stld_compact_foreground__stld_sam2_flip.webp" alt="STLD: Both SAM2 Variants Recover the Object — STLD · SAM2 flip_avg" data-zoom-src="assets/gallery/stld_compact_foreground__stld_sam2_flip.webp" />
-  <figcaption>
-    <strong>STLD · SAM2 flip_avg</strong>
+    <strong>SAM2 coarse</strong>
     <div class="mini-note">mIoU 0.8555 · ARI 0.8099</div>
   </figcaption>
 </figure>
@@ -140,28 +134,22 @@
                 </article>
 <article class="story-block">
                   <div class="story-head">
-                    <span class="tag good">thin structure</span>
+                    <span class="tag good">flip parity</span>
                     <span class="pill">STLD · crop 41</span>
                   </div>
-                  <h3>STLD: Thin Structure Favors the SAM2 Variants</h3>
-                  <p class="story-summary">The thin oblique strip is a harder shape. SAM2 coarse recovers part of it, SAM2 flip captures more of it, and the SAM3 flip baseline nearly collapses the signal.</p>
+                  <h3>STLD: Flip-Averaged Parity Still Favors SAM2</h3>
+                  <p class="story-summary">The thin oblique strip is harder, but the same-flavor flip-avg comparison still separates the models. SAM2 flip captures far more of the structure, while SAM3 flip nearly collapses the signal.</p>
                   <div class="story-grid">
                     <figure>
-  <img src="assets/gallery/stld_thin_strip__stld_sam3_flip.webp" alt="STLD: Thin Structure Favors the SAM2 Variants — STLD · SAM3 flip_avg" data-zoom-src="assets/gallery/stld_thin_strip__stld_sam3_flip.webp" />
+  <img src="assets/gallery/stld_flip_parity__stld_sam3_flip.webp" alt="STLD: Flip-Averaged Parity Still Favors SAM2 — SAM3 flip" data-zoom-src="assets/gallery/stld_flip_parity__stld_sam3_flip.webp" />
   <figcaption>
-    <strong>STLD · SAM3 flip_avg</strong>
+    <strong>SAM3 flip</strong>
     <div class="mini-note">mIoU 0.0764 · ARI -0.0241</div>
   </figcaption>
 </figure> <figure>
-  <img src="assets/gallery/stld_thin_strip__stld_sam2_coarse.webp" alt="STLD: Thin Structure Favors the SAM2 Variants — STLD · SAM2 coarse_only" data-zoom-src="assets/gallery/stld_thin_strip__stld_sam2_coarse.webp" />
+  <img src="assets/gallery/stld_flip_parity__stld_sam2_flip.webp" alt="STLD: Flip-Averaged Parity Still Favors SAM2 — SAM2 flip" data-zoom-src="assets/gallery/stld_flip_parity__stld_sam2_flip.webp" />
   <figcaption>
-    <strong>STLD · SAM2 coarse_only</strong>
-    <div class="mini-note">mIoU 0.5386 · ARI 0.2118</div>
-  </figcaption>
-</figure> <figure>
-  <img src="assets/gallery/stld_thin_strip__stld_sam2_flip.webp" alt="STLD: Thin Structure Favors the SAM2 Variants — STLD · SAM2 flip_avg" data-zoom-src="assets/gallery/stld_thin_strip__stld_sam2_flip.webp" />
-  <figcaption>
-    <strong>STLD · SAM2 flip_avg</strong>
+    <strong>SAM2 flip</strong>
     <div class="mini-note">mIoU 0.6885 · ARI 0.5477</div>
   </figcaption>
 </figure>
@@ -169,52 +157,23 @@
                 </article>
 <article class="story-block">
                   <div class="story-head">
-                    <span class="tag good">gallery</span>
-                    <span class="pill">RWTD · crop 261</span>
+                    <span class="tag good">rwtd holdout</span>
+                    <span class="pill">RWTD · crop 219</span>
                   </div>
-                  <h3>RWTD: Another Strong Texture Split</h3>
-                  <p class="story-summary">SAM2 coarse separates smooth concrete from coarse gravel and the neighboring red slab cleanly; the SAM3 flip baseline merges the scene into two broad low-fidelity regions.</p>
+                  <h3>RWTD: Flip-Averaged Is the Main Exception</h3>
+                  <p class="story-summary">RWTD flip-avg is the one same-flavor slice where SAM3 keeps a slight aggregate lead. This crop is included as a useful counterexample rather than hidden by the summary.</p>
                   <div class="story-grid">
                     <figure>
-  <img src="assets/gallery/rwtd_concrete_gravel__rwtd_sam3_flip.webp" alt="RWTD: Another Strong Texture Split — RWTD · SAM3 flip_avg" data-zoom-src="assets/gallery/rwtd_concrete_gravel__rwtd_sam3_flip.webp" />
+  <img src="assets/gallery/rwtd_flip_holdout__rwtd_sam2_flip.webp" alt="RWTD: Flip-Averaged Is the Main Exception — SAM2 flip" data-zoom-src="assets/gallery/rwtd_flip_holdout__rwtd_sam2_flip.webp" />
   <figcaption>
-    <strong>RWTD · SAM3 flip_avg</strong>
-    <div class="mini-note">mIoU 0.3032 · ARI -0.0071</div>
+    <strong>SAM2 flip</strong>
+    <div class="mini-note">mIoU 0.3401 · ARI 0.0201</div>
   </figcaption>
 </figure> <figure>
-  <img src="assets/gallery/rwtd_concrete_gravel__rwtd_sam2_coarse.webp" alt="RWTD: Another Strong Texture Split — RWTD · SAM2 coarse_only" data-zoom-src="assets/gallery/rwtd_concrete_gravel__rwtd_sam2_coarse.webp" />
+  <img src="assets/gallery/rwtd_flip_holdout__rwtd_sam3_flip.webp" alt="RWTD: Flip-Averaged Is the Main Exception — SAM3 flip" data-zoom-src="assets/gallery/rwtd_flip_holdout__rwtd_sam3_flip.webp" />
   <figcaption>
-    <strong>RWTD · SAM2 coarse_only</strong>
-    <div class="mini-note">mIoU 0.9772 · ARI 0.9553</div>
-  </figcaption>
-</figure>
-                  </div>
-                </article>
-<article class="story-block">
-                  <div class="story-head">
-                    <span class="tag good">gallery</span>
-                    <span class="pill">STLD · crop 2</span>
-                  </div>
-                  <h3>STLD: Another Synthetic Foreground Win</h3>
-                  <p class="story-summary">A second thin foreground example. Both SAM2 rows remain stable, while the SAM3 flip baseline overfills a large surrounding region.</p>
-                  <div class="story-grid">
-                    <figure>
-  <img src="assets/gallery/stld_diagonal_strip__stld_sam3_flip.webp" alt="STLD: Another Synthetic Foreground Win — STLD · SAM3 flip_avg" data-zoom-src="assets/gallery/stld_diagonal_strip__stld_sam3_flip.webp" />
-  <figcaption>
-    <strong>STLD · SAM3 flip_avg</strong>
-    <div class="mini-note">mIoU 0.2888 · ARI -0.0286</div>
-  </figcaption>
-</figure> <figure>
-  <img src="assets/gallery/stld_diagonal_strip__stld_sam2_coarse.webp" alt="STLD: Another Synthetic Foreground Win — STLD · SAM2 coarse_only" data-zoom-src="assets/gallery/stld_diagonal_strip__stld_sam2_coarse.webp" />
-  <figcaption>
-    <strong>STLD · SAM2 coarse_only</strong>
-    <div class="mini-note">mIoU 0.8523 · ARI 0.8021</div>
-  </figcaption>
-</figure> <figure>
-  <img src="assets/gallery/stld_diagonal_strip__stld_sam2_flip.webp" alt="STLD: Another Synthetic Foreground Win — STLD · SAM2 flip_avg" data-zoom-src="assets/gallery/stld_diagonal_strip__stld_sam2_flip.webp" />
-  <figcaption>
-    <strong>STLD · SAM2 flip_avg</strong>
-    <div class="mini-note">mIoU 0.8539 · ARI 0.8042</div>
+    <strong>SAM3 flip</strong>
+    <div class="mini-note">mIoU 0.9900 · ARI 0.9801</div>
   </figcaption>
 </figure>
                   </div>
