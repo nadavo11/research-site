@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coarse-vs-Fine SAM Scales — Stage 2 Probe</title>
+  <script>
+    (() => {
+      const storageKey = 'research-site-theme';
+      let theme = null;
+      try {
+        const stored = window.localStorage.getItem(storageKey);
+        if (stored === 'dark' || stored === 'light') theme = stored;
+      } catch (_) {}
+      if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        theme = 'dark';
+      }
+      document.documentElement.dataset.theme = theme || 'light';
+      document.documentElement.style.colorScheme = theme || 'light';
+    })();
+  </script>
+  <link rel="stylesheet" href="../../assets/site.css" />
+  <style>
+    .compact-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .identity-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .identity-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-top: 8px;
+      color: var(--ink);
+    }
+
+    .config-copy,
+    .story-summary,
+    .interpretation-copy {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .gate-readout {
+      font-size: 1.5rem !important;
+      line-height: 1.2;
+    }
+
+    .chart-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 26px;
+    }
+
+    .chart-card {
+      background: var(--surface-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .chart-card img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface-strong);
+    }
+
+    .chart-card-wide {
+      grid-column: span 2;
+    }
+
+    .story-block {
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      background: var(--surface-card);
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .story-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .story-block h3 {
+      margin: 0 0 10px;
+    }
+
+    .story-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      margin-top: 18px;
+    }
+
+    .mini-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .plot-gallery {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      margin-top: 20px;
+    }
+
+    .artifact-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .artifact-card {
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      background: var(--surface-card);
+      padding: 20px;
+    }
+
+    .artifact-card code {
+      font-size: 0.82rem;
+    }
+
+    .warning-list {
+      margin: 16px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .warning-list li + li {
+      margin-top: 8px;
+    }
+
+    .delta-negative {
+      color: var(--bad) !important;
+    }
+
+    @media (max-width: 900px) {
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-card-wide {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container animate-fade-in-down">
+    <div class="page-tools">
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+        <span data-theme-toggle-label>Dark mode</span>
+      </button>
+    </div>
+
+    <header style="text-align: center; margin-bottom: 54px;">
+      <div class="subtitle">Experiment Report</div>
+      <h1 class="title-gradient">Coarse-vs-Fine SAM Scales — Stage 2 Probe</h1>
+      <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 900px; margin-inline: auto;">
+        Stage-2 scale ablation on RWTD binary texture partitioning with a shared tiny probe. The readout is coarse-dominant: fpn_2 carries the main signal, fpn_1 is a useful complement, and fpn_0 is weak enough to be harmful in this setting.
+      </p>
+      <div style="margin-top: 18px;">
+        <span class="tag good">reviewed</span>
+        <span class="tag">sam3</span>
+        <span class="tag">stage2</span>
+        <span class="tag">scale study</span>
+      </div>
+    </header>
+
+    <section class="executive-summary">
+      <h2>Executive Synopsis</h2>
+      <p>Stage-2 asks which SAM FPN scale actually carries the binary texture partition signal once everything else stays fixed. The answer is <strong>coarse-dominant</strong>: <code>fpn_2</code> is the strongest single scale, <code>fpn_1</code> is clearly weaker alone but improves the best run when paired with <code>fpn_2</code>, and <code>fpn_0</code> is weak enough to hurt.</p>
+      <p>That matters because the best result is not “coarse only.” The winning configuration is the learned coarse+next-finer probe (<code>fpn_2 + fpn_1</code>, mIoU 0.9124, ARI 0.8452), while learned all-scale gating only partly recovers the same insight: it does learn <code>fpn_2 &gt; fpn_1 &gt; fpn_0</code>, but still loses to both fixed-uniform all-scale fusion and the simpler coarse+mid subset.</p>
+    </section>
+
+    <section class="section">
+      <h2>Run Identity / Provenance</h2>
+      <div class="identity-grid">
+  <article class="card">
+    <div class="k">Run Date</div>
+    <div class="identity-value">2026-03-25</div>
+    <div class="mini-note">Rendered from Stage-2 bundles dated 2026-03-24 to 2026-03-25.</div>
+  </article>
+  <article class="card">
+    <div class="k">Git Commit</div>
+    <div class="identity-value"><code>87684d25</code></div>
+    <div class="mini-note">Author: nadavo11</div>
+  </article>
+  <article class="card">
+    <div class="k">Dataset / Split</div>
+    <div class="identity-value">RWTD test</div>
+    <div class="mini-note"><code>aviadcohz/RWTD</code> · 227 evaluated crops</div>
+  </article>
+  <article class="card">
+    <div class="k">Model / Task</div>
+    <div class="identity-value">facebook/sam3</div>
+    <div class="mini-note">Binary texture partition, Stage-2 scale fusion probe</div>
+  </article>
+</div>
+    </section>
+
+    <section class="section">
+      <h2>Configuration</h2>
+      <div class="card-grid">
+  <article class="card">
+    <h3>Shared Probe</h3>
+    <p class="config-copy">Projection dim <code>64</code>, embedding dim <code>32</code>, AdamW, 5 epochs, lr <code>1e-3</code>, weight decay <code>1e-4</code>.</p>
+  </article>
+  <article class="card">
+    <h3>Clustering Contract</h3>
+    <p class="config-copy">Deterministic K-means, cosine distance, <code>K=2</code>, bilinear feature alignment, 512 pair samples per image.</p>
+  </article>
+  <article class="card">
+    <h3>Variant Space</h3>
+    <p class="config-copy">3 single-scale controls, 2 all-scale fusion variants, 1 coarse+mid learned fusion, and 1 native fine-grid control.</p>
+  </article>
+  <article class="card">
+    <h3>Missing Next Control</h3>
+    <p class="config-copy"><code>fixed_uniform_gates_coarse_plus_next_finer</code> is still absent, so the strongest subset has no fixed-weight companion yet.</p>
+  </article>
+</div>
+      <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <a class="btn secondary" href="repro/source_runs.json">Open Run Map</a>
+        <a class="btn secondary" href="assets/tables/summary_table.csv">Open Summary CSV</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Headline Metrics</h2>
+      <div class="metric-grid compact-grid">
+  <article class="metric">
+    <div class="k">Best Overall</div>
+    <div class="v">0.9124</div>
+    <div class="mini-note"><code>fpn_2 + fpn_1</code> learned · ARI 0.8452</div>
+  </article>
+  <article class="metric">
+    <div class="k">Best Single Scale</div>
+    <div class="v">0.9032</div>
+    <div class="mini-note"><code>fpn_2</code> only · ARI 0.8286</div>
+  </article>
+  <article class="metric">
+    <div class="k">All-Scale Learned Gates</div>
+    <div class="v gate-readout">0.430 / 0.315 / 0.256</div>
+    <div class="mini-note"><code>fpn_2 &gt; fpn_1 &gt; fpn_0</code></div>
+  </article>
+  <article class="metric">
+    <div class="k">Fine Native Penalty</div>
+    <div class="v delta-negative">-0.0781</div>
+    <div class="mini-note">mIoU vs aligned <code>fpn_0</code> · ARI -0.1255</div>
+  </article>
+</div>
+      <div class="table-wrap" style="margin-top: 26px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Variant</th>
+              <th>Levels Used</th>
+              <th>Clustering Grid</th>
+              <th>Gate Type</th>
+              <th>Final Gate Weights</th>
+              <th>Mean mIoU</th>
+              <th>Mean ARI</th>
+              <th>Takeaway</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+  <td><strong>1</strong> <span class="tag good">best</span></td>
+  <td><strong>fpn_2 + fpn_1 learned gates</strong></td>
+  <td><code>fpn_2 + fpn_1</code></td>
+  <td>72x72</td>
+  <td>learned global softmax</td>
+  <td><code>fpn_2=0.576 · fpn_1=0.424</code></td>
+  <td><strong>0.9124</strong></td>
+  <td><strong>0.8452</strong></td>
+  <td>Best overall. Coarse signal stays dominant while fpn_1 adds complementary detail.</td>
+</tr>
+<tr>
+  <td><strong>2</strong> </td>
+  <td><strong>all scales, fixed uniform</strong></td>
+  <td><code>fpn_2 + fpn_1 + fpn_0</code></td>
+  <td>72x72</td>
+  <td>fixed uniform</td>
+  <td><code>fpn_2=0.333 · fpn_1=0.333 · fpn_0=0.333</code></td>
+  <td><strong>0.9083</strong></td>
+  <td><strong>0.8381</strong></td>
+  <td>All-scale fusion helps, but the simpler uniform fusion still trails the best coarse+mid subset.</td>
+</tr>
+<tr>
+  <td><strong>3</strong> </td>
+  <td><strong>all scales, learned gates</strong></td>
+  <td><code>fpn_2 + fpn_1 + fpn_0</code></td>
+  <td>72x72</td>
+  <td>learned global softmax</td>
+  <td><code>fpn_2=0.430 · fpn_1=0.315 · fpn_0=0.256</code></td>
+  <td><strong>0.9042</strong></td>
+  <td><strong>0.8303</strong></td>
+  <td>Learns coarse &gt; mid &gt; fine, but still underperforms fixed uniform all-scale fusion.</td>
+</tr>
+<tr>
+  <td><strong>4</strong> </td>
+  <td><strong>fpn_2 only</strong></td>
+  <td><code>fpn_2</code></td>
+  <td>72x72</td>
+  <td>single-scale fixed</td>
+  <td><code>fpn_2=1.000</code></td>
+  <td><strong>0.9032</strong></td>
+  <td><strong>0.8286</strong></td>
+  <td>Strongest single scale. Coarsest SAM features already recover most of the binary partition.</td>
+</tr>
+<tr>
+  <td><strong>5</strong> </td>
+  <td><strong>fpn_1 only</strong></td>
+  <td><code>fpn_1</code></td>
+  <td>144x144</td>
+  <td>single-scale fixed</td>
+  <td><code>fpn_1=1.000</code></td>
+  <td><strong>0.8212</strong></td>
+  <td><strong>0.6779</strong></td>
+  <td>Weaker alone than fpn_2, but useful when paired with the coarsest scale.</td>
+</tr>
+<tr>
+  <td><strong>6</strong> </td>
+  <td><strong>fpn_0 only, aligned</strong></td>
+  <td><code>fpn_0</code></td>
+  <td>72x72</td>
+  <td>single-scale fixed</td>
+  <td><code>fpn_0=1.000</code></td>
+  <td><strong>0.7326</strong></td>
+  <td><strong>0.5311</strong></td>
+  <td>Weak even after alignment down to the coarse 72x72 grid.</td>
+</tr>
+<tr>
+  <td><strong>7</strong> </td>
+  <td><strong>fpn_0 only, native</strong></td>
+  <td><code>fpn_0</code></td>
+  <td>288x288</td>
+  <td>single-scale fixed</td>
+  <td><code>fpn_0=1.000</code></td>
+  <td><strong>0.6545</strong></td>
+  <td><strong>0.4055</strong></td>
+  <td>Worst control. Native 288x288 fine-scale clustering degrades further instead of helping.</td>
+</tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chart-grid">
+  <article class="chart-card">
+    <img src="assets/plots/mean_miou_by_run.svg" alt="Mean mIoU by run" />
+  </article>
+  <article class="chart-card">
+    <img src="assets/plots/mean_ari_by_run.svg" alt="Mean ARI by run" />
+  </article>
+  <article class="chart-card chart-card-wide">
+    <img src="assets/plots/single_scale_comparison.svg" alt="Single-scale comparison" />
+  </article>
+  <article class="chart-card">
+    <img src="assets/plots/gates_all_scales.svg" alt="Learned gate weights across all scales" />
+  </article>
+  <article class="chart-card">
+    <img src="assets/plots/gates_coarse_plus_next_finer.svg" alt="Learned gate weights for coarse plus next-finer" />
+  </article>
+</div>
+    </section>
+
+    <section class="section">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+        <div>
+          <h2>Visual Comparison Gallery</h2>
+          <p class="interpretation-copy">Each published panel is the run-emitted triptych: input, GT, and prediction. The selected crops below are chosen to make the coarse-dominant story easy to see at a glance.</p>
+        </div>
+        <a class="btn" href="gallery.html">Open Full Lightweight Gallery →</a>
+      </div>
+      <div style="margin-top: 24px;">
+        <article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">complementarity</span>
+                    <span class="pill">crop 350</span>
+                  </div>
+                  <h3>Mid-Scale Rescue on a Coarse Boundary</h3>
+                  <p class="story-summary">fpn_2 misses the narrow bark-versus-moss seam here. fpn_1 alone is noisy, but adding it to fpn_2 restores the thin vertical partition cleanly.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/coarse_mid_rescue__fpn_2_only.webp" alt="Mid-Scale Rescue on a Coarse Boundary — fpn_2 only" data-zoom-src="assets/gallery/coarse_mid_rescue__fpn_2_only.webp" />
+  <figcaption>
+    <strong>fpn_2 only</strong>
+    <div class="mini-note">mIoU 0.4433 · ARI 0.1150</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/coarse_mid_rescue__fpn_1_only.webp" alt="Mid-Scale Rescue on a Coarse Boundary — fpn_1 only" data-zoom-src="assets/gallery/coarse_mid_rescue__fpn_1_only.webp" />
+  <figcaption>
+    <strong>fpn_1 only</strong>
+    <div class="mini-note">mIoU 0.8425 · ARI 0.7241</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/coarse_mid_rescue__fpn_0_only_aligned.webp" alt="Mid-Scale Rescue on a Coarse Boundary — fpn_0 only, aligned" data-zoom-src="assets/gallery/coarse_mid_rescue__fpn_0_only_aligned.webp" />
+  <figcaption>
+    <strong>fpn_0 only, aligned</strong>
+    <div class="mini-note">mIoU 0.6424 · ARI 0.3754</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/coarse_mid_rescue__learned_global_gates_all_scales.webp" alt="Mid-Scale Rescue on a Coarse Boundary — all scales, learned gates" data-zoom-src="assets/gallery/coarse_mid_rescue__learned_global_gates_all_scales.webp" />
+  <figcaption>
+    <strong>all scales, learned gates</strong>
+    <div class="mini-note">mIoU 0.4492 · ARI 0.1239</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/coarse_mid_rescue__learned_global_gates_coarse_plus_next_finer.webp" alt="Mid-Scale Rescue on a Coarse Boundary — fpn_2 + fpn_1 learned gates" data-zoom-src="assets/gallery/coarse_mid_rescue__learned_global_gates_coarse_plus_next_finer.webp" />
+  <figcaption>
+    <strong>fpn_2 + fpn_1 learned gates</strong>
+    <div class="mini-note">mIoU 0.9586 · ARI 0.9297</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">subset matters</span>
+                    <span class="pill">crop 357</span>
+                  </div>
+                  <h3>Subset Choice Beats All-Scale Learned Weighting</h3>
+                  <p class="story-summary">The learned all-scale gate already favors coarse &gt; mid &gt; fine, yet the explicit coarse+mid subset still edges it out. Even fixed-uniform all-scale fusion beats the learned all-scale variant here.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/subset_choice__fpn_2_only.webp" alt="Subset Choice Beats All-Scale Learned Weighting — fpn_2 only" data-zoom-src="assets/gallery/subset_choice__fpn_2_only.webp" />
+  <figcaption>
+    <strong>fpn_2 only</strong>
+    <div class="mini-note">mIoU 0.6910 · ARI 0.4024</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/subset_choice__fixed_uniform_gates_all_scales.webp" alt="Subset Choice Beats All-Scale Learned Weighting — all scales, fixed uniform" data-zoom-src="assets/gallery/subset_choice__fixed_uniform_gates_all_scales.webp" />
+  <figcaption>
+    <strong>all scales, fixed uniform</strong>
+    <div class="mini-note">mIoU 0.9273 · ARI 0.8588</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/subset_choice__learned_global_gates_all_scales.webp" alt="Subset Choice Beats All-Scale Learned Weighting — all scales, learned gates" data-zoom-src="assets/gallery/subset_choice__learned_global_gates_all_scales.webp" />
+  <figcaption>
+    <strong>all scales, learned gates</strong>
+    <div class="mini-note">mIoU 0.8963 · ARI 0.7977</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/subset_choice__learned_global_gates_coarse_plus_next_finer.webp" alt="Subset Choice Beats All-Scale Learned Weighting — fpn_2 + fpn_1 learned gates" data-zoom-src="assets/gallery/subset_choice__learned_global_gates_coarse_plus_next_finer.webp" />
+  <figcaption>
+    <strong>fpn_2 + fpn_1 learned gates</strong>
+    <div class="mini-note">mIoU 0.9344 · ARI 0.8726</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">coarse dominant</span>
+                    <span class="pill">crop 213</span>
+                  </div>
+                  <h3>Coarse Signal Already Carries the Partition</h3>
+                  <p class="story-summary">On this crop the coarsest scale is already nearly optimal. The best two-scale fusion barely moves the score, while the finer-only controls are still distinctly weaker.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/coarse_already_strong__fpn_2_only.webp" alt="Coarse Signal Already Carries the Partition — fpn_2 only" data-zoom-src="assets/gallery/coarse_already_strong__fpn_2_only.webp" />
+  <figcaption>
+    <strong>fpn_2 only</strong>
+    <div class="mini-note">mIoU 0.9892 · ARI 0.9787</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/coarse_already_strong__fpn_1_only.webp" alt="Coarse Signal Already Carries the Partition — fpn_1 only" data-zoom-src="assets/gallery/coarse_already_strong__fpn_1_only.webp" />
+  <figcaption>
+    <strong>fpn_1 only</strong>
+    <div class="mini-note">mIoU 0.8280 · ARI 0.6705</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/coarse_already_strong__fpn_0_only_aligned.webp" alt="Coarse Signal Already Carries the Partition — fpn_0 only, aligned" data-zoom-src="assets/gallery/coarse_already_strong__fpn_0_only_aligned.webp" />
+  <figcaption>
+    <strong>fpn_0 only, aligned</strong>
+    <div class="mini-note">mIoU 0.7929 · ARI 0.5977</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/coarse_already_strong__learned_global_gates_all_scales.webp" alt="Coarse Signal Already Carries the Partition — all scales, learned gates" data-zoom-src="assets/gallery/coarse_already_strong__learned_global_gates_all_scales.webp" />
+  <figcaption>
+    <strong>all scales, learned gates</strong>
+    <div class="mini-note">mIoU 0.9883 · ARI 0.9771</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/coarse_already_strong__learned_global_gates_coarse_plus_next_finer.webp" alt="Coarse Signal Already Carries the Partition — fpn_2 + fpn_1 learned gates" data-zoom-src="assets/gallery/coarse_already_strong__learned_global_gates_coarse_plus_next_finer.webp" />
+  <figcaption>
+    <strong>fpn_2 + fpn_1 learned gates</strong>
+    <div class="mini-note">mIoU 0.9896 · ARI 0.9796</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">fine failure</span>
+                    <span class="pill">crop 210</span>
+                  </div>
+                  <h3>Fine-Scale Native Resolution Collapses</h3>
+                  <p class="story-summary">The finest scale is weak even after alignment to 72x72, and becomes worse at its native 288x288 grid. Coarse features still recover the semantic partition cleanly.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/native_fine_collapse__fpn_2_only.webp" alt="Fine-Scale Native Resolution Collapses — fpn_2 only" data-zoom-src="assets/gallery/native_fine_collapse__fpn_2_only.webp" />
+  <figcaption>
+    <strong>fpn_2 only</strong>
+    <div class="mini-note">mIoU 0.9701 · ARI 0.9408</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/native_fine_collapse__fpn_1_only.webp" alt="Fine-Scale Native Resolution Collapses — fpn_1 only" data-zoom-src="assets/gallery/native_fine_collapse__fpn_1_only.webp" />
+  <figcaption>
+    <strong>fpn_1 only</strong>
+    <div class="mini-note">mIoU 0.6371 · ARI 0.3099</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/native_fine_collapse__fpn_0_only_aligned.webp" alt="Fine-Scale Native Resolution Collapses — fpn_0 only, aligned" data-zoom-src="assets/gallery/native_fine_collapse__fpn_0_only_aligned.webp" />
+  <figcaption>
+    <strong>fpn_0 only, aligned</strong>
+    <div class="mini-note">mIoU 0.3196 · ARI -0.0027</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/native_fine_collapse__learned_global_gates_all_scales.webp" alt="Fine-Scale Native Resolution Collapses — all scales, learned gates" data-zoom-src="assets/gallery/native_fine_collapse__learned_global_gates_all_scales.webp" />
+  <figcaption>
+    <strong>all scales, learned gates</strong>
+    <div class="mini-note">mIoU 0.9670 · ARI 0.9347</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/native_fine_collapse__learned_global_gates_coarse_plus_next_finer.webp" alt="Fine-Scale Native Resolution Collapses — fpn_2 + fpn_1 learned gates" data-zoom-src="assets/gallery/native_fine_collapse__learned_global_gates_coarse_plus_next_finer.webp" />
+  <figcaption>
+    <strong>fpn_2 + fpn_1 learned gates</strong>
+    <div class="mini-note">mIoU 0.9717 · ARI 0.9440</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/native_fine_collapse__fpn_0_only_native.webp" alt="Fine-Scale Native Resolution Collapses — fpn_0 only, native" data-zoom-src="assets/gallery/native_fine_collapse__fpn_0_only_native.webp" />
+  <figcaption>
+    <strong>fpn_0 only, native</strong>
+    <div class="mini-note">mIoU 0.3182 · ARI -0.0011</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>QC / Diagnostics</h2>
+      <div class="plot-gallery">
+        <article class="chart-card">
+          <img src="assets/plots/delta_best_vs_fpn2.svg" alt="Per-sample delta between best run and fpn_2 only" />
+        </article>
+        <article class="chart-card">
+          <img src="assets/plots/delta_fpn0_native_vs_aligned.svg" alt="Per-sample delta between native and aligned fpn_0 controls" />
+        </article>
+      </div>
+      <div class="gallery" style="margin-top: 22px;">
+        <figure>
+  <img src="assets/qc/fine_native_warning.webp" alt="Worst-case native fine-scale control" data-zoom-src="assets/qc/fine_native_warning.webp" />
+  <figcaption>
+    <strong>Worst-case native fine-scale control</strong>
+    <div class="mini-note">crop 210 · fpn_0 only, native · mIoU 0.3182 · ARI -0.0011</div>
+  </figcaption>
+</figure>
+<figure>
+  <img src="assets/qc/subset_gap_warning.webp" alt="Learned all-scale lagging a simpler alternative" data-zoom-src="assets/qc/subset_gap_warning.webp" />
+  <figcaption>
+    <strong>Learned all-scale lagging a simpler alternative</strong>
+    <div class="mini-note">crop 357 · all scales, learned gates · mIoU 0.8963 · ARI 0.7977</div>
+  </figcaption>
+</figure>
+<figure>
+  <img src="assets/qc/coarse_rescue_warning.webp" alt="Coarse-only under-segmentation before the fpn_1 complement" data-zoom-src="assets/qc/coarse_rescue_warning.webp" />
+  <figcaption>
+    <strong>Coarse-only under-segmentation before the fpn_1 complement</strong>
+    <div class="mini-note">crop 350 · fpn_2 only · mIoU 0.4433 · ARI 0.1150</div>
+  </figcaption>
+</figure>
+      </div>
+      <ul class="warning-list">
+        <li>fpn_1_only runs at its native 144x144 grid, while fpn_2_only runs at 72x72.</li><li>fpn_0_only was evaluated both aligned to 72x72 and at native 288x288; native was worse on both headline metrics.</li><li>The only available full all-scale learned bundle is stored under smoke_learned_global_gates_all_scales/, even though it covers the full 227-sample test set.</li><li>The next useful control is still the missing fixed_uniform_gates_coarse_plus_next_finer run.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Interpretation</h2>
+      <p class="interpretation-copy">The coarsest SAM scale carries the main binary texture partition signal in this Stage-2 setting. The next-finer scale adds useful complementary structure, while the finest scale is not beneficial and can be actively detrimental, especially when clustered at its native resolution. The cleanest reading is therefore coarse-dominant rather than coarse-only: subset choice matters more than simply learning a softmax over all scales.</p>
+      <div class="artifact-grid" style="margin-top: 20px;">
+        <article class="artifact-card">
+          <h3>What Improved</h3>
+          <p class="config-copy">The best learned coarse+mid probe gains +0.0092 mIoU and +0.0166 ARI over <code>fpn_2</code> alone.</p>
+        </article>
+        <article class="artifact-card">
+          <h3>What Regressed</h3>
+          <p class="config-copy">The native fine-scale control drops -0.0781 mIoU and -0.1255 ARI relative to aligned <code>fpn_0_only</code>.</p>
+        </article>
+        <article class="artifact-card">
+          <h3>What Is Suspicious</h3>
+          <p class="config-copy">Even though learned all-scale gating settles on coarse > mid > fine, it still trails fixed-uniform all-scale fusion by +0.0041 mIoU and +0.0078 ARI.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Artifact Links</h2>
+      <div class="artifact-grid">
+        <article class="artifact-card">
+          <h3>Page Bundle</h3>
+          <p class="config-copy"><a class="btn secondary" href="gallery.html">Gallery</a></p>
+          <p class="mini-note"><code>metrics.json</code>, <code>summary.md</code>, <code>training_data.json</code>, and <code>assets/tables/summary_table.csv</code> are published beside this page.</p>
+        </article>
+        <article class="artifact-card">
+          <h3>Repro Bundles</h3>
+          <p class="config-copy">Each source run is copied into <code>repro/&lt;variant&gt;/</code> with <code>config.json</code>, <code>summary.json</code>, <code>summary.csv</code>, and the per-sample manifests.</p>
+          <p style="margin-top: 16px;"><a class="btn secondary" href="repro/source_runs.json">Inspect Repro Map</a></p>
+        </article>
+        <article class="artifact-card">
+          <h3>Source Mapping</h3>
+          <p class="config-copy"><code>repro/source_runs.json</code></p>
+          <p class="mini-note">Includes source experiment roots, checkpoint paths, and page-local repro folders.</p>
+          <p style="margin-top: 16px;"><a class="btn secondary" href="repro/source_runs.json">Open JSON</a></p>
+        </article>
+      </div>
+      <div style="margin-top: 28px; text-align: center;">
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>Report generated on 2026-03-25 | Powered by <strong>SAM 3 Intelligence Hub</strong></p>
+    </footer>
+  </div>
+
+  <dialog class="image-dialog" id="imageDialog">
+    <img id="imageDialogImg" alt="Expanded preview" />
+  </dialog>
+  <script src="../../assets/site.js"></script>
+</body>
+
+</html>

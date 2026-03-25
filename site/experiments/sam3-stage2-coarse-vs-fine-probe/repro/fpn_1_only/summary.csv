@@ -1,0 +1,2 @@
+variant,split,num_evaluated_samples,eval_miou,eval_ari,coarsest_level_name,selected_level_names_json,learnable_gates,final_gate_weights_json,checkpoint_path
+fpn_1_only,test,227,0.8212021066704215,0.6778875339835372,fpn_1,"[""fpn_1""]",False,"{""fpn_1"": 1.0}",outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/train_fpn_1_only_test/checkpoint.pt

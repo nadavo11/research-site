@@ -1,0 +1,15 @@
+title: "Coarse-vs-Fine SAM Scales — Stage 2 Probe"
+model_id: "facebook/sam3"
+dataset_id: "aviadcohz/RWTD"
+split: "test"
+date: "2026-03-25"
+description: "Stage-2 scale ablation for SAM 3 binary texture partitioning on RWTD."
+status: "reviewed"
+assets:
+  gallery_count: 20
+  qc_count: 3
+  all_previews_count: 1589
+evaluation:
+  primary_metric: "eval_miou"
+  secondary_metric: "eval_ari"
+  metrics_file: "metrics.json"

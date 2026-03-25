@@ -1,0 +1,2 @@
+variant,split,num_evaluated_samples,eval_miou,eval_ari,coarsest_level_name,selected_level_names_json,learnable_gates,final_gate_weights_json,checkpoint_path
+fixed_uniform_gates_all_scales,test,227,0.9082723254293734,0.8381490825875956,fpn_2,"[""fpn_2"", ""fpn_1"", ""fpn_0""]",False,"{""fpn_0"": 0.3333333432674408, ""fpn_1"": 0.3333333432674408, ""fpn_2"": 0.3333333432674408}",outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/train_fixed_uniform_gates_all_scales_test/checkpoint.pt

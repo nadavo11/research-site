@@ -1,0 +1,8 @@
+rank,run_id,variant,levels_label,grid_label,gate_type,weights_compact,mean_miou,mean_ari,note
+1,learned_global_gates_coarse_plus_next_finer,fpn_2 + fpn_1 learned gates,fpn_2 + fpn_1,72x72,learned global softmax,fpn_2=0.576 · fpn_1=0.424,0.912399973190467,0.8452004599480261,Best overall. Coarse signal stays dominant while fpn_1 adds complementary detail.
+2,fixed_uniform_gates_all_scales,"all scales, fixed uniform",fpn_2 + fpn_1 + fpn_0,72x72,fixed uniform,fpn_2=0.333 · fpn_1=0.333 · fpn_0=0.333,0.9082723254293734,0.8381490825875956,"All-scale fusion helps, but the simpler uniform fusion still trails the best coarse+mid subset."
+3,learned_global_gates_all_scales,"all scales, learned gates",fpn_2 + fpn_1 + fpn_0,72x72,learned global softmax,fpn_2=0.430 · fpn_1=0.315 · fpn_0=0.256,0.9041637476060829,0.8303445232149811,"Learns coarse > mid > fine, but still underperforms fixed uniform all-scale fusion."
+4,fpn_2_only,fpn_2 only,fpn_2,72x72,single-scale fixed,fpn_2=1.000,0.9031663077691665,0.8285924560560499,Strongest single scale. Coarsest SAM features already recover most of the binary partition.
+5,fpn_1_only,fpn_1 only,fpn_1,144x144,single-scale fixed,fpn_1=1.000,0.8212021066704215,0.6778875339835372,"Weaker alone than fpn_2, but useful when paired with the coarsest scale."
+6,fpn_0_only_aligned,"fpn_0 only, aligned",fpn_0,72x72,single-scale fixed,fpn_0=1.000,0.7326333353699155,0.531057214709789,Weak even after alignment down to the coarse 72x72 grid.
+7,fpn_0_only_native,"fpn_0 only, native",fpn_0,288x288,single-scale fixed,fpn_0=1.000,0.6545456470461155,0.4055213409794071,Worst control. Native 288x288 fine-scale clustering degrades further instead of helping.

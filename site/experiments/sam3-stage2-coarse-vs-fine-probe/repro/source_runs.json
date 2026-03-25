@@ -1,0 +1,51 @@
+[
+  {
+    "run_id": "learned_global_gates_coarse_plus_next_finer",
+    "label": "fpn_2 + fpn_1 learned gates",
+    "source_dir": "experiments/stage2/train_learned_global_gates_coarse_plus_next_finer_test",
+    "checkpoint_path": "outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/train_learned_global_gates_coarse_plus_next_finer_test/checkpoint.pt",
+    "naming_note": ""
+  },
+  {
+    "run_id": "fixed_uniform_gates_all_scales",
+    "label": "all scales, fixed uniform",
+    "source_dir": "experiments/stage2/train_fixed_uniform_gates_all_scales_test",
+    "checkpoint_path": "outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/train_fixed_uniform_gates_all_scales_test/checkpoint.pt",
+    "naming_note": ""
+  },
+  {
+    "run_id": "learned_global_gates_all_scales",
+    "label": "all scales, learned gates",
+    "source_dir": "experiments/stage2/smoke_learned_global_gates_all_scales",
+    "checkpoint_path": "outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/smoke_learned_global_gates_all_scales/checkpoint.pt",
+    "naming_note": "The only extant full 227-sample bundle for this variant lives under `smoke_learned_global_gates_all_scales/`."
+  },
+  {
+    "run_id": "fpn_2_only",
+    "label": "fpn_2 only",
+    "source_dir": "experiments/stage2/train_fpn_2_only_test",
+    "checkpoint_path": "outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/train_fpn_2_only_test/checkpoint.pt",
+    "naming_note": ""
+  },
+  {
+    "run_id": "fpn_1_only",
+    "label": "fpn_1 only",
+    "source_dir": "experiments/stage2/train_fpn_1_only_test",
+    "checkpoint_path": "outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/train_fpn_1_only_test/checkpoint.pt",
+    "naming_note": ""
+  },
+  {
+    "run_id": "fpn_0_only_aligned",
+    "label": "fpn_0 only, aligned",
+    "source_dir": "experiments/stage2/train_fpn_0_only_test",
+    "checkpoint_path": "outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/train_fpn_0_only_test/checkpoint.pt",
+    "naming_note": ""
+  },
+  {
+    "run_id": "fpn_0_only_native",
+    "label": "fpn_0 only, native",
+    "source_dir": "experiments/stage2/smoke_train_fpn_0_only_native",
+    "checkpoint_path": "outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/smoke_train_fpn_0_only_native/checkpoint.pt",
+    "naming_note": "The only extant full 227-sample native-grid control lives under `smoke_train_fpn_0_only_native/`."
+  }
+]

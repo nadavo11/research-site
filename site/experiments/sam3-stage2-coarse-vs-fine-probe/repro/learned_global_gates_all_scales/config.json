@@ -1,0 +1,74 @@
+{
+  "affinity_temperature": 0.1,
+  "command": "train-coarse-vs-fine-sam-probe",
+  "dataset_id": "aviadcohz/RWTD",
+  "device": "auto",
+  "embedding_dim": 32,
+  "eval_limit": null,
+  "eval_split": "test",
+  "evaluation_contract": "architexture_binary_v1",
+  "generated_at_utc": "2026-03-24T17:54:18Z",
+  "kmeans_convergence_tolerance": 0.0001,
+  "kmeans_max_iterations": 25,
+  "kmeans_metric": "cosine",
+  "kmeans_num_clusters": 2,
+  "learning_rate": 0.001,
+  "limit": null,
+  "model_id": "facebook/sam3",
+  "num_epochs": 5,
+  "official_checkpoint_path": null,
+  "pairs_per_image": 512,
+  "primary_metric_name": "eval_miou",
+  "projection_dim": 64,
+  "run_kind": "train",
+  "save_visuals": true,
+  "secondary_metric_name": "eval_ari",
+  "seed": 0,
+  "split": null,
+  "stage2_settings": {
+    "affinity_temperature": 0.1,
+    "embedding_dim": 32,
+    "feature_alignment_mode": "bilinear",
+    "feature_source": "backbone_fpn",
+    "kmeans_convergence_tolerance": 0.0001,
+    "kmeans_max_iterations": 25,
+    "kmeans_metric": "cosine",
+    "kmeans_num_clusters": 2,
+    "learning_rate": 0.001,
+    "num_epochs": 5,
+    "pair_samples_per_image": 512,
+    "per_level_normalization": "l2",
+    "post_fusion_normalization": "l2",
+    "projection_dim": 64,
+    "weight_decay": 0.0001
+  },
+  "train_limit": null,
+  "train_split": "train",
+  "variant": "learned_global_gates_all_scales",
+  "variant_specs": {
+    "fixed_uniform_gates_all_scales": {
+      "learnable_gates": false,
+      "selected_level_policy": "all_scales",
+      "summary": "Use the same tiny probe, but keep scale weights fixed uniform across all discovered levels."
+    },
+    "learned_global_gates_all_scales": {
+      "learnable_gates": true,
+      "selected_level_policy": "all_scales",
+      "summary": "Learn one global softmax scale gate over all discovered main SAM pyramid levels."
+    },
+    "learned_global_gates_coarse_plus_next_finer": {
+      "learnable_gates": true,
+      "selected_level_policy": "coarse_plus_next_finer",
+      "summary": "Learn one global softmax scale gate using only the coarsest level and the next finer level."
+    }
+  },
+  "versions": {
+    "Pillow": "12.1.1",
+    "datasets": "4.7.0",
+    "numpy": "1.26.4",
+    "torch": "2.10.0",
+    "transformers": "5.3.0",
+    "wandb": null
+  },
+  "weight_decay": 0.0001
+}

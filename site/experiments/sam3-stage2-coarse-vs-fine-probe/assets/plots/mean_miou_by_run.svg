@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="414" viewBox="0 0 860 414" role="img" aria-label="Mean mIoU by Run">
+<rect width="100%" height="100%" fill="#ffffff" rx="24" />
+<text x="32" y="38" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700" fill="#122033">Mean mIoU by Run</text>
+<text x="32" y="62" font-family="Space Grotesk, sans-serif" font-size="13" fill="#4c5d73">The coarse+next-finer learned probe is the current leader, with fpn_2 the best single scale.</text>
+<line x1="210.0" y1="70" x2="210.0" y2="390" stroke="#e3ebf2" stroke-width="1" />
+<text x="210.0" y="406" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#4c5d73">0.00</text>
+<line x1="342.5" y1="70" x2="342.5" y2="390" stroke="#e3ebf2" stroke-width="1" />
+<text x="342.5" y="406" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#4c5d73">0.25</text>
+<line x1="475.0" y1="70" x2="475.0" y2="390" stroke="#e3ebf2" stroke-width="1" />
+<text x="475.0" y="406" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#4c5d73">0.50</text>
+<line x1="607.5" y1="70" x2="607.5" y2="390" stroke="#e3ebf2" stroke-width="1" />
+<text x="607.5" y="406" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#4c5d73">0.75</text>
+<line x1="740.0" y1="70" x2="740.0" y2="390" stroke="#e3ebf2" stroke-width="1" />
+<text x="740.0" y="406" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#4c5d73">1.00</text>
+<text x="32" y="100" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#122033">fpn_2 + fpn_1 learned gates</text>
+<text x="32" y="114" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">fpn_2 + fpn_1</text>
+<rect x="210" y="86" width="530" height="16" rx="8" fill="#edf3f7" />
+<rect x="210" y="86" width="483.6" height="16" rx="8" fill="#005f73" />
+<text x="752" y="99" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#122033">0.9124</text>
+<text x="32" y="142" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#122033">all scales, fixed uniform</text>
+<text x="32" y="156" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">fpn_2 + fpn_1 + fpn_0</text>
+<rect x="210" y="128" width="530" height="16" rx="8" fill="#edf3f7" />
+<rect x="210" y="128" width="481.4" height="16" rx="8" fill="#0a9396" />
+<text x="752" y="141" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#122033">0.9083</text>
+<text x="32" y="184" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#122033">all scales, learned gates</text>
+<text x="32" y="198" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">fpn_2 + fpn_1 + fpn_0</text>
+<rect x="210" y="170" width="530" height="16" rx="8" fill="#edf3f7" />
+<rect x="210" y="170" width="479.2" height="16" rx="8" fill="#94d2bd" />
+<text x="752" y="183" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#122033">0.9042</text>
+<text x="32" y="226" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#122033">fpn_2 only</text>
+<text x="32" y="240" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">fpn_2</text>
+<rect x="210" y="212" width="530" height="16" rx="8" fill="#edf3f7" />
+<rect x="210" y="212" width="478.7" height="16" rx="8" fill="#ca6702" />
+<text x="752" y="225" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#122033">0.9032</text>
+<text x="32" y="268" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#122033">fpn_1 only</text>
+<text x="32" y="282" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">fpn_1</text>
+<rect x="210" y="254" width="530" height="16" rx="8" fill="#edf3f7" />
+<rect x="210" y="254" width="435.2" height="16" rx="8" fill="#ee9b00" />
+<text x="752" y="267" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#122033">0.8212</text>
+<text x="32" y="310" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#122033">fpn_0 only, aligned</text>
+<text x="32" y="324" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">fpn_0</text>
+<rect x="210" y="296" width="530" height="16" rx="8" fill="#edf3f7" />
+<rect x="210" y="296" width="388.3" height="16" rx="8" fill="#bb3e03" />
+<text x="752" y="309" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#122033">0.7326</text>
+<text x="32" y="352" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#122033">fpn_0 only, native</text>
+<text x="32" y="366" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">fpn_0</text>
+<rect x="210" y="338" width="530" height="16" rx="8" fill="#edf3f7" />
+<rect x="210" y="338" width="346.9" height="16" rx="8" fill="#9b2226" />
+<text x="752" y="351" font-family="Space Grotesk, sans-serif" font-size="12" font-weight="700" fill="#122033">0.6545</text>
+</svg>

@@ -1,0 +1,54 @@
+{
+  "dashboard": "../../index.html",
+  "report": "index.html",
+  "gallery": "gallery.html",
+  "metrics": "metrics.json",
+  "training_data": "training_data.json",
+  "summary": "summary.md",
+  "summary_csv": "assets/tables/summary_table.csv",
+  "source_run_map": "repro/source_runs.json",
+  "repro_runs": [
+    {
+      "run_id": "learned_global_gates_coarse_plus_next_finer",
+      "label": "fpn_2 + fpn_1 learned gates",
+      "source_dir": "experiments/stage2/train_learned_global_gates_coarse_plus_next_finer_test",
+      "repro_dir": "repro/learned_global_gates_coarse_plus_next_finer"
+    },
+    {
+      "run_id": "fixed_uniform_gates_all_scales",
+      "label": "all scales, fixed uniform",
+      "source_dir": "experiments/stage2/train_fixed_uniform_gates_all_scales_test",
+      "repro_dir": "repro/fixed_uniform_gates_all_scales"
+    },
+    {
+      "run_id": "learned_global_gates_all_scales",
+      "label": "all scales, learned gates",
+      "source_dir": "experiments/stage2/smoke_learned_global_gates_all_scales",
+      "repro_dir": "repro/learned_global_gates_all_scales"
+    },
+    {
+      "run_id": "fpn_2_only",
+      "label": "fpn_2 only",
+      "source_dir": "experiments/stage2/train_fpn_2_only_test",
+      "repro_dir": "repro/fpn_2_only"
+    },
+    {
+      "run_id": "fpn_1_only",
+      "label": "fpn_1 only",
+      "source_dir": "experiments/stage2/train_fpn_1_only_test",
+      "repro_dir": "repro/fpn_1_only"
+    },
+    {
+      "run_id": "fpn_0_only_aligned",
+      "label": "fpn_0 only, aligned",
+      "source_dir": "experiments/stage2/train_fpn_0_only_test",
+      "repro_dir": "repro/fpn_0_only_aligned"
+    },
+    {
+      "run_id": "fpn_0_only_native",
+      "label": "fpn_0 only, native",
+      "source_dir": "experiments/stage2/smoke_train_fpn_0_only_native",
+      "repro_dir": "repro/fpn_0_only_native"
+    }
+  ]
+}

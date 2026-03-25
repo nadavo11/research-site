@@ -1,0 +1,2 @@
+variant,split,num_evaluated_samples,eval_miou,eval_ari,coarsest_level_name,selected_level_names_json,learnable_gates,final_gate_weights_json,checkpoint_path
+learned_global_gates_all_scales,test,227,0.9041637476060829,0.8303445232149811,fpn_2,"[""fpn_2"", ""fpn_1"", ""fpn_0""]",True,"{""fpn_0"": 0.25559553503990173, ""fpn_1"": 0.3147805631160736, ""fpn_2"": 0.42962387204170227}",outputs/rwtd_sam3_auto/coarse_vs_fine_sam_scales/stage2/smoke_learned_global_gates_all_scales/checkpoint.pt
