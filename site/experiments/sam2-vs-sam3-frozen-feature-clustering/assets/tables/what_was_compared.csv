@@ -1,0 +1,6 @@
+route_label,dataset_label,split_label,display_label,exact_variant,model_id,num_samples,eval_miou,eval_ari,miou_agg,note
+RWTD,aviadcohz/RWTD,test,RWTD · SAM2 coarse_only,feature_cluster_coarse_to_fine_global_pooled_init_coarse_only_sam2,facebook/sam2-hiera-small,227,0.8560653761519125,0.7471779875922779,0.5281478683607435,SAM2 coarse-only on RWTD is the requested cross-model comparator.
+RWTD,aviadcohz/RWTD,test,RWTD · SAM3 flip_avg,feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only,facebook/sam3,227,0.8397479737334304,0.7258115046755812,0.5137485707802587,SAM3 flip-averaged coarse-only baseline on RWTD.
+STLD,architexture:stld,benchmark,STLD · SAM2 coarse_only,feature_cluster_coarse_to_fine_global_pooled_init_coarse_only_sam2,facebook/sam2-hiera-small,200,0.790775614405653,0.6863961982271931,0.5,SAM2 coarse-only on STLD.
+STLD,architexture:stld,benchmark,STLD · SAM3 flip_avg,feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only,facebook/sam3,200,0.7533947361386859,0.6194081190647452,0.5008249341380542,SAM3 flip-averaged coarse-only baseline on STLD.
+STLD,architexture:stld,benchmark,STLD · SAM2 flip_avg,feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only_sam2,facebook/sam2-hiera-small,200,0.8064081628642077,0.7088955757534903,0.5,STLD SAM2 flip-averaging improves further over the SAM3 flip-avg baseline.

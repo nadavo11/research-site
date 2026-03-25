@@ -1,0 +1,112 @@
+{
+  "status": "reviewed",
+  "page_title": "SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitioning",
+  "primary_metrics": [
+    "eval_miou",
+    "eval_ari"
+  ],
+  "caution_metric": "miou_agg",
+  "runs": [
+    {
+      "run_id": "rwtd_sam2_coarse",
+      "route": "rwtd",
+      "route_label": "RWTD",
+      "display_label": "RWTD \u00b7 SAM2 coarse_only",
+      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only_sam2",
+      "model_id": "facebook/sam2-hiera-small",
+      "num_samples": 227,
+      "eval_miou": 0.8560653761519125,
+      "eval_ari": 0.7471779875922779,
+      "miou_agg": 0.5281478683607435
+    },
+    {
+      "run_id": "rwtd_sam3_flip",
+      "route": "rwtd",
+      "route_label": "RWTD",
+      "display_label": "RWTD \u00b7 SAM3 flip_avg",
+      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
+      "model_id": "facebook/sam3",
+      "num_samples": 227,
+      "eval_miou": 0.8397479737334304,
+      "eval_ari": 0.7258115046755812,
+      "miou_agg": 0.5137485707802587
+    },
+    {
+      "run_id": "stld_sam2_coarse",
+      "route": "stld",
+      "route_label": "STLD",
+      "display_label": "STLD \u00b7 SAM2 coarse_only",
+      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_coarse_only_sam2",
+      "model_id": "facebook/sam2-hiera-small",
+      "num_samples": 200,
+      "eval_miou": 0.790775614405653,
+      "eval_ari": 0.6863961982271931,
+      "miou_agg": 0.5
+    },
+    {
+      "run_id": "stld_sam3_flip",
+      "route": "stld",
+      "route_label": "STLD",
+      "display_label": "STLD \u00b7 SAM3 flip_avg",
+      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only",
+      "model_id": "facebook/sam3",
+      "num_samples": 200,
+      "eval_miou": 0.7533947361386859,
+      "eval_ari": 0.6194081190647452,
+      "miou_agg": 0.5008249341380542
+    },
+    {
+      "run_id": "stld_sam2_flip",
+      "route": "stld",
+      "route_label": "STLD",
+      "display_label": "STLD \u00b7 SAM2 flip_avg",
+      "exact_variant": "feature_cluster_coarse_to_fine_global_pooled_init_flip_avg_coarse_only_sam2",
+      "model_id": "facebook/sam2-hiera-small",
+      "num_samples": 200,
+      "eval_miou": 0.8064081628642077,
+      "eval_ari": 0.7088955757534903,
+      "miou_agg": 0.5
+    }
+  ],
+  "delta_vs_sam3": [
+    {
+      "delta_id": "rwtd_sam2_coarse_vs_sam3_flip",
+      "route": "rwtd",
+      "title": "RWTD: SAM2 coarse vs SAM3 flip",
+      "delta_miou": 0.01631740241848212,
+      "delta_ari": 0.02136648291669674
+    },
+    {
+      "delta_id": "stld_sam2_coarse_vs_sam3_flip",
+      "route": "stld",
+      "title": "STLD: SAM2 coarse vs SAM3 flip",
+      "delta_miou": 0.03738087826696712,
+      "delta_ari": 0.06698807916244787
+    },
+    {
+      "delta_id": "stld_sam2_flip_vs_sam3_flip",
+      "route": "stld",
+      "title": "STLD: SAM2 flip vs SAM3 flip",
+      "delta_miou": 0.053013426725521784,
+      "delta_ari": 0.08948745668874503
+    }
+  ],
+  "headline": {
+    "rwtd_winner": {
+      "run_id": "rwtd_sam2_coarse",
+      "eval_miou": 0.8560653761519125,
+      "eval_ari": 0.7471779875922779
+    },
+    "stld_winner": {
+      "run_id": "stld_sam2_flip",
+      "eval_miou": 0.8064081628642077,
+      "eval_ari": 0.7088955757534903
+    },
+    "stld_miou_agg_span": 0.0008249341380541786
+  },
+  "notes": [
+    "This page is intentionally scoped to the requested RWTD/STLD comparison rows.",
+    "CAID is not included because the matching CAID SAM2 flip-avg row is still missing for this focused page.",
+    "On STLD, miou_agg is nearly constant around 0.5 and should not be treated as the main signal."
+  ]
+}

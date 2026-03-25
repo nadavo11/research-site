@@ -1,0 +1,20 @@
+title: "SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitioning"
+model_ids:
+  - "facebook/sam2-hiera-small"
+  - "facebook/sam3"
+dataset_ids:
+  - "aviadcohz/RWTD"
+  - "architexture:stld"
+date: "2026-03-25"
+description: "SAM2-vs-SAM3 frozen-feature binary texture partitioning report for RWTD and STLD."
+status: "reviewed"
+assets:
+  story_block_count: 3
+  gallery_block_count: 5
+  plot_count: 2
+evaluation:
+  primary_metrics:
+    - "eval_miou"
+    - "eval_ari"
+  caution_metric: "miou_agg"
+  metrics_file: "metrics.json"

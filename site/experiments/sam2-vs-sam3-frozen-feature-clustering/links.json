@@ -1,0 +1,12 @@
+{
+  "page": "index.html",
+  "gallery": "gallery.html",
+  "metrics": "metrics.json",
+  "training_data": "training_data.json",
+  "summary": "summary.md",
+  "manifest": "manifest.yaml",
+  "tables": {
+    "what_was_compared": "assets/tables/what_was_compared.csv",
+    "delta_vs_sam3": "assets/tables/delta_vs_sam3_baseline.csv"
+  }
+}

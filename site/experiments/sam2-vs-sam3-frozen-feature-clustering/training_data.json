@@ -1,0 +1,209 @@
+{
+  "page": {
+    "title": "SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitioning",
+    "date": "2026-03-25",
+    "status": "reviewed"
+  },
+  "stories": [
+    {
+      "story_id": "rwtd_granular_bands",
+      "route": "rwtd",
+      "route_label": "RWTD",
+      "sample_id": "237",
+      "title": "RWTD: SAM2 Preserves the Three-Band Split",
+      "summary": "This granular crop has a narrow central light band flanked by two different coarse textures. SAM2 coarse tracks the split cleanly, while the comparable SAM3 flip-avg run collapses the center into a broad blob.",
+      "tag": "clear win",
+      "show_on_index": true,
+      "images": [
+        {
+          "run_id": "rwtd_sam3_flip",
+          "label": "RWTD \u00b7 SAM3 flip_avg",
+          "short_label": "SAM3 flip",
+          "model_label": "SAM3",
+          "asset_rel": "assets/gallery/rwtd_granular_bands__rwtd_sam3_flip.webp",
+          "eval_miou": 0.29573207897858145,
+          "eval_ari": -0.0009032814638352802
+        },
+        {
+          "run_id": "rwtd_sam2_coarse",
+          "label": "RWTD \u00b7 SAM2 coarse_only",
+          "short_label": "SAM2 coarse",
+          "model_label": "SAM2",
+          "asset_rel": "assets/gallery/rwtd_granular_bands__rwtd_sam2_coarse.webp",
+          "eval_miou": 0.9705305867031166,
+          "eval_ari": 0.9411382340966471
+        }
+      ]
+    },
+    {
+      "story_id": "stld_compact_foreground",
+      "route": "stld",
+      "route_label": "STLD",
+      "sample_id": "66",
+      "title": "STLD: Both SAM2 Variants Recover the Object",
+      "summary": "On this compact synthetic foreground, both SAM2 variants recover the object cleanly. The SAM3 flip baseline expands into a large false-positive disk instead.",
+      "tag": "stld gain",
+      "show_on_index": true,
+      "images": [
+        {
+          "run_id": "stld_sam3_flip",
+          "label": "STLD \u00b7 SAM3 flip_avg",
+          "short_label": "SAM3 flip",
+          "model_label": "SAM3",
+          "asset_rel": "assets/gallery/stld_compact_foreground__stld_sam3_flip.webp",
+          "eval_miou": 0.2680372941015272,
+          "eval_ari": -0.04205860577297384
+        },
+        {
+          "run_id": "stld_sam2_coarse",
+          "label": "STLD \u00b7 SAM2 coarse_only",
+          "short_label": "SAM2 coarse",
+          "model_label": "SAM2",
+          "asset_rel": "assets/gallery/stld_compact_foreground__stld_sam2_coarse.webp",
+          "eval_miou": 0.8555477370274662,
+          "eval_ari": 0.8099079293322009
+        },
+        {
+          "run_id": "stld_sam2_flip",
+          "label": "STLD \u00b7 SAM2 flip_avg",
+          "short_label": "SAM2 flip",
+          "model_label": "SAM2",
+          "asset_rel": "assets/gallery/stld_compact_foreground__stld_sam2_flip.webp",
+          "eval_miou": 0.8555477370274662,
+          "eval_ari": 0.8099079293322009
+        }
+      ]
+    },
+    {
+      "story_id": "stld_thin_strip",
+      "route": "stld",
+      "route_label": "STLD",
+      "sample_id": "41",
+      "title": "STLD: Thin Structure Favors the SAM2 Variants",
+      "summary": "The thin oblique strip is a harder shape. SAM2 coarse recovers part of it, SAM2 flip captures more of it, and the SAM3 flip baseline nearly collapses the signal.",
+      "tag": "thin structure",
+      "show_on_index": true,
+      "images": [
+        {
+          "run_id": "stld_sam3_flip",
+          "label": "STLD \u00b7 SAM3 flip_avg",
+          "short_label": "SAM3 flip",
+          "model_label": "SAM3",
+          "asset_rel": "assets/gallery/stld_thin_strip__stld_sam3_flip.webp",
+          "eval_miou": 0.07638579558123056,
+          "eval_ari": -0.024090619163919264
+        },
+        {
+          "run_id": "stld_sam2_coarse",
+          "label": "STLD \u00b7 SAM2 coarse_only",
+          "short_label": "SAM2 coarse",
+          "model_label": "SAM2",
+          "asset_rel": "assets/gallery/stld_thin_strip__stld_sam2_coarse.webp",
+          "eval_miou": 0.5386191991221165,
+          "eval_ari": 0.2117509709213563
+        },
+        {
+          "run_id": "stld_sam2_flip",
+          "label": "STLD \u00b7 SAM2 flip_avg",
+          "short_label": "SAM2 flip",
+          "model_label": "SAM2",
+          "asset_rel": "assets/gallery/stld_thin_strip__stld_sam2_flip.webp",
+          "eval_miou": 0.6884956719447816,
+          "eval_ari": 0.5477299110306384
+        }
+      ]
+    },
+    {
+      "story_id": "rwtd_concrete_gravel",
+      "route": "rwtd",
+      "route_label": "RWTD",
+      "sample_id": "261",
+      "title": "RWTD: Another Strong Texture Split",
+      "summary": "SAM2 coarse separates smooth concrete from coarse gravel and the neighboring red slab cleanly; the SAM3 flip baseline merges the scene into two broad low-fidelity regions.",
+      "tag": "gallery",
+      "show_on_index": false,
+      "images": [
+        {
+          "run_id": "rwtd_sam3_flip",
+          "label": "RWTD \u00b7 SAM3 flip_avg",
+          "short_label": "SAM3 flip",
+          "model_label": "SAM3",
+          "asset_rel": "assets/gallery/rwtd_concrete_gravel__rwtd_sam3_flip.webp",
+          "eval_miou": 0.3032323636042467,
+          "eval_ari": -0.007055827386417356
+        },
+        {
+          "run_id": "rwtd_sam2_coarse",
+          "label": "RWTD \u00b7 SAM2 coarse_only",
+          "short_label": "SAM2 coarse",
+          "model_label": "SAM2",
+          "asset_rel": "assets/gallery/rwtd_concrete_gravel__rwtd_sam2_coarse.webp",
+          "eval_miou": 0.9772255722481517,
+          "eval_ari": 0.9552684339671691
+        }
+      ]
+    },
+    {
+      "story_id": "stld_diagonal_strip",
+      "route": "stld",
+      "route_label": "STLD",
+      "sample_id": "2",
+      "title": "STLD: Another Synthetic Foreground Win",
+      "summary": "A second thin foreground example. Both SAM2 rows remain stable, while the SAM3 flip baseline overfills a large surrounding region.",
+      "tag": "gallery",
+      "show_on_index": false,
+      "images": [
+        {
+          "run_id": "stld_sam3_flip",
+          "label": "STLD \u00b7 SAM3 flip_avg",
+          "short_label": "SAM3 flip",
+          "model_label": "SAM3",
+          "asset_rel": "assets/gallery/stld_diagonal_strip__stld_sam3_flip.webp",
+          "eval_miou": 0.28875242202014983,
+          "eval_ari": -0.02861176347288069
+        },
+        {
+          "run_id": "stld_sam2_coarse",
+          "label": "STLD \u00b7 SAM2 coarse_only",
+          "short_label": "SAM2 coarse",
+          "model_label": "SAM2",
+          "asset_rel": "assets/gallery/stld_diagonal_strip__stld_sam2_coarse.webp",
+          "eval_miou": 0.8523020851254468,
+          "eval_ari": 0.8021006877290554
+        },
+        {
+          "run_id": "stld_sam2_flip",
+          "label": "STLD \u00b7 SAM2 flip_avg",
+          "short_label": "SAM2 flip",
+          "model_label": "SAM2",
+          "asset_rel": "assets/gallery/stld_diagonal_strip__stld_sam2_flip.webp",
+          "eval_miou": 0.8539454757211775,
+          "eval_ari": 0.8042365835606468
+        }
+      ]
+    }
+  ],
+  "delta_rows": [
+    {
+      "delta_id": "rwtd_sam2_coarse_vs_sam3_flip",
+      "route": "rwtd",
+      "title": "RWTD: SAM2 coarse vs SAM3 flip",
+      "delta_miou": 0.01631740241848212,
+      "delta_ari": 0.02136648291669674
+    },
+    {
+      "delta_id": "stld_sam2_coarse_vs_sam3_flip",
+      "route": "stld",
+      "title": "STLD: SAM2 coarse vs SAM3 flip",
+      "delta_miou": 0.03738087826696712,
+      "delta_ari": 0.06698807916244787
+    },
+    {
+      "delta_id": "stld_sam2_flip_vs_sam3_flip",
+      "route": "stld",
+      "title": "STLD: SAM2 flip vs SAM3 flip",
+      "delta_miou": 0.053013426725521784,
+      "delta_ari": 0.08948745668874503
+    }
+  ]
+}

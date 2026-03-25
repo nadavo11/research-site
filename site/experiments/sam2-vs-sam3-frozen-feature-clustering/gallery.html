@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitioning — Gallery</title>
+  <script>
+    (() => {
+      const storageKey = 'research-site-theme';
+      let theme = null;
+      try {
+        const stored = window.localStorage.getItem(storageKey);
+        if (stored === 'dark' || stored === 'light') theme = stored;
+      } catch (_) {}
+      if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        theme = 'dark';
+      }
+      document.documentElement.dataset.theme = theme || 'light';
+      document.documentElement.style.colorScheme = theme || 'light';
+    })();
+  </script>
+  <link rel="stylesheet" href="../../assets/site.css" />
+  <style>
+    .story-block {
+      background: var(--surface-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .story-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .story-summary {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .story-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      margin-top: 18px;
+    }
+
+    .story-grid img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface-strong);
+      cursor: zoom-in;
+    }
+
+    .mini-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container animate-fade-in-down">
+    <div class="page-tools">
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+        <span data-theme-toggle-label>Dark mode</span>
+      </button>
+    </div>
+
+    <header style="text-align: center; margin-bottom: 44px;">
+      <div class="subtitle">Curated Gallery</div>
+      <h1 class="title-gradient">SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitioning</h1>
+      <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
+        A lightweight qualitative subset built from the run-emitted visual triptychs. This gallery is intentionally curated to show the route-level story, not to publish every sample.
+      </p>
+      <div style="margin-top: 18px;">
+        <a class="btn secondary" href="index.html">← Back to Report</a>
+      </div>
+    </header>
+
+    <section class="section">
+      <article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">clear win</span>
+                    <span class="pill">RWTD · crop 237</span>
+                  </div>
+                  <h3>RWTD: SAM2 Preserves the Three-Band Split</h3>
+                  <p class="story-summary">This granular crop has a narrow central light band flanked by two different coarse textures. SAM2 coarse tracks the split cleanly, while the comparable SAM3 flip-avg run collapses the center into a broad blob.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/rwtd_granular_bands__rwtd_sam3_flip.webp" alt="RWTD: SAM2 Preserves the Three-Band Split — RWTD · SAM3 flip_avg" data-zoom-src="assets/gallery/rwtd_granular_bands__rwtd_sam3_flip.webp" />
+  <figcaption>
+    <strong>RWTD · SAM3 flip_avg</strong>
+    <div class="mini-note">mIoU 0.2957 · ARI -0.0009</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/rwtd_granular_bands__rwtd_sam2_coarse.webp" alt="RWTD: SAM2 Preserves the Three-Band Split — RWTD · SAM2 coarse_only" data-zoom-src="assets/gallery/rwtd_granular_bands__rwtd_sam2_coarse.webp" />
+  <figcaption>
+    <strong>RWTD · SAM2 coarse_only</strong>
+    <div class="mini-note">mIoU 0.9705 · ARI 0.9411</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">stld gain</span>
+                    <span class="pill">STLD · crop 66</span>
+                  </div>
+                  <h3>STLD: Both SAM2 Variants Recover the Object</h3>
+                  <p class="story-summary">On this compact synthetic foreground, both SAM2 variants recover the object cleanly. The SAM3 flip baseline expands into a large false-positive disk instead.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/stld_compact_foreground__stld_sam3_flip.webp" alt="STLD: Both SAM2 Variants Recover the Object — STLD · SAM3 flip_avg" data-zoom-src="assets/gallery/stld_compact_foreground__stld_sam3_flip.webp" />
+  <figcaption>
+    <strong>STLD · SAM3 flip_avg</strong>
+    <div class="mini-note">mIoU 0.2680 · ARI -0.0421</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/stld_compact_foreground__stld_sam2_coarse.webp" alt="STLD: Both SAM2 Variants Recover the Object — STLD · SAM2 coarse_only" data-zoom-src="assets/gallery/stld_compact_foreground__stld_sam2_coarse.webp" />
+  <figcaption>
+    <strong>STLD · SAM2 coarse_only</strong>
+    <div class="mini-note">mIoU 0.8555 · ARI 0.8099</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/stld_compact_foreground__stld_sam2_flip.webp" alt="STLD: Both SAM2 Variants Recover the Object — STLD · SAM2 flip_avg" data-zoom-src="assets/gallery/stld_compact_foreground__stld_sam2_flip.webp" />
+  <figcaption>
+    <strong>STLD · SAM2 flip_avg</strong>
+    <div class="mini-note">mIoU 0.8555 · ARI 0.8099</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">thin structure</span>
+                    <span class="pill">STLD · crop 41</span>
+                  </div>
+                  <h3>STLD: Thin Structure Favors the SAM2 Variants</h3>
+                  <p class="story-summary">The thin oblique strip is a harder shape. SAM2 coarse recovers part of it, SAM2 flip captures more of it, and the SAM3 flip baseline nearly collapses the signal.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/stld_thin_strip__stld_sam3_flip.webp" alt="STLD: Thin Structure Favors the SAM2 Variants — STLD · SAM3 flip_avg" data-zoom-src="assets/gallery/stld_thin_strip__stld_sam3_flip.webp" />
+  <figcaption>
+    <strong>STLD · SAM3 flip_avg</strong>
+    <div class="mini-note">mIoU 0.0764 · ARI -0.0241</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/stld_thin_strip__stld_sam2_coarse.webp" alt="STLD: Thin Structure Favors the SAM2 Variants — STLD · SAM2 coarse_only" data-zoom-src="assets/gallery/stld_thin_strip__stld_sam2_coarse.webp" />
+  <figcaption>
+    <strong>STLD · SAM2 coarse_only</strong>
+    <div class="mini-note">mIoU 0.5386 · ARI 0.2118</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/stld_thin_strip__stld_sam2_flip.webp" alt="STLD: Thin Structure Favors the SAM2 Variants — STLD · SAM2 flip_avg" data-zoom-src="assets/gallery/stld_thin_strip__stld_sam2_flip.webp" />
+  <figcaption>
+    <strong>STLD · SAM2 flip_avg</strong>
+    <div class="mini-note">mIoU 0.6885 · ARI 0.5477</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">gallery</span>
+                    <span class="pill">RWTD · crop 261</span>
+                  </div>
+                  <h3>RWTD: Another Strong Texture Split</h3>
+                  <p class="story-summary">SAM2 coarse separates smooth concrete from coarse gravel and the neighboring red slab cleanly; the SAM3 flip baseline merges the scene into two broad low-fidelity regions.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/rwtd_concrete_gravel__rwtd_sam3_flip.webp" alt="RWTD: Another Strong Texture Split — RWTD · SAM3 flip_avg" data-zoom-src="assets/gallery/rwtd_concrete_gravel__rwtd_sam3_flip.webp" />
+  <figcaption>
+    <strong>RWTD · SAM3 flip_avg</strong>
+    <div class="mini-note">mIoU 0.3032 · ARI -0.0071</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/rwtd_concrete_gravel__rwtd_sam2_coarse.webp" alt="RWTD: Another Strong Texture Split — RWTD · SAM2 coarse_only" data-zoom-src="assets/gallery/rwtd_concrete_gravel__rwtd_sam2_coarse.webp" />
+  <figcaption>
+    <strong>RWTD · SAM2 coarse_only</strong>
+    <div class="mini-note">mIoU 0.9772 · ARI 0.9553</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">gallery</span>
+                    <span class="pill">STLD · crop 2</span>
+                  </div>
+                  <h3>STLD: Another Synthetic Foreground Win</h3>
+                  <p class="story-summary">A second thin foreground example. Both SAM2 rows remain stable, while the SAM3 flip baseline overfills a large surrounding region.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/stld_diagonal_strip__stld_sam3_flip.webp" alt="STLD: Another Synthetic Foreground Win — STLD · SAM3 flip_avg" data-zoom-src="assets/gallery/stld_diagonal_strip__stld_sam3_flip.webp" />
+  <figcaption>
+    <strong>STLD · SAM3 flip_avg</strong>
+    <div class="mini-note">mIoU 0.2888 · ARI -0.0286</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/stld_diagonal_strip__stld_sam2_coarse.webp" alt="STLD: Another Synthetic Foreground Win — STLD · SAM2 coarse_only" data-zoom-src="assets/gallery/stld_diagonal_strip__stld_sam2_coarse.webp" />
+  <figcaption>
+    <strong>STLD · SAM2 coarse_only</strong>
+    <div class="mini-note">mIoU 0.8523 · ARI 0.8021</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/stld_diagonal_strip__stld_sam2_flip.webp" alt="STLD: Another Synthetic Foreground Win — STLD · SAM2 flip_avg" data-zoom-src="assets/gallery/stld_diagonal_strip__stld_sam2_flip.webp" />
+  <figcaption>
+    <strong>STLD · SAM2 flip_avg</strong>
+    <div class="mini-note">mIoU 0.8539 · ARI 0.8042</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+    </section>
+
+    <footer>
+      <p>Curated comparison subset | Lightweight previews only</p>
+    </footer>
+  </div>
+
+  <dialog class="image-dialog" id="imageDialog">
+    <img id="imageDialogImg" alt="Expanded preview" />
+  </dialog>
+
+  <script src="../../assets/site.js"></script>
+</body>
+
+</html>
