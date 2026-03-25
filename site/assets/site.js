@@ -30,6 +30,30 @@
     return theme === 'dark' ? 'Light mode' : 'Dark mode';
   }
 
+  function ensureThemeToggle() {
+    if (document.querySelector('[data-theme-toggle]')) return;
+    const host = document.querySelector('.container') || document.querySelector('main') || document.body;
+    if (!host) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'page-tools';
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'theme-toggle';
+    button.setAttribute('data-theme-toggle', '');
+    button.setAttribute('aria-label', 'Toggle color theme');
+    button.setAttribute('aria-pressed', 'false');
+
+    const label = document.createElement('span');
+    label.setAttribute('data-theme-toggle-label', '');
+    label.textContent = 'Dark mode';
+
+    button.appendChild(label);
+    wrapper.appendChild(button);
+    host.insertBefore(wrapper, host.firstChild);
+  }
+
   function applyTheme(theme) {
     root.dataset.theme = theme;
     root.style.colorScheme = theme;
@@ -45,6 +69,7 @@
     });
   }
 
+  ensureThemeToggle();
   applyTheme(root.dataset.theme === 'dark' || root.dataset.theme === 'light' ? root.dataset.theme : readStoredTheme() || preferredTheme());
 
   document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
