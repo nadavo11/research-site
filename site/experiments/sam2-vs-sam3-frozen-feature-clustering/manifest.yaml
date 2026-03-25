@@ -6,14 +6,14 @@ dataset_ids:
   - "aviadcohz/RWTD"
   - "architexture:caid"
   - "architexture:stld"
-date: "2026-03-25"
+date: "2026-03-26"
 description: "Same-flavor SAM2-vs-SAM3 frozen-feature binary texture partitioning report for RWTD, CAID, and STLD."
 status: "reviewed"
 assets:
   story_block_count: 3
   gallery_block_count: 4
-  gallery_preview_count: 192
-  gallery_pair_count: 96
+  gallery_preview_count: 2668
+  gallery_pair_count: 1334
   plot_count: 2
 evaluation:
   primary_metrics:

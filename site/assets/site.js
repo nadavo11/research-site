@@ -106,13 +106,23 @@
   const dialog = document.getElementById('imageDialog');
   const dialogImage = document.getElementById('imageDialogImg');
   if (dialog && dialogImage) {
-    document.querySelectorAll('[data-zoom-src]').forEach((img) => {
-      img.addEventListener('click', () => {
-        dialogImage.src = img.getAttribute('data-zoom-src');
-        dialogImage.alt = img.alt || 'Expanded preview';
+    const openZoomTarget = (node) => {
+      const zoomSrc = node?.getAttribute?.('data-zoom-src');
+      if (!zoomSrc) return;
+      dialogImage.src = zoomSrc;
+      dialogImage.alt = node.getAttribute('alt') || node.getAttribute('aria-label') || 'Expanded preview';
+      if (!dialog.open) {
         dialog.showModal();
-      });
+      }
+    };
+
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+      const target = event.target.closest('[data-zoom-src]');
+      if (!target) return;
+      openZoomTarget(target);
     });
+
     dialog.addEventListener('click', (event) => {
       const rect = dialog.getBoundingClientRect();
       const inside = rect.top <= event.clientY && event.clientY <= rect.bottom && rect.left <= event.clientX && event.clientX <= rect.right;

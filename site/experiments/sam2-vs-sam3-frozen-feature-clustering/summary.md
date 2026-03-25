@@ -1,6 +1,6 @@
 # SAM2 vs SAM3 Frozen Feature Clustering for Binary Texture Partitioning
 
-- Date: `2026-03-25`
+- Date: `2026-03-26`
 - Scope: RWTD, CAID, and STLD same-flavor frozen-feature binary partitioning
 - Coarse-only lead split: `SAM2 3/3`
 - Flip-avg lead split: `SAM2 2/3`

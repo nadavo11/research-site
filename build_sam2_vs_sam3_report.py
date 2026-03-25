@@ -31,7 +31,9 @@ PAGE_DESCRIPTION = (
 
 PRIMARY_METRICS = ("eval_miou", "eval_ari")
 CAUTION_METRIC = "miou_agg"
-GALLERY_PAIRS_PER_SLICE = 16
+GALLERY_PAIRS_PER_SLICE = 240
+GALLERY_PREVIEW_WIDTH = 560
+GALLERY_PREVIEW_QUALITY = 78
 
 DATASET_ORDER = ["rwtd", "caid", "stld"]
 DATASET_LABELS = {
@@ -551,7 +553,12 @@ def build_gallery_payload(runs: dict[str, dict]) -> dict:
                     peer_model = "sam3" if model_key == "sam2" else "sam2"
                     peer_row = runs[RUN_LOOKUP[(dataset, peer_model, flavor)]]["sample_lookup"][sample_id]
                     asset_rel = Path("assets") / "all_previews" / run["run_id"] / f"{sample_id}.webp"
-                    write_thumbnail(row["source_visual_path"], DEST_DIR / asset_rel)
+                    write_thumbnail(
+                        row["source_visual_path"],
+                        DEST_DIR / asset_rel,
+                        width=GALLERY_PREVIEW_WIDTH,
+                        quality=GALLERY_PREVIEW_QUALITY,
+                    )
                     records.append(
                         {
                             "sample_id": sample_id,
@@ -1479,8 +1486,9 @@ def render_gallery_html() -> str:
       </div>
     </section>
 
-    <div style="margin-top: 8px; text-align: center;">
+    <div style="margin-top: 8px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
       <a class="btn secondary" href="index.html">← Back to Report</a>
+      <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
     </div>
 
     <footer>
@@ -1509,7 +1517,10 @@ def render_gallery_html() -> str:
       const gallery = document.getElementById('fullGallery');
       const summary = document.getElementById('gallerySummary');
       const loadMoreButton = document.getElementById('loadMoreButton');
+      const dialog = document.getElementById('imageDialog');
+      const dialogImage = document.getElementById('imageDialogImg');
       const params = new URLSearchParams(window.location.search);
+      let activeZoomIndex = -1;
 
       datasetFilter.innerHTML = [
         '<option value="all">All datasets</option>',
@@ -1598,15 +1609,81 @@ def render_gallery_html() -> str:
         `;
       }}
 
-      function render() {{
+      function loadedZoomNodes() {{
+        return Array.from(gallery.querySelectorAll('[data-zoom-src]'));
+      }}
+
+      function openZoomAt(index) {{
+        if (!dialog || !dialogImage) return false;
+        const nodes = loadedZoomNodes();
+        const node = nodes[index];
+        if (!node) return false;
+        activeZoomIndex = index;
+        dialogImage.src = node.getAttribute('data-zoom-src');
+        dialogImage.alt = node.alt || 'Expanded preview';
+        if (!dialog.open) {{
+          dialog.showModal();
+        }}
+        return true;
+      }}
+
+      function render(options = {{}}) {{
+        const preserveZoom = Boolean(options.preserveZoom);
+        const focusIndex = Number.isInteger(options.focusIndex) ? options.focusIndex : null;
         const items = filteredRecords();
         const limit = Math.min(shown, items.length);
         gallery.innerHTML = items.slice(0, limit).map(card).join('');
-        summary.textContent = `Showing ${{limit}} of ${{items.length}} published previews from ${{data.gallery.published_pair_count}} curated same-flavor pairs (${{data.gallery.available_pair_count}} aligned pairs available in the source runs).`;
+        summary.textContent = `Showing ${{limit}} of ${{items.length}} published previews from ${{data.gallery.record_count}} cards across ${{data.gallery.published_pair_count}} curated same-flavor pairs (${{data.gallery.available_pair_count}} aligned pairs available in the source runs).`;
         loadMoreButton.hidden = limit >= items.length;
         loadMoreButton.disabled = limit >= items.length;
+        if (preserveZoom && focusIndex !== null) {{
+          openZoomAt(focusIndex);
+        }} else if (dialog?.open) {{
+          dialog.close();
+          activeZoomIndex = -1;
+        }}
         syncUrl();
       }}
+
+      function moveZoom(step) {{
+        const items = filteredRecords();
+        if (!items.length) return;
+        if (activeZoomIndex < 0) {{
+          openZoomAt(step > 0 ? 0 : Math.min(Math.min(shown, items.length), items.length) - 1);
+          return;
+        }}
+        const nextIndex = activeZoomIndex + step;
+        if (nextIndex < 0 || nextIndex >= items.length) {{
+          return;
+        }}
+        if (nextIndex >= loadedZoomNodes().length) {{
+          shown = Math.min(shown + Number(pageSize.value), items.length);
+          render({{ preserveZoom: true, focusIndex: nextIndex }});
+          return;
+        }}
+        openZoomAt(nextIndex);
+      }}
+
+      gallery.addEventListener('click', (event) => {{
+        const target = event.target.closest('[data-zoom-src]');
+        if (!target) return;
+        activeZoomIndex = loadedZoomNodes().indexOf(target);
+      }});
+
+      dialog?.addEventListener('close', () => {{
+        activeZoomIndex = -1;
+      }});
+
+      document.addEventListener('keydown', (event) => {{
+        if (!dialog?.open) return;
+        if (event.key === 'ArrowRight') {{
+          event.preventDefault();
+          moveZoom(1);
+        }} else if (event.key === 'ArrowLeft') {{
+          event.preventDefault();
+          moveZoom(-1);
+        }}
+      }});
 
       datasetFilter.addEventListener('change', () => {{
         shown = Number(pageSize.value);
