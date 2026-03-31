@@ -1,0 +1,23 @@
+title: "GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study"
+model_ids:
+  - "facebook/sam3"
+  - "AutoSAM (reported reference)"
+dataset_ids:
+  - "glas"
+date: "2026-03-31"
+description: "Frozen SAM3 feature readout study on GlaS with current internal AutoSAM reference context."
+status: "reviewed"
+assets:
+  story_block_count: 5
+  gallery_preview_count: 80
+  plot_count: 3
+evaluation:
+  primary_metrics:
+    - "direct_foreground_iou"
+    - "direct_foreground_dice"
+  diagnostics:
+    - "eval_miou"
+    - "eval_ari"
+caveats:
+  - "AutoSAM values are reported paper reference values."
+  - "Strict 224x224 protocol-matched rerun is still pending."

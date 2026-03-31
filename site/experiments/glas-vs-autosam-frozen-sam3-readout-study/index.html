@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study</title>
+  <script>
+    (() => {
+      const storageKey = 'research-site-theme';
+      let theme = null;
+      try {
+        const stored = window.localStorage.getItem(storageKey);
+        if (stored === 'dark' || stored === 'light') theme = stored;
+      } catch (_) {}
+      if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        theme = 'dark';
+      }
+      document.documentElement.dataset.theme = theme || 'light';
+      document.documentElement.style.colorScheme = theme || 'light';
+    })();
+  </script>
+  <link rel="stylesheet" href="../../assets/site.css" />
+  <style>
+    .compact-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .callout-panel,
+    .chart-card,
+    .story-block,
+    .note-card {
+      background: var(--surface-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .callout-panel {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1.4fr 1fr;
+      align-items: start;
+    }
+
+    .callout-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .callout-grid div {
+      display: grid;
+      gap: 4px;
+      padding: 14px;
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      background: var(--surface-strong);
+    }
+
+    .chart-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 24px;
+    }
+
+    .chart-card img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface-strong);
+      cursor: zoom-in;
+    }
+
+    .story-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .story-summary,
+    .interpretation-copy {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .story-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      margin-top: 18px;
+    }
+
+    .story-grid img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface-strong);
+      cursor: zoom-in;
+    }
+
+    .story-grid figcaption {
+      margin-top: 8px;
+    }
+
+    .mini-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .artifact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .bullet-list {
+      margin: 16px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .bullet-list li + li {
+      margin-top: 8px;
+    }
+
+    .qual-note {
+      margin-top: 14px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 960px) {
+      .callout-panel,
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container animate-fade-in-down">
+    <div class="page-tools">
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+        <span data-theme-toggle-label>Dark mode</span>
+      </button>
+    </div>
+
+    <header style="text-align: center; margin-bottom: 54px;">
+      <div class="subtitle">Experiment Report</div>
+      <h1 class="title-gradient">GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study</h1>
+      <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 940px; margin-inline: auto;">
+        GlaS is a useful histology stress test because weak training-free binary clustering can mean either missing representation signal or a poor readout. The current answer is much more about the readout: a tiny dense supervised head on frozen SAM3 multiscale features already gets surprisingly close to the cited AutoSAM foreground numbers, and the strongest current frozen-feature variant is unexpectedly the coarsest SAM pyramid level alone.
+      </p>
+      <div style="margin-top: 18px;">
+        <span class="tag good">reviewed</span>
+        <span class="tag">glas</span>
+        <span class="tag">sam3</span>
+        <span class="tag">autosam</span>
+        <span class="tag">readout</span>
+      </div>
+      <div style="margin-top: 18px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
+        <a class="btn" href="gallery.html">Open Lightweight Gallery →</a>
+      </div>
+    </header>
+
+    <section class="executive-summary">
+      <h2>Executive Synopsis</h2>
+      <p>GlaS is a useful stress test because weak training-free gland partitioning can mean either that frozen SAM3 lacks gland information or that the readout is poor. The current evidence points much more strongly to the readout bottleneck: even a tiny dense supervised head on frozen SAM3 features is already strong.</p>
+      <p>The strongest current result is unexpectedly <strong>coarse-only</strong>. The best frozen-feature run is <strong><code>fpn_2_only d128</code></strong> at <strong>fg IoU 0.824312</strong> and <strong>Dice 0.899436</strong>, while the legacy <strong>all-scales d64</strong> head lands at <strong>fg IoU 0.803117</strong> and <strong>Dice 0.885918</strong>.</p>
+    </section>
+
+    <section class="section">
+      <h2>Headline Findings</h2>
+      <div class="metric-grid compact-grid">
+  <article class="metric">
+    <div class="k">Training-Free vs Supervised</div>
+    <div class="v delta-positive">+0.2644</div>
+    <div class="mini-note">Best frozen head vs CFC baseline in foreground IoU.</div>
+  </article>
+  <article class="metric">
+    <div class="k">Best Current Frozen Run</div>
+    <div class="v">0.824312</div>
+    <div class="mini-note">Foreground IoU 0.824312 · Dice 0.899436.</div>
+  </article>
+  <article class="metric">
+    <div class="k">Coarse-Only d64 vs all_scales d64</div>
+    <div class="v delta-positive">+0.0101</div>
+    <div class="mini-note">The coarsest level alone already outruns all-scales at the default width.</div>
+  </article>
+  <article class="metric">
+    <div class="k">Gap to AutoSAM Reference</div>
+    <div class="v">0.0465</div>
+    <div class="mini-note">Remaining foreground IoU gap to the cited paper value.</div>
+  </article>
+</div>
+    </section>
+
+    <section class="section">
+      <h2>Protocol / Fairness</h2>
+      <div class="callout-panel">
+        <div>
+          <span class="tag warn">protocol caveat</span>
+          <h3>Current Internal Comparison, Not Final AutoSAM Parity</h3>
+          <p class="interpretation-copy">This page is the current best internal comparison for the question “does weak training-free CFC on GlaS mean frozen SAM3 lacks gland signal?”. The answer so far is no: dense supervision on top of frozen SAM3 features is already strong. The remaining fairness gap is a strict <code>224x224</code> protocol-matched rerun, which is still pending.</p>
+        </div>
+        <div class="callout-grid">
+          <div><strong>Dataset</strong><span>GlaS</span></div>
+          <div><strong>Split</strong><span>train → test</span></div>
+          <div><strong>SAM backbone frozen</strong><span>yes</span></div>
+          <div><strong>Supervision</strong><span>dense binary gland masks</span></div>
+          <div><strong>Loss</strong><span>BCEWithLogits + Dice</span></div>
+          <div><strong>AutoSAM values here</strong><span>reported paper references only</span></div>
+          <div><strong>Pending caveat</strong><span>strict 224x224 rerun</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Main Comparison</h2>
+      <p class="interpretation-copy">The ladder view below is the cleanest summary for a cold reviewer: weak training-free CFC, much stronger dense-supervised frozen-feature readout, and a best current frozen-feature run that sits meaningfully below but not absurdly far from the cited AutoSAM reference.</p>
+      <div class="chart-grid">
+        <article class="chart-card">
+          <img src="assets/plots/supervision_ladder.svg" alt="Foreground metrics ladder from CFC to AutoSAM reference" data-zoom-src="assets/plots/supervision_ladder.svg" />
+        </article>
+        <article class="note-card">
+          <h3>Current Readout Story</h3>
+          <p class="interpretation-copy">The jump from the training-free CFC baseline to the best frozen head is <strong>+0.264442</strong> in foreground IoU and <strong>+0.196342</strong> in Dice. That is too large to explain away as a minor evaluator mismatch.</p>
+          <p class="interpretation-copy" style="margin-top: 14px;">The remaining gap to the cited AutoSAM reference is <strong>0.046488</strong> in foreground IoU and <strong>0.028764</strong> in Dice. This is why the current page is worth keeping as a serious internal baseline, even before the pending 224x224 rerun.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Scale Ablations</h2>
+      <div class="chart-grid">
+        <article class="chart-card">
+          <img src="assets/plots/scale_ablation.svg" alt="Scale ablation at d64" data-zoom-src="assets/plots/scale_ablation.svg" />
+        </article>
+        <article class="chart-card">
+          <img src="assets/plots/capacity_sweep.svg" alt="Coarse-only capacity sweep" data-zoom-src="assets/plots/capacity_sweep.svg" />
+        </article>
+      </div>
+      <p class="qual-note">The key readout is qualitative as much as numeric: dropping from <code>all_scales d64</code> to <code>fpn_2_only d64</code> already improves the result while using fewer parameters, and extra width on top of the coarse-only branch helps again. That is why the page frames the current result as <strong>coarse-dominant</strong>, not just “bigger head wins”.</p>
+    </section>
+
+    <section class="section">
+      <h2>Main Results Table</h2>
+      <div class="table-wrap" style="margin-top: 16px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Supervision</th>
+              <th>Frozen backbone?</th>
+              <th>Learned prompt generator?</th>
+              <th>Trainable params</th>
+              <th>Fg IoU</th>
+              <th>Dice</th>
+              <th>eval mIoU</th>
+              <th>eval ARI</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+  <td><strong>CFC training-free baseline</strong></td>
+  <td>none</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>n/a</td>
+  <td>0.559870</td>
+  <td>0.703093</td>
+  <td>0.576410</td>
+  <td>0.254778</td>
+  <td>Exact GlaS flip-avg coarse-only baseline from the phase-1 AutoSAM comparison note.</td>
+</tr>
+<tr>
+  <td><strong>Frozen mask head all_scales d64</strong></td>
+  <td>dense binary gland masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>197,249</td>
+  <td>0.803117</td>
+  <td>0.885918</td>
+  <td>0.793207</td>
+  <td>0.624593</td>
+  <td>Legacy tiny multiscale decoder; summary bundle records 40 epochs despite the older directory name.</td>
+</tr>
+<tr>
+  <td><strong>Frozen mask head fpn_0_only d64</strong></td>
+  <td>dense binary gland masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>90,625</td>
+  <td>0.729788</td>
+  <td>0.838083</td>
+  <td>0.715166</td>
+  <td>0.479865</td>
+  <td>Finest single-scale control.</td>
+</tr>
+<tr>
+  <td><strong>Frozen mask head mid_plus_fine d64</strong></td>
+  <td>dense binary gland masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>143,937</td>
+  <td>0.786244</td>
+  <td>0.876425</td>
+  <td>0.771574</td>
+  <td>0.582750</td>
+  <td>Drops the coarsest scale and fuses only the two finer levels.</td>
+</tr>
+<tr>
+  <td><strong>Frozen mask head fpn_2_only d64</strong></td>
+  <td>dense binary gland masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>90,625</td>
+  <td>0.813221</td>
+  <td>0.892288</td>
+  <td>0.803947</td>
+  <td>0.644130</td>
+  <td>Default-width coarse-only run; this is the ambiguous `fpn_2_only` directory that resolves to d64.</td>
+</tr>
+<tr>
+  <td><strong>Frozen mask head fpn_2_only d32</strong></td>
+  <td>dense binary gland masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>26,881</td>
+  <td>0.808445</td>
+  <td>0.889356</td>
+  <td>0.798616</td>
+  <td>0.633705</td>
+  <td>Lower-capacity coarse-only control.</td>
+</tr>
+<tr>
+  <td><strong>Frozen mask head fpn_2_only d128</strong></td>
+  <td>dense binary gland masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>328,705</td>
+  <td>0.824312</td>
+  <td>0.899436</td>
+  <td>0.813555</td>
+  <td>0.659685</td>
+  <td>Best current frozen-feature run and the current internal headline comparison point.</td>
+</tr>
+<tr>
+  <td><strong>AutoSAM reported paper reference</strong></td>
+  <td>dense gland masks (paper)</td>
+  <td>reported only</td>
+  <td>yes (reported)</td>
+  <td>learned prompt encoder (reported in paper)</td>
+  <td>0.870800</td>
+  <td>0.928200</td>
+  <td>n/a</td>
+  <td>n/a</td>
+  <td>Not reproduced by us in this repo; strict 224x224 protocol-matched rerun is still pending.</td>
+</tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="artifact-row">
+        <a class="btn secondary" href="assets/tables/main_results.csv">Open Results CSV</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+        <div>
+          <h2>Qualitative Comparison</h2>
+          <p class="interpretation-copy">Each row below uses the repo-native GlaS triptych panels, cropped back into explicit <strong>Input</strong>, <strong>GT</strong>, and method-specific prediction columns. That keeps the page faithful to the saved run artifacts instead of fabricating a new qualitative format.</p>
+        </div>
+        <a class="btn" href="gallery.html">Open Lightweight Gallery →</a>
+      </div>
+      <div style="margin-top: 24px;">
+        <article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">supervision rescue</span>
+                    <span class="pill">testA_38</span>
+                    <span class="pill">Δ best vs CFC +0.7161</span>
+                  </div>
+                  <h3>Supervision Repairs a Near-Collapse Case</h3>
+                  <p class="story-summary">The training-free CFC branch nearly misses the gland entirely here. Both supervised heads recover the structure, and the best coarse-only readout edges the all-scales head again.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/testa38_supervision_rescue/input.webp" alt="testA_38 — Input" data-zoom-src="assets/gallery/testa38_supervision_rescue/input.webp" />
+  <figcaption>
+    <strong>Input</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa38_supervision_rescue/gt.webp" alt="testA_38 — GT" data-zoom-src="assets/gallery/testa38_supervision_rescue/gt.webp" />
+  <figcaption>
+    <strong>GT</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa38_supervision_rescue/cfc.webp" alt="testA_38 — CFC baseline" data-zoom-src="assets/gallery/testa38_supervision_rescue/cfc.webp" />
+  <figcaption>
+    <strong>CFC baseline</strong>
+    <div class="mini-note">Fg IoU 0.1159 · Dice 0.2078</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa38_supervision_rescue/all_scales.webp" alt="testA_38 — all_scales d64" data-zoom-src="assets/gallery/testa38_supervision_rescue/all_scales.webp" />
+  <figcaption>
+    <strong>all_scales d64</strong>
+    <div class="mini-note">Fg IoU 0.8217 · Dice 0.9021</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa38_supervision_rescue/best.webp" alt="testA_38 — fpn_2_only d128" data-zoom-src="assets/gallery/testa38_supervision_rescue/best.webp" />
+  <figcaption>
+    <strong>fpn_2_only d128</strong>
+    <div class="mini-note">Fg IoU 0.8320 · Dice 0.9083</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">coarse-only edge</span>
+                    <span class="pill">testA_39</span>
+                    <span class="pill">Δ best vs CFC +0.6681</span>
+                  </div>
+                  <h3>Coarse-Only Can Beat the Multiscale Head Cleanly</h3>
+                  <p class="story-summary">This crop is a useful reminder that the best current result is not just a width effect. The coarse-only d128 head is visibly cleaner than the all-scales d64 baseline.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/testa39_coarse_only_edge/input.webp" alt="testA_39 — Input" data-zoom-src="assets/gallery/testa39_coarse_only_edge/input.webp" />
+  <figcaption>
+    <strong>Input</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa39_coarse_only_edge/gt.webp" alt="testA_39 — GT" data-zoom-src="assets/gallery/testa39_coarse_only_edge/gt.webp" />
+  <figcaption>
+    <strong>GT</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa39_coarse_only_edge/cfc.webp" alt="testA_39 — CFC baseline" data-zoom-src="assets/gallery/testa39_coarse_only_edge/cfc.webp" />
+  <figcaption>
+    <strong>CFC baseline</strong>
+    <div class="mini-note">Fg IoU 0.1800 · Dice 0.3051</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa39_coarse_only_edge/all_scales.webp" alt="testA_39 — all_scales d64" data-zoom-src="assets/gallery/testa39_coarse_only_edge/all_scales.webp" />
+  <figcaption>
+    <strong>all_scales d64</strong>
+    <div class="mini-note">Fg IoU 0.7571 · Dice 0.8617</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa39_coarse_only_edge/best.webp" alt="testA_39 — fpn_2_only d128" data-zoom-src="assets/gallery/testa39_coarse_only_edge/best.webp" />
+  <figcaption>
+    <strong>fpn_2_only d128</strong>
+    <div class="mini-note">Fg IoU 0.8481 · Dice 0.9178</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">all-scales holdout</span>
+                    <span class="pill">testA_53</span>
+                    <span class="pill">Δ best vs CFC +0.6185</span>
+                  </div>
+                  <h3>Coarse-Only Is Strongest Overall, But Not Universal</h3>
+                  <p class="story-summary">The strongest aggregate result is coarse-only, but this crop is a good counterexample. The all-scales d64 head is actually better here than the best coarse-only run.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/testa53_all_scales_holdout/input.webp" alt="testA_53 — Input" data-zoom-src="assets/gallery/testa53_all_scales_holdout/input.webp" />
+  <figcaption>
+    <strong>Input</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa53_all_scales_holdout/gt.webp" alt="testA_53 — GT" data-zoom-src="assets/gallery/testa53_all_scales_holdout/gt.webp" />
+  <figcaption>
+    <strong>GT</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa53_all_scales_holdout/cfc.webp" alt="testA_53 — CFC baseline" data-zoom-src="assets/gallery/testa53_all_scales_holdout/cfc.webp" />
+  <figcaption>
+    <strong>CFC baseline</strong>
+    <div class="mini-note">Fg IoU 0.2163 · Dice 0.3557</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa53_all_scales_holdout/all_scales.webp" alt="testA_53 — all_scales d64" data-zoom-src="assets/gallery/testa53_all_scales_holdout/all_scales.webp" />
+  <figcaption>
+    <strong>all_scales d64</strong>
+    <div class="mini-note">Fg IoU 0.8880 · Dice 0.9407</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa53_all_scales_holdout/best.webp" alt="testA_53 — fpn_2_only d128" data-zoom-src="assets/gallery/testa53_all_scales_holdout/best.webp" />
+  <figcaption>
+    <strong>fpn_2_only d128</strong>
+    <div class="mini-note">Fg IoU 0.8349 · Dice 0.9100</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">capacity helps</span>
+                    <span class="pill">testA_17</span>
+                    <span class="pill">Δ best vs CFC +0.4377</span>
+                  </div>
+                  <h3>Better Readout First, Then Extra Width</h3>
+                  <p class="story-summary">CFC is weak, the all-scales head improves it, and the best coarse-only head improves further. This is representative of the current coarse-dominant readout story.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/testa17_capacity_and_readout/input.webp" alt="testA_17 — Input" data-zoom-src="assets/gallery/testa17_capacity_and_readout/input.webp" />
+  <figcaption>
+    <strong>Input</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa17_capacity_and_readout/gt.webp" alt="testA_17 — GT" data-zoom-src="assets/gallery/testa17_capacity_and_readout/gt.webp" />
+  <figcaption>
+    <strong>GT</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa17_capacity_and_readout/cfc.webp" alt="testA_17 — CFC baseline" data-zoom-src="assets/gallery/testa17_capacity_and_readout/cfc.webp" />
+  <figcaption>
+    <strong>CFC baseline</strong>
+    <div class="mini-note">Fg IoU 0.3787 · Dice 0.5494</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa17_capacity_and_readout/all_scales.webp" alt="testA_17 — all_scales d64" data-zoom-src="assets/gallery/testa17_capacity_and_readout/all_scales.webp" />
+  <figcaption>
+    <strong>all_scales d64</strong>
+    <div class="mini-note">Fg IoU 0.6466 · Dice 0.7854</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testa17_capacity_and_readout/best.webp" alt="testA_17 — fpn_2_only d128" data-zoom-src="assets/gallery/testa17_capacity_and_readout/best.webp" />
+  <figcaption>
+    <strong>fpn_2_only d128</strong>
+    <div class="mini-note">Fg IoU 0.8164 · Dice 0.8989</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">limitation</span>
+                    <span class="pill">testB_14</span>
+                    <span class="pill">Δ best vs CFC -0.2886</span>
+                  </div>
+                  <h3>A Real Failure Case Still Exists</h3>
+                  <p class="story-summary">This crop stays difficult for the supervised frozen-feature heads and is worth keeping visible. The current page is not claiming that the readout fully dominates every CFC sample.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/testb14_limitation/input.webp" alt="testB_14 — Input" data-zoom-src="assets/gallery/testb14_limitation/input.webp" />
+  <figcaption>
+    <strong>Input</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testb14_limitation/gt.webp" alt="testB_14 — GT" data-zoom-src="assets/gallery/testb14_limitation/gt.webp" />
+  <figcaption>
+    <strong>GT</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testb14_limitation/cfc.webp" alt="testB_14 — CFC baseline" data-zoom-src="assets/gallery/testb14_limitation/cfc.webp" />
+  <figcaption>
+    <strong>CFC baseline</strong>
+    <div class="mini-note">Fg IoU 0.7276 · Dice 0.8423</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testb14_limitation/all_scales.webp" alt="testB_14 — all_scales d64" data-zoom-src="assets/gallery/testb14_limitation/all_scales.webp" />
+  <figcaption>
+    <strong>all_scales d64</strong>
+    <div class="mini-note">Fg IoU 0.4172 · Dice 0.5888</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/testb14_limitation/best.webp" alt="testB_14 — fpn_2_only d128" data-zoom-src="assets/gallery/testb14_limitation/best.webp" />
+  <figcaption>
+    <strong>fpn_2_only d128</strong>
+    <div class="mini-note">Fg IoU 0.4391 · Dice 0.6102</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Interpretation</h2>
+      <p class="interpretation-copy">The current evidence does <strong>not</strong> say that SAM3 is already AutoSAM or that the project is solved. It does say that weak training-free CFC on GlaS should not be read as evidence that frozen SAM3 lacks gland information. A tiny supervised head already closes most of the gap to the cited AutoSAM foreground numbers, and the strongest signal currently comes from the coarsest frozen SAM level.</p>
+      <p class="interpretation-copy" style="margin-top: 14px;">That makes the current lesson mostly about <strong>readout design</strong>, not feature absence. The frozen representation appears substantially more informative than the training-free clustering route suggested.</p>
+    </section>
+
+    <section class="section">
+      <h2>Caveats / Next Step</h2>
+      <ul class="bullet-list">
+        <li>AutoSAM on this page is a <strong>reported paper reference</strong>, not a reproduced run from this repo.</li>
+        <li>The remaining fairness gap is the unresolved strict <code>224x224</code> train/eval setting; that rerun is still pending.</li>
+        <li><code>fpn_2_only</code> is labeled explicitly as <code>d64</code> or <code>d128</code> throughout this page so the default-width run is no longer ambiguous.</li>
+        <li>A targeted coarse+fine residual refinement probe remains a plausible next architecture experiment after the strict protocol-matching rerun.</li>
+      </ul>
+      <div class="artifact-row">
+        <a class="btn secondary" href="metrics.json">metrics.json</a>
+        <a class="btn secondary" href="training_data.json">training_data.json</a>
+        <a class="btn secondary" href="summary.md">summary.md</a>
+      </div>
+      <div style="margin-top: 28px; text-align: center;">
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>GlaS vs AutoSAM report | Rendered 2026-03-31</p>
+    </footer>
+  </div>
+
+  <dialog class="image-dialog" id="imageDialog">
+    <img id="imageDialogImg" alt="Expanded preview" />
+  </dialog>
+
+  <script src="../../assets/site.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,14 @@
+{
+  "page": "index.html",
+  "gallery": "gallery.html",
+  "metrics": "metrics.json",
+  "training_data": "training_data.json",
+  "summary": "summary.md",
+  "manifest": "manifest.yaml",
+  "results_table_csv": "assets/tables/main_results.csv",
+  "plots": {
+    "supervision_ladder.svg": "assets/plots/supervision_ladder.svg",
+    "scale_ablation.svg": "assets/plots/scale_ablation.svg",
+    "capacity_sweep.svg": "assets/plots/capacity_sweep.svg"
+  }
+}

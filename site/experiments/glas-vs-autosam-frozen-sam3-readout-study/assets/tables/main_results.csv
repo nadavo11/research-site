@@ -1,0 +1,9 @@
+method,supervision,frozen_backbone,learned_prompt_generator,trainable_params,fg_iou,dice,eval_miou,eval_ari,notes
+CFC training-free baseline,none,yes,no,,0.5598698446607729,0.7030933433336127,0.5764100680501544,0.25477772112173425,Exact GlaS flip-avg coarse-only baseline from the phase-1 AutoSAM comparison note.
+Frozen mask head all_scales d64,dense binary gland masks,yes,no,197249,0.8031169368808352,0.8859184015272803,0.7932073207963984,0.6245927585025193,Legacy tiny multiscale decoder; summary bundle records 40 epochs despite the older directory name.
+Frozen mask head fpn_0_only d64,dense binary gland masks,yes,no,90625,0.7297882090992099,0.838082600702574,0.7151656070932438,0.47986533905524237,Finest single-scale control.
+Frozen mask head mid_plus_fine d64,dense binary gland masks,yes,no,143937,0.7862439145845392,0.8764253228548322,0.7715737057060688,0.5827498082525334,Drops the coarsest scale and fuses only the two finer levels.
+Frozen mask head fpn_2_only d64,dense binary gland masks,yes,no,90625,0.813221412924978,0.8922878386176467,0.8039467620916938,0.6441302807876848,Default-width coarse-only run; this is the ambiguous `fpn_2_only` directory that resolves to d64.
+Frozen mask head fpn_2_only d32,dense binary gland masks,yes,no,26881,0.8084453801947736,0.8893564018208039,0.7986158199641424,0.6337049297197236,Lower-capacity coarse-only control.
+Frozen mask head fpn_2_only d128,dense binary gland masks,yes,no,328705,0.8243115541697282,0.8994357113693254,0.8135546960377789,0.6596848700569711,Best current frozen-feature run and the current internal headline comparison point.
+AutoSAM reported paper reference,dense gland masks (paper),reported only,yes (reported),learned prompt encoder (reported in paper),0.8708,0.9282,,,Not reproduced by us in this repo; strict 224x224 protocol-matched rerun is still pending.

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study — Gallery</title>
+  <script>
+    (() => {
+      const storageKey = 'research-site-theme';
+      let theme = null;
+      try {
+        const stored = window.localStorage.getItem(storageKey);
+        if (stored === 'dark' || stored === 'light') theme = stored;
+      } catch (_) {}
+      if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        theme = 'dark';
+      }
+      document.documentElement.dataset.theme = theme || 'light';
+      document.documentElement.style.colorScheme = theme || 'light';
+    })();
+  </script>
+  <link rel="stylesheet" href="../../assets/site.css" />
+  <style>
+    .controls {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-bottom: 20px;
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control label {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .control select,
+    .control input {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: var(--surface-strong);
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .gallery-card {
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .gallery-card img {
+      width: 100%;
+      display: block;
+      cursor: zoom-in;
+      background: var(--surface-strong);
+    }
+
+    .gallery-card .body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .gallery-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      color: var(--muted);
+    }
+
+    .load-more-wrap {
+      margin-top: 24px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container animate-fade-in-down">
+    <div class="page-tools">
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+        <span data-theme-toggle-label>Dark mode</span>
+      </button>
+    </div>
+
+    <header style="text-align: center; margin-bottom: 42px;">
+      <div class="subtitle">Full Gallery</div>
+      <h1 class="title-gradient">GlaS vs AutoSAM — Lightweight Gallery</h1>
+      <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
+        Each strip is <strong>Input | GT | CFC baseline | all_scales d64 | fpn_2_only d128</strong>. The source run panels are cropped into this comparison view directly from the saved experiment visuals.
+      </p>
+      <div style="margin-top: 18px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <a class="btn secondary" href="index.html">← Back to Report</a>
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="controls">
+        <div class="control">
+          <label for="storyFilter">Story picks</label>
+          <select id="storyFilter">
+            <option value="all">All samples</option>
+            <option value="story">Story picks only</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="sortBy">Sort</label>
+          <select id="sortBy">
+            <option value="sample">Sample order</option>
+            <option value="best_fg_desc">Best fg IoU ↓</option>
+            <option value="best_fg_asc">Best fg IoU ↑</option>
+            <option value="delta_cfc_desc">Δ best vs CFC ↓</option>
+            <option value="delta_cfc_asc">Δ best vs CFC ↑</option>
+            <option value="delta_all_desc">Δ best vs all_scales ↓</option>
+            <option value="delta_all_asc">Δ best vs all_scales ↑</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="pageSize">Per page</label>
+          <select id="pageSize">
+            <option value="12">12</option>
+            <option value="24">24</option>
+            <option value="48">48</option>
+            <option value="80">80</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div id="gallerySummary">Loading gallery…</div>
+        <div id="galleryHint">Click any strip to expand. Arrow keys move between samples and auto-load more when needed.</div>
+      </div>
+
+      <div class="gallery" id="fullGallery"></div>
+
+      <div class="load-more-wrap">
+        <button id="loadMoreButton" type="button" class="btn">Load More</button>
+      </div>
+
+      <div style="margin-top: 28px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <a class="btn secondary" href="index.html">← Back to Report</a>
+        <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>GlaS gallery bundle | Lightweight previews only</p>
+    </footer>
+  </div>
+
+  <dialog class="image-dialog" id="imageDialog">
+    <img id="imageDialogImg" alt="Expanded preview" />
+  </dialog>
+
+  <script src="../../assets/site.js"></script>
+  <script>
+    (async () => {
+      const response = await fetch('training_data.json');
+      if (!response.ok) {
+        throw new Error(`Failed to load training_data.json: ${response.status}`);
+      }
+      const data = await response.json();
+      const records = data.gallery.records.slice();
+      const storyFilter = document.getElementById('storyFilter');
+      const sortBy = document.getElementById('sortBy');
+      const pageSize = document.getElementById('pageSize');
+      const gallery = document.getElementById('fullGallery');
+      const summary = document.getElementById('gallerySummary');
+      const loadMoreButton = document.getElementById('loadMoreButton');
+      const dialog = document.getElementById('imageDialog');
+      const dialogImage = document.getElementById('imageDialogImg');
+      const params = new URLSearchParams(window.location.search);
+      let activeZoomIndex = -1;
+
+      storyFilter.value = params.get('story') || 'all';
+      sortBy.value = params.get('sort') || 'sample';
+      pageSize.value = params.get('page_size') || '12';
+      let shown = Number(params.get('shown')) || Number(pageSize.value);
+
+      function syncUrl() {
+        const next = new URLSearchParams();
+        if (storyFilter.value !== 'all') next.set('story', storyFilter.value);
+        if (sortBy.value !== 'sample') next.set('sort', sortBy.value);
+        if (pageSize.value !== '12') next.set('page_size', pageSize.value);
+        if (shown > Number(pageSize.value)) next.set('shown', String(shown));
+        const query = next.toString();
+        history.replaceState(null, '', query ? `?${query}` : 'gallery.html');
+      }
+
+      function filteredRecords() {
+        let items = records.slice();
+        if (storyFilter.value === 'story') {
+          items = items.filter((item) => Boolean(item.story_tag));
+        }
+        if (sortBy.value === 'best_fg_desc') {
+          items.sort((a, b) => b.best_fg_iou - a.best_fg_iou || a.sample_index - b.sample_index);
+        } else if (sortBy.value === 'best_fg_asc') {
+          items.sort((a, b) => a.best_fg_iou - b.best_fg_iou || a.sample_index - b.sample_index);
+        } else if (sortBy.value === 'delta_cfc_desc') {
+          items.sort((a, b) => b.delta_best_vs_cfc - a.delta_best_vs_cfc || a.sample_index - b.sample_index);
+        } else if (sortBy.value === 'delta_cfc_asc') {
+          items.sort((a, b) => a.delta_best_vs_cfc - b.delta_best_vs_cfc || a.sample_index - b.sample_index);
+        } else if (sortBy.value === 'delta_all_desc') {
+          items.sort((a, b) => b.delta_best_vs_all_scales - a.delta_best_vs_all_scales || a.sample_index - b.sample_index);
+        } else if (sortBy.value === 'delta_all_asc') {
+          items.sort((a, b) => a.delta_best_vs_all_scales - b.delta_best_vs_all_scales || a.sample_index - b.sample_index);
+        } else {
+          items.sort((a, b) => a.sample_index - b.sample_index);
+        }
+        return items;
+      }
+
+      function card(item) {
+        const storyTag = item.story_tag ? `<span class="tag good">${item.story_tag}</span>` : '';
+        const deltaVsAll = item.delta_best_vs_all_scales > 0.0005
+          ? `<span class="tag good">Δ vs all_scales +${item.delta_best_vs_all_scales.toFixed(4)}</span>`
+          : item.delta_best_vs_all_scales < -0.0005
+            ? `<span class="tag warn">Δ vs all_scales ${item.delta_best_vs_all_scales.toFixed(4)}</span>`
+            : '<span class="tag">Δ vs all_scales 0.0000</span>';
+        return `
+          <article class="gallery-card">
+            <img src="${item.thumb_path}" alt="${item.sample_id} comparison strip" data-zoom-src="${item.thumb_path}" />
+            <div class="body">
+              <div class="gallery-meta">
+                <span class="pill">${item.sample_id}</span>
+                <span class="tag">best fg IoU ${item.best_fg_iou.toFixed(4)}</span>
+                <span class="tag">Δ vs CFC ${item.delta_best_vs_cfc.toFixed(4)}</span>
+                ${deltaVsAll}
+                ${storyTag}
+              </div>
+              <div><strong>Best Dice ${item.best_dice.toFixed(4)}</strong> · Best eval mIoU ${item.best_eval_miou.toFixed(4)} · Best eval ARI ${item.best_eval_ari.toFixed(4)}</div>
+              <div class="mini-note">Left to right: Input, GT, CFC baseline, all_scales d64, fpn_2_only d128.</div>
+            </div>
+          </article>
+        `;
+      }
+
+      function loadedZoomNodes() {
+        return Array.from(gallery.querySelectorAll('[data-zoom-src]'));
+      }
+
+      function openZoomAt(index) {
+        if (!dialog || !dialogImage) return false;
+        const nodes = loadedZoomNodes();
+        const node = nodes[index];
+        if (!node) return false;
+        activeZoomIndex = index;
+        dialogImage.src = node.getAttribute('data-zoom-src');
+        dialogImage.alt = node.alt || 'Expanded preview';
+        if (!dialog.open) {
+          dialog.showModal();
+        }
+        return true;
+      }
+
+      function render(options = {}) {
+        const preserveZoom = Boolean(options.preserveZoom);
+        const focusIndex = Number.isInteger(options.focusIndex) ? options.focusIndex : null;
+        const items = filteredRecords();
+        const limit = Math.min(shown, items.length);
+        gallery.innerHTML = items.slice(0, limit).map(card).join('');
+        summary.textContent = `Showing ${limit} of ${items.length} sample strips across ${data.gallery.sample_count} GlaS test crops.`;
+        loadMoreButton.hidden = limit >= items.length;
+        loadMoreButton.disabled = limit >= items.length;
+        if (preserveZoom && focusIndex !== null) {
+          openZoomAt(focusIndex);
+        } else if (dialog?.open) {
+          dialog.close();
+          activeZoomIndex = -1;
+        }
+        syncUrl();
+      }
+
+      function moveZoom(step) {
+        const items = filteredRecords();
+        if (!items.length) return;
+        if (activeZoomIndex < 0) {
+          openZoomAt(step > 0 ? 0 : Math.min(Math.min(shown, items.length), items.length) - 1);
+          return;
+        }
+        const nextIndex = activeZoomIndex + step;
+        if (nextIndex < 0 || nextIndex >= items.length) {
+          return;
+        }
+        if (nextIndex >= loadedZoomNodes().length) {
+          shown = Math.min(shown + Number(pageSize.value), items.length);
+          render({ preserveZoom: true, focusIndex: nextIndex });
+          return;
+        }
+        openZoomAt(nextIndex);
+      }
+
+      gallery.addEventListener('click', (event) => {
+        const target = event.target.closest('[data-zoom-src]');
+        if (!target) return;
+        activeZoomIndex = loadedZoomNodes().indexOf(target);
+      });
+
+      dialog?.addEventListener('close', () => {
+        activeZoomIndex = -1;
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (!dialog?.open) return;
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          moveZoom(1);
+        } else if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          moveZoom(-1);
+        }
+      });
+
+      storyFilter.addEventListener('change', () => {
+        shown = Number(pageSize.value);
+        render();
+      });
+      sortBy.addEventListener('change', () => {
+        shown = Number(pageSize.value);
+        render();
+      });
+      pageSize.addEventListener('change', () => {
+        shown = Number(pageSize.value);
+        render();
+      });
+      loadMoreButton.addEventListener('click', () => {
+        shown += Number(pageSize.value);
+        render();
+      });
+
+      render();
+    })().catch((error) => {
+      document.getElementById('gallerySummary').textContent = error.message;
+      document.getElementById('loadMoreButton').hidden = true;
+    });
+  </script>
+</body>
+
+</html>
