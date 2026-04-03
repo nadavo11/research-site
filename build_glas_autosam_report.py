@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parent
 TEXTURE_REPO_ROOT = ROOT.parent / "texture representations"
 GLAS_OUTPUT_ROOT = TEXTURE_REPO_ROOT / "outputs" / "glas_binary"
 DEST_DIR = ROOT / "site" / "experiments" / "glas-vs-autosam-frozen-sam3-readout-study"
+METHOD_README = ROOT / "experiments" / "autosam head to head" / "glas_supervised_frozen_sam_phase2" / "method" / "README.md"
 
 PAGE_TITLE = "GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study"
 PAGE_SUBTITLE = "Experiment Report"
@@ -391,6 +392,153 @@ def render_capacity_chart(*, title: str, subtitle: str, points: list[dict], all_
     return "\n".join(lines)
 
 
+def render_architecture_diagram() -> str:
+    width = 1200
+    height = 520
+    lines = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="Frozen SAM GlaS mask-head architecture diagram">',
+        '<rect width="100%" height="100%" fill="#ffffff" rx="24" />',
+        '<text x="28" y="40" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700" fill="#122033">Frozen SAM GlaS Dense Head</text>',
+        '<text x="28" y="64" font-family="Space Grotesk, sans-serif" font-size="13" fill="#4c5d73">Static SVG diagram for the repo-native method: frozen backbone, tiny head, direct gland-foreground output.</text>',
+    ]
+
+    def box(x: int, y: int, w: int, h: int, title: str, body: list[str], *, fill: str, stroke: str = "#cdd9e5") -> None:
+        lines.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="18" fill="{fill}" stroke="{stroke}" stroke-width="2" />')
+        lines.append(f'<text x="{x + 18}" y="{y + 28}" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">{escape(title)}</text>')
+        for idx, text in enumerate(body):
+            lines.append(
+                f'<text x="{x + 18}" y="{y + 52 + idx * 18}" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">{escape(text)}</text>'
+            )
+
+    def arrow(x1: int, y1: int, x2: int, y2: int, label: str | None = None) -> None:
+        lines.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="#355070" stroke-width="3" stroke-linecap="round" />')
+        lines.append(f'<polygon points="{x2},{y2} {x2 - 12},{y2 - 6} {x2 - 12},{y2 + 6}" fill="#355070" />')
+        if label:
+            mid_x = (x1 + x2) / 2
+            mid_y = (y1 + y2) / 2 - 10
+            lines.append(
+                f'<text x="{mid_x:.1f}" y="{mid_y:.1f}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">{escape(label)}</text>'
+            )
+
+    box(
+        40,
+        110,
+        210,
+        120,
+        "Input + target",
+        [
+            "RGB histology image from GlaS",
+            "Dense binary gland mask",
+            "train split for optimization",
+            "test split for evaluation",
+        ],
+        fill="#f4fbfd",
+        stroke="#88c0d0",
+    )
+    box(
+        285,
+        110,
+        235,
+        120,
+        "Frozen SAM3 extractor",
+        [
+            "feature source = backbone_fpn",
+            "no prompt learning",
+            "no backbone fine-tuning",
+            "observed levels: fpn_2, fpn_1, fpn_0",
+        ],
+        fill="#f6f6ff",
+        stroke="#9db4ff",
+    )
+    box(
+        555,
+        92,
+        250,
+        156,
+        "Selected pyramid levels",
+        [
+            "fpn_2 = 256 x 72 x 72",
+            "fpn_1 = 256 x 144 x 144",
+            "fpn_0 = 256 x 288 x 288",
+            "variants choose subsets of these levels",
+            "best current result uses fpn_2 only",
+        ],
+        fill="#fff8ef",
+        stroke="#f4a261",
+    )
+    box(
+        840,
+        92,
+        320,
+        156,
+        "Tiny dense head",
+        [
+            "per-level 1x1 projection to dim d",
+            "bilinear resize to finest selected grid",
+            "channel concat",
+            "Conv3x3 -> GroupNorm(8) -> GELU",
+            "Conv3x3 -> GroupNorm(8) -> GELU",
+            "upsample to image size -> 1x1 classifier",
+        ],
+        fill="#eefaf4",
+        stroke="#58a37c",
+    )
+    box(
+        285,
+        300,
+        300,
+        120,
+        "Optimization",
+        [
+            "AdamW on head params only",
+            "loss = BCEWithLogits + Dice",
+            "defaults: d=64, lr=1e-3, wd=1e-4",
+            "foreground threshold = 0.5",
+        ],
+        fill="#fef7fb",
+        stroke="#d17aa8",
+    )
+    box(
+        635,
+        300,
+        295,
+        120,
+        "Prediction contract",
+        [
+            "single foreground logit map",
+            "sigmoid + threshold -> gland foreground",
+            "background = logical complement",
+            "batch size effectively 1",
+        ],
+        fill="#f8f9ee",
+        stroke="#a3b26d",
+    )
+    box(
+        965,
+        300,
+        195,
+        120,
+        "Metrics",
+        [
+            "headline: direct_foreground_iou",
+            "headline: direct_foreground_dice",
+            "aux: eval_miou, eval_ari",
+        ],
+        fill="#f5f7fa",
+        stroke="#90a4b8",
+    )
+
+    arrow(250, 170, 285, 170)
+    arrow(520, 170, 555, 170)
+    arrow(805, 170, 840, 170, "project + fuse")
+    arrow(420, 230, 420, 300, "train head only")
+    arrow(1000, 248, 1000, 300, "upsample + threshold")
+    arrow(930, 360, 965, 360)
+    lines.append('<text x="1040" y="468" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Minimal baseline: no prompt encoder changes, no transformer decoder, no UNet-scale head.</text>')
+    lines.append("</svg>")
+    return "\n".join(lines)
+
+
 def load_visual_rows(run_dir: Path) -> list[dict]:
     manifest_rows: dict[str, dict] = {}
     with require_file(run_dir / "visuals_manifest.jsonl").open(encoding="utf-8") as handle:
@@ -711,6 +859,7 @@ def write_plot_assets(runs: dict[str, dict]) -> dict[str, str]:
         for run_id in CAPACITY_SWEEP_IDS
     ]
     plots = {
+        "method_architecture.svg": render_architecture_diagram(),
         "supervision_ladder.svg": render_bar_chart(
             title="Foreground Metrics: CFC vs Frozen-Head Readout vs AutoSAM",
             subtitle="Direct foreground IoU and Dice are the closest current AutoSAM-style comparison view in this repo.",
@@ -793,6 +942,7 @@ def build_links_payload(table_csv_path: str, plot_paths: dict[str, str]) -> dict
         "metrics": "metrics.json",
         "training_data": "training_data.json",
         "summary": "summary.md",
+        "method_source": "method_source.md",
         "manifest": "manifest.yaml",
         "results_table_csv": table_csv_path,
         "plots": plot_paths,
@@ -814,7 +964,7 @@ def build_manifest(story_blocks: list[dict], gallery_payload: dict) -> str:
         assets:
           story_block_count: {len(story_blocks)}
           gallery_preview_count: {gallery_payload['sample_count']}
-          plot_count: 3
+          plot_count: 4
         evaluation:
           primary_metrics:
             - "direct_foreground_iou"
@@ -934,6 +1084,54 @@ def render_story_blocks(blocks: list[dict]) -> str:
             ).strip()
         )
     return "\n".join(rendered)
+
+
+def render_method_cards() -> str:
+    return dedent(
+        """\
+        <div class="card-grid compact-grid">
+          <article class="card">
+            <h3>Problem Setup</h3>
+            <p class="interpretation-copy">The method asks one narrow question: if SAM3 stays frozen, can a very small dense supervised readout already segment glands well on GlaS? The point is interpretability, not maximal engineering.</p>
+            <p class="mini-note">No prompt generator, no prompt encoder changes, no transformer decoder, no attention blocks, no U-Net-scale decoder, and no SAM fine-tuning.</p>
+          </article>
+          <article class="card">
+            <h3>Feature Path</h3>
+            <p class="interpretation-copy">Frozen features come from <code>backbone_fpn</code>. The recorded GlaS runs expose <code>fpn_2</code>, <code>fpn_1</code>, and <code>fpn_0</code> with reference shapes <code>72x72</code>, <code>144x144</code>, and <code>288x288</code>.</p>
+            <p class="mini-note">The dense mask-head family supports <code>all_scales</code>, <code>mid_plus_fine</code>, <code>coarse_plus_next_finer</code>, <code>fpn_2_only</code>, <code>fpn_1_only</code>, and <code>fpn_0_only</code>.</p>
+          </article>
+          <article class="card">
+            <h3>Optimization Contract</h3>
+            <p class="interpretation-copy">Only the head parameters are trainable. Optimization uses <code>AdamW</code> with <code>BCEWithLogits + Dice</code>. Dense-head defaults are <code>projection_dim=64</code>, <code>decoder_dim=64</code>, <code>GroupNorm(8)</code>, <code>lr=1e-3</code>, <code>wd=1e-4</code>, and threshold <code>0.5</code>.</p>
+            <p class="mini-note">Headline metrics for the AutoSAM-style comparison are <code>direct_foreground_iou</code> and <code>direct_foreground_dice</code>. <code>eval_miou</code> and <code>eval_ari</code> stay auxiliary.</p>
+          </article>
+        </div>
+        """
+    ).strip()
+
+
+def render_replication_cards() -> str:
+    return dedent(
+        """\
+        <div class="card-grid compact-grid">
+          <article class="card">
+            <h3>Recorded Environment</h3>
+            <p class="interpretation-copy">The saved runs used <code>./.venv/bin/python</code> with the shell prefix <code>PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python</code>, seed <code>0</code>, device <code>cuda</code>, and model id <code>facebook/sam3</code>.</p>
+            <p class="mini-note">Recorded package versions from the best current run: Pillow 12.1.1, datasets 4.7.0, numpy 1.26.4, torch 2.10.0, transformers 5.3.0.</p>
+          </article>
+          <article class="card">
+            <h3>Audit First</h3>
+            <p class="interpretation-copy">After any rerun, inspect <code>config.json</code>, <code>summary.json</code>, and <code>train_history.csv</code> before trusting the directory name or the page summary.</p>
+            <p class="mini-note">The strongest example is <code>train_all_scales_test_e20_visuals</code>: the folder suffix says <code>e20</code>, but the saved metadata records <code>num_epochs=40</code>.</p>
+          </article>
+          <article class="card">
+            <h3>Minimum Fields</h3>
+            <p class="interpretation-copy">The replication-critical fields are <code>variant</code>, <code>selected_level_names</code>, <code>projection_dim</code>, <code>decoder_dim</code>, <code>num_epochs</code>, <code>trainable_parameter_count</code>, and the four headline metrics in <code>mean_metrics</code>.</p>
+            <p class="mini-note">This is the smallest reliable audit set for catching accidental protocol drift.</p>
+          </article>
+        </div>
+        """
+    ).strip()
 
 
 def render_index_html(
@@ -1068,6 +1266,25 @@ def render_index_html(
       margin-top: 20px;
     }}
 
+    .code-panel {{
+      background: var(--surface-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 20px;
+    }}
+
+    .code-panel pre {{
+      margin: 14px 0 0;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      overflow-x: auto;
+      color: var(--ink);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }}
+
     .bullet-list {{
       margin: 16px 0 0;
       padding-left: 20px;
@@ -1151,6 +1368,27 @@ def render_index_html(
     </section>
 
     <section class="section">
+      <h2>Method</h2>
+      <p class="interpretation-copy">The page now includes the core method details from the internal phase-2 method note. This is the dense-supervised frozen-feature baseline actually used in the saved runs, not a paraphrased AutoSAM surrogate.</p>
+      <div style="margin-top: 20px;">
+        {render_method_cards()}
+      </div>
+      <div class="chart-grid">
+        <article class="chart-card">
+          <img src="{plot_paths['method_architecture.svg']}" alt="Frozen SAM GlaS dense-head architecture diagram" data-zoom-src="{plot_paths['method_architecture.svg']}" />
+        </article>
+        <article class="note-card">
+          <h3>Architecture Readout</h3>
+          <p class="interpretation-copy">For selected levels, each SAM feature map is projected with a learned <code>1x1</code> convolution, resized to the finest selected grid, concatenated, decoded by two <code>3x3 + GroupNorm + GELU</code> blocks, upsampled back to image resolution, and mapped to one foreground logit channel.</p>
+          <p class="interpretation-copy" style="margin-top: 14px;">That design choice matters for the page story: it keeps the head deliberately small enough that poor results still say something about the readout itself, not about a giant downstream decoder quietly doing most of the work.</p>
+          <div class="artifact-row">
+            <a class="btn secondary" href="method_source.md">Open Method Notes</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
       <h2>Main Comparison</h2>
       <p class="interpretation-copy">The ladder view below is the cleanest summary for a cold reviewer: weak training-free CFC, much stronger dense-supervised frozen-feature readout, and a best current frozen-feature run that sits meaningfully below but not absurdly far from the cited AutoSAM reference.</p>
       <div class="chart-grid">
@@ -1207,6 +1445,51 @@ def render_index_html(
     </section>
 
     <section class="section">
+      <h2>Replication Details</h2>
+      <p class="interpretation-copy">The commands below are the compact replication ladder from the method note. They are enough to smoke-test the path, reproduce the 40-epoch all-scales reference, and rerun the current best coarse-only width-128 result under the recorded defaults.</p>
+      <div style="margin-top: 20px;">
+        {render_replication_cards()}
+      </div>
+      <div class="chart-grid">
+        <article class="code-panel">
+          <h3>Shared Prefix + Smoke Test</h3>
+          <pre><code>PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \\
+  --dataset-root datasets/GlaS \\
+  --device cuda \\
+  --variant all_scales \\
+  --train-limit 1 \\
+  --eval-limit 1 \\
+  --num-epochs 1 \\
+  --output-dir outputs/glas_binary/frozen_sam_mask_head/smoke_all_scales_train_to_test_1x1 \\
+  --no-save-visuals</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Phase-2 Reference + Best Current Run</h3>
+          <pre><code># 40-epoch all-scales reference
+PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \\
+  --dataset-root datasets/GlaS \\
+  --device cuda \\
+  --variant all_scales \\
+  --num-epochs 40 \\
+  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_all_scales_test_e20_visuals
+
+# best current coarse-only d128
+PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \\
+  --dataset-root datasets/GlaS \\
+  --device cuda \\
+  --variant fpn_2_only \\
+  --projection-dim 128 \\
+  --decoder-dim 128 \\
+  --num-epochs 40 \\
+  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_fpn_2_only_d128_test_e40</code></pre>
+        </article>
+      </div>
+      <div class="artifact-row">
+        <a class="btn secondary" href="method_source.md">method_source.md</a>
+      </div>
+    </section>
+
+    <section class="section">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
         <div>
           <h2>Qualitative Comparison</h2>
@@ -1234,6 +1517,7 @@ def render_index_html(
         <li>A targeted coarse+fine residual refinement probe remains a plausible next architecture experiment after the strict protocol-matching rerun.</li>
       </ul>
       <div class="artifact-row">
+        <a class="btn secondary" href="method_source.md">method_source.md</a>
         <a class="btn secondary" href="metrics.json">metrics.json</a>
         <a class="btn secondary" href="training_data.json">training_data.json</a>
         <a class="btn secondary" href="summary.md">summary.md</a>
@@ -1658,6 +1942,7 @@ def main() -> None:
     require_file(AUTOSAM_COMPARISON_README)
     require_file(PHASE1_README)
     require_file(PHASE2_README)
+    method_readme = require_file(METHOD_README)
 
     runs = {spec.run_id: load_run(spec) for spec in RUN_SPECS}
     enforce_alignment(runs)
@@ -1682,6 +1967,7 @@ def main() -> None:
     write_text(DEST_DIR / "links.json", json.dumps(links_payload, indent=2))
     write_text(DEST_DIR / "summary.md", render_summary_md(runs))
     write_text(DEST_DIR / "manifest.yaml", build_manifest(story_blocks, gallery_payload))
+    write_text(DEST_DIR / "method_source.md", method_readme.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
