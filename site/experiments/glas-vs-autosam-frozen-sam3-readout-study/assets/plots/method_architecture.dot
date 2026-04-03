@@ -1,0 +1,142 @@
+digraph GlasFrozenSam3DenseHead {
+  graph [
+    rankdir=TB,
+    splines=polyline,
+    bgcolor="white",
+    pad=0.25,
+    nodesep=0.42,
+    ranksep=0.62,
+    fontname="DejaVu Sans",
+    labelloc=t,
+    labeljust=l,
+    label="Frozen SAM3 Dense Mask Head on GlaS\nShared readout spine with explicit training and evaluation branches",
+    fontsize=24
+  ];
+
+  node [
+    fontname="DejaVu Sans",
+    fontsize=12,
+    color="#8a98ab",
+    penwidth=1.4,
+    margin="0.16,0.10",
+    style="rounded,filled"
+  ];
+
+  edge [
+    fontname="DejaVu Sans",
+    fontsize=10,
+    color="#4c5d73",
+    penwidth=1.4,
+    arrowsize=0.75
+  ];
+
+  subgraph cluster_data {
+    label="Data and supervision contract";
+    color="#88c0d0";
+    fillcolor="#f4fbfd";
+    style="rounded,filled";
+    margin=20;
+
+    input_image [shape=folder, fillcolor="#ffffff", label="RGB image\nGlaS crop"];
+    gt_mask [shape=folder, fillcolor="#ffffff", label="Dense target mask\ngland foreground"];
+    split_note [shape=note, fillcolor="#ffffff", label="train -> optimize head\ntest -> report metrics"];
+    { rank=same; input_image; gt_mask; split_note; }
+  }
+
+  subgraph cluster_backbone {
+    label="Frozen SAM3 backbone";
+    color="#9db4ff";
+    fillcolor="#f6f6ff";
+    style="rounded,filled";
+    margin=20;
+
+    sam3 [shape=component, fillcolor="#ffffff", label="SAM3 feature extractor\nbackbone_fpn only"];
+    freeze_tag [shape=note, fillcolor="#ffffff", label="shared at train + eval\nno prompt learning\nno backbone updates"];
+  }
+
+  subgraph cluster_pyramid {
+    label="Observed multiscale feature pyramid";
+    color="#f4a261";
+    fillcolor="#fff8ef";
+    style="rounded,filled";
+    margin=20;
+
+    p2 [shape=box, fillcolor="#ffffff", label="fpn_2\n256 x 72 x 72\ncoarsest, strongest"];
+    p1 [shape=box, fillcolor="#ffffff", label="fpn_1\n256 x 144 x 144"];
+    p0 [shape=box, fillcolor="#ffffff", label="fpn_0\n256 x 288 x 288\nfinest"];
+    select_levels [shape=box, fillcolor="#fffdf8", label="Select subset\nall / coarse+mid /\ncoarse / fine"];
+    { rank=same; p2; p1; p0; }
+  }
+
+  subgraph cluster_head {
+    label="Shared dense readout";
+    color="#58a37c";
+    fillcolor="#eefaf4";
+    style="rounded,filled";
+    margin=20;
+
+    project [shape=box3d, fillcolor="#ffffff", label="Per-level 1x1 projections\nto width d"];
+    resize [shape=box, fillcolor="#ffffff", label="Resize to finest selected grid\nbilinear, align_corners=false"];
+    fuse_decode [shape=box3d, fillcolor="#ffffff", label="Concat -> 2 x Conv3x3\nGroupNorm(8) + GELU"];
+    logits [shape=tab, fillcolor="#ffffff", label="Upsample to image size\n1x1 classifier -> foreground logits"];
+    head_params [shape=note, fillcolor="#ffffff", label="trainable only\nprojection + decoder + classifier"];
+  }
+
+  subgraph cluster_train {
+    label="Training path";
+    color="#d17aa8";
+    fillcolor="#fef7fb";
+    style="rounded,filled";
+    margin=20;
+
+    loss [shape=hexagon, fillcolor="#ffffff", label="BCEWithLogits + Dice"];
+    optimizer [shape=box, fillcolor="#ffffff", label="AdamW\nlr 1e-3, wd 1e-4"];
+  }
+
+  subgraph cluster_eval {
+    label="Inference / evaluation path";
+    color="#a3b26d";
+    fillcolor="#f8f9ee";
+    style="rounded,filled";
+    margin=20;
+
+    sigmoid [shape=box, fillcolor="#ffffff", label="Sigmoid"];
+    threshold [shape=diamond, fillcolor="#ffffff", label="threshold 0.5"];
+    pred_fg [shape=tab, fillcolor="#ffffff", label="Predicted gland foreground"];
+    pred_bg [shape=note, fillcolor="#ffffff", label="Background\ncomplement"];
+    metrics [shape=note, fillcolor="#ffffff", label="Metrics vs GT reference\nHeadline: direct fg IoU, Dice\nAux: eval mIoU, eval ARI"];
+  }
+
+  input_image -> sam3;
+  gt_mask -> loss [label="train target"];
+
+  sam3 -> p2;
+  sam3 -> p1;
+  sam3 -> p0;
+  freeze_tag -> sam3 [arrowhead=none, style=dashed, color="#7f8fb0"];
+
+  p2 -> select_levels;
+  p1 -> select_levels;
+  p0 -> select_levels;
+
+  select_levels -> project [label="chosen scales"];
+  project -> resize;
+  resize -> fuse_decode [label="aligned maps"];
+  fuse_decode -> logits;
+  head_params -> project [arrowhead=none, style=dashed, color="#58a37c"];
+  head_params -> fuse_decode [arrowhead=none, style=dashed, color="#58a37c"];
+  head_params -> logits [arrowhead=none, style=dashed, color="#58a37c"];
+
+  logits -> loss [label="train only"];
+  loss -> optimizer;
+  optimizer -> head_params [style=dashed, color="#d17aa8", label="update head only"];
+
+  logits -> sigmoid [label="eval only"];
+  sigmoid -> threshold;
+  threshold -> pred_fg [label=">= 0.5"];
+  pred_fg -> pred_bg [style=dashed, color="#91a064", label="complement"];
+  pred_fg -> metrics;
+
+  split_note -> sam3 [style=invis, weight=0.2];
+  optimizer -> threshold [style=invis, weight=0.2];
+}

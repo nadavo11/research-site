@@ -269,10 +269,11 @@
         </article>
         <article class="note-card">
           <h3>Architecture Readout</h3>
-          <p class="interpretation-copy">For selected levels, each SAM feature map is projected with a learned <code>1x1</code> convolution, resized to the finest selected grid, concatenated, decoded by two <code>3x3 + GroupNorm + GELU</code> blocks, upsampled back to image resolution, and mapped to one foreground logit channel.</p>
+          <p class="interpretation-copy">This figure is now generated from a Graphviz DOT source, then rendered to SVG for the site. The main spine shows the shared frozen-feature path, while the lower branches make the training loss/update loop and the inference thresholding/metric path explicit.</p>
           <p class="interpretation-copy" style="margin-top: 14px;">That design choice matters for the page story: it keeps the head deliberately small enough that poor results still say something about the readout itself, not about a giant downstream decoder quietly doing most of the work.</p>
           <div class="artifact-row">
             <a class="btn secondary" href="method_source.md">Open Method Notes</a>
+            <a class="btn secondary" href="assets/plots/method_architecture.dot">Open DOT Source</a>
           </div>
         </article>
       </div>
@@ -487,6 +488,7 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
       </div>
       <div class="artifact-row">
         <a class="btn secondary" href="method_source.md">method_source.md</a>
+        <a class="btn secondary" href="assets/plots/method_architecture.dot">method_architecture.dot</a>
       </div>
     </section>
 
@@ -728,6 +730,7 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
       </ul>
       <div class="artifact-row">
         <a class="btn secondary" href="method_source.md">method_source.md</a>
+        <a class="btn secondary" href="assets/plots/method_architecture.dot">method_architecture.dot</a>
         <a class="btn secondary" href="metrics.json">metrics.json</a>
         <a class="btn secondary" href="training_data.json">training_data.json</a>
         <a class="btn secondary" href="summary.md">summary.md</a>
@@ -738,7 +741,7 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
     </section>
 
     <footer>
-      <p>GlaS vs AutoSAM report | Rendered 2026-04-03</p>
+      <p>GlaS vs AutoSAM report | Rendered 2026-04-04</p>
     </footer>
   </div>
 

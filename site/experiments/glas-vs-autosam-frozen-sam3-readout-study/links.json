@@ -5,10 +5,12 @@
   "training_data": "training_data.json",
   "summary": "summary.md",
   "method_source": "method_source.md",
+  "method_architecture_dot": "assets/plots/method_architecture.dot",
   "manifest": "manifest.yaml",
   "results_table_csv": "assets/tables/main_results.csv",
   "plots": {
     "method_architecture.svg": "assets/plots/method_architecture.svg",
+    "method_architecture.dot": "assets/plots/method_architecture.dot",
     "supervision_ladder.svg": "assets/plots/supervision_ladder.svg",
     "scale_ablation.svg": "assets/plots/scale_ablation.svg",
     "capacity_sweep.svg": "assets/plots/capacity_sweep.svg"

@@ -1,6 +1,6 @@
 # GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study
 
-- Rendered: `2026-04-03`
+- Rendered: `2026-04-04`
 - Question: does weak training-free GlaS CFC imply that frozen SAM3 lacks gland information, or is the readout the main bottleneck?
 - Current answer: dense supervision on frozen SAM3 features is already strong, and the best current frozen-feature run is unexpectedly coarse-only.
 

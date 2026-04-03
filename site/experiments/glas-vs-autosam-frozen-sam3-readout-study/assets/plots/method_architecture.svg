@@ -1,65 +1,363 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-label="Frozen SAM GlaS mask-head architecture diagram">
-<rect width="100%" height="100%" fill="#ffffff" rx="24" />
-<text x="28" y="40" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700" fill="#122033">Frozen SAM GlaS Dense Head</text>
-<text x="28" y="64" font-family="Space Grotesk, sans-serif" font-size="13" fill="#4c5d73">Static SVG diagram for the repo-native method: frozen backbone, tiny head, direct gland-foreground output.</text>
-<rect x="40" y="110" width="210" height="120" rx="18" fill="#f4fbfd" stroke="#88c0d0" stroke-width="2" />
-<text x="58" y="138" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Input + target</text>
-<text x="58" y="162" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">RGB histology image from GlaS</text>
-<text x="58" y="180" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">Dense binary gland mask</text>
-<text x="58" y="198" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">train split for optimization</text>
-<text x="58" y="216" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">test split for evaluation</text>
-<rect x="285" y="110" width="235" height="120" rx="18" fill="#f6f6ff" stroke="#9db4ff" stroke-width="2" />
-<text x="303" y="138" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Frozen SAM3 extractor</text>
-<text x="303" y="162" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">feature source = backbone_fpn</text>
-<text x="303" y="180" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">no prompt learning</text>
-<text x="303" y="198" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">no backbone fine-tuning</text>
-<text x="303" y="216" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">observed levels: fpn_2, fpn_1, fpn_0</text>
-<rect x="555" y="92" width="250" height="156" rx="18" fill="#fff8ef" stroke="#f4a261" stroke-width="2" />
-<text x="573" y="120" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Selected pyramid levels</text>
-<text x="573" y="144" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">fpn_2 = 256 x 72 x 72</text>
-<text x="573" y="162" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">fpn_1 = 256 x 144 x 144</text>
-<text x="573" y="180" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">fpn_0 = 256 x 288 x 288</text>
-<text x="573" y="198" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">variants choose subsets of these levels</text>
-<text x="573" y="216" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">best current result uses fpn_2 only</text>
-<rect x="840" y="92" width="320" height="156" rx="18" fill="#eefaf4" stroke="#58a37c" stroke-width="2" />
-<text x="858" y="120" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Tiny dense head</text>
-<text x="858" y="144" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">per-level 1x1 projection to dim d</text>
-<text x="858" y="162" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">bilinear resize to finest selected grid</text>
-<text x="858" y="180" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">channel concat</text>
-<text x="858" y="198" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">Conv3x3 -&gt; GroupNorm(8) -&gt; GELU</text>
-<text x="858" y="216" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">Conv3x3 -&gt; GroupNorm(8) -&gt; GELU</text>
-<text x="858" y="234" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">upsample to image size -&gt; 1x1 classifier</text>
-<rect x="285" y="300" width="300" height="120" rx="18" fill="#fef7fb" stroke="#d17aa8" stroke-width="2" />
-<text x="303" y="328" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Optimization</text>
-<text x="303" y="352" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">AdamW on head params only</text>
-<text x="303" y="370" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">loss = BCEWithLogits + Dice</text>
-<text x="303" y="388" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">defaults: d=64, lr=1e-3, wd=1e-4</text>
-<text x="303" y="406" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">foreground threshold = 0.5</text>
-<rect x="635" y="300" width="295" height="120" rx="18" fill="#f8f9ee" stroke="#a3b26d" stroke-width="2" />
-<text x="653" y="328" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Prediction contract</text>
-<text x="653" y="352" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">single foreground logit map</text>
-<text x="653" y="370" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">sigmoid + threshold -&gt; gland foreground</text>
-<text x="653" y="388" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">background = logical complement</text>
-<text x="653" y="406" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">batch size effectively 1</text>
-<rect x="965" y="300" width="195" height="120" rx="18" fill="#f5f7fa" stroke="#90a4b8" stroke-width="2" />
-<text x="983" y="328" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Metrics</text>
-<text x="983" y="352" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">headline: direct_foreground_iou</text>
-<text x="983" y="370" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">headline: direct_foreground_dice</text>
-<text x="983" y="388" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">aux: eval_miou, eval_ari</text>
-<line x1="250" y1="170" x2="285" y2="170" stroke="#355070" stroke-width="3" stroke-linecap="round" />
-<polygon points="285,170 273,164 273,176" fill="#355070" />
-<line x1="520" y1="170" x2="555" y2="170" stroke="#355070" stroke-width="3" stroke-linecap="round" />
-<polygon points="555,170 543,164 543,176" fill="#355070" />
-<line x1="805" y1="170" x2="840" y2="170" stroke="#355070" stroke-width="3" stroke-linecap="round" />
-<polygon points="840,170 828,164 828,176" fill="#355070" />
-<text x="822.5" y="160.0" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">project + fuse</text>
-<line x1="420" y1="230" x2="420" y2="300" stroke="#355070" stroke-width="3" stroke-linecap="round" />
-<polygon points="420,300 408,294 408,306" fill="#355070" />
-<text x="420.0" y="255.0" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">train head only</text>
-<line x1="1000" y1="248" x2="1000" y2="300" stroke="#355070" stroke-width="3" stroke-linecap="round" />
-<polygon points="1000,300 988,294 988,306" fill="#355070" />
-<text x="1000.0" y="264.0" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">upsample + threshold</text>
-<line x1="930" y1="360" x2="965" y2="360" stroke="#355070" stroke-width="3" stroke-linecap="round" />
-<polygon points="965,360 953,354 953,366" fill="#355070" />
-<text x="1040" y="468" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Minimal baseline: no prompt encoder changes, no transformer decoder, no UNet-scale head.</text>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (20260126.1125)
+ -->
+<!-- Title: GlasFrozenSam3DenseHead Pages: 1 -->
+<svg width="942pt" height="1541pt"
+ viewBox="0.00 0.00 942.00 1541.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 1522.97)">
+<title>GlasFrozenSam3DenseHead</title>
+<polygon fill="white" stroke="none" points="-18,18 -18,-1522.97 924,-1522.97 924,18 -18,18"/>
+<text xml:space="preserve" text-anchor="middle" x="416.38" y="-1478.17" font-family="DejaVu Sans" font-size="24.00">Frozen SAM3 Dense Mask Head on GlaS</text>
+<text xml:space="preserve" text-anchor="middle" x="416.38" y="-1449.67" font-family="DejaVu Sans" font-size="24.00">Shared readout spine with explicit training and evaluation branches</text>
+<g id="clust1" class="cluster">
+<title>cluster_data</title>
+<path fill="#f4fbfd" stroke="#88c0d0" d="M105,-1305.44C105,-1305.44 565,-1305.44 565,-1305.44 571,-1305.44 577,-1311.44 577,-1317.44 577,-1317.44 577,-1412.84 577,-1412.84 577,-1418.84 571,-1424.84 565,-1424.84 565,-1424.84 105,-1424.84 105,-1424.84 99,-1424.84 93,-1418.84 93,-1412.84 93,-1412.84 93,-1317.44 93,-1317.44 93,-1311.44 99,-1305.44 105,-1305.44"/>
+<text xml:space="preserve" text-anchor="middle" x="283.62" y="-1398.04" font-family="DejaVu Sans" font-size="24.00">Data and supervision contract</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_backbone</title>
+<path fill="#f6f6ff" stroke="#9db4ff" d="M597,-1153.23C597,-1153.23 869,-1153.23 869,-1153.23 875,-1153.23 881,-1159.23 881,-1165.23 881,-1165.23 881,-1419.97 881,-1419.97 881,-1425.97 875,-1431.97 869,-1431.97 869,-1431.97 597,-1431.97 597,-1431.97 591,-1431.97 585,-1425.97 585,-1419.97 585,-1419.97 585,-1165.23 585,-1165.23 585,-1159.23 591,-1153.23 597,-1153.23"/>
+<text xml:space="preserve" text-anchor="middle" x="732.88" y="-1405.17" font-family="DejaVu Sans" font-size="24.00">Frozen SAM3 backbone</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_pyramid</title>
+<path fill="#fff8ef" stroke="#f4a261" d="M434,-852.3C434,-852.3 886,-852.3 886,-852.3 892,-852.3 898,-858.3 898,-864.3 898,-864.3 898,-1124.23 898,-1124.23 898,-1130.23 892,-1136.23 886,-1136.23 886,-1136.23 434,-1136.23 434,-1136.23 428,-1136.23 422,-1130.23 422,-1124.23 422,-1124.23 422,-864.3 422,-864.3 422,-858.3 428,-852.3 434,-852.3"/>
+<text xml:space="preserve" text-anchor="middle" x="654.25" y="-1109.43" font-family="DejaVu Sans" font-size="24.00">Observed multiscale feature pyramid</text>
+</g>
+<g id="clust6" class="cluster">
+<title>cluster_head</title>
+<path fill="#eefaf4" stroke="#58a37c" d="M48,-464.2C48,-464.2 322,-464.2 322,-464.2 328,-464.2 334,-470.2 334,-476.2 334,-476.2 334,-966.83 334,-966.83 334,-972.83 328,-978.83 322,-978.83 322,-978.83 48,-978.83 48,-978.83 42,-978.83 36,-972.83 36,-966.83 36,-966.83 36,-476.2 36,-476.2 36,-470.2 42,-464.2 48,-464.2"/>
+<text xml:space="preserve" text-anchor="middle" x="176.75" y="-952.03" font-family="DejaVu Sans" font-size="24.00">Shared dense readout</text>
+</g>
+<g id="clust7" class="cluster">
+<title>cluster_train</title>
+<path fill="#fef7fb" stroke="#d17aa8" d="M61,-1009.7C61,-1009.7 325,-1009.7 325,-1009.7 331,-1009.7 337,-1015.7 337,-1021.7 337,-1021.7 337,-1262.57 337,-1262.57 337,-1268.57 331,-1274.57 325,-1274.57 325,-1274.57 61,-1274.57 61,-1274.57 55,-1274.57 49,-1268.57 49,-1262.57 49,-1262.57 49,-1021.7 49,-1021.7 49,-1015.7 55,-1009.7 61,-1009.7"/>
+<text xml:space="preserve" text-anchor="middle" x="135.38" y="-1247.77" font-family="DejaVu Sans" font-size="24.00">Training path</text>
+</g>
+<g id="clust8" class="cluster">
+<title>cluster_eval</title>
+<path fill="#f8f9ee" stroke="#a3b26d" d="M85,-8C85,-8 420,-8 420,-8 426,-8 432,-14 432,-20 432,-20 432,-423.45 432,-423.45 432,-429.45 426,-435.45 420,-435.45 420,-435.45 85,-435.45 85,-435.45 79,-435.45 73,-429.45 73,-423.45 73,-423.45 73,-20 73,-20 73,-14 79,-8 85,-8"/>
+<text xml:space="preserve" text-anchor="middle" x="243.75" y="-408.65" font-family="DejaVu Sans" font-size="24.00">Inference / evaluation path</text>
+</g>
+<!-- input_image -->
+<g id="node1" class="node">
+<title>input_image</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="556.89,-1368.34 553.89,-1372.34 532.89,-1372.34 529.89,-1368.34 467.11,-1368.34 467.11,-1325.44 556.89,-1325.44 556.89,-1368.34"/>
+<text xml:space="preserve" text-anchor="middle" x="512" y="-1349.74" font-family="DejaVu Sans" font-size="12.00">RGB image</text>
+<text xml:space="preserve" text-anchor="middle" x="512" y="-1335.49" font-family="DejaVu Sans" font-size="12.00">GlaS crop</text>
+</g>
+<!-- sam3 -->
+<g id="node4" class="node">
+<title>sam3</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="768.64,-1216.13 605.36,-1216.13 605.36,-1212.13 601.36,-1212.13 601.36,-1208.13 605.36,-1208.13 605.36,-1181.23 601.36,-1181.23 601.36,-1177.23 605.36,-1177.23 605.36,-1173.23 768.64,-1173.23 768.64,-1216.13"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="605.36,-1212.13 609.36,-1212.13 609.36,-1208.13 605.36,-1208.13"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="605.36,-1181.23 609.36,-1181.23 609.36,-1177.23 605.36,-1177.23"/>
+<text xml:space="preserve" text-anchor="middle" x="687" y="-1197.53" font-family="DejaVu Sans" font-size="12.00">SAM3 feature extractor</text>
+<text xml:space="preserve" text-anchor="middle" x="687" y="-1183.28" font-family="DejaVu Sans" font-size="12.00">backbone_fpn only</text>
+</g>
+<!-- input_image&#45;&gt;sam3 -->
+<g id="edge1" class="edge">
+<title>input_image&#45;&gt;sam3</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M536.33,-1325.01C567.46,-1298.29 621.42,-1251.97 655.61,-1222.62"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="657,-1224.88 660.98,-1218.01 653.58,-1220.9 657,-1224.88"/>
+</g>
+<!-- gt_mask -->
+<g id="node2" class="node">
+<title>gt_mask</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="249.14,-1368.34 246.14,-1372.34 225.14,-1372.34 222.14,-1368.34 112.86,-1368.34 112.86,-1325.44 249.14,-1325.44 249.14,-1368.34"/>
+<text xml:space="preserve" text-anchor="middle" x="181" y="-1349.74" font-family="DejaVu Sans" font-size="12.00">Dense target mask</text>
+<text xml:space="preserve" text-anchor="middle" x="181" y="-1335.49" font-family="DejaVu Sans" font-size="12.00">gland foreground</text>
+</g>
+<!-- loss -->
+<g id="node15" class="node">
+<title>loss</title>
+<path fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" d="M305.91,-1198.91C305.91,-1198.91 266.3,-1213.84 266.3,-1213.84 260.68,-1215.95 249.07,-1218.07 243.07,-1218.07 243.07,-1218.07 142.93,-1218.07 142.93,-1218.07 136.93,-1218.07 125.32,-1215.95 119.7,-1213.84 119.7,-1213.84 80.09,-1198.91 80.09,-1198.91 74.47,-1196.79 74.47,-1192.56 80.09,-1190.44 80.09,-1190.44 119.7,-1175.51 119.7,-1175.51 125.32,-1173.4 136.93,-1171.28 142.93,-1171.28 142.93,-1171.28 243.07,-1171.28 243.07,-1171.28 249.07,-1171.28 260.68,-1173.4 266.3,-1175.51 266.3,-1175.51 305.91,-1190.44 305.91,-1190.44 311.53,-1192.56 311.53,-1196.79 305.91,-1198.91"/>
+<text xml:space="preserve" text-anchor="middle" x="193" y="-1190.4" font-family="DejaVu Sans" font-size="12.00">BCEWithLogits + Dice</text>
+</g>
+<!-- gt_mask&#45;&gt;loss -->
+<g id="edge2" class="edge">
+<title>gt_mask&#45;&gt;loss</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M182.67,-1325.01C184.68,-1299.87 188.07,-1257.4 190.42,-1228.02"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="193.02,-1228.39 191,-1220.71 187.79,-1227.98 193.02,-1228.39"/>
+<text xml:space="preserve" text-anchor="middle" x="213.3" y="-1285.82" font-family="DejaVu Sans" font-size="10.00">train target</text>
+</g>
+<!-- split_note -->
+<g id="node3" class="node">
+<title>split_note</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="430.64,-1368.34 279.36,-1368.34 279.36,-1325.44 436.64,-1325.44 436.64,-1362.34 430.64,-1368.34"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="430.64,-1368.34 430.64,-1362.34"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="436.64,-1362.34 430.64,-1362.34"/>
+<text xml:space="preserve" text-anchor="middle" x="358" y="-1349.74" font-family="DejaVu Sans" font-size="12.00">train &#45;&gt; optimize head</text>
+<text xml:space="preserve" text-anchor="middle" x="358" y="-1335.49" font-family="DejaVu Sans" font-size="12.00">test &#45;&gt; report metrics</text>
+</g>
+<!-- split_note&#45;&gt;sam3 -->
+<!-- p2 -->
+<g id="node6" class="node">
+<title>p2</title>
+<path fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" d="M567.52,-1079.73C567.52,-1079.73 454.48,-1079.73 454.48,-1079.73 448.48,-1079.73 442.48,-1073.73 442.48,-1067.73 442.48,-1067.73 442.48,-1034.58 442.48,-1034.58 442.48,-1028.58 448.48,-1022.58 454.48,-1022.58 454.48,-1022.58 567.52,-1022.58 567.52,-1022.58 573.52,-1022.58 579.52,-1028.58 579.52,-1034.58 579.52,-1034.58 579.52,-1067.73 579.52,-1067.73 579.52,-1073.73 573.52,-1079.73 567.52,-1079.73"/>
+<text xml:space="preserve" text-anchor="middle" x="511" y="-1061.13" font-family="DejaVu Sans" font-size="12.00">fpn_2</text>
+<text xml:space="preserve" text-anchor="middle" x="511" y="-1046.88" font-family="DejaVu Sans" font-size="12.00">256 x 72 x 72</text>
+<text xml:space="preserve" text-anchor="middle" x="511" y="-1032.63" font-family="DejaVu Sans" font-size="12.00">coarsest, strongest</text>
+</g>
+<!-- sam3&#45;&gt;p2 -->
+<g id="edge3" class="edge">
+<title>sam3&#45;&gt;p2</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M652.9,-1172.61C626.36,-1156.21 594,-1136.23 594,-1136.23 594,-1136.23 568.14,-1110.03 545.29,-1086.88"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="547.26,-1085.15 540.13,-1081.65 543.53,-1088.84 547.26,-1085.15"/>
+</g>
+<!-- p1 -->
+<g id="node7" class="node">
+<title>p1</title>
+<path fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" d="M716.52,-1072.6C716.52,-1072.6 621.48,-1072.6 621.48,-1072.6 615.48,-1072.6 609.48,-1066.6 609.48,-1060.6 609.48,-1060.6 609.48,-1041.7 609.48,-1041.7 609.48,-1035.7 615.48,-1029.7 621.48,-1029.7 621.48,-1029.7 716.52,-1029.7 716.52,-1029.7 722.52,-1029.7 728.52,-1035.7 728.52,-1041.7 728.52,-1041.7 728.52,-1060.6 728.52,-1060.6 728.52,-1066.6 722.52,-1072.6 716.52,-1072.6"/>
+<text xml:space="preserve" text-anchor="middle" x="669" y="-1054" font-family="DejaVu Sans" font-size="12.00">fpn_1</text>
+<text xml:space="preserve" text-anchor="middle" x="669" y="-1039.75" font-family="DejaVu Sans" font-size="12.00">256 x 144 x 144</text>
+</g>
+<!-- sam3&#45;&gt;p1 -->
+<g id="edge4" class="edge">
+<title>sam3&#45;&gt;p1</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M684.34,-1172.79C681.31,-1148.96 676.33,-1109.77 672.87,-1082.55"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="675.48,-1082.33 671.93,-1075.22 670.28,-1082.99 675.48,-1082.33"/>
+</g>
+<!-- p0 -->
+<g id="node8" class="node">
+<title>p0</title>
+<path fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" d="M865.52,-1079.73C865.52,-1079.73 770.48,-1079.73 770.48,-1079.73 764.48,-1079.73 758.48,-1073.73 758.48,-1067.73 758.48,-1067.73 758.48,-1034.58 758.48,-1034.58 758.48,-1028.58 764.48,-1022.58 770.48,-1022.58 770.48,-1022.58 865.52,-1022.58 865.52,-1022.58 871.52,-1022.58 877.52,-1028.58 877.52,-1034.58 877.52,-1034.58 877.52,-1067.73 877.52,-1067.73 877.52,-1073.73 871.52,-1079.73 865.52,-1079.73"/>
+<text xml:space="preserve" text-anchor="middle" x="818" y="-1061.13" font-family="DejaVu Sans" font-size="12.00">fpn_0</text>
+<text xml:space="preserve" text-anchor="middle" x="818" y="-1046.88" font-family="DejaVu Sans" font-size="12.00">256 x 288 x 288</text>
+<text xml:space="preserve" text-anchor="middle" x="818" y="-1032.63" font-family="DejaVu Sans" font-size="12.00">finest</text>
+</g>
+<!-- sam3&#45;&gt;p0 -->
+<g id="edge5" class="edge">
+<title>sam3&#45;&gt;p0</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M707.9,-1172.61C724.17,-1156.21 744,-1136.23 744,-1136.23 744,-1136.23 766.86,-1110.25 787.17,-1087.18"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="788.97,-1089.1 791.96,-1081.74 785.03,-1085.63 788.97,-1089.1"/>
+</g>
+<!-- freeze_tag -->
+<g id="node5" class="node">
+<title>freeze_tag</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="757.39,-1375.47 610.61,-1375.47 610.61,-1318.32 763.39,-1318.32 763.39,-1369.47 757.39,-1375.47"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="757.39,-1375.47 757.39,-1369.47"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="763.39,-1369.47 757.39,-1369.47"/>
+<text xml:space="preserve" text-anchor="middle" x="687" y="-1356.87" font-family="DejaVu Sans" font-size="12.00">shared at train + eval</text>
+<text xml:space="preserve" text-anchor="middle" x="687" y="-1342.62" font-family="DejaVu Sans" font-size="12.00">no prompt learning</text>
+<text xml:space="preserve" text-anchor="middle" x="687" y="-1328.37" font-family="DejaVu Sans" font-size="12.00">no backbone updates</text>
+</g>
+<!-- freeze_tag&#45;&gt;sam3 -->
+<g id="edge6" class="edge">
+<title>freeze_tag&#45;&gt;sam3</title>
+<path fill="none" stroke="#7f8fb0" stroke-width="1.4" stroke-dasharray="5,2" d="M687,-1317.64C687,-1288.23 687,-1242.87 687,-1216.55"/>
+</g>
+<!-- select_levels -->
+<g id="node9" class="node">
+<title>select_levels</title>
+<path fill="#fffdf8" stroke="#8a98ab" stroke-width="1.4" d="M642.02,-929.45C642.02,-929.45 537.98,-929.45 537.98,-929.45 531.98,-929.45 525.98,-923.45 525.98,-917.45 525.98,-917.45 525.98,-884.3 525.98,-884.3 525.98,-878.3 531.98,-872.3 537.98,-872.3 537.98,-872.3 642.02,-872.3 642.02,-872.3 648.02,-872.3 654.02,-878.3 654.02,-884.3 654.02,-884.3 654.02,-917.45 654.02,-917.45 654.02,-923.45 648.02,-929.45 642.02,-929.45"/>
+<text xml:space="preserve" text-anchor="middle" x="590" y="-910.85" font-family="DejaVu Sans" font-size="12.00">Select subset</text>
+<text xml:space="preserve" text-anchor="middle" x="590" y="-896.6" font-family="DejaVu Sans" font-size="12.00">all / coarse+mid /</text>
+<text xml:space="preserve" text-anchor="middle" x="590" y="-882.35" font-family="DejaVu Sans" font-size="12.00">coarse / fine</text>
+</g>
+<!-- p2&#45;&gt;select_levels -->
+<g id="edge7" class="edge">
+<title>p2&#45;&gt;select_levels</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M526.05,-1021.91C538.67,-998.21 556.8,-964.18 570.54,-938.41"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="572.8,-939.73 574.01,-931.88 568.17,-937.26 572.8,-939.73"/>
+</g>
+<!-- p1&#45;&gt;select_levels -->
+<g id="edge8" class="edge">
+<title>p1&#45;&gt;select_levels</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M657.85,-1029.22C645.27,-1005.61 624.58,-966.77 609.35,-938.19"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="611.85,-937.3 606.01,-931.92 607.22,-939.77 611.85,-937.3"/>
+</g>
+<!-- p0&#45;&gt;select_levels -->
+<g id="edge9" class="edge">
+<title>p0&#45;&gt;select_levels</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M774.58,-1021.91C736.54,-997.18 681.23,-961.2 641.08,-935.09"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="642.75,-933.05 635.04,-931.16 639.89,-937.45 642.75,-933.05"/>
+</g>
+<!-- project -->
+<g id="node10" class="node">
+<title>project</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="277.27,-808.55 112.73,-808.55 108.73,-804.55 108.73,-765.65 273.27,-765.65 277.27,-769.65 277.27,-808.55"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="273.27,-804.55 108.73,-804.55"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="273.27,-804.55 273.27,-765.65"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="273.27,-804.55 277.27,-808.55"/>
+<text xml:space="preserve" text-anchor="middle" x="193" y="-789.95" font-family="DejaVu Sans" font-size="12.00">Per&#45;level 1x1 projections</text>
+<text xml:space="preserve" text-anchor="middle" x="193" y="-775.7" font-family="DejaVu Sans" font-size="12.00">to width d</text>
+</g>
+<!-- select_levels&#45;&gt;project -->
+<g id="edge10" class="edge">
+<title>select_levels&#45;&gt;project</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M525.33,-881.67C457.56,-862.59 350.82,-832.53 276.67,-811.66"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="277.77,-809.24 269.83,-809.73 276.34,-814.29 277.77,-809.24"/>
+<text xml:space="preserve" text-anchor="middle" x="425.62" y="-834.8" font-family="DejaVu Sans" font-size="10.00">chosen scales</text>
+</g>
+<!-- resize -->
+<g id="node11" class="node">
+<title>resize</title>
+<path fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" d="M270.02,-718.65C270.02,-718.65 99.98,-718.65 99.98,-718.65 93.98,-718.65 87.98,-712.65 87.98,-706.65 87.98,-706.65 87.98,-687.75 87.98,-687.75 87.98,-681.75 93.98,-675.75 99.98,-675.75 99.98,-675.75 270.02,-675.75 270.02,-675.75 276.02,-675.75 282.02,-681.75 282.02,-687.75 282.02,-687.75 282.02,-706.65 282.02,-706.65 282.02,-712.65 276.02,-718.65 270.02,-718.65"/>
+<text xml:space="preserve" text-anchor="middle" x="185" y="-700.05" font-family="DejaVu Sans" font-size="12.00">Resize to finest selected grid</text>
+<text xml:space="preserve" text-anchor="middle" x="185" y="-685.8" font-family="DejaVu Sans" font-size="12.00">bilinear, align_corners=false</text>
+</g>
+<!-- project&#45;&gt;resize -->
+<g id="edge11" class="edge">
+<title>project&#45;&gt;resize</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M191.1,-765.27C190.11,-754.29 188.86,-740.63 187.76,-728.5"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="190.4,-728.53 187.1,-721.3 185.17,-729 190.4,-728.53"/>
+</g>
+<!-- fuse_decode -->
+<g id="node12" class="node">
+<title>fuse_decode</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="265.14,-617 108.86,-617 104.86,-613 104.86,-574.1 261.14,-574.1 265.14,-578.1 265.14,-617"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="261.14,-613 104.86,-613"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="261.14,-613 261.14,-574.1"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="261.14,-613 265.14,-617"/>
+<text xml:space="preserve" text-anchor="middle" x="185" y="-598.4" font-family="DejaVu Sans" font-size="12.00">Concat &#45;&gt; 2 x Conv3x3</text>
+<text xml:space="preserve" text-anchor="middle" x="185" y="-584.15" font-family="DejaVu Sans" font-size="12.00">GroupNorm(8) + GELU</text>
+</g>
+<!-- resize&#45;&gt;fuse_decode -->
+<g id="edge12" class="edge">
+<title>resize&#45;&gt;fuse_decode</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M185,-675.07C185,-661.06 185,-642.47 185,-626.89"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="187.63,-627.27 185,-619.77 182.38,-627.27 187.63,-627.27"/>
+<text xml:space="preserve" text-anchor="middle" x="218" y="-643.25" font-family="DejaVu Sans" font-size="10.00">aligned maps</text>
+</g>
+<!-- logits -->
+<g id="node13" class="node">
+<title>logits</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="314.02,-527.1 101.98,-527.1 101.98,-531.1 89.98,-531.1 89.98,-484.2 314.02,-484.2 314.02,-527.1"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="89.98,-527.1 101.98,-527.1"/>
+<text xml:space="preserve" text-anchor="middle" x="202" y="-508.5" font-family="DejaVu Sans" font-size="12.00">Upsample to image size</text>
+<text xml:space="preserve" text-anchor="middle" x="202" y="-494.25" font-family="DejaVu Sans" font-size="12.00">1x1 classifier &#45;&gt; foreground logits</text>
+</g>
+<!-- fuse_decode&#45;&gt;logits -->
+<g id="edge13" class="edge">
+<title>fuse_decode&#45;&gt;logits</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M189.03,-573.72C191.15,-562.74 193.79,-549.08 196.14,-536.95"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="198.69,-537.58 197.54,-529.72 193.54,-536.58 198.69,-537.58"/>
+</g>
+<!-- logits&#45;&gt;loss -->
+<g id="edge17" class="edge">
+<title>logits&#45;&gt;loss</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M243.2,-527.7C294.08,-553.71 374,-594.55 374,-594.55 374,-1052.15 374,-1052.15 374,-1052.15 374,-1052.15 267,-1136.23 267,-1136.23 267,-1136.23 248.5,-1150.59 230,-1164.95"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="228.66,-1162.67 224.35,-1169.34 231.88,-1166.81 228.66,-1162.67"/>
+<text xml:space="preserve" text-anchor="middle" x="397.25" y="-783.98" font-family="DejaVu Sans" font-size="10.00">train only</text>
+</g>
+<!-- sigmoid -->
+<g id="node17" class="node">
+<title>sigmoid</title>
+<path fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" d="M225.52,-378.95C225.52,-378.95 178.48,-378.95 178.48,-378.95 172.48,-378.95 166.48,-372.95 166.48,-366.95 166.48,-366.95 166.48,-354.95 166.48,-354.95 166.48,-348.95 172.48,-342.95 178.48,-342.95 178.48,-342.95 225.52,-342.95 225.52,-342.95 231.52,-342.95 237.52,-348.95 237.52,-354.95 237.52,-354.95 237.52,-366.95 237.52,-366.95 237.52,-372.95 231.52,-378.95 225.52,-378.95"/>
+<text xml:space="preserve" text-anchor="middle" x="202" y="-356.68" font-family="DejaVu Sans" font-size="12.00">Sigmoid</text>
+</g>
+<!-- logits&#45;&gt;sigmoid -->
+<g id="edge20" class="edge">
+<title>logits&#45;&gt;sigmoid</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M202,-483.59C202,-458.46 202,-416.39 202,-388.9"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="204.63,-389.11 202,-381.61 199.38,-389.11 204.63,-389.11"/>
+<text xml:space="preserve" text-anchor="middle" x="224.5" y="-446.7" font-family="DejaVu Sans" font-size="10.00">eval only</text>
+</g>
+<!-- head_params -->
+<g id="node14" class="node">
+<title>head_params</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="296.39,-922.33 83.6,-922.33 83.6,-879.43 302.39,-879.43 302.39,-916.33 296.39,-922.33"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="296.39,-922.33 296.39,-916.33"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="302.39,-916.33 296.39,-916.33"/>
+<text xml:space="preserve" text-anchor="middle" x="193" y="-903.73" font-family="DejaVu Sans" font-size="12.00">trainable only</text>
+<text xml:space="preserve" text-anchor="middle" x="193" y="-889.48" font-family="DejaVu Sans" font-size="12.00">projection + decoder + classifier</text>
+</g>
+<!-- head_params&#45;&gt;project -->
+<g id="edge14" class="edge">
+<title>head_params&#45;&gt;project</title>
+<path fill="none" stroke="#58a37c" stroke-width="1.4" stroke-dasharray="5,2" d="M193,-878.85C193,-858.87 193,-828.98 193,-809.03"/>
+</g>
+<!-- head_params&#45;&gt;fuse_decode -->
+<g id="edge15" class="edge">
+<title>head_params&#45;&gt;fuse_decode</title>
+<path fill="none" stroke="#58a37c" stroke-width="1.4" stroke-dasharray="5,2" d="M170.54,-879.15C141.33,-852.21 94,-808.55 94,-808.55 94,-808.55 73,-718.65 73,-718.65 73,-718.65 73,-675.75 73,-675.75 73,-675.75 122.1,-641.03 155.28,-617.57"/>
+</g>
+<!-- head_params&#45;&gt;logits -->
+<g id="edge16" class="edge">
+<title>head_params&#45;&gt;logits</title>
+<path fill="none" stroke="#58a37c" stroke-width="1.4" stroke-dasharray="5,2" d="M215.46,-879.15C244.67,-852.21 292,-808.55 292,-808.55 292,-808.55 313,-788.1 313,-788.1 313,-788.1 313,-788.1 313,-594.55 313,-594.55 261.43,-553.71 228.59,-527.7"/>
+</g>
+<!-- optimizer -->
+<g id="node16" class="node">
+<title>optimizer</title>
+<path fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" d="M239.77,-1072.6C239.77,-1072.6 146.23,-1072.6 146.23,-1072.6 140.23,-1072.6 134.23,-1066.6 134.23,-1060.6 134.23,-1060.6 134.23,-1041.7 134.23,-1041.7 134.23,-1035.7 140.23,-1029.7 146.23,-1029.7 146.23,-1029.7 239.77,-1029.7 239.77,-1029.7 245.77,-1029.7 251.77,-1035.7 251.77,-1041.7 251.77,-1041.7 251.77,-1060.6 251.77,-1060.6 251.77,-1066.6 245.77,-1072.6 239.77,-1072.6"/>
+<text xml:space="preserve" text-anchor="middle" x="193" y="-1054" font-family="DejaVu Sans" font-size="12.00">AdamW</text>
+<text xml:space="preserve" text-anchor="middle" x="193" y="-1039.75" font-family="DejaVu Sans" font-size="12.00">lr 1e&#45;3, wd 1e&#45;4</text>
+</g>
+<!-- loss&#45;&gt;optimizer -->
+<g id="edge18" class="edge">
+<title>loss&#45;&gt;optimizer</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M193,-1170.62C193,-1146.59 193,-1108.82 193,-1082.4"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="195.63,-1082.51 193,-1075.01 190.38,-1082.51 195.63,-1082.51"/>
+</g>
+<!-- optimizer&#45;&gt;head_params -->
+<g id="edge19" class="edge">
+<title>optimizer&#45;&gt;head_params</title>
+<path fill="none" stroke="#d17aa8" stroke-width="1.4" stroke-dasharray="5,2" d="M193,-1029.22C193,-1003.94 193,-961.22 193,-932.3"/>
+<polygon fill="#d17aa8" stroke="#d17aa8" stroke-width="1.4" points="195.63,-932.32 193,-924.82 190.38,-932.32 195.63,-932.32"/>
+<text xml:space="preserve" text-anchor="middle" x="235.38" y="-990.08" font-family="DejaVu Sans" font-size="10.00">update head only</text>
+</g>
+<!-- threshold -->
+<g id="node18" class="node">
+<title>threshold</title>
+<path fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" d="M190.46,-292.68C190.46,-292.68 112.5,-270.57 112.5,-270.57 106.73,-268.94 106.73,-265.66 112.5,-264.03 112.5,-264.03 190.46,-241.92 190.46,-241.92 196.23,-240.29 207.77,-240.29 213.54,-241.92 213.54,-241.92 291.5,-264.03 291.5,-264.03 297.27,-265.66 297.27,-268.94 291.5,-270.57 291.5,-270.57 213.54,-292.68 213.54,-292.68 207.77,-294.31 196.23,-294.31 190.46,-292.68"/>
+<text xml:space="preserve" text-anchor="middle" x="202" y="-263.03" font-family="DejaVu Sans" font-size="12.00">threshold 0.5</text>
+</g>
+<!-- optimizer&#45;&gt;threshold -->
+<!-- sigmoid&#45;&gt;threshold -->
+<g id="edge21" class="edge">
+<title>sigmoid&#45;&gt;threshold</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M202,-342.28C202,-331.92 202,-318.42 202,-305.79"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="204.63,-305.99 202,-298.49 199.38,-305.99 204.63,-305.99"/>
+</g>
+<!-- pred_fg -->
+<g id="node19" class="node">
+<title>pred_fg</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="294.52,-179.9 121.48,-179.9 121.48,-183.9 109.48,-183.9 109.48,-143.9 294.52,-143.9 294.52,-179.9"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="109.48,-179.9 121.48,-179.9"/>
+<text xml:space="preserve" text-anchor="middle" x="202" y="-157.62" font-family="DejaVu Sans" font-size="12.00">Predicted gland foreground</text>
+</g>
+<!-- threshold&#45;&gt;pred_fg -->
+<g id="edge22" class="edge">
+<title>threshold&#45;&gt;pred_fg</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M202,-238.05C202,-223.08 202,-204.79 202,-190.01"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="204.63,-190.03 202,-182.53 199.38,-190.03 204.63,-190.03"/>
+<text xml:space="preserve" text-anchor="middle" x="219.25" y="-206.15" font-family="DejaVu Sans" font-size="10.00">&gt;= 0.5</text>
+</g>
+<!-- pred_bg -->
+<g id="node20" class="node">
+<title>pred_bg</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="185.39,-78.03 92.61,-78.03 92.61,-35.12 191.39,-35.12 191.39,-72.03 185.39,-78.03"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="185.39,-78.03 185.39,-72.03"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="191.39,-72.03 185.39,-72.03"/>
+<text xml:space="preserve" text-anchor="middle" x="142" y="-59.43" font-family="DejaVu Sans" font-size="12.00">Background</text>
+<text xml:space="preserve" text-anchor="middle" x="142" y="-45.18" font-family="DejaVu Sans" font-size="12.00">complement</text>
+</g>
+<!-- pred_fg&#45;&gt;pred_bg -->
+<g id="edge23" class="edge">
+<title>pred_fg&#45;&gt;pred_bg</title>
+<path fill="none" stroke="#91a064" stroke-width="1.4" stroke-dasharray="5,2" d="M191.82,-143.37C182.78,-127.79 169.38,-104.72 158.75,-86.43"/>
+<polygon fill="#91a064" stroke="#91a064" stroke-width="1.4" points="161.19,-85.4 155.16,-80.23 156.65,-88.04 161.19,-85.4"/>
+<text xml:space="preserve" text-anchor="middle" x="208.12" y="-111.4" font-family="DejaVu Sans" font-size="10.00">complement</text>
+</g>
+<!-- metrics -->
+<g id="node21" class="node">
+<title>metrics</title>
+<polygon fill="#ffffff" stroke="#8a98ab" stroke-width="1.4" points="406.14,-85.15 221.86,-85.15 221.86,-28 412.14,-28 412.14,-79.15 406.14,-85.15"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="406.14,-85.15 406.14,-79.15"/>
+<polyline fill="none" stroke="#8a98ab" stroke-width="1.4" points="412.14,-79.15 406.14,-79.15"/>
+<text xml:space="preserve" text-anchor="middle" x="317" y="-66.55" font-family="DejaVu Sans" font-size="12.00">Metrics vs GT reference</text>
+<text xml:space="preserve" text-anchor="middle" x="317" y="-52.3" font-family="DejaVu Sans" font-size="12.00">Headline: direct fg IoU, Dice</text>
+<text xml:space="preserve" text-anchor="middle" x="317" y="-38.05" font-family="DejaVu Sans" font-size="12.00">Aux: eval mIoU, eval ARI</text>
+</g>
+<!-- pred_fg&#45;&gt;metrics -->
+<g id="edge24" class="edge">
+<title>pred_fg&#45;&gt;metrics</title>
+<path fill="none" stroke="#4c5d73" stroke-width="1.4" d="M221.51,-143.37C237.15,-129.32 259.57,-109.17 278.76,-91.93"/>
+<polygon fill="#4c5d73" stroke="#4c5d73" stroke-width="1.4" points="280.26,-94.11 284.09,-87.15 276.75,-90.21 280.26,-94.11"/>
+</g>
+</g>
 </svg>
