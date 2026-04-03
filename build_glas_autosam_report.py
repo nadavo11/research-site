@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import csv
 import json
+import os
+import subprocess
 import shutil
 from dataclasses import dataclass
 from datetime import date
@@ -20,6 +22,9 @@ TEXTURE_REPO_ROOT = ROOT.parent / "texture representations"
 GLAS_OUTPUT_ROOT = TEXTURE_REPO_ROOT / "outputs" / "glas_binary"
 DEST_DIR = ROOT / "site" / "experiments" / "glas-vs-autosam-frozen-sam3-readout-study"
 METHOD_README = ROOT / "experiments" / "autosam head to head" / "glas_supervised_frozen_sam_phase2" / "method" / "README.md"
+GRAPHVIZ_DOT_CANDIDATES = [
+    Path.home() / ".local" / "graphviz-env" / "bin" / "dot",
+]
 
 PAGE_TITLE = "GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study"
 PAGE_SUBTITLE = "Experiment Report"
@@ -392,151 +397,187 @@ def render_capacity_chart(*, title: str, subtitle: str, points: list[dict], all_
     return "\n".join(lines)
 
 
-def render_architecture_diagram() -> str:
-    width = 1200
-    height = 520
-    lines = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="Frozen SAM GlaS mask-head architecture diagram">',
-        '<rect width="100%" height="100%" fill="#ffffff" rx="24" />',
-        '<text x="28" y="40" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700" fill="#122033">Frozen SAM GlaS Dense Head</text>',
-        '<text x="28" y="64" font-family="Space Grotesk, sans-serif" font-size="13" fill="#4c5d73">Static SVG diagram for the repo-native method: frozen backbone, tiny head, direct gland-foreground output.</text>',
-    ]
-
-    def box(x: int, y: int, w: int, h: int, title: str, body: list[str], *, fill: str, stroke: str = "#cdd9e5") -> None:
-        lines.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="18" fill="{fill}" stroke="{stroke}" stroke-width="2" />')
-        lines.append(f'<text x="{x + 18}" y="{y + 28}" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">{escape(title)}</text>')
-        for idx, text in enumerate(body):
-            lines.append(
-                f'<text x="{x + 18}" y="{y + 52 + idx * 18}" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">{escape(text)}</text>'
-            )
-
-    def arrow(x1: int, y1: int, x2: int, y2: int, label: str | None = None) -> None:
-        lines.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="#355070" stroke-width="3" stroke-linecap="round" />')
-        lines.append(f'<polygon points="{x2},{y2} {x2 - 12},{y2 - 6} {x2 - 12},{y2 + 6}" fill="#355070" />')
-        if label:
-            mid_x = (x1 + x2) / 2
-            mid_y = (y1 + y2) / 2 - 10
-            lines.append(
-                f'<text x="{mid_x:.1f}" y="{mid_y:.1f}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">{escape(label)}</text>'
-            )
-
-    box(
-        40,
-        110,
-        210,
-        120,
-        "Input + target",
-        [
-            "RGB histology image from GlaS",
-            "Dense binary gland mask",
-            "train split for optimization",
-            "test split for evaluation",
-        ],
-        fill="#f4fbfd",
-        stroke="#88c0d0",
-    )
-    box(
-        285,
-        110,
-        235,
-        120,
-        "Frozen SAM3 extractor",
-        [
-            "feature source = backbone_fpn",
-            "no prompt learning",
-            "no backbone fine-tuning",
-            "observed levels: fpn_2, fpn_1, fpn_0",
-        ],
-        fill="#f6f6ff",
-        stroke="#9db4ff",
-    )
-    box(
-        555,
-        92,
-        250,
-        156,
-        "Selected pyramid levels",
-        [
-            "fpn_2 = 256 x 72 x 72",
-            "fpn_1 = 256 x 144 x 144",
-            "fpn_0 = 256 x 288 x 288",
-            "variants choose subsets of these levels",
-            "best current result uses fpn_2 only",
-        ],
-        fill="#fff8ef",
-        stroke="#f4a261",
-    )
-    box(
-        840,
-        92,
-        320,
-        156,
-        "Tiny dense head",
-        [
-            "per-level 1x1 projection to dim d",
-            "bilinear resize to finest selected grid",
-            "channel concat",
-            "Conv3x3 -> GroupNorm(8) -> GELU",
-            "Conv3x3 -> GroupNorm(8) -> GELU",
-            "upsample to image size -> 1x1 classifier",
-        ],
-        fill="#eefaf4",
-        stroke="#58a37c",
-    )
-    box(
-        285,
-        300,
-        300,
-        120,
-        "Optimization",
-        [
-            "AdamW on head params only",
-            "loss = BCEWithLogits + Dice",
-            "defaults: d=64, lr=1e-3, wd=1e-4",
-            "foreground threshold = 0.5",
-        ],
-        fill="#fef7fb",
-        stroke="#d17aa8",
-    )
-    box(
-        635,
-        300,
-        295,
-        120,
-        "Prediction contract",
-        [
-            "single foreground logit map",
-            "sigmoid + threshold -> gland foreground",
-            "background = logical complement",
-            "batch size effectively 1",
-        ],
-        fill="#f8f9ee",
-        stroke="#a3b26d",
-    )
-    box(
-        965,
-        300,
-        195,
-        120,
-        "Metrics",
-        [
-            "headline: direct_foreground_iou",
-            "headline: direct_foreground_dice",
-            "aux: eval_miou, eval_ari",
-        ],
-        fill="#f5f7fa",
-        stroke="#90a4b8",
+def find_graphviz_dot() -> str:
+    configured = os.environ.get("GRAPHVIZ_DOT")
+    if configured:
+        candidate = Path(configured).expanduser()
+        if candidate.exists():
+            return str(candidate)
+        raise RuntimeError(f"GRAPHVIZ_DOT points to a missing file: {candidate}")
+    for candidate in GRAPHVIZ_DOT_CANDIDATES:
+        if candidate.exists():
+            return str(candidate)
+    discovered = shutil.which("dot")
+    if discovered:
+        return discovered
+    raise RuntimeError(
+        "Graphviz 'dot' binary not found. Install Graphviz or place dot at "
+        f"{GRAPHVIZ_DOT_CANDIDATES[0]} before rebuilding this report."
     )
 
-    arrow(250, 170, 285, 170)
-    arrow(520, 170, 555, 170)
-    arrow(805, 170, 840, 170, "project + fuse")
-    arrow(420, 230, 420, 300, "train head only")
-    arrow(1000, 248, 1000, 300, "upsample + threshold")
-    arrow(930, 360, 965, 360)
-    lines.append('<text x="1040" y="468" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Minimal baseline: no prompt encoder changes, no transformer decoder, no UNet-scale head.</text>')
-    lines.append("</svg>")
-    return "\n".join(lines)
+
+def render_architecture_dot() -> str:
+    return dedent(
+        r'''
+        digraph GlasFrozenSam3DenseHead {
+          graph [
+            rankdir=TB,
+            splines=polyline,
+            bgcolor="white",
+            pad=0.25,
+            nodesep=0.42,
+            ranksep=0.62,
+            fontname="DejaVu Sans",
+            labelloc=t,
+            labeljust=l,
+            label="Frozen SAM3 Dense Mask Head on GlaS\nShared readout spine with explicit training and evaluation branches",
+            fontsize=24
+          ];
+
+          node [
+            fontname="DejaVu Sans",
+            fontsize=12,
+            color="#8a98ab",
+            penwidth=1.4,
+            margin="0.16,0.10",
+            style="rounded,filled"
+          ];
+
+          edge [
+            fontname="DejaVu Sans",
+            fontsize=10,
+            color="#4c5d73",
+            penwidth=1.4,
+            arrowsize=0.75
+          ];
+
+          subgraph cluster_data {
+            label="Data and supervision contract";
+            color="#88c0d0";
+            fillcolor="#f4fbfd";
+            style="rounded,filled";
+            margin=20;
+
+            input_image [shape=folder, fillcolor="#ffffff", label="RGB image\nGlaS crop"];
+            gt_mask [shape=folder, fillcolor="#ffffff", label="Dense target mask\ngland foreground"];
+            split_note [shape=note, fillcolor="#ffffff", label="train -> optimize head\ntest -> report metrics"];
+            { rank=same; input_image; gt_mask; split_note; }
+          }
+
+          subgraph cluster_backbone {
+            label="Frozen SAM3 backbone";
+            color="#9db4ff";
+            fillcolor="#f6f6ff";
+            style="rounded,filled";
+            margin=20;
+
+            sam3 [shape=component, fillcolor="#ffffff", label="SAM3 feature extractor\nbackbone_fpn only"];
+            freeze_tag [shape=note, fillcolor="#ffffff", label="shared at train + eval\nno prompt learning\nno backbone updates"];
+          }
+
+          subgraph cluster_pyramid {
+            label="Observed multiscale feature pyramid";
+            color="#f4a261";
+            fillcolor="#fff8ef";
+            style="rounded,filled";
+            margin=20;
+
+            p2 [shape=box, fillcolor="#ffffff", label="fpn_2\n256 x 72 x 72\ncoarsest, strongest"];
+            p1 [shape=box, fillcolor="#ffffff", label="fpn_1\n256 x 144 x 144"];
+            p0 [shape=box, fillcolor="#ffffff", label="fpn_0\n256 x 288 x 288\nfinest"];
+            select_levels [shape=box, fillcolor="#fffdf8", label="Select subset\nall / coarse+mid /\ncoarse / fine"];
+            { rank=same; p2; p1; p0; }
+          }
+
+          subgraph cluster_head {
+            label="Shared dense readout";
+            color="#58a37c";
+            fillcolor="#eefaf4";
+            style="rounded,filled";
+            margin=20;
+
+            project [shape=box3d, fillcolor="#ffffff", label="Per-level 1x1 projections\nto width d"];
+            resize [shape=box, fillcolor="#ffffff", label="Resize to finest selected grid\nbilinear, align_corners=false"];
+            fuse_decode [shape=box3d, fillcolor="#ffffff", label="Concat -> 2 x Conv3x3\nGroupNorm(8) + GELU"];
+            logits [shape=tab, fillcolor="#ffffff", label="Upsample to image size\n1x1 classifier -> foreground logits"];
+            head_params [shape=note, fillcolor="#ffffff", label="trainable only\nprojection + decoder + classifier"];
+          }
+
+          subgraph cluster_train {
+            label="Training path";
+            color="#d17aa8";
+            fillcolor="#fef7fb";
+            style="rounded,filled";
+            margin=20;
+
+            loss [shape=hexagon, fillcolor="#ffffff", label="BCEWithLogits + Dice"];
+            optimizer [shape=box, fillcolor="#ffffff", label="AdamW\nlr 1e-3, wd 1e-4"];
+          }
+
+          subgraph cluster_eval {
+            label="Inference / evaluation path";
+            color="#a3b26d";
+            fillcolor="#f8f9ee";
+            style="rounded,filled";
+            margin=20;
+
+            sigmoid [shape=box, fillcolor="#ffffff", label="Sigmoid"];
+            threshold [shape=diamond, fillcolor="#ffffff", label="threshold 0.5"];
+            pred_fg [shape=tab, fillcolor="#ffffff", label="Predicted gland foreground"];
+            pred_bg [shape=note, fillcolor="#ffffff", label="Background\ncomplement"];
+            metrics [shape=note, fillcolor="#ffffff", label="Metrics vs GT reference\nHeadline: direct fg IoU, Dice\nAux: eval mIoU, eval ARI"];
+          }
+
+          input_image -> sam3;
+          gt_mask -> loss [label="train target"];
+
+          sam3 -> p2;
+          sam3 -> p1;
+          sam3 -> p0;
+          freeze_tag -> sam3 [arrowhead=none, style=dashed, color="#7f8fb0"];
+
+          p2 -> select_levels;
+          p1 -> select_levels;
+          p0 -> select_levels;
+
+          select_levels -> project [label="chosen scales"];
+          project -> resize;
+          resize -> fuse_decode [label="aligned maps"];
+          fuse_decode -> logits;
+          head_params -> project [arrowhead=none, style=dashed, color="#58a37c"];
+          head_params -> fuse_decode [arrowhead=none, style=dashed, color="#58a37c"];
+          head_params -> logits [arrowhead=none, style=dashed, color="#58a37c"];
+
+          logits -> loss [label="train only"];
+          loss -> optimizer;
+          optimizer -> head_params [style=dashed, color="#d17aa8", label="update head only"];
+
+          logits -> sigmoid [label="eval only"];
+          sigmoid -> threshold;
+          threshold -> pred_fg [label=">= 0.5"];
+          pred_fg -> pred_bg [style=dashed, color="#91a064", label="complement"];
+          pred_fg -> metrics;
+
+          split_note -> sam3 [style=invis, weight=0.2];
+          optimizer -> threshold [style=invis, weight=0.2];
+        }
+        '''
+    ).strip() + "\n"
+
+
+def render_architecture_diagram() -> tuple[str, str]:
+    dot_source = render_architecture_dot()
+    dot_binary = find_graphviz_dot()
+    rendered = subprocess.run(
+        [dot_binary, "-Tsvg"],
+        input=dot_source,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if rendered.returncode != 0:
+        raise RuntimeError(f"Graphviz render failed: {rendered.stderr.strip()}")
+    return dot_source, rendered.stdout
 
 
 def load_visual_rows(run_dir: Path) -> list[dict]:
@@ -858,8 +899,10 @@ def write_plot_assets(runs: dict[str, dict]) -> dict[str, str]:
         }
         for run_id in CAPACITY_SWEEP_IDS
     ]
+    architecture_dot, architecture_svg = render_architecture_diagram()
     plots = {
-        "method_architecture.svg": render_architecture_diagram(),
+        "method_architecture.svg": architecture_svg,
+        "method_architecture.dot": architecture_dot,
         "supervision_ladder.svg": render_bar_chart(
             title="Foreground Metrics: CFC vs Frozen-Head Readout vs AutoSAM",
             subtitle="Direct foreground IoU and Dice are the closest current AutoSAM-style comparison view in this repo.",
@@ -943,6 +986,7 @@ def build_links_payload(table_csv_path: str, plot_paths: dict[str, str]) -> dict
         "training_data": "training_data.json",
         "summary": "summary.md",
         "method_source": "method_source.md",
+        "method_architecture_dot": plot_paths["method_architecture.dot"],
         "manifest": "manifest.yaml",
         "results_table_csv": table_csv_path,
         "plots": plot_paths,
@@ -1379,10 +1423,11 @@ def render_index_html(
         </article>
         <article class="note-card">
           <h3>Architecture Readout</h3>
-          <p class="interpretation-copy">For selected levels, each SAM feature map is projected with a learned <code>1x1</code> convolution, resized to the finest selected grid, concatenated, decoded by two <code>3x3 + GroupNorm + GELU</code> blocks, upsampled back to image resolution, and mapped to one foreground logit channel.</p>
+          <p class="interpretation-copy">This figure is now generated from a Graphviz DOT source, then rendered to SVG for the site. The main spine shows the shared frozen-feature path, while the lower branches make the training loss/update loop and the inference thresholding/metric path explicit.</p>
           <p class="interpretation-copy" style="margin-top: 14px;">That design choice matters for the page story: it keeps the head deliberately small enough that poor results still say something about the readout itself, not about a giant downstream decoder quietly doing most of the work.</p>
           <div class="artifact-row">
             <a class="btn secondary" href="method_source.md">Open Method Notes</a>
+            <a class="btn secondary" href="assets/plots/method_architecture.dot">Open DOT Source</a>
           </div>
         </article>
       </div>
@@ -1486,6 +1531,7 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
       </div>
       <div class="artifact-row">
         <a class="btn secondary" href="method_source.md">method_source.md</a>
+        <a class="btn secondary" href="assets/plots/method_architecture.dot">method_architecture.dot</a>
       </div>
     </section>
 
@@ -1518,6 +1564,7 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
       </ul>
       <div class="artifact-row">
         <a class="btn secondary" href="method_source.md">method_source.md</a>
+        <a class="btn secondary" href="assets/plots/method_architecture.dot">method_architecture.dot</a>
         <a class="btn secondary" href="metrics.json">metrics.json</a>
         <a class="btn secondary" href="training_data.json">training_data.json</a>
         <a class="btn secondary" href="summary.md">summary.md</a>
