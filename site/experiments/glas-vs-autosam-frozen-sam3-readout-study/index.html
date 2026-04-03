@@ -119,6 +119,25 @@
       margin-top: 20px;
     }
 
+    .code-panel {
+      background: var(--surface-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .code-panel pre {
+      margin: 14px 0 0;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      overflow-x: auto;
+      color: var(--ink);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
     .bullet-list {
       margin: 16px 0 0;
       padding-left: 20px;
@@ -219,6 +238,43 @@
           <div><strong>AutoSAM values here</strong><span>reported paper references only</span></div>
           <div><strong>Pending caveat</strong><span>strict 224x224 rerun</span></div>
         </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Method</h2>
+      <p class="interpretation-copy">The page now includes the core method details from the internal phase-2 method note. This is the dense-supervised frozen-feature baseline actually used in the saved runs, not a paraphrased AutoSAM surrogate.</p>
+      <div style="margin-top: 20px;">
+        <div class="card-grid compact-grid">
+  <article class="card">
+    <h3>Problem Setup</h3>
+    <p class="interpretation-copy">The method asks one narrow question: if SAM3 stays frozen, can a very small dense supervised readout already segment glands well on GlaS? The point is interpretability, not maximal engineering.</p>
+    <p class="mini-note">No prompt generator, no prompt encoder changes, no transformer decoder, no attention blocks, no U-Net-scale decoder, and no SAM fine-tuning.</p>
+  </article>
+  <article class="card">
+    <h3>Feature Path</h3>
+    <p class="interpretation-copy">Frozen features come from <code>backbone_fpn</code>. The recorded GlaS runs expose <code>fpn_2</code>, <code>fpn_1</code>, and <code>fpn_0</code> with reference shapes <code>72x72</code>, <code>144x144</code>, and <code>288x288</code>.</p>
+    <p class="mini-note">The dense mask-head family supports <code>all_scales</code>, <code>mid_plus_fine</code>, <code>coarse_plus_next_finer</code>, <code>fpn_2_only</code>, <code>fpn_1_only</code>, and <code>fpn_0_only</code>.</p>
+  </article>
+  <article class="card">
+    <h3>Optimization Contract</h3>
+    <p class="interpretation-copy">Only the head parameters are trainable. Optimization uses <code>AdamW</code> with <code>BCEWithLogits + Dice</code>. Dense-head defaults are <code>projection_dim=64</code>, <code>decoder_dim=64</code>, <code>GroupNorm(8)</code>, <code>lr=1e-3</code>, <code>wd=1e-4</code>, and threshold <code>0.5</code>.</p>
+    <p class="mini-note">Headline metrics for the AutoSAM-style comparison are <code>direct_foreground_iou</code> and <code>direct_foreground_dice</code>. <code>eval_miou</code> and <code>eval_ari</code> stay auxiliary.</p>
+  </article>
+</div>
+      </div>
+      <div class="chart-grid">
+        <article class="chart-card">
+          <img src="assets/plots/method_architecture.svg" alt="Frozen SAM GlaS dense-head architecture diagram" data-zoom-src="assets/plots/method_architecture.svg" />
+        </article>
+        <article class="note-card">
+          <h3>Architecture Readout</h3>
+          <p class="interpretation-copy">For selected levels, each SAM feature map is projected with a learned <code>1x1</code> convolution, resized to the finest selected grid, concatenated, decoded by two <code>3x3 + GroupNorm + GELU</code> blocks, upsampled back to image resolution, and mapped to one foreground logit channel.</p>
+          <p class="interpretation-copy" style="margin-top: 14px;">That design choice matters for the page story: it keeps the head deliberately small enough that poor results still say something about the readout itself, not about a giant downstream decoder quietly doing most of the work.</p>
+          <div class="artifact-row">
+            <a class="btn secondary" href="method_source.md">Open Method Notes</a>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -370,6 +426,67 @@
       </div>
       <div class="artifact-row">
         <a class="btn secondary" href="assets/tables/main_results.csv">Open Results CSV</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Replication Details</h2>
+      <p class="interpretation-copy">The commands below are the compact replication ladder from the method note. They are enough to smoke-test the path, reproduce the 40-epoch all-scales reference, and rerun the current best coarse-only width-128 result under the recorded defaults.</p>
+      <div style="margin-top: 20px;">
+        <div class="card-grid compact-grid">
+  <article class="card">
+    <h3>Recorded Environment</h3>
+    <p class="interpretation-copy">The saved runs used <code>./.venv/bin/python</code> with the shell prefix <code>PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python</code>, seed <code>0</code>, device <code>cuda</code>, and model id <code>facebook/sam3</code>.</p>
+    <p class="mini-note">Recorded package versions from the best current run: Pillow 12.1.1, datasets 4.7.0, numpy 1.26.4, torch 2.10.0, transformers 5.3.0.</p>
+  </article>
+  <article class="card">
+    <h3>Audit First</h3>
+    <p class="interpretation-copy">After any rerun, inspect <code>config.json</code>, <code>summary.json</code>, and <code>train_history.csv</code> before trusting the directory name or the page summary.</p>
+    <p class="mini-note">The strongest example is <code>train_all_scales_test_e20_visuals</code>: the folder suffix says <code>e20</code>, but the saved metadata records <code>num_epochs=40</code>.</p>
+  </article>
+  <article class="card">
+    <h3>Minimum Fields</h3>
+    <p class="interpretation-copy">The replication-critical fields are <code>variant</code>, <code>selected_level_names</code>, <code>projection_dim</code>, <code>decoder_dim</code>, <code>num_epochs</code>, <code>trainable_parameter_count</code>, and the four headline metrics in <code>mean_metrics</code>.</p>
+    <p class="mini-note">This is the smallest reliable audit set for catching accidental protocol drift.</p>
+  </article>
+</div>
+      </div>
+      <div class="chart-grid">
+        <article class="code-panel">
+          <h3>Shared Prefix + Smoke Test</h3>
+          <pre><code>PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \
+  --dataset-root datasets/GlaS \
+  --device cuda \
+  --variant all_scales \
+  --train-limit 1 \
+  --eval-limit 1 \
+  --num-epochs 1 \
+  --output-dir outputs/glas_binary/frozen_sam_mask_head/smoke_all_scales_train_to_test_1x1 \
+  --no-save-visuals</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Phase-2 Reference + Best Current Run</h3>
+          <pre><code># 40-epoch all-scales reference
+PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \
+  --dataset-root datasets/GlaS \
+  --device cuda \
+  --variant all_scales \
+  --num-epochs 40 \
+  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_all_scales_test_e20_visuals
+
+# best current coarse-only d128
+PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \
+  --dataset-root datasets/GlaS \
+  --device cuda \
+  --variant fpn_2_only \
+  --projection-dim 128 \
+  --decoder-dim 128 \
+  --num-epochs 40 \
+  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_fpn_2_only_d128_test_e40</code></pre>
+        </article>
+      </div>
+      <div class="artifact-row">
+        <a class="btn secondary" href="method_source.md">method_source.md</a>
       </div>
     </section>
 
@@ -610,6 +727,7 @@
         <li>A targeted coarse+fine residual refinement probe remains a plausible next architecture experiment after the strict protocol-matching rerun.</li>
       </ul>
       <div class="artifact-row">
+        <a class="btn secondary" href="method_source.md">method_source.md</a>
         <a class="btn secondary" href="metrics.json">metrics.json</a>
         <a class="btn secondary" href="training_data.json">training_data.json</a>
         <a class="btn secondary" href="summary.md">summary.md</a>
@@ -620,7 +738,7 @@
     </section>
 
     <footer>
-      <p>GlaS vs AutoSAM report | Rendered 2026-03-31</p>
+      <p>GlaS vs AutoSAM report | Rendered 2026-04-03</p>
     </footer>
   </div>
 

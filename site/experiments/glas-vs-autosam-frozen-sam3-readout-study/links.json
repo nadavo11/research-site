@@ -4,9 +4,11 @@
   "metrics": "metrics.json",
   "training_data": "training_data.json",
   "summary": "summary.md",
+  "method_source": "method_source.md",
   "manifest": "manifest.yaml",
   "results_table_csv": "assets/tables/main_results.csv",
   "plots": {
+    "method_architecture.svg": "assets/plots/method_architecture.svg",
     "supervision_ladder.svg": "assets/plots/supervision_ladder.svg",
     "scale_ablation.svg": "assets/plots/scale_ablation.svg",
     "capacity_sweep.svg": "assets/plots/capacity_sweep.svg"

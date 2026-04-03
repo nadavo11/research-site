@@ -4,13 +4,13 @@ model_ids:
   - "AutoSAM (reported reference)"
 dataset_ids:
   - "glas"
-date: "2026-03-31"
+date: "2026-04-03"
 description: "Frozen SAM3 feature readout study on GlaS with current internal AutoSAM reference context."
 status: "reviewed"
 assets:
   story_block_count: 5
   gallery_preview_count: 80
-  plot_count: 3
+  plot_count: 4
 evaluation:
   primary_metrics:
     - "direct_foreground_iou"

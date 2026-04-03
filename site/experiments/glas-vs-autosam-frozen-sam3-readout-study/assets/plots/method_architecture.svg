@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-label="Frozen SAM GlaS mask-head architecture diagram">
+<rect width="100%" height="100%" fill="#ffffff" rx="24" />
+<text x="28" y="40" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700" fill="#122033">Frozen SAM GlaS Dense Head</text>
+<text x="28" y="64" font-family="Space Grotesk, sans-serif" font-size="13" fill="#4c5d73">Static SVG diagram for the repo-native method: frozen backbone, tiny head, direct gland-foreground output.</text>
+<rect x="40" y="110" width="210" height="120" rx="18" fill="#f4fbfd" stroke="#88c0d0" stroke-width="2" />
+<text x="58" y="138" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Input + target</text>
+<text x="58" y="162" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">RGB histology image from GlaS</text>
+<text x="58" y="180" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">Dense binary gland mask</text>
+<text x="58" y="198" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">train split for optimization</text>
+<text x="58" y="216" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">test split for evaluation</text>
+<rect x="285" y="110" width="235" height="120" rx="18" fill="#f6f6ff" stroke="#9db4ff" stroke-width="2" />
+<text x="303" y="138" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Frozen SAM3 extractor</text>
+<text x="303" y="162" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">feature source = backbone_fpn</text>
+<text x="303" y="180" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">no prompt learning</text>
+<text x="303" y="198" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">no backbone fine-tuning</text>
+<text x="303" y="216" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">observed levels: fpn_2, fpn_1, fpn_0</text>
+<rect x="555" y="92" width="250" height="156" rx="18" fill="#fff8ef" stroke="#f4a261" stroke-width="2" />
+<text x="573" y="120" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Selected pyramid levels</text>
+<text x="573" y="144" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">fpn_2 = 256 x 72 x 72</text>
+<text x="573" y="162" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">fpn_1 = 256 x 144 x 144</text>
+<text x="573" y="180" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">fpn_0 = 256 x 288 x 288</text>
+<text x="573" y="198" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">variants choose subsets of these levels</text>
+<text x="573" y="216" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">best current result uses fpn_2 only</text>
+<rect x="840" y="92" width="320" height="156" rx="18" fill="#eefaf4" stroke="#58a37c" stroke-width="2" />
+<text x="858" y="120" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Tiny dense head</text>
+<text x="858" y="144" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">per-level 1x1 projection to dim d</text>
+<text x="858" y="162" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">bilinear resize to finest selected grid</text>
+<text x="858" y="180" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">channel concat</text>
+<text x="858" y="198" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">Conv3x3 -&gt; GroupNorm(8) -&gt; GELU</text>
+<text x="858" y="216" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">Conv3x3 -&gt; GroupNorm(8) -&gt; GELU</text>
+<text x="858" y="234" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">upsample to image size -&gt; 1x1 classifier</text>
+<rect x="285" y="300" width="300" height="120" rx="18" fill="#fef7fb" stroke="#d17aa8" stroke-width="2" />
+<text x="303" y="328" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Optimization</text>
+<text x="303" y="352" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">AdamW on head params only</text>
+<text x="303" y="370" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">loss = BCEWithLogits + Dice</text>
+<text x="303" y="388" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">defaults: d=64, lr=1e-3, wd=1e-4</text>
+<text x="303" y="406" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">foreground threshold = 0.5</text>
+<rect x="635" y="300" width="295" height="120" rx="18" fill="#f8f9ee" stroke="#a3b26d" stroke-width="2" />
+<text x="653" y="328" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Prediction contract</text>
+<text x="653" y="352" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">single foreground logit map</text>
+<text x="653" y="370" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">sigmoid + threshold -&gt; gland foreground</text>
+<text x="653" y="388" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">background = logical complement</text>
+<text x="653" y="406" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">batch size effectively 1</text>
+<rect x="965" y="300" width="195" height="120" rx="18" fill="#f5f7fa" stroke="#90a4b8" stroke-width="2" />
+<text x="983" y="328" font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700" fill="#122033">Metrics</text>
+<text x="983" y="352" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">headline: direct_foreground_iou</text>
+<text x="983" y="370" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">headline: direct_foreground_dice</text>
+<text x="983" y="388" font-family="Space Grotesk, sans-serif" font-size="12" fill="#355070">aux: eval_miou, eval_ari</text>
+<line x1="250" y1="170" x2="285" y2="170" stroke="#355070" stroke-width="3" stroke-linecap="round" />
+<polygon points="285,170 273,164 273,176" fill="#355070" />
+<line x1="520" y1="170" x2="555" y2="170" stroke="#355070" stroke-width="3" stroke-linecap="round" />
+<polygon points="555,170 543,164 543,176" fill="#355070" />
+<line x1="805" y1="170" x2="840" y2="170" stroke="#355070" stroke-width="3" stroke-linecap="round" />
+<polygon points="840,170 828,164 828,176" fill="#355070" />
+<text x="822.5" y="160.0" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">project + fuse</text>
+<line x1="420" y1="230" x2="420" y2="300" stroke="#355070" stroke-width="3" stroke-linecap="round" />
+<polygon points="420,300 408,294 408,306" fill="#355070" />
+<text x="420.0" y="255.0" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">train head only</text>
+<line x1="1000" y1="248" x2="1000" y2="300" stroke="#355070" stroke-width="3" stroke-linecap="round" />
+<polygon points="1000,300 988,294 988,306" fill="#355070" />
+<text x="1000.0" y="264.0" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">upsample + threshold</text>
+<line x1="930" y1="360" x2="965" y2="360" stroke="#355070" stroke-width="3" stroke-linecap="round" />
+<polygon points="965,360 953,354 953,366" fill="#355070" />
+<text x="1040" y="468" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Minimal baseline: no prompt encoder changes, no transformer decoder, no UNet-scale head.</text>
+</svg>
