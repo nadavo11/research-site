@@ -1,16 +1,17 @@
-title: "GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study"
+title: "GlaS + MoNuSeg vs AutoSAM: Frozen SAM3 Readout Study"
 model_ids:
   - "facebook/sam3"
   - "AutoSAM (reported reference)"
 dataset_ids:
   - "glas"
+  - "monuseg"
 date: "2026-04-04"
-description: "Frozen SAM3 feature readout study on GlaS with current internal AutoSAM reference context."
+description: "Frozen SAM3 readout study across GlaS and MoNuSeg with current internal AutoSAM reference context."
 status: "reviewed"
 assets:
-  story_block_count: 5
+  story_block_count: 9
   gallery_preview_count: 80
-  plot_count: 4
+  plot_count: 5
 evaluation:
   primary_metrics:
     - "direct_foreground_iou"
@@ -20,4 +21,4 @@ evaluation:
     - "eval_ari"
 caveats:
   - "AutoSAM values are reported paper reference values."
-  - "Strict 224x224 protocol-matched rerun is still pending."
+  - "MoNuSeg native refine results are not resize-matched to the paper's explicit 512x512 route."

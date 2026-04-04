@@ -12,6 +12,7 @@
     "method_architecture.svg": "assets/plots/method_architecture.svg",
     "method_architecture.dot": "assets/plots/method_architecture.dot",
     "supervision_ladder.svg": "assets/plots/supervision_ladder.svg",
+    "monuseg_readout_story.svg": "assets/plots/monuseg_readout_story.svg",
     "scale_ablation.svg": "assets/plots/scale_ablation.svg",
     "capacity_sweep.svg": "assets/plots/capacity_sweep.svg"
   }

@@ -1,17 +1,25 @@
 {
   "status": "reviewed",
-  "page_title": "GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study",
+  "page_title": "GlaS + MoNuSeg vs AutoSAM: Frozen SAM3 Readout Study",
   "headline": {
-    "best_current_fg_iou": 0.8243115541697282,
-    "best_current_dice": 0.8994357113693254,
+    "glas_best_readout_fg_iou": 0.8243115541697282,
+    "glas_best_readout_dice": 0.8994357113693254,
+    "glas_protocol_fg_iou": 0.8354448379140114,
+    "glas_protocol_dice": 0.9058420824956642,
     "delta_best_vs_cfc_fg_iou": 0.2644417095089553,
     "delta_best_vs_cfc_dice": 0.1963423680357127,
     "delta_fpn2_d64_vs_all_scales_fg_iou": 0.010104476044142774,
     "delta_fpn2_d64_vs_all_scales_dice": 0.006369437090366414,
-    "gap_to_autosam_fg_iou": 0.046488445830271785,
-    "gap_to_autosam_dice": 0.028764288630674595
+    "glas_gap_to_autosam_fg_iou": 0.035355162085988656,
+    "glas_gap_to_autosam_dice": 0.0223579175043358,
+    "monuseg_strict512_fg_iou": 0.6352011982642413,
+    "monuseg_best_fg_iou": 0.6876132930628713,
+    "monuseg_delta_native_coarse_vs_strict_fg_iou": -0.0036985365857130637,
+    "monuseg_delta_refine_vs_strict_fg_iou": 0.05241209479863007,
+    "monuseg_gap_to_autosam_fg_iou": 0.014086706937128657,
+    "monuseg_gap_to_autosam_dice": 0.009907567683971386
   },
-  "runs": {
+  "glas_runs": {
     "cfc_baseline": {
       "run_id": "cfc_baseline",
       "label": "CFC training-free baseline",
@@ -151,309 +159,640 @@
       "eval_miou": 0.8135546960377789,
       "eval_ari": 0.6596848700569711,
       "miou_agg": 0.0
+    },
+    "fpn_2_only_d128_224_autosamaug": {
+      "run_id": "fpn_2_only_d128_224_autosamaug",
+      "label": "Frozen mask head fpn_2_only d128 @ 224 + autosam aug",
+      "short_label": "fpn_2_only d128 @224",
+      "variant": "fpn_2_only",
+      "variant_summary": "Single-scale frozen mask head using only the coarsest SAM level `fpn_2`.",
+      "num_samples": 80,
+      "decoder_dim": 128,
+      "projection_dim": 128,
+      "trainable_parameter_count": 328705,
+      "supervision": "dense binary gland masks",
+      "frozen_backbone": "yes",
+      "learned_prompt_generator": "no",
+      "notes": "Closest current GlaS AutoSAM-style endpoint: explicit 224x224 resize, AutoSAM-style dense augmentation, final epoch checkpoint.",
+      "fg_iou": 0.8354448379140114,
+      "dice": 0.9058420824956642,
+      "eval_miou": 0.8227116100198814,
+      "eval_ari": 0.6800410422414638,
+      "miou_agg": 0.0
+    }
+  },
+  "monuseg_runs": {
+    "strict512_coarse": {
+      "run_id": "strict512_coarse",
+      "label": "Frozen mask head fpn_2_only d128 @ 512x512",
+      "short_label": "strict512 coarse",
+      "variant": "fpn_2_only",
+      "variant_summary": "Single-scale frozen mask head using only the coarsest SAM level `fpn_2`.",
+      "num_samples": 14,
+      "decoder_dim": 128,
+      "projection_dim": 128,
+      "trainable_parameter_count": 328705,
+      "supervision": "dense binary nucleus masks",
+      "frozen_backbone": "yes",
+      "learned_prompt_generator": "no",
+      "notes": "Strict MoNuSeg anchor: official 30 -> 14 split semantics, explicit 512x512 resize, direct nucleus foreground metrics.",
+      "fg_iou": 0.6352011982642413,
+      "dice": 0.7763165409397614,
+      "eval_miou": 0.7553034548277299,
+      "eval_ari": 0.5985073163090534,
+      "miou_agg": 0.0
+    },
+    "native_aug_coarse": {
+      "run_id": "native_aug_coarse",
+      "label": "Frozen mask head fpn_2_only d128 @ native + autosam aug",
+      "short_label": "native coarse",
+      "variant": "fpn_2_only",
+      "variant_summary": "Single-scale frozen mask head using only the coarsest SAM level `fpn_2`.",
+      "num_samples": 14,
+      "decoder_dim": 128,
+      "projection_dim": 128,
+      "trainable_parameter_count": 328705,
+      "supervision": "dense binary nucleus masks",
+      "frozen_backbone": "yes",
+      "learned_prompt_generator": "no",
+      "notes": "Native-resolution coarse-only run with AutoSAM-style augmentation; roughly flat versus the strict 512x512 anchor.",
+      "fg_iou": 0.6315026616785282,
+      "dice": 0.7736261687990234,
+      "eval_miou": 0.7497478723553569,
+      "eval_ari": 0.585474403389427,
+      "miou_agg": 0.0
+    },
+    "native_aug_refine": {
+      "run_id": "native_aug_refine",
+      "label": "Frozen mask head fpn_2+fpn_1 refine d128 @ native + autosam aug",
+      "short_label": "native refine",
+      "variant": "fpn_2_plus_fpn_1_refine",
+      "variant_summary": "Coarse-only frozen mask head on `fpn_2` plus a tiny `fpn_1` residual-refinement branch that predicts an additive foreground-logit correction.",
+      "num_samples": 14,
+      "decoder_dim": 128,
+      "projection_dim": 128,
+      "trainable_parameter_count": 355587,
+      "supervision": "dense binary nucleus masks",
+      "frozen_backbone": "yes",
+      "learned_prompt_generator": "no",
+      "notes": "Strongest current MoNuSeg run: coarse head plus tiny mid-scale residual refinement with only a small parameter increase.",
+      "fg_iou": 0.6876132930628713,
+      "dice": 0.8143924323160286,
+      "eval_miou": 0.7892391159331448,
+      "eval_ari": 0.6533071389307067,
+      "miou_agg": 0.0
     }
   },
   "autosam_reference": {
-    "fg_iou": 0.8708,
-    "dice": 0.9282,
-    "source": "/home/nada/PycharmProjects/texture representations/outputs/glas_supervised_frozen_sam_phase1/README.md",
-    "reported_only": true
-  },
-  "stories": [
-    {
-      "story_id": "testa38_supervision_rescue",
-      "crop_name": "testA_38",
-      "tag": "supervision rescue",
-      "title": "Supervision Repairs a Near-Collapse Case",
-      "summary": "The training-free CFC branch nearly misses the gland entirely here. Both supervised heads recover the structure, and the best coarse-only readout edges the all-scales head again.",
-      "strip_rel": "assets/gallery/testa38_supervision_rescue/strip.webp",
-      "panels": [
-        {
-          "key": "input",
-          "label": "Input",
-          "asset_rel": "assets/gallery/testa38_supervision_rescue/input.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "gt",
-          "label": "GT",
-          "asset_rel": "assets/gallery/testa38_supervision_rescue/gt.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "cfc",
-          "label": "CFC baseline",
-          "asset_rel": "assets/gallery/testa38_supervision_rescue/cfc.webp",
-          "fg_iou": 0.11594313596865649,
-          "dice": 0.2077939856102363,
-          "eval_miou": 0.2982176438401151,
-          "eval_ari": 0.0006128308877230939
-        },
-        {
-          "key": "all_scales",
-          "label": "all_scales d64",
-          "asset_rel": "assets/gallery/testa38_supervision_rescue/all_scales.webp",
-          "fg_iou": 0.8216774857941485,
-          "dice": 0.9021108206054855,
-          "eval_miou": 0.8973657472431122,
-          "eval_ari": 0.8613297411778081
-        },
-        {
-          "key": "best",
-          "label": "fpn_2_only d128",
-          "asset_rel": "assets/gallery/testa38_supervision_rescue/best.webp",
-          "fg_iou": 0.8320082116947058,
-          "dice": 0.9083018366222864,
-          "eval_miou": 0.9024699466724095,
-          "eval_ari": 0.867042782513808
-        }
-      ],
-      "delta_best_vs_cfc": 0.7160650757260494,
-      "delta_best_vs_all_scales": 0.010330725900557391
+    "glas": {
+      "fg_iou": 0.8708,
+      "dice": 0.9282,
+      "source": "/home/nada/PycharmProjects/texture representations/outputs/glas_supervised_frozen_sam_phase1/README.md",
+      "reported_only": true
     },
-    {
-      "story_id": "testa39_coarse_only_edge",
-      "crop_name": "testA_39",
-      "tag": "coarse-only edge",
-      "title": "Coarse-Only Can Beat the Multiscale Head Cleanly",
-      "summary": "This crop is a useful reminder that the best current result is not just a width effect. The coarse-only d128 head is visibly cleaner than the all-scales d64 baseline.",
-      "strip_rel": "assets/gallery/testa39_coarse_only_edge/strip.webp",
-      "panels": [
-        {
-          "key": "input",
-          "label": "Input",
-          "asset_rel": "assets/gallery/testa39_coarse_only_edge/input.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "gt",
-          "label": "GT",
-          "asset_rel": "assets/gallery/testa39_coarse_only_edge/gt.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "cfc",
-          "label": "CFC baseline",
-          "asset_rel": "assets/gallery/testa39_coarse_only_edge/cfc.webp",
-          "fg_iou": 0.18002760287935918,
-          "dice": 0.30512439275162345,
-          "eval_miou": 0.340722043928744,
-          "eval_ari": 0.010135981423272433
-        },
-        {
-          "key": "all_scales",
-          "label": "all_scales d64",
-          "asset_rel": "assets/gallery/testa39_coarse_only_edge/all_scales.webp",
-          "fg_iou": 0.7570748347665411,
-          "dice": 0.8617445538307218,
-          "eval_miou": 0.8542110849931384,
-          "eval_ari": 0.7891117927495743
-        },
-        {
-          "key": "best",
-          "label": "fpn_2_only d128",
-          "asset_rel": "assets/gallery/testa39_coarse_only_edge/best.webp",
-          "fg_iou": 0.8481083423012956,
-          "dice": 0.9178123629323774,
-          "eval_miou": 0.9082515497883188,
-          "eval_ari": 0.8684636917241744
-        }
-      ],
-      "delta_best_vs_cfc": 0.6680807394219365,
-      "delta_best_vs_all_scales": 0.09103350753475448
-    },
-    {
-      "story_id": "testa53_all_scales_holdout",
-      "crop_name": "testA_53",
-      "tag": "all-scales holdout",
-      "title": "Coarse-Only Is Strongest Overall, But Not Universal",
-      "summary": "The strongest aggregate result is coarse-only, but this crop is a good counterexample. The all-scales d64 head is actually better here than the best coarse-only run.",
-      "strip_rel": "assets/gallery/testa53_all_scales_holdout/strip.webp",
-      "panels": [
-        {
-          "key": "input",
-          "label": "Input",
-          "asset_rel": "assets/gallery/testa53_all_scales_holdout/input.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "gt",
-          "label": "GT",
-          "asset_rel": "assets/gallery/testa53_all_scales_holdout/gt.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "cfc",
-          "label": "CFC baseline",
-          "asset_rel": "assets/gallery/testa53_all_scales_holdout/cfc.webp",
-          "fg_iou": 0.2163408035121752,
-          "dice": 0.3557239926301785,
-          "eval_miou": 0.39623874516293134,
-          "eval_ari": 0.041445976465184754
-        },
-        {
-          "key": "all_scales",
-          "label": "all_scales d64",
-          "asset_rel": "assets/gallery/testa53_all_scales_holdout/all_scales.webp",
-          "fg_iou": 0.8880003719373286,
-          "dice": 0.9406781747888399,
-          "eval_miou": 0.9293178760494201,
-          "eval_ari": 0.8933074973517963
-        },
-        {
-          "key": "best",
-          "label": "fpn_2_only d128",
-          "asset_rel": "assets/gallery/testa53_all_scales_holdout/best.webp",
-          "fg_iou": 0.8348770042824419,
-          "dice": 0.9100086843247938,
-          "eval_miou": 0.8947677881094437,
-          "eval_ari": 0.8383119752839523
-        }
-      ],
-      "delta_best_vs_cfc": 0.6185362007702667,
-      "delta_best_vs_all_scales": -0.05312336765488668
-    },
-    {
-      "story_id": "testa17_capacity_and_readout",
-      "crop_name": "testA_17",
-      "tag": "capacity helps",
-      "title": "Better Readout First, Then Extra Width",
-      "summary": "CFC is weak, the all-scales head improves it, and the best coarse-only head improves further. This is representative of the current coarse-dominant readout story.",
-      "strip_rel": "assets/gallery/testa17_capacity_and_readout/strip.webp",
-      "panels": [
-        {
-          "key": "input",
-          "label": "Input",
-          "asset_rel": "assets/gallery/testa17_capacity_and_readout/input.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "gt",
-          "label": "GT",
-          "asset_rel": "assets/gallery/testa17_capacity_and_readout/gt.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "cfc",
-          "label": "CFC baseline",
-          "asset_rel": "assets/gallery/testa17_capacity_and_readout/cfc.webp",
-          "fg_iou": 0.378715040235383,
-          "dice": 0.5493739158321307,
-          "eval_miou": 0.44032181308230023,
-          "eval_ari": 0.04511156861160009
-        },
-        {
-          "key": "all_scales",
-          "label": "all_scales d64",
-          "asset_rel": "assets/gallery/testa17_capacity_and_readout/all_scales.webp",
-          "fg_iou": 0.6465770907930656,
-          "dice": 0.7853590268058994,
-          "eval_miou": 0.6366870179931186,
-          "eval_ari": 0.3090573333234993
-        },
-        {
-          "key": "best",
-          "label": "fpn_2_only d128",
-          "asset_rel": "assets/gallery/testa17_capacity_and_readout/best.webp",
-          "fg_iou": 0.8164142801701447,
-          "dice": 0.8989295989169064,
-          "eval_miou": 0.783836438446684,
-          "eval_ari": 0.5830804905578093
-        }
-      ],
-      "delta_best_vs_cfc": 0.43769923993476173,
-      "delta_best_vs_all_scales": 0.16983718937707915
-    },
-    {
-      "story_id": "testb14_limitation",
-      "crop_name": "testB_14",
-      "tag": "limitation",
-      "title": "A Real Failure Case Still Exists",
-      "summary": "This crop stays difficult for the supervised frozen-feature heads and is worth keeping visible. The current page is not claiming that the readout fully dominates every CFC sample.",
-      "strip_rel": "assets/gallery/testb14_limitation/strip.webp",
-      "panels": [
-        {
-          "key": "input",
-          "label": "Input",
-          "asset_rel": "assets/gallery/testb14_limitation/input.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "gt",
-          "label": "GT",
-          "asset_rel": "assets/gallery/testb14_limitation/gt.webp",
-          "fg_iou": null,
-          "dice": null,
-          "eval_miou": null,
-          "eval_ari": null
-        },
-        {
-          "key": "cfc",
-          "label": "CFC baseline",
-          "asset_rel": "assets/gallery/testb14_limitation/cfc.webp",
-          "fg_iou": 0.7276278422811661,
-          "dice": 0.8423432691619552,
-          "eval_miou": 0.7008061839730431,
-          "eval_ari": 0.4243867418553739
-        },
-        {
-          "key": "all_scales",
-          "label": "all_scales d64",
-          "asset_rel": "assets/gallery/testb14_limitation/all_scales.webp",
-          "fg_iou": 0.41719347336799106,
-          "dice": 0.5887600828086256,
-          "eval_miou": 0.5111424575646774,
-          "eval_ari": 0.14735817430756099
-        },
-        {
-          "key": "best",
-          "label": "fpn_2_only d128",
-          "asset_rel": "assets/gallery/testb14_limitation/best.webp",
-          "fg_iou": 0.4390723233828529,
-          "dice": 0.6102157845002784,
-          "eval_miou": 0.5254329992641056,
-          "eval_ari": 0.1633992494452184
-        }
-      ],
-      "delta_best_vs_cfc": -0.28855551889831316,
-      "delta_best_vs_all_scales": 0.02187885001486184
+    "monuseg": {
+      "fg_iou": 0.7017,
+      "dice": 0.8243,
+      "source": "/home/nada/PycharmProjects/texture representations/outputs/autosam_cross_dataset_phase1/README.md",
+      "reported_only": true
     }
-  ],
+  },
+  "stories": {
+    "glas": [
+      {
+        "story_id": "testa38_supervision_rescue",
+        "crop_name": "testA_38",
+        "tag": "supervision rescue",
+        "title": "Supervision Repairs a Near-Collapse Case",
+        "summary": "The training-free CFC branch nearly misses the gland entirely here. Both supervised heads recover the structure, and the best coarse-only readout edges the all-scales head again.",
+        "strip_rel": "assets/gallery/testa38_supervision_rescue/strip.webp",
+        "panels": [
+          {
+            "key": "input",
+            "label": "Input",
+            "asset_rel": "assets/gallery/testa38_supervision_rescue/input.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "gt",
+            "label": "GT",
+            "asset_rel": "assets/gallery/testa38_supervision_rescue/gt.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "cfc",
+            "label": "CFC baseline",
+            "asset_rel": "assets/gallery/testa38_supervision_rescue/cfc.webp",
+            "fg_iou": 0.11594313596865649,
+            "dice": 0.2077939856102363,
+            "eval_miou": 0.2982176438401151,
+            "eval_ari": 0.0006128308877230939
+          },
+          {
+            "key": "all_scales",
+            "label": "all_scales d64",
+            "asset_rel": "assets/gallery/testa38_supervision_rescue/all_scales.webp",
+            "fg_iou": 0.8216774857941485,
+            "dice": 0.9021108206054855,
+            "eval_miou": 0.8973657472431122,
+            "eval_ari": 0.8613297411778081
+          },
+          {
+            "key": "best",
+            "label": "fpn_2_only d128",
+            "asset_rel": "assets/gallery/testa38_supervision_rescue/best.webp",
+            "fg_iou": 0.8320082116947058,
+            "dice": 0.9083018366222864,
+            "eval_miou": 0.9024699466724095,
+            "eval_ari": 0.867042782513808
+          }
+        ],
+        "delta_label": "\u0394 best vs CFC",
+        "delta_best_vs_cfc": 0.7160650757260494,
+        "delta_best_vs_all_scales": 0.010330725900557391
+      },
+      {
+        "story_id": "testa39_coarse_only_edge",
+        "crop_name": "testA_39",
+        "tag": "coarse-only edge",
+        "title": "Coarse-Only Can Beat the Multiscale Head Cleanly",
+        "summary": "This crop is a useful reminder that the best current result is not just a width effect. The coarse-only d128 head is visibly cleaner than the all-scales d64 baseline.",
+        "strip_rel": "assets/gallery/testa39_coarse_only_edge/strip.webp",
+        "panels": [
+          {
+            "key": "input",
+            "label": "Input",
+            "asset_rel": "assets/gallery/testa39_coarse_only_edge/input.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "gt",
+            "label": "GT",
+            "asset_rel": "assets/gallery/testa39_coarse_only_edge/gt.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "cfc",
+            "label": "CFC baseline",
+            "asset_rel": "assets/gallery/testa39_coarse_only_edge/cfc.webp",
+            "fg_iou": 0.18002760287935918,
+            "dice": 0.30512439275162345,
+            "eval_miou": 0.340722043928744,
+            "eval_ari": 0.010135981423272433
+          },
+          {
+            "key": "all_scales",
+            "label": "all_scales d64",
+            "asset_rel": "assets/gallery/testa39_coarse_only_edge/all_scales.webp",
+            "fg_iou": 0.7570748347665411,
+            "dice": 0.8617445538307218,
+            "eval_miou": 0.8542110849931384,
+            "eval_ari": 0.7891117927495743
+          },
+          {
+            "key": "best",
+            "label": "fpn_2_only d128",
+            "asset_rel": "assets/gallery/testa39_coarse_only_edge/best.webp",
+            "fg_iou": 0.8481083423012956,
+            "dice": 0.9178123629323774,
+            "eval_miou": 0.9082515497883188,
+            "eval_ari": 0.8684636917241744
+          }
+        ],
+        "delta_label": "\u0394 best vs CFC",
+        "delta_best_vs_cfc": 0.6680807394219365,
+        "delta_best_vs_all_scales": 0.09103350753475448
+      },
+      {
+        "story_id": "testa53_all_scales_holdout",
+        "crop_name": "testA_53",
+        "tag": "all-scales holdout",
+        "title": "Coarse-Only Is Strongest Overall, But Not Universal",
+        "summary": "The strongest aggregate result is coarse-only, but this crop is a good counterexample. The all-scales d64 head is actually better here than the best coarse-only run.",
+        "strip_rel": "assets/gallery/testa53_all_scales_holdout/strip.webp",
+        "panels": [
+          {
+            "key": "input",
+            "label": "Input",
+            "asset_rel": "assets/gallery/testa53_all_scales_holdout/input.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "gt",
+            "label": "GT",
+            "asset_rel": "assets/gallery/testa53_all_scales_holdout/gt.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "cfc",
+            "label": "CFC baseline",
+            "asset_rel": "assets/gallery/testa53_all_scales_holdout/cfc.webp",
+            "fg_iou": 0.2163408035121752,
+            "dice": 0.3557239926301785,
+            "eval_miou": 0.39623874516293134,
+            "eval_ari": 0.041445976465184754
+          },
+          {
+            "key": "all_scales",
+            "label": "all_scales d64",
+            "asset_rel": "assets/gallery/testa53_all_scales_holdout/all_scales.webp",
+            "fg_iou": 0.8880003719373286,
+            "dice": 0.9406781747888399,
+            "eval_miou": 0.9293178760494201,
+            "eval_ari": 0.8933074973517963
+          },
+          {
+            "key": "best",
+            "label": "fpn_2_only d128",
+            "asset_rel": "assets/gallery/testa53_all_scales_holdout/best.webp",
+            "fg_iou": 0.8348770042824419,
+            "dice": 0.9100086843247938,
+            "eval_miou": 0.8947677881094437,
+            "eval_ari": 0.8383119752839523
+          }
+        ],
+        "delta_label": "\u0394 best vs CFC",
+        "delta_best_vs_cfc": 0.6185362007702667,
+        "delta_best_vs_all_scales": -0.05312336765488668
+      },
+      {
+        "story_id": "testa17_capacity_and_readout",
+        "crop_name": "testA_17",
+        "tag": "capacity helps",
+        "title": "Better Readout First, Then Extra Width",
+        "summary": "CFC is weak, the all-scales head improves it, and the best coarse-only head improves further. This is representative of the current coarse-dominant readout story.",
+        "strip_rel": "assets/gallery/testa17_capacity_and_readout/strip.webp",
+        "panels": [
+          {
+            "key": "input",
+            "label": "Input",
+            "asset_rel": "assets/gallery/testa17_capacity_and_readout/input.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "gt",
+            "label": "GT",
+            "asset_rel": "assets/gallery/testa17_capacity_and_readout/gt.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "cfc",
+            "label": "CFC baseline",
+            "asset_rel": "assets/gallery/testa17_capacity_and_readout/cfc.webp",
+            "fg_iou": 0.378715040235383,
+            "dice": 0.5493739158321307,
+            "eval_miou": 0.44032181308230023,
+            "eval_ari": 0.04511156861160009
+          },
+          {
+            "key": "all_scales",
+            "label": "all_scales d64",
+            "asset_rel": "assets/gallery/testa17_capacity_and_readout/all_scales.webp",
+            "fg_iou": 0.6465770907930656,
+            "dice": 0.7853590268058994,
+            "eval_miou": 0.6366870179931186,
+            "eval_ari": 0.3090573333234993
+          },
+          {
+            "key": "best",
+            "label": "fpn_2_only d128",
+            "asset_rel": "assets/gallery/testa17_capacity_and_readout/best.webp",
+            "fg_iou": 0.8164142801701447,
+            "dice": 0.8989295989169064,
+            "eval_miou": 0.783836438446684,
+            "eval_ari": 0.5830804905578093
+          }
+        ],
+        "delta_label": "\u0394 best vs CFC",
+        "delta_best_vs_cfc": 0.43769923993476173,
+        "delta_best_vs_all_scales": 0.16983718937707915
+      },
+      {
+        "story_id": "testb14_limitation",
+        "crop_name": "testB_14",
+        "tag": "limitation",
+        "title": "A Real Failure Case Still Exists",
+        "summary": "This crop stays difficult for the supervised frozen-feature heads and is worth keeping visible. The current page is not claiming that the readout fully dominates every CFC sample.",
+        "strip_rel": "assets/gallery/testb14_limitation/strip.webp",
+        "panels": [
+          {
+            "key": "input",
+            "label": "Input",
+            "asset_rel": "assets/gallery/testb14_limitation/input.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "gt",
+            "label": "GT",
+            "asset_rel": "assets/gallery/testb14_limitation/gt.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "cfc",
+            "label": "CFC baseline",
+            "asset_rel": "assets/gallery/testb14_limitation/cfc.webp",
+            "fg_iou": 0.7276278422811661,
+            "dice": 0.8423432691619552,
+            "eval_miou": 0.7008061839730431,
+            "eval_ari": 0.4243867418553739
+          },
+          {
+            "key": "all_scales",
+            "label": "all_scales d64",
+            "asset_rel": "assets/gallery/testb14_limitation/all_scales.webp",
+            "fg_iou": 0.41719347336799106,
+            "dice": 0.5887600828086256,
+            "eval_miou": 0.5111424575646774,
+            "eval_ari": 0.14735817430756099
+          },
+          {
+            "key": "best",
+            "label": "fpn_2_only d128",
+            "asset_rel": "assets/gallery/testb14_limitation/best.webp",
+            "fg_iou": 0.4390723233828529,
+            "dice": 0.6102157845002784,
+            "eval_miou": 0.5254329992641056,
+            "eval_ari": 0.1633992494452184
+          }
+        ],
+        "delta_label": "\u0394 best vs CFC",
+        "delta_best_vs_cfc": -0.28855551889831316,
+        "delta_best_vs_all_scales": 0.02187885001486184
+      }
+    ],
+    "monuseg": [
+      {
+        "story_id": "monuseg_44_2665_residual_jump",
+        "crop_name": "TCGA-44-2665-01B-06-BS6",
+        "tag": "residual jump",
+        "title": "Residual Refinement Produces a Clear MoNuSeg Leap",
+        "summary": "This is the strongest single-sample gain in the current MoNuSeg set. The native coarse-only run barely changes the strict 512x512 baseline, while the coarse+mid residual branch sharpens the nucleus map immediately.",
+        "strip_rel": "assets/gallery/monuseg_44_2665_residual_jump/strip.webp",
+        "panels": [
+          {
+            "key": "input",
+            "label": "Input",
+            "asset_rel": "assets/gallery/monuseg_44_2665_residual_jump/input.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "gt",
+            "label": "GT",
+            "asset_rel": "assets/gallery/monuseg_44_2665_residual_jump/gt.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "strict512",
+            "label": "strict 512x512 coarse",
+            "asset_rel": "assets/gallery/monuseg_44_2665_residual_jump/strict512.webp",
+            "fg_iou": 0.6436972105189593,
+            "dice": 0.7832308851041084,
+            "eval_miou": 0.7315769403634409,
+            "eval_ari": 0.5205020700188991
+          },
+          {
+            "key": "native_coarse",
+            "label": "native + aug coarse",
+            "asset_rel": "assets/gallery/monuseg_44_2665_residual_jump/native_coarse.webp",
+            "fg_iou": 0.648830675778284,
+            "dice": 0.7870191709916141,
+            "eval_miou": 0.7311271245298465,
+            "eval_ari": 0.5151354672948426
+          },
+          {
+            "key": "refine",
+            "label": "native + aug refine",
+            "asset_rel": "assets/gallery/monuseg_44_2665_residual_jump/refine.webp",
+            "fg_iou": 0.7311653986088527,
+            "dice": 0.8447088870842843,
+            "eval_miou": 0.7979698470836281,
+            "eval_ari": 0.6374262645564527
+          }
+        ],
+        "delta_label": "\u0394 refine vs strict512",
+        "delta_best_vs_cfc": 0.08746818808989332,
+        "delta_best_vs_all_scales": 0.08233472283056864
+      },
+      {
+        "story_id": "monuseg_ac_a2fo_rescue",
+        "crop_name": "TCGA-AC-A2FO-01A-01-TS1",
+        "tag": "rescue case",
+        "title": "When Coarse-Only Stalls, the Mid-Scale Branch Can Rescue It",
+        "summary": "This crop matters because it shows the structural story more clearly than the averages. The small residual branch adds a real correction, not just a cosmetic smoothing effect.",
+        "strip_rel": "assets/gallery/monuseg_ac_a2fo_rescue/strip.webp",
+        "panels": [
+          {
+            "key": "input",
+            "label": "Input",
+            "asset_rel": "assets/gallery/monuseg_ac_a2fo_rescue/input.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "gt",
+            "label": "GT",
+            "asset_rel": "assets/gallery/monuseg_ac_a2fo_rescue/gt.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "strict512",
+            "label": "strict 512x512 coarse",
+            "asset_rel": "assets/gallery/monuseg_ac_a2fo_rescue/strict512.webp",
+            "fg_iou": 0.5685596906718221,
+            "dice": 0.7249449211949405,
+            "eval_miou": 0.7012773812511093,
+            "eval_ari": 0.4974327894317778
+          },
+          {
+            "key": "native_coarse",
+            "label": "native + aug coarse",
+            "asset_rel": "assets/gallery/monuseg_ac_a2fo_rescue/native_coarse.webp",
+            "fg_iou": 0.5829730768307034,
+            "dice": 0.7365546330047299,
+            "eval_miou": 0.7052941912980268,
+            "eval_ari": 0.49649488286652993
+          },
+          {
+            "key": "refine",
+            "label": "native + aug refine",
+            "asset_rel": "assets/gallery/monuseg_ac_a2fo_rescue/refine.webp",
+            "fg_iou": 0.6369193792779142,
+            "dice": 0.77819272878164,
+            "eval_miou": 0.7439532123504623,
+            "eval_ari": 0.5624493307129685
+          }
+        ],
+        "delta_label": "\u0394 refine vs strict512",
+        "delta_best_vs_cfc": 0.0683596886060921,
+        "delta_best_vs_all_scales": 0.05394630244721077
+      },
+      {
+        "story_id": "monuseg_fg_a4mu_strong_anchor",
+        "crop_name": "TCGA-FG-A4MU-01B-01-TS1",
+        "tag": "already strong",
+        "title": "The Best MoNuSeg Head Still Helps Even When the Baseline Is Decent",
+        "summary": "The strict 512x512 baseline is already respectable on this crop, but the residual branch still improves it. That is why the page treats the MoNuSeg gain as a readout effect, not just a rescue-on-failures effect.",
+        "strip_rel": "assets/gallery/monuseg_fg_a4mu_strong_anchor/strip.webp",
+        "panels": [
+          {
+            "key": "input",
+            "label": "Input",
+            "asset_rel": "assets/gallery/monuseg_fg_a4mu_strong_anchor/input.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "gt",
+            "label": "GT",
+            "asset_rel": "assets/gallery/monuseg_fg_a4mu_strong_anchor/gt.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "strict512",
+            "label": "strict 512x512 coarse",
+            "asset_rel": "assets/gallery/monuseg_fg_a4mu_strong_anchor/strict512.webp",
+            "fg_iou": 0.6922862374640748,
+            "dice": 0.8181668350638834,
+            "eval_miou": 0.7842697768156828,
+            "eval_ari": 0.6330214466865262
+          },
+          {
+            "key": "native_coarse",
+            "label": "native + aug coarse",
+            "asset_rel": "assets/gallery/monuseg_fg_a4mu_strong_anchor/native_coarse.webp",
+            "fg_iou": 0.6822240347846583,
+            "dice": 0.8110977143088909,
+            "eval_miou": 0.7754319028316047,
+            "eval_ari": 0.6157382252478303
+          },
+          {
+            "key": "refine",
+            "label": "native + aug refine",
+            "asset_rel": "assets/gallery/monuseg_fg_a4mu_strong_anchor/refine.webp",
+            "fg_iou": 0.7301425268405155,
+            "dice": 0.8440258712949607,
+            "eval_miou": 0.8108846542070922,
+            "eval_ari": 0.678455804162196
+          }
+        ],
+        "delta_label": "\u0394 refine vs strict512",
+        "delta_best_vs_cfc": 0.0378562893764407,
+        "delta_best_vs_all_scales": 0.04791849205585719
+      },
+      {
+        "story_id": "monuseg_ao_a0j2_limited_gain",
+        "crop_name": "TCGA-AO-A0J2-01A-01-BSA",
+        "tag": "limited gain",
+        "title": "The MoNuSeg Refinement Branch Is Strong, Not Magic",
+        "summary": "This crop is one of the smallest positive deltas. Keeping it visible prevents the section from overstating the improvement and makes the average gain easier to trust.",
+        "strip_rel": "assets/gallery/monuseg_ao_a0j2_limited_gain/strip.webp",
+        "panels": [
+          {
+            "key": "input",
+            "label": "Input",
+            "asset_rel": "assets/gallery/monuseg_ao_a0j2_limited_gain/input.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "gt",
+            "label": "GT",
+            "asset_rel": "assets/gallery/monuseg_ao_a0j2_limited_gain/gt.webp",
+            "fg_iou": null,
+            "dice": null,
+            "eval_miou": null,
+            "eval_ari": null
+          },
+          {
+            "key": "strict512",
+            "label": "strict 512x512 coarse",
+            "asset_rel": "assets/gallery/monuseg_ao_a0j2_limited_gain/strict512.webp",
+            "fg_iou": 0.6253686643816118,
+            "dice": 0.7695099309909973,
+            "eval_miou": 0.733304814176657,
+            "eval_ari": 0.54190396944935
+          },
+          {
+            "key": "native_coarse",
+            "label": "native + aug coarse",
+            "asset_rel": "assets/gallery/monuseg_ao_a0j2_limited_gain/native_coarse.webp",
+            "fg_iou": 0.6192568905663894,
+            "dice": 0.7648655308173906,
+            "eval_miou": 0.7266080748587294,
+            "eval_ari": 0.5279509346022128
+          },
+          {
+            "key": "refine",
+            "label": "native + aug refine",
+            "asset_rel": "assets/gallery/monuseg_ao_a0j2_limited_gain/refine.webp",
+            "fg_iou": 0.6410968070405121,
+            "dice": 0.7813028509837152,
+            "eval_miou": 0.7414322997850658,
+            "eval_ari": 0.5522401409636553
+          }
+        ],
+        "delta_label": "\u0394 refine vs strict512",
+        "delta_best_vs_cfc": 0.015728142658900324,
+        "delta_best_vs_all_scales": 0.021839916474122645
+      }
+    ]
+  },
   "gallery": {
     "sample_count": 80,
     "story_count": 5
   },
   "notes": [
     "Training-free CFC on GlaS is materially weaker than the dense-supervised frozen-feature heads.",
-    "The best current frozen-feature row is fpn_2_only d128, not all_scales.",
-    "AutoSAM values on this page are reported paper reference values, not reproduced runs in this repo.",
-    "A strict 224x224 protocol-matched rerun is still pending."
+    "GlaS still favors coarse-only, but MoNuSeg now favors a slightly richer coarse-plus-mid residual readout.",
+    "On MoNuSeg, augmentation alone does not explain the jump; the architectural refinement does.",
+    "AutoSAM values on this page are reported paper reference values, not reproduced runs in this repo."
   ]
 }

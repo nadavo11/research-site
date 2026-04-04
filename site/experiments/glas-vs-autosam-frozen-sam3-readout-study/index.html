@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study</title>
+  <title>GlaS + MoNuSeg vs AutoSAM: Frozen SAM3 Readout Study</title>
   <script>
     (() => {
       const storageKey = 'research-site-theme';
@@ -172,13 +172,14 @@
 
     <header style="text-align: center; margin-bottom: 54px;">
       <div class="subtitle">Experiment Report</div>
-      <h1 class="title-gradient">GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study</h1>
+      <h1 class="title-gradient">GlaS + MoNuSeg vs AutoSAM: Frozen SAM3 Readout Study</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 940px; margin-inline: auto;">
-        GlaS is a useful histology stress test because weak training-free binary clustering can mean either missing representation signal or a poor readout. The current answer is much more about the readout: a tiny dense supervised head on frozen SAM3 multiscale features already gets surprisingly close to the cited AutoSAM foreground numbers, and the strongest current frozen-feature variant is unexpectedly the coarsest SAM pyramid level alone.
+        Across GlaS and MoNuSeg, the current evidence points much more strongly to the readout bottleneck than to missing frozen-feature signal. GlaS still shows that a tiny supervised head on frozen SAM3 features is already strong, while the new MoNuSeg runs show that a slightly richer coarse-plus-mid residual readout can get very close to the cited AutoSAM foreground numbers. AutoSAM values on this page remain reported paper references, not reproduced runs.
       </p>
       <div style="margin-top: 18px;">
         <span class="tag good">reviewed</span>
         <span class="tag">glas</span>
+        <span class="tag">monuseg</span>
         <span class="tag">sam3</span>
         <span class="tag">autosam</span>
         <span class="tag">readout</span>
@@ -191,32 +192,32 @@
 
     <section class="executive-summary">
       <h2>Executive Synopsis</h2>
-      <p>GlaS is a useful stress test because weak training-free gland partitioning can mean either that frozen SAM3 lacks gland information or that the readout is poor. The current evidence points much more strongly to the readout bottleneck: even a tiny dense supervised head on frozen SAM3 features is already strong.</p>
-      <p>The strongest current result is unexpectedly <strong>coarse-only</strong>. The best frozen-feature run is <strong><code>fpn_2_only d128</code></strong> at <strong>fg IoU 0.824312</strong> and <strong>Dice 0.899436</strong>, while the legacy <strong>all-scales d64</strong> head lands at <strong>fg IoU 0.803117</strong> and <strong>Dice 0.885918</strong>.</p>
+      <p>GlaS still answers the original question cleanly: weak training-free CFC does <strong>not</strong> imply missing gland information in frozen SAM3. A tiny supervised head is already strong, and the GlaS scale story remains surprisingly coarse-dominant.</p>
+      <p>MoNuSeg adds the more important AutoSAM-comparison update. The new <strong><code>fpn_2 + fpn_1</code> residual-refinement</strong> readout reaches <strong>fg IoU 0.687613</strong> and <strong>Dice 0.814392</strong>, leaving only a small gap to the cited MoNuSeg AutoSAM paper reference. The combined picture is now more precise: the frozen features are strong, but the best readout is dataset-dependent.</p>
     </section>
 
     <section class="section">
       <h2>Headline Findings</h2>
       <div class="metric-grid compact-grid">
   <article class="metric">
-    <div class="k">Training-Free vs Supervised</div>
+    <div class="k">GlaS CFC vs Best Readout</div>
     <div class="v delta-positive">+0.2644</div>
-    <div class="mini-note">Best frozen head vs CFC baseline in foreground IoU.</div>
+    <div class="mini-note">Foreground IoU jump from training-free CFC to <code>fpn_2_only d128</code>.</div>
   </article>
   <article class="metric">
-    <div class="k">Best Current Frozen Run</div>
-    <div class="v">0.824312</div>
-    <div class="mini-note">Foreground IoU 0.824312 · Dice 0.899436.</div>
+    <div class="k">Closest Clean GlaS Endpoint</div>
+    <div class="v">0.835445</div>
+    <div class="mini-note">Foreground IoU 0.835445 · Dice 0.905842 under <code>224x224 + autosam_dense_v1</code>.</div>
   </article>
   <article class="metric">
-    <div class="k">Coarse-Only d64 vs all_scales d64</div>
-    <div class="v delta-positive">+0.0101</div>
-    <div class="mini-note">The coarsest level alone already outruns all-scales at the default width.</div>
+    <div class="k">MoNuSeg Residual Branch Payoff</div>
+    <div class="v delta-positive">+0.0524</div>
+    <div class="mini-note">Foreground IoU gain over the strict <code>512x512</code> coarse-only anchor with only <code>26,882</code> extra params.</div>
   </article>
   <article class="metric">
-    <div class="k">Gap to AutoSAM Reference</div>
-    <div class="v">0.0465</div>
-    <div class="mini-note">Remaining foreground IoU gap to the cited paper value.</div>
+    <div class="k">MoNuSeg Gap to AutoSAM</div>
+    <div class="v">0.0141</div>
+    <div class="mini-note">Remaining foreground IoU gap from the best current MoNuSeg run to the cited paper value.</div>
   </article>
 </div>
     </section>
@@ -226,17 +227,18 @@
       <div class="callout-panel">
         <div>
           <span class="tag warn">protocol caveat</span>
-          <h3>Current Internal Comparison, Not Final AutoSAM Parity</h3>
-          <p class="interpretation-copy">This page is the current best internal comparison for the question “does weak training-free CFC on GlaS mean frozen SAM3 lacks gland signal?”. The answer so far is no: dense supervision on top of frozen SAM3 features is already strong. The remaining fairness gap is a strict <code>224x224</code> protocol-matched rerun, which is still pending.</p>
+          <h3>Serious Internal Comparison, Still Not a Reproduced AutoSAM Benchmark</h3>
+          <p class="interpretation-copy">AutoSAM values on this page are still reported paper references. The new evidence is valuable because it separates two different questions: whether frozen SAM3 features already carry the right signal, and whether the current readout family is expressive enough to use it well on each dataset.</p>
         </div>
         <div class="callout-grid">
-          <div><strong>Dataset</strong><span>GlaS</span></div>
-          <div><strong>Split</strong><span>train → test</span></div>
+          <div><strong>Datasets</strong><span>GlaS and MoNuSeg</span></div>
+          <div><strong>Splits</strong><span>GlaS train → test, MoNuSeg official 30 → 14 or native test</span></div>
           <div><strong>SAM backbone frozen</strong><span>yes</span></div>
-          <div><strong>Supervision</strong><span>dense binary gland masks</span></div>
+          <div><strong>Supervision</strong><span>dense binary gland or nucleus masks</span></div>
           <div><strong>Loss</strong><span>BCEWithLogits + Dice</span></div>
           <div><strong>AutoSAM values here</strong><span>reported paper references only</span></div>
-          <div><strong>Pending caveat</strong><span>strict 224x224 rerun</span></div>
+          <div><strong>GlaS closest clean endpoint</strong><span><code>224x224 + autosam_dense_v1</code> final checkpoint</span></div>
+          <div><strong>MoNuSeg strongest current run</strong><span>native-resolution <code>fpn_2 + fpn_1</code> residual refine</span></div>
         </div>
       </div>
     </section>
@@ -280,22 +282,106 @@
     </section>
 
     <section class="section">
-      <h2>Main Comparison</h2>
-      <p class="interpretation-copy">The ladder view below is the cleanest summary for a cold reviewer: weak training-free CFC, much stronger dense-supervised frozen-feature readout, and a best current frozen-feature run that sits meaningfully below but not absurdly far from the cited AutoSAM reference.</p>
+      <h2>GlaS Readout Story</h2>
+      <p class="interpretation-copy">The ladder below keeps the original GlaS question visible. Training-free CFC is weak, dense supervision changes the picture completely, and the cleanest current <code>224x224 + autosam_dense_v1</code> endpoint improves again over the earlier readout-study checkpoint.</p>
       <div class="chart-grid">
         <article class="chart-card">
           <img src="assets/plots/supervision_ladder.svg" alt="Foreground metrics ladder from CFC to AutoSAM reference" data-zoom-src="assets/plots/supervision_ladder.svg" />
         </article>
         <article class="note-card">
-          <h3>Current Readout Story</h3>
-          <p class="interpretation-copy">The jump from the training-free CFC baseline to the best frozen head is <strong>+0.264442</strong> in foreground IoU and <strong>+0.196342</strong> in Dice. That is too large to explain away as a minor evaluator mismatch.</p>
-          <p class="interpretation-copy" style="margin-top: 14px;">The remaining gap to the cited AutoSAM reference is <strong>0.046488</strong> in foreground IoU and <strong>0.028764</strong> in Dice. This is why the current page is worth keeping as a serious internal baseline, even before the pending 224x224 rerun.</p>
+          <h3>What GlaS Still Says</h3>
+          <p class="interpretation-copy">The jump from the training-free CFC baseline to the original best frozen head is <strong>+0.264442</strong> in foreground IoU and <strong>+0.196342</strong> in Dice. That is far too large to explain away as a minor evaluator mismatch.</p>
+          <p class="interpretation-copy" style="margin-top: 14px;">Using the cleaner <code>224x224 + autosam_dense_v1</code> endpoint, the remaining GlaS gap to the cited AutoSAM reference is <strong>0.035355</strong> in foreground IoU and <strong>0.022358</strong> in Dice.</p>
         </article>
       </div>
     </section>
 
     <section class="section">
-      <h2>Scale Ablations</h2>
+      <h2>MoNuSeg Extension</h2>
+      <p class="interpretation-copy">MoNuSeg is the more important AutoSAM-comparison update. The strict <code>512x512</code> coarse-only anchor is clean and useful, the new native coarse-only run is basically flat, and the real movement comes when the readout gets a tiny <code>fpn_1</code> residual refinement branch.</p>
+      <div class="chart-grid">
+        <article class="chart-card">
+          <img src="assets/plots/monuseg_readout_story.svg" alt="MoNuSeg readout comparison against AutoSAM reference" data-zoom-src="assets/plots/monuseg_readout_story.svg" />
+        </article>
+        <article class="note-card">
+          <h3>What Changed on MoNuSeg</h3>
+          <p class="interpretation-copy">The native coarse-only run changes little relative to the strict <code>512x512</code> anchor: it shifts foreground IoU by only <strong>-0.003699</strong> and Dice by <strong>-0.002690</strong>. The important move is architectural: the residual branch lifts foreground IoU by <strong>+0.052412</strong> and Dice by <strong>+0.038076</strong> over the strict anchor.</p>
+          <p class="interpretation-copy" style="margin-top: 14px;">That leaves only <strong>0.014087</strong> IoU and <strong>0.009908</strong> Dice to the cited paper reference. It is still not protocol-identical, but it is no longer a “frozen features are far away” story.</p>
+        </article>
+      </div>
+      <div style="margin-top: 20px;">
+        <div class="metric-grid compact-grid">
+  <article class="metric">
+    <div class="k">Native Coarse vs Strict 512</div>
+    <div class="v">-0.0037</div>
+    <div class="mini-note">Foreground IoU delta from moving to native-resolution + AutoSAM-style augmentation without changing the head.</div>
+  </article>
+  <article class="metric">
+    <div class="k">Residual Refine vs Strict 512</div>
+    <div class="v delta-positive">+0.0524</div>
+    <div class="mini-note">Foreground IoU gain after adding the tiny <code>fpn_1</code> residual branch.</div>
+  </article>
+  <article class="metric">
+    <div class="k">Residual Refine vs Native Coarse</div>
+    <div class="v delta-positive">+0.0561</div>
+    <div class="mini-note">Same training recipe, same backbone, different readout.</div>
+  </article>
+  <article class="metric">
+    <div class="k">MoNuSeg Gap to AutoSAM</div>
+    <div class="v">0.0141</div>
+    <div class="mini-note">Remaining foreground IoU gap from the strongest current MoNuSeg run to the cited paper value.</div>
+  </article>
+</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Cross-Dataset Snapshot</h2>
+      <div class="table-wrap" style="margin-top: 16px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Current strongest frozen run</th>
+              <th>Fg IoU</th>
+              <th>Dice</th>
+              <th>AutoSAM IoU</th>
+              <th>AutoSAM Dice</th>
+              <th>IoU gap</th>
+              <th>Dice gap</th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+  <td><strong>GlaS</strong></td>
+  <td>fpn_2_only d128 @ 224 + autosam aug</td>
+  <td>0.835445</td>
+  <td>0.905842</td>
+  <td>0.870800</td>
+  <td>0.928200</td>
+  <td>0.035355</td>
+  <td>0.022358</td>
+  <td>Cleanest current endpoint; still a reported-reference comparison, not an AutoSAM reproduction.</td>
+</tr>
+<tr>
+  <td><strong>MoNuSeg</strong></td>
+  <td>fpn_2+fpn_1 refine d128 @ native + autosam aug</td>
+  <td>0.687613</td>
+  <td>0.814392</td>
+  <td>0.701700</td>
+  <td>0.824300</td>
+  <td>0.014087</td>
+  <td>0.009908</td>
+  <td>Strongest current row is close to the paper reference, but it is native-resolution rather than the paper's explicit 512x512 route.</td>
+</tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>GlaS Scale Ablations</h2>
       <div class="chart-grid">
         <article class="chart-card">
           <img src="assets/plots/scale_ablation.svg" alt="Scale ablation at d64" data-zoom-src="assets/plots/scale_ablation.svg" />
@@ -304,7 +390,7 @@
           <img src="assets/plots/capacity_sweep.svg" alt="Coarse-only capacity sweep" data-zoom-src="assets/plots/capacity_sweep.svg" />
         </article>
       </div>
-      <p class="qual-note">The key readout is qualitative as much as numeric: dropping from <code>all_scales d64</code> to <code>fpn_2_only d64</code> already improves the result while using fewer parameters, and extra width on top of the coarse-only branch helps again. That is why the page frames the current result as <strong>coarse-dominant</strong>, not just “bigger head wins”.</p>
+      <p class="qual-note">The GlaS readout is qualitative as much as numeric: dropping from <code>all_scales d64</code> to <code>fpn_2_only d64</code> already improves the result while using fewer parameters, and extra width on top of the coarse-only branch helps again. That is why the page still frames GlaS as <strong>coarse-dominant</strong>, not just “bigger head wins”.</p>
     </section>
 
     <section class="section">
@@ -313,6 +399,7 @@
         <table>
           <thead>
             <tr>
+              <th>Dataset</th>
               <th>Method</th>
               <th>Supervision</th>
               <th>Frozen backbone?</th>
@@ -327,6 +414,7 @@
           </thead>
           <tbody>
             <tr>
+  <td><strong>GlaS</strong></td>
   <td><strong>CFC training-free baseline</strong></td>
   <td>none</td>
   <td>yes</td>
@@ -339,6 +427,7 @@
   <td>Exact GlaS flip-avg coarse-only baseline from the phase-1 AutoSAM comparison note.</td>
 </tr>
 <tr>
+  <td><strong>GlaS</strong></td>
   <td><strong>Frozen mask head all_scales d64</strong></td>
   <td>dense binary gland masks</td>
   <td>yes</td>
@@ -351,30 +440,7 @@
   <td>Legacy tiny multiscale decoder; summary bundle records 40 epochs despite the older directory name.</td>
 </tr>
 <tr>
-  <td><strong>Frozen mask head fpn_0_only d64</strong></td>
-  <td>dense binary gland masks</td>
-  <td>yes</td>
-  <td>no</td>
-  <td>90,625</td>
-  <td>0.729788</td>
-  <td>0.838083</td>
-  <td>0.715166</td>
-  <td>0.479865</td>
-  <td>Finest single-scale control.</td>
-</tr>
-<tr>
-  <td><strong>Frozen mask head mid_plus_fine d64</strong></td>
-  <td>dense binary gland masks</td>
-  <td>yes</td>
-  <td>no</td>
-  <td>143,937</td>
-  <td>0.786244</td>
-  <td>0.876425</td>
-  <td>0.771574</td>
-  <td>0.582750</td>
-  <td>Drops the coarsest scale and fuses only the two finer levels.</td>
-</tr>
-<tr>
+  <td><strong>GlaS</strong></td>
   <td><strong>Frozen mask head fpn_2_only d64</strong></td>
   <td>dense binary gland masks</td>
   <td>yes</td>
@@ -387,6 +453,7 @@
   <td>Default-width coarse-only run; this is the ambiguous `fpn_2_only` directory that resolves to d64.</td>
 </tr>
 <tr>
+  <td><strong>GlaS</strong></td>
   <td><strong>Frozen mask head fpn_2_only d32</strong></td>
   <td>dense binary gland masks</td>
   <td>yes</td>
@@ -399,6 +466,7 @@
   <td>Lower-capacity coarse-only control.</td>
 </tr>
 <tr>
+  <td><strong>GlaS</strong></td>
   <td><strong>Frozen mask head fpn_2_only d128</strong></td>
   <td>dense binary gland masks</td>
   <td>yes</td>
@@ -411,6 +479,20 @@
   <td>Best current frozen-feature run and the current internal headline comparison point.</td>
 </tr>
 <tr>
+  <td><strong>GlaS</strong></td>
+  <td><strong>Frozen mask head fpn_2_only d128 @ 224 + autosam aug</strong></td>
+  <td>dense binary gland masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>328,705</td>
+  <td>0.835445</td>
+  <td>0.905842</td>
+  <td>0.822712</td>
+  <td>0.680041</td>
+  <td>Closest current GlaS AutoSAM-style endpoint: explicit 224x224 resize, AutoSAM-style dense augmentation, final epoch checkpoint.</td>
+</tr>
+<tr>
+  <td><strong>GlaS</strong></td>
   <td><strong>AutoSAM reported paper reference</strong></td>
   <td>dense gland masks (paper)</td>
   <td>reported only</td>
@@ -420,7 +502,59 @@
   <td>0.928200</td>
   <td>n/a</td>
   <td>n/a</td>
-  <td>Not reproduced by us in this repo; strict 224x224 protocol-matched rerun is still pending.</td>
+  <td>Reported paper reference only; not reproduced by us in this repo.</td>
+</tr>
+<tr>
+  <td><strong>MoNuSeg</strong></td>
+  <td><strong>Frozen mask head fpn_2_only d128 @ 512x512</strong></td>
+  <td>dense binary nucleus masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>328,705</td>
+  <td>0.635201</td>
+  <td>0.776317</td>
+  <td>0.755303</td>
+  <td>0.598507</td>
+  <td>Strict MoNuSeg anchor: official 30 -&gt; 14 split semantics, explicit 512x512 resize, direct nucleus foreground metrics.</td>
+</tr>
+<tr>
+  <td><strong>MoNuSeg</strong></td>
+  <td><strong>Frozen mask head fpn_2_only d128 @ native + autosam aug</strong></td>
+  <td>dense binary nucleus masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>328,705</td>
+  <td>0.631503</td>
+  <td>0.773626</td>
+  <td>0.749748</td>
+  <td>0.585474</td>
+  <td>Native-resolution coarse-only run with AutoSAM-style augmentation; roughly flat versus the strict 512x512 anchor.</td>
+</tr>
+<tr>
+  <td><strong>MoNuSeg</strong></td>
+  <td><strong>Frozen mask head fpn_2+fpn_1 refine d128 @ native + autosam aug</strong></td>
+  <td>dense binary nucleus masks</td>
+  <td>yes</td>
+  <td>no</td>
+  <td>355,587</td>
+  <td>0.687613</td>
+  <td>0.814392</td>
+  <td>0.789239</td>
+  <td>0.653307</td>
+  <td>Strongest current MoNuSeg run: coarse head plus tiny mid-scale residual refinement with only a small parameter increase.</td>
+</tr>
+<tr>
+  <td><strong>MoNuSeg</strong></td>
+  <td><strong>AutoSAM reported paper reference</strong></td>
+  <td>dense nucleus masks (paper)</td>
+  <td>reported only</td>
+  <td>yes (reported)</td>
+  <td>learned prompt encoder (reported in paper)</td>
+  <td>0.701700</td>
+  <td>0.824300</td>
+  <td>n/a</td>
+  <td>n/a</td>
+  <td>Reported paper reference only; current strongest local run is native-resolution and not resize-matched to the paper 512x512 setting.</td>
 </tr>
           </tbody>
         </table>
@@ -432,7 +566,7 @@
 
     <section class="section">
       <h2>Replication Details</h2>
-      <p class="interpretation-copy">The commands below are the compact replication ladder from the method note. They are enough to smoke-test the path, reproduce the 40-epoch all-scales reference, and rerun the current best coarse-only width-128 result under the recorded defaults.</p>
+      <p class="interpretation-copy">The commands below are the compact replication ladder for the main GlaS and MoNuSeg comparison points used on this page. They are enough to smoke-test the path, reproduce the clean GlaS endpoint, reproduce the strict MoNuSeg anchor, and rerun the current best MoNuSeg refine variant.</p>
       <div style="margin-top: 20px;">
         <div class="card-grid compact-grid">
   <article class="card">
@@ -466,24 +600,45 @@
   --no-save-visuals</code></pre>
         </article>
         <article class="code-panel">
-          <h3>Phase-2 Reference + Best Current Run</h3>
-          <pre><code># 40-epoch all-scales reference
-PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \
-  --dataset-root datasets/GlaS \
-  --device cuda \
-  --variant all_scales \
-  --num-epochs 40 \
-  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_all_scales_test_e20_visuals
-
-# best current coarse-only d128
+          <h3>GlaS Clean Endpoint</h3>
+          <pre><code># GlaS 224x224 + autosam_dense_v1 final checkpoint
 PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \
   --dataset-root datasets/GlaS \
   --device cuda \
   --variant fpn_2_only \
   --projection-dim 128 \
   --decoder-dim 128 \
+  --resize-height 224 \
+  --resize-width 224 \
+  --train-augmentation-policy autosam_dense_v1 \
+  --eval-every-epochs 1 \
+  --num-epochs 200 \
+  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_fpn_2_only_d128_224_autosamaug_e200</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>MoNuSeg Anchor + Best Current Run</h3>
+          <pre><code># strict 512x512 anchor
+PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-monuseg-frozen-sam-mask-head \
+  --dataset-name RationAI/MoNuSeg \
+  --device cuda \
+  --variant fpn_2_only \
+  --projection-dim 128 \
+  --decoder-dim 128 \
+  --resize-height 512 \
+  --resize-width 512 \
   --num-epochs 40 \
-  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_fpn_2_only_d128_test_e40</code></pre>
+  --output-dir outputs/monuseg_binary/frozen_sam_mask_head/train_fpn_2_only_d128_512_test_e40
+
+# best current MoNuSeg refine run
+PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-monuseg-frozen-sam-mask-head \
+  --dataset-name RationAI/MoNuSeg \
+  --device cuda \
+  --variant fpn_2_plus_fpn_1_refine \
+  --projection-dim 128 \
+  --decoder-dim 128 \
+  --train-augmentation-policy autosam_dense_v1 \
+  --num-epochs 20 \
+  --output-dir outputs/monuseg_binary/frozen_sam_mask_head/train_fpn_2_plus_fpn_1_refine_d128_native_autosamaug_e20</code></pre>
         </article>
       </div>
       <div class="artifact-row">
@@ -495,10 +650,10 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
     <section class="section">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
         <div>
-          <h2>Qualitative Comparison</h2>
+          <h2>GlaS Qualitative Comparison</h2>
           <p class="interpretation-copy">Each row below uses the repo-native GlaS triptych panels, cropped back into explicit <strong>Input</strong>, <strong>GT</strong>, and method-specific prediction columns. That keeps the page faithful to the saved run artifacts instead of fabricating a new qualitative format.</p>
         </div>
-        <a class="btn" href="gallery.html">Open Lightweight Gallery →</a>
+        <a class="btn" href="gallery.html">Open GlaS Gallery →</a>
       </div>
       <div style="margin-top: 24px;">
         <article class="story-block">
@@ -715,18 +870,194 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
     </section>
 
     <section class="section">
+      <h2>MoNuSeg Qualitative Comparison</h2>
+      <p class="interpretation-copy">The MoNuSeg rows below use the same triptych-cropping approach, but the columns are now <strong>Input | GT | strict 512x512 coarse | native + aug coarse | native + aug refine</strong>. This section exists because the MoNuSeg average is not just a small training tweak: the residual branch visibly changes the prediction behavior.</p>
+      <div style="margin-top: 24px;">
+        <article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">residual jump</span>
+                    <span class="pill">TCGA-44-2665-01B-06-BS6</span>
+                    <span class="pill">Δ refine vs strict512 +0.0875</span>
+                  </div>
+                  <h3>Residual Refinement Produces a Clear MoNuSeg Leap</h3>
+                  <p class="story-summary">This is the strongest single-sample gain in the current MoNuSeg set. The native coarse-only run barely changes the strict 512x512 baseline, while the coarse+mid residual branch sharpens the nucleus map immediately.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/monuseg_44_2665_residual_jump/input.webp" alt="TCGA-44-2665-01B-06-BS6 — Input" data-zoom-src="assets/gallery/monuseg_44_2665_residual_jump/input.webp" />
+  <figcaption>
+    <strong>Input</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_44_2665_residual_jump/gt.webp" alt="TCGA-44-2665-01B-06-BS6 — GT" data-zoom-src="assets/gallery/monuseg_44_2665_residual_jump/gt.webp" />
+  <figcaption>
+    <strong>GT</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_44_2665_residual_jump/strict512.webp" alt="TCGA-44-2665-01B-06-BS6 — strict 512x512 coarse" data-zoom-src="assets/gallery/monuseg_44_2665_residual_jump/strict512.webp" />
+  <figcaption>
+    <strong>strict 512x512 coarse</strong>
+    <div class="mini-note">Fg IoU 0.6437 · Dice 0.7832</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_44_2665_residual_jump/native_coarse.webp" alt="TCGA-44-2665-01B-06-BS6 — native + aug coarse" data-zoom-src="assets/gallery/monuseg_44_2665_residual_jump/native_coarse.webp" />
+  <figcaption>
+    <strong>native + aug coarse</strong>
+    <div class="mini-note">Fg IoU 0.6488 · Dice 0.7870</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_44_2665_residual_jump/refine.webp" alt="TCGA-44-2665-01B-06-BS6 — native + aug refine" data-zoom-src="assets/gallery/monuseg_44_2665_residual_jump/refine.webp" />
+  <figcaption>
+    <strong>native + aug refine</strong>
+    <div class="mini-note">Fg IoU 0.7312 · Dice 0.8447</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">rescue case</span>
+                    <span class="pill">TCGA-AC-A2FO-01A-01-TS1</span>
+                    <span class="pill">Δ refine vs strict512 +0.0684</span>
+                  </div>
+                  <h3>When Coarse-Only Stalls, the Mid-Scale Branch Can Rescue It</h3>
+                  <p class="story-summary">This crop matters because it shows the structural story more clearly than the averages. The small residual branch adds a real correction, not just a cosmetic smoothing effect.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/monuseg_ac_a2fo_rescue/input.webp" alt="TCGA-AC-A2FO-01A-01-TS1 — Input" data-zoom-src="assets/gallery/monuseg_ac_a2fo_rescue/input.webp" />
+  <figcaption>
+    <strong>Input</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_ac_a2fo_rescue/gt.webp" alt="TCGA-AC-A2FO-01A-01-TS1 — GT" data-zoom-src="assets/gallery/monuseg_ac_a2fo_rescue/gt.webp" />
+  <figcaption>
+    <strong>GT</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_ac_a2fo_rescue/strict512.webp" alt="TCGA-AC-A2FO-01A-01-TS1 — strict 512x512 coarse" data-zoom-src="assets/gallery/monuseg_ac_a2fo_rescue/strict512.webp" />
+  <figcaption>
+    <strong>strict 512x512 coarse</strong>
+    <div class="mini-note">Fg IoU 0.5686 · Dice 0.7249</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_ac_a2fo_rescue/native_coarse.webp" alt="TCGA-AC-A2FO-01A-01-TS1 — native + aug coarse" data-zoom-src="assets/gallery/monuseg_ac_a2fo_rescue/native_coarse.webp" />
+  <figcaption>
+    <strong>native + aug coarse</strong>
+    <div class="mini-note">Fg IoU 0.5830 · Dice 0.7366</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_ac_a2fo_rescue/refine.webp" alt="TCGA-AC-A2FO-01A-01-TS1 — native + aug refine" data-zoom-src="assets/gallery/monuseg_ac_a2fo_rescue/refine.webp" />
+  <figcaption>
+    <strong>native + aug refine</strong>
+    <div class="mini-note">Fg IoU 0.6369 · Dice 0.7782</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">already strong</span>
+                    <span class="pill">TCGA-FG-A4MU-01B-01-TS1</span>
+                    <span class="pill">Δ refine vs strict512 +0.0379</span>
+                  </div>
+                  <h3>The Best MoNuSeg Head Still Helps Even When the Baseline Is Decent</h3>
+                  <p class="story-summary">The strict 512x512 baseline is already respectable on this crop, but the residual branch still improves it. That is why the page treats the MoNuSeg gain as a readout effect, not just a rescue-on-failures effect.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/monuseg_fg_a4mu_strong_anchor/input.webp" alt="TCGA-FG-A4MU-01B-01-TS1 — Input" data-zoom-src="assets/gallery/monuseg_fg_a4mu_strong_anchor/input.webp" />
+  <figcaption>
+    <strong>Input</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_fg_a4mu_strong_anchor/gt.webp" alt="TCGA-FG-A4MU-01B-01-TS1 — GT" data-zoom-src="assets/gallery/monuseg_fg_a4mu_strong_anchor/gt.webp" />
+  <figcaption>
+    <strong>GT</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_fg_a4mu_strong_anchor/strict512.webp" alt="TCGA-FG-A4MU-01B-01-TS1 — strict 512x512 coarse" data-zoom-src="assets/gallery/monuseg_fg_a4mu_strong_anchor/strict512.webp" />
+  <figcaption>
+    <strong>strict 512x512 coarse</strong>
+    <div class="mini-note">Fg IoU 0.6923 · Dice 0.8182</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_fg_a4mu_strong_anchor/native_coarse.webp" alt="TCGA-FG-A4MU-01B-01-TS1 — native + aug coarse" data-zoom-src="assets/gallery/monuseg_fg_a4mu_strong_anchor/native_coarse.webp" />
+  <figcaption>
+    <strong>native + aug coarse</strong>
+    <div class="mini-note">Fg IoU 0.6822 · Dice 0.8111</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_fg_a4mu_strong_anchor/refine.webp" alt="TCGA-FG-A4MU-01B-01-TS1 — native + aug refine" data-zoom-src="assets/gallery/monuseg_fg_a4mu_strong_anchor/refine.webp" />
+  <figcaption>
+    <strong>native + aug refine</strong>
+    <div class="mini-note">Fg IoU 0.7301 · Dice 0.8440</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+<article class="story-block">
+                  <div class="story-head">
+                    <span class="tag good">limited gain</span>
+                    <span class="pill">TCGA-AO-A0J2-01A-01-BSA</span>
+                    <span class="pill">Δ refine vs strict512 +0.0157</span>
+                  </div>
+                  <h3>The MoNuSeg Refinement Branch Is Strong, Not Magic</h3>
+                  <p class="story-summary">This crop is one of the smallest positive deltas. Keeping it visible prevents the section from overstating the improvement and makes the average gain easier to trust.</p>
+                  <div class="story-grid">
+                    <figure>
+  <img src="assets/gallery/monuseg_ao_a0j2_limited_gain/input.webp" alt="TCGA-AO-A0J2-01A-01-BSA — Input" data-zoom-src="assets/gallery/monuseg_ao_a0j2_limited_gain/input.webp" />
+  <figcaption>
+    <strong>Input</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_ao_a0j2_limited_gain/gt.webp" alt="TCGA-AO-A0J2-01A-01-BSA — GT" data-zoom-src="assets/gallery/monuseg_ao_a0j2_limited_gain/gt.webp" />
+  <figcaption>
+    <strong>GT</strong>
+
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_ao_a0j2_limited_gain/strict512.webp" alt="TCGA-AO-A0J2-01A-01-BSA — strict 512x512 coarse" data-zoom-src="assets/gallery/monuseg_ao_a0j2_limited_gain/strict512.webp" />
+  <figcaption>
+    <strong>strict 512x512 coarse</strong>
+    <div class="mini-note">Fg IoU 0.6254 · Dice 0.7695</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_ao_a0j2_limited_gain/native_coarse.webp" alt="TCGA-AO-A0J2-01A-01-BSA — native + aug coarse" data-zoom-src="assets/gallery/monuseg_ao_a0j2_limited_gain/native_coarse.webp" />
+  <figcaption>
+    <strong>native + aug coarse</strong>
+    <div class="mini-note">Fg IoU 0.6193 · Dice 0.7649</div>
+  </figcaption>
+</figure> <figure>
+  <img src="assets/gallery/monuseg_ao_a0j2_limited_gain/refine.webp" alt="TCGA-AO-A0J2-01A-01-BSA — native + aug refine" data-zoom-src="assets/gallery/monuseg_ao_a0j2_limited_gain/refine.webp" />
+  <figcaption>
+    <strong>native + aug refine</strong>
+    <div class="mini-note">Fg IoU 0.6411 · Dice 0.7813</div>
+  </figcaption>
+</figure>
+                  </div>
+                </article>
+      </div>
+    </section>
+
+    <section class="section">
       <h2>Interpretation</h2>
-      <p class="interpretation-copy">The current evidence does <strong>not</strong> say that SAM3 is already AutoSAM or that the project is solved. It does say that weak training-free CFC on GlaS should not be read as evidence that frozen SAM3 lacks gland information. A tiny supervised head already closes most of the gap to the cited AutoSAM foreground numbers, and the strongest signal currently comes from the coarsest frozen SAM level.</p>
-      <p class="interpretation-copy" style="margin-top: 14px;">That makes the current lesson mostly about <strong>readout design</strong>, not feature absence. The frozen representation appears substantially more informative than the training-free clustering route suggested.</p>
+      <p class="interpretation-copy">The current evidence does <strong>not</strong> say that SAM3 is simply “better than AutoSAM” or that the problem is solved. It does say something narrower but important: weak training-free CFC on GlaS should not be read as evidence that frozen SAM3 lacks usable histology signal, and the new MoNuSeg runs make the same point from a different angle.</p>
+      <p class="interpretation-copy" style="margin-top: 14px;">Across both datasets, the frozen representation looks much stronger than the weakest readout made it appear. The best readout is not universal, though. GlaS still favors a coarse-only head, while MoNuSeg benefits substantially from adding a tiny mid-scale residual correction. That makes the current lesson mostly about <strong>readout design</strong>, not feature absence.</p>
     </section>
 
     <section class="section">
       <h2>Caveats / Next Step</h2>
       <ul class="bullet-list">
         <li>AutoSAM on this page is a <strong>reported paper reference</strong>, not a reproduced run from this repo.</li>
-        <li>The remaining fairness gap is the unresolved strict <code>224x224</code> train/eval setting; that rerun is still pending.</li>
+        <li>The GlaS page view now includes the clean <code>224x224 + autosam_dense_v1</code> endpoint, but the cited AutoSAM numbers are still external reported references rather than a local reproduction.</li>
+        <li>The strongest MoNuSeg run on this page is <strong>not</strong> resize-matched to the paper’s explicit <code>512x512</code> route; the strict <code>512x512</code> coarse-only anchor remains the clean apples-to-apples baseline.</li>
         <li><code>fpn_2_only</code> is labeled explicitly as <code>d64</code> or <code>d128</code> throughout this page so the default-width run is no longer ambiguous.</li>
-        <li>A targeted coarse+fine residual refinement probe remains a plausible next architecture experiment after the strict protocol-matching rerun.</li>
+        <li>The next high-value move is to run the <code>fpn_2 + fpn_1</code> residual readout under the strict MoNuSeg <code>512x512</code> route, rather than spending more effort on augmentation-only sweeps.</li>
       </ul>
       <div class="artifact-row">
         <a class="btn secondary" href="method_source.md">method_source.md</a>
@@ -741,7 +1072,7 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
     </section>
 
     <footer>
-      <p>GlaS vs AutoSAM report | Rendered 2026-04-04</p>
+      <p>GlaS + MoNuSeg vs AutoSAM report | Rendered 2026-04-04</p>
     </footer>
   </div>
 
