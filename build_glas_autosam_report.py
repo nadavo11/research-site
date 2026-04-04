@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the GlaS vs AutoSAM frozen-SAM3 readout report bundle."""
+"""Build the GlaS + MoNuSeg vs AutoSAM frozen-SAM3 readout report bundle."""
 
 from __future__ import annotations
 
@@ -20,24 +20,27 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parent
 TEXTURE_REPO_ROOT = ROOT.parent / "texture representations"
 GLAS_OUTPUT_ROOT = TEXTURE_REPO_ROOT / "outputs" / "glas_binary"
+MONUSEG_OUTPUT_ROOT = TEXTURE_REPO_ROOT / "outputs" / "monuseg_binary" / "frozen_sam_mask_head"
 DEST_DIR = ROOT / "site" / "experiments" / "glas-vs-autosam-frozen-sam3-readout-study"
 METHOD_README = ROOT / "experiments" / "autosam head to head" / "glas_supervised_frozen_sam_phase2" / "method" / "README.md"
 GRAPHVIZ_DOT_CANDIDATES = [
     Path.home() / ".local" / "graphviz-env" / "bin" / "dot",
 ]
 
-PAGE_TITLE = "GlaS vs AutoSAM: Frozen SAM3 Feature Readout Study"
+PAGE_TITLE = "GlaS + MoNuSeg vs AutoSAM: Frozen SAM3 Readout Study"
 PAGE_SUBTITLE = "Experiment Report"
 PAGE_DATE = date.today().isoformat()
 PAGE_DESCRIPTION = (
-    "GlaS is a useful histology stress test because weak training-free binary clustering can mean either missing "
-    "representation signal or a poor readout. The current answer is much more about the readout: a tiny dense "
-    "supervised head on frozen SAM3 multiscale features already gets surprisingly close to the cited AutoSAM "
-    "foreground numbers, and the strongest current frozen-feature variant is unexpectedly the coarsest SAM pyramid level alone."
+    "Across GlaS and MoNuSeg, the current evidence points much more strongly to the readout bottleneck than to missing "
+    "frozen-feature signal. GlaS still shows that a tiny supervised head on frozen SAM3 features is already strong, while "
+    "the new MoNuSeg runs show that a slightly richer coarse-plus-mid residual readout can get very close to the cited AutoSAM "
+    "foreground numbers. AutoSAM values on this page remain reported paper references, not reproduced runs."
 )
 
-AUTOSAM_REPORTED_FG_IOU = 0.8708
-AUTOSAM_REPORTED_DICE = 0.9282
+GLAS_AUTOSAM_REPORTED_FG_IOU = 0.8708
+GLAS_AUTOSAM_REPORTED_DICE = 0.9282
+MONUSEG_AUTOSAM_REPORTED_FG_IOU = 0.7017
+MONUSEG_AUTOSAM_REPORTED_DICE = 0.8243
 GALLERY_PREVIEW_WIDTH = 1680
 GALLERY_PREVIEW_QUALITY = 80
 
@@ -72,7 +75,7 @@ class RunSpec:
     notes: str
 
 
-RUN_SPECS = [
+GLAS_RUN_SPECS = [
     RunSpec(
         run_id="cfc_baseline",
         label="CFC training-free baseline",
@@ -143,21 +146,62 @@ RUN_SPECS = [
         learned_prompt_generator="no",
         notes="Best current frozen-feature run and the current internal headline comparison point.",
     ),
+    RunSpec(
+        run_id="fpn_2_only_d128_224_autosamaug",
+        label="Frozen mask head fpn_2_only d128 @ 224 + autosam aug",
+        short_label="fpn_2_only d128 @224",
+        source_dir="frozen_sam_mask_head/train_fpn_2_only_d128_224_autosamaug_e200",
+        supervision="dense binary gland masks",
+        frozen_backbone="yes",
+        learned_prompt_generator="no",
+        notes="Closest current GlaS AutoSAM-style endpoint: explicit 224x224 resize, AutoSAM-style dense augmentation, final epoch checkpoint.",
+    ),
 ]
 
-RUN_ORDER = [
+GLAS_RESULTS_ORDER = [
     "cfc_baseline",
     "all_scales_d64",
-    "fpn_0_only_d64",
-    "mid_plus_fine_d64",
     "fpn_2_only_d64",
     "fpn_2_only_d32",
     "fpn_2_only_d128",
+    "fpn_2_only_d128_224_autosamaug",
 ]
 
-SUPERVISION_LADDER_IDS = ["cfc_baseline", "all_scales_d64", "fpn_2_only_d128"]
-SCALE_ABLATION_IDS = ["fpn_0_only_d64", "mid_plus_fine_d64", "all_scales_d64", "fpn_2_only_d64"]
-CAPACITY_SWEEP_IDS = ["fpn_2_only_d32", "fpn_2_only_d64", "fpn_2_only_d128"]
+GLAS_SCALE_ABLATION_IDS = ["fpn_0_only_d64", "mid_plus_fine_d64", "all_scales_d64", "fpn_2_only_d64"]
+GLAS_CAPACITY_SWEEP_IDS = ["fpn_2_only_d32", "fpn_2_only_d64", "fpn_2_only_d128"]
+
+MONUSEG_RUN_SPECS = [
+    RunSpec(
+        run_id="strict512_coarse",
+        label="Frozen mask head fpn_2_only d128 @ 512x512",
+        short_label="strict512 coarse",
+        source_dir="train_fpn_2_only_d128_512_test_e40",
+        supervision="dense binary nucleus masks",
+        frozen_backbone="yes",
+        learned_prompt_generator="no",
+        notes="Strict MoNuSeg anchor: official 30 -> 14 split semantics, explicit 512x512 resize, direct nucleus foreground metrics.",
+    ),
+    RunSpec(
+        run_id="native_aug_coarse",
+        label="Frozen mask head fpn_2_only d128 @ native + autosam aug",
+        short_label="native coarse",
+        source_dir="train_fpn_2_only_d128_native_autosamaug_e20",
+        supervision="dense binary nucleus masks",
+        frozen_backbone="yes",
+        learned_prompt_generator="no",
+        notes="Native-resolution coarse-only run with AutoSAM-style augmentation; roughly flat versus the strict 512x512 anchor.",
+    ),
+    RunSpec(
+        run_id="native_aug_refine",
+        label="Frozen mask head fpn_2+fpn_1 refine d128 @ native + autosam aug",
+        short_label="native refine",
+        source_dir="train_fpn_2_plus_fpn_1_refine_d128_native_autosamaug_e20",
+        supervision="dense binary nucleus masks",
+        frozen_backbone="yes",
+        learned_prompt_generator="no",
+        notes="Strongest current MoNuSeg run: coarse head plus tiny mid-scale residual refinement with only a small parameter increase.",
+    ),
+]
 
 QUAL_STORIES = [
     {
@@ -208,6 +252,49 @@ QUAL_STORIES = [
         "summary": (
             "This crop stays difficult for the supervised frozen-feature heads and is worth keeping visible. "
             "The current page is not claiming that the readout fully dominates every CFC sample."
+        ),
+    },
+]
+
+MONUSEG_QUAL_STORIES = [
+    {
+        "story_id": "monuseg_44_2665_residual_jump",
+        "crop_name": "TCGA-44-2665-01B-06-BS6",
+        "tag": "residual jump",
+        "title": "Residual Refinement Produces a Clear MoNuSeg Leap",
+        "summary": (
+            "This is the strongest single-sample gain in the current MoNuSeg set. The native coarse-only run barely changes "
+            "the strict 512x512 baseline, while the coarse+mid residual branch sharpens the nucleus map immediately."
+        ),
+    },
+    {
+        "story_id": "monuseg_ac_a2fo_rescue",
+        "crop_name": "TCGA-AC-A2FO-01A-01-TS1",
+        "tag": "rescue case",
+        "title": "When Coarse-Only Stalls, the Mid-Scale Branch Can Rescue It",
+        "summary": (
+            "This crop matters because it shows the structural story more clearly than the averages. The small residual "
+            "branch adds a real correction, not just a cosmetic smoothing effect."
+        ),
+    },
+    {
+        "story_id": "monuseg_fg_a4mu_strong_anchor",
+        "crop_name": "TCGA-FG-A4MU-01B-01-TS1",
+        "tag": "already strong",
+        "title": "The Best MoNuSeg Head Still Helps Even When the Baseline Is Decent",
+        "summary": (
+            "The strict 512x512 baseline is already respectable on this crop, but the residual branch still improves it. "
+            "That is why the page treats the MoNuSeg gain as a readout effect, not just a rescue-on-failures effect."
+        ),
+    },
+    {
+        "story_id": "monuseg_ao_a0j2_limited_gain",
+        "crop_name": "TCGA-AO-A0J2-01A-01-BSA",
+        "tag": "limited gain",
+        "title": "The MoNuSeg Refinement Branch Is Strong, Not Magic",
+        "summary": (
+            "This crop is one of the smallest positive deltas. Keeping it visible prevents the section from overstating the "
+            "improvement and makes the average gain easier to trust."
         ),
     },
 ]
@@ -622,8 +709,8 @@ def load_visual_rows(run_dir: Path) -> list[dict]:
     return rows
 
 
-def load_run(spec: RunSpec) -> dict:
-    run_dir = GLAS_OUTPUT_ROOT / spec.source_dir
+def load_run(spec: RunSpec, output_root: Path) -> dict:
+    run_dir = output_root / spec.source_dir
     for file_name in REQUIRED_RUN_FILES:
         require_file(run_dir / file_name)
 
@@ -657,13 +744,13 @@ def load_run(spec: RunSpec) -> dict:
     }
 
 
-def enforce_alignment(runs: dict[str, dict]) -> None:
-    baseline = set(runs["cfc_baseline"]["sample_lookup"])
+def enforce_alignment(runs: dict[str, dict], baseline_run_id: str) -> None:
+    baseline = set(runs[baseline_run_id]["sample_lookup"])
     for run_id, run in runs.items():
         current = set(run["sample_lookup"])
         if current != baseline:
             diff = len(baseline.symmetric_difference(current))
-            raise RuntimeError(f"GlaS sample mismatch for {run_id}: {diff} mismatched crop ids")
+            raise RuntimeError(f"Sample mismatch for {run_id}: {diff} mismatched crop ids relative to {baseline_run_id}")
 
 
 def crop_triptych_panel(source_path: Path, panel_index: int) -> Image.Image:
@@ -687,7 +774,7 @@ def compose_strip(images: list[Image.Image]) -> Image.Image:
     return canvas
 
 
-def build_story_blocks(runs: dict[str, dict]) -> list[dict]:
+def build_glas_story_blocks(runs: dict[str, dict]) -> list[dict]:
     blocks = []
     for story in QUAL_STORIES:
         crop_name = story["crop_name"]
@@ -729,8 +816,59 @@ def build_story_blocks(runs: dict[str, dict]) -> list[dict]:
                 **story,
                 "strip_rel": strip_rel.as_posix(),
                 "panels": panels,
+                "delta_label": "Δ best vs CFC",
                 "delta_best_vs_cfc": best_row["direct_foreground_iou"] - cfc_row["direct_foreground_iou"],
                 "delta_best_vs_all_scales": best_row["direct_foreground_iou"] - all_row["direct_foreground_iou"],
+            }
+        )
+    return blocks
+
+
+def build_monuseg_story_blocks(runs: dict[str, dict]) -> list[dict]:
+    blocks = []
+    for story in MONUSEG_QUAL_STORIES:
+        crop_name = story["crop_name"]
+        strict_row = runs["strict512_coarse"]["sample_lookup"][crop_name]
+        native_coarse_row = runs["native_aug_coarse"]["sample_lookup"][crop_name]
+        refine_row = runs["native_aug_refine"]["sample_lookup"][crop_name]
+
+        panel_specs = [
+            ("input", "Input", refine_row["source_visual_path"], 0, None),
+            ("gt", "GT", refine_row["source_visual_path"], 1, None),
+            ("strict512", "strict 512x512 coarse", strict_row["source_visual_path"], 2, strict_row),
+            ("native_coarse", "native + aug coarse", native_coarse_row["source_visual_path"], 2, native_coarse_row),
+            ("refine", "native + aug refine", refine_row["source_visual_path"], 2, refine_row),
+        ]
+
+        panels = []
+        strip_images = []
+        for key, label, source_visual, panel_index, row in panel_specs:
+            image = crop_triptych_panel(source_visual, panel_index)
+            strip_images.append(image.copy())
+            rel = Path("assets") / "gallery" / story["story_id"] / f"{key}.webp"
+            write_webp(image, DEST_DIR / rel, width=420, quality=82)
+            panels.append(
+                {
+                    "key": key,
+                    "label": label,
+                    "asset_rel": rel.as_posix(),
+                    "fg_iou": None if row is None else row["direct_foreground_iou"],
+                    "dice": None if row is None else row["direct_foreground_dice"],
+                    "eval_miou": None if row is None else row["eval_miou"],
+                    "eval_ari": None if row is None else row["eval_ari"],
+                }
+            )
+
+        strip_rel = Path("assets") / "gallery" / story["story_id"] / "strip.webp"
+        write_webp(compose_strip(strip_images), DEST_DIR / strip_rel, width=1600, quality=82)
+        blocks.append(
+            {
+                **story,
+                "strip_rel": strip_rel.as_posix(),
+                "panels": panels,
+                "delta_label": "Δ refine vs strict512",
+                "delta_best_vs_cfc": refine_row["direct_foreground_iou"] - strict_row["direct_foreground_iou"],
+                "delta_best_vs_all_scales": refine_row["direct_foreground_iou"] - native_coarse_row["direct_foreground_iou"],
             }
         )
     return blocks
@@ -779,12 +917,13 @@ def build_gallery_payload(runs: dict[str, dict], story_blocks: list[dict]) -> di
     }
 
 
-def build_results_rows(runs: dict[str, dict]) -> list[dict]:
+def build_results_rows(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict]) -> list[dict]:
     rows = []
-    for run_id in RUN_ORDER:
-        run = runs[run_id]
+    for run_id in GLAS_RESULTS_ORDER:
+        run = glas_runs[run_id]
         rows.append(
             {
+                "dataset": "GlaS",
                 "method": run["label"],
                 "supervision": run["supervision"],
                 "frozen_backbone": run["frozen_backbone"],
@@ -799,16 +938,49 @@ def build_results_rows(runs: dict[str, dict]) -> list[dict]:
         )
     rows.append(
         {
+            "dataset": "GlaS",
             "method": "AutoSAM reported paper reference",
             "supervision": "dense gland masks (paper)",
             "frozen_backbone": "reported only",
             "learned_prompt_generator": "yes (reported)",
             "trainable_params": "learned prompt encoder (reported in paper)",
-            "fg_iou": AUTOSAM_REPORTED_FG_IOU,
-            "dice": AUTOSAM_REPORTED_DICE,
+            "fg_iou": GLAS_AUTOSAM_REPORTED_FG_IOU,
+            "dice": GLAS_AUTOSAM_REPORTED_DICE,
             "eval_miou": None,
             "eval_ari": None,
-            "notes": "Not reproduced by us in this repo; strict 224x224 protocol-matched rerun is still pending.",
+            "notes": "Reported paper reference only; not reproduced by us in this repo.",
+        }
+    )
+    for run_id in ["strict512_coarse", "native_aug_coarse", "native_aug_refine"]:
+        run = monuseg_runs[run_id]
+        rows.append(
+            {
+                "dataset": "MoNuSeg",
+                "method": run["label"],
+                "supervision": run["supervision"],
+                "frozen_backbone": run["frozen_backbone"],
+                "learned_prompt_generator": run["learned_prompt_generator"],
+                "trainable_params": run["trainable_parameter_count"],
+                "fg_iou": run["fg_iou"],
+                "dice": run["dice"],
+                "eval_miou": run["eval_miou"],
+                "eval_ari": run["eval_ari"],
+                "notes": run["notes"],
+            }
+        )
+    rows.append(
+        {
+            "dataset": "MoNuSeg",
+            "method": "AutoSAM reported paper reference",
+            "supervision": "dense nucleus masks (paper)",
+            "frozen_backbone": "reported only",
+            "learned_prompt_generator": "yes (reported)",
+            "trainable_params": "learned prompt encoder (reported in paper)",
+            "fg_iou": MONUSEG_AUTOSAM_REPORTED_FG_IOU,
+            "dice": MONUSEG_AUTOSAM_REPORTED_DICE,
+            "eval_miou": None,
+            "eval_ari": None,
+            "notes": "Reported paper reference only; current strongest local run is native-resolution and not resize-matched to the paper 512x512 setting.",
         }
     )
     return rows
@@ -818,6 +990,7 @@ def write_table_csv(results_rows: list[dict]) -> str:
     table_path = DEST_DIR / "assets" / "tables" / "main_results.csv"
     table_path.parent.mkdir(parents=True, exist_ok=True)
     fields = [
+        "dataset",
         "method",
         "supervision",
         "frozen_backbone",
@@ -836,31 +1009,64 @@ def write_table_csv(results_rows: list[dict]) -> str:
     return table_path.relative_to(DEST_DIR).as_posix()
 
 
-def write_plot_assets(runs: dict[str, dict]) -> dict[str, str]:
-    supervision_groups = [
+def write_plot_assets(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict]) -> dict[str, str]:
+    glas_groups = [
         {
             "label": "CFC baseline",
             "sub_label": "training-free",
-            "fg_iou": runs["cfc_baseline"]["fg_iou"],
-            "dice": runs["cfc_baseline"]["dice"],
+            "fg_iou": glas_runs["cfc_baseline"]["fg_iou"],
+            "dice": glas_runs["cfc_baseline"]["dice"],
         },
         {
             "label": "all_scales d64",
             "sub_label": "frozen head",
-            "fg_iou": runs["all_scales_d64"]["fg_iou"],
-            "dice": runs["all_scales_d64"]["dice"],
+            "fg_iou": glas_runs["all_scales_d64"]["fg_iou"],
+            "dice": glas_runs["all_scales_d64"]["dice"],
         },
         {
             "label": "fpn_2_only d128",
-            "sub_label": "best current",
-            "fg_iou": runs["fpn_2_only_d128"]["fg_iou"],
-            "dice": runs["fpn_2_only_d128"]["dice"],
+            "sub_label": "readout study",
+            "fg_iou": glas_runs["fpn_2_only_d128"]["fg_iou"],
+            "dice": glas_runs["fpn_2_only_d128"]["dice"],
+        },
+        {
+            "label": "fpn_2_only d128",
+            "sub_label": "224 + autosam aug",
+            "fg_iou": glas_runs["fpn_2_only_d128_224_autosamaug"]["fg_iou"],
+            "dice": glas_runs["fpn_2_only_d128_224_autosamaug"]["dice"],
         },
         {
             "label": "AutoSAM",
             "sub_label": "paper reference",
-            "fg_iou": AUTOSAM_REPORTED_FG_IOU,
-            "dice": AUTOSAM_REPORTED_DICE,
+            "fg_iou": GLAS_AUTOSAM_REPORTED_FG_IOU,
+            "dice": GLAS_AUTOSAM_REPORTED_DICE,
+            "reported_reference": True,
+        },
+    ]
+    monuseg_groups = [
+        {
+            "label": "strict512 coarse",
+            "sub_label": "clean anchor",
+            "fg_iou": monuseg_runs["strict512_coarse"]["fg_iou"],
+            "dice": monuseg_runs["strict512_coarse"]["dice"],
+        },
+        {
+            "label": "native coarse",
+            "sub_label": "autosam aug",
+            "fg_iou": monuseg_runs["native_aug_coarse"]["fg_iou"],
+            "dice": monuseg_runs["native_aug_coarse"]["dice"],
+        },
+        {
+            "label": "native refine",
+            "sub_label": "best current",
+            "fg_iou": monuseg_runs["native_aug_refine"]["fg_iou"],
+            "dice": monuseg_runs["native_aug_refine"]["dice"],
+        },
+        {
+            "label": "AutoSAM",
+            "sub_label": "paper reference",
+            "fg_iou": MONUSEG_AUTOSAM_REPORTED_FG_IOU,
+            "dice": MONUSEG_AUTOSAM_REPORTED_DICE,
             "reported_reference": True,
         },
     ]
@@ -868,57 +1074,63 @@ def write_plot_assets(runs: dict[str, dict]) -> dict[str, str]:
         {
             "label": "fpn_0_only",
             "sub_label": "d64",
-            "fg_iou": runs["fpn_0_only_d64"]["fg_iou"],
-            "dice": runs["fpn_0_only_d64"]["dice"],
+            "fg_iou": glas_runs["fpn_0_only_d64"]["fg_iou"],
+            "dice": glas_runs["fpn_0_only_d64"]["dice"],
         },
         {
             "label": "mid_plus_fine",
             "sub_label": "d64",
-            "fg_iou": runs["mid_plus_fine_d64"]["fg_iou"],
-            "dice": runs["mid_plus_fine_d64"]["dice"],
+            "fg_iou": glas_runs["mid_plus_fine_d64"]["fg_iou"],
+            "dice": glas_runs["mid_plus_fine_d64"]["dice"],
         },
         {
             "label": "all_scales",
             "sub_label": "d64",
-            "fg_iou": runs["all_scales_d64"]["fg_iou"],
-            "dice": runs["all_scales_d64"]["dice"],
+            "fg_iou": glas_runs["all_scales_d64"]["fg_iou"],
+            "dice": glas_runs["all_scales_d64"]["dice"],
         },
         {
             "label": "fpn_2_only",
             "sub_label": "d64",
-            "fg_iou": runs["fpn_2_only_d64"]["fg_iou"],
-            "dice": runs["fpn_2_only_d64"]["dice"],
+            "fg_iou": glas_runs["fpn_2_only_d64"]["fg_iou"],
+            "dice": glas_runs["fpn_2_only_d64"]["dice"],
         },
     ]
     capacity_points = [
         {
-            "decoder_dim": runs[run_id]["decoder_dim"],
-            "trainable_parameter_count": runs[run_id]["trainable_parameter_count"],
-            "fg_iou": runs[run_id]["fg_iou"],
-            "dice": runs[run_id]["dice"],
+            "decoder_dim": glas_runs[run_id]["decoder_dim"],
+            "trainable_parameter_count": glas_runs[run_id]["trainable_parameter_count"],
+            "fg_iou": glas_runs[run_id]["fg_iou"],
+            "dice": glas_runs[run_id]["dice"],
         }
-        for run_id in CAPACITY_SWEEP_IDS
+        for run_id in GLAS_CAPACITY_SWEEP_IDS
     ]
     architecture_dot, architecture_svg = render_architecture_diagram()
     plots = {
         "method_architecture.svg": architecture_svg,
         "method_architecture.dot": architecture_dot,
         "supervision_ladder.svg": render_bar_chart(
-            title="Foreground Metrics: CFC vs Frozen-Head Readout vs AutoSAM",
-            subtitle="Direct foreground IoU and Dice are the closest current AutoSAM-style comparison view in this repo.",
-            groups=supervision_groups,
+            title="GlaS: CFC vs Frozen-Head Readout vs AutoSAM",
+            subtitle="The GlaS story still starts with readout: weak training-free CFC, strong dense supervision, and a cleaner 224x224 AutoSAM-style endpoint.",
+            groups=glas_groups,
+            highlight_reported=True,
+        ),
+        "monuseg_readout_story.svg": render_bar_chart(
+            title="MoNuSeg: Readout Architecture Matters More Than Augmentation Alone",
+            subtitle="The native coarse-only run stays near the strict 512x512 anchor, but a tiny coarse+mid residual branch makes a substantial jump.",
+            groups=monuseg_groups,
             highlight_reported=True,
         ),
         "scale_ablation.svg": render_bar_chart(
-            title="Scale Ablation at d64",
-            subtitle="Under the same dense-supervision setup, the coarsest level alone is currently strongest.",
+            title="GlaS Scale Ablation at d64",
+            subtitle="On GlaS, the coarsest level alone is still the strongest strict scale choice.",
             groups=scale_groups,
         ),
         "capacity_sweep.svg": render_capacity_chart(
-            title="Coarse-Only Capacity Sweep",
+            title="GlaS Coarse-Only Capacity Sweep",
             subtitle="Width helps monotonically, but coarse-only d64 already beats all_scales d64 with fewer parameters.",
             points=capacity_points,
-            all_scales_reference=runs["all_scales_d64"],
+            all_scales_reference=glas_runs["all_scales_d64"],
         ),
     }
     for file_name, content in plots.items():
@@ -926,46 +1138,76 @@ def write_plot_assets(runs: dict[str, dict]) -> dict[str, str]:
     return {name: f"assets/plots/{name}" for name in plots}
 
 
-def build_metrics_payload(runs: dict[str, dict], story_blocks: list[dict], gallery_payload: dict) -> dict:
-    best_run = runs["fpn_2_only_d128"]
-    coarse_d64 = runs["fpn_2_only_d64"]
-    all_scales = runs["all_scales_d64"]
-    cfc = runs["cfc_baseline"]
+def build_metrics_payload(
+    glas_runs: dict[str, dict],
+    monuseg_runs: dict[str, dict],
+    glas_story_blocks: list[dict],
+    monuseg_story_blocks: list[dict],
+    gallery_payload: dict,
+) -> dict:
+    glas_best = glas_runs["fpn_2_only_d128"]
+    glas_protocol = glas_runs["fpn_2_only_d128_224_autosamaug"]
+    coarse_d64 = glas_runs["fpn_2_only_d64"]
+    all_scales = glas_runs["all_scales_d64"]
+    cfc = glas_runs["cfc_baseline"]
+    monu_strict = monuseg_runs["strict512_coarse"]
+    monu_native_coarse = monuseg_runs["native_aug_coarse"]
+    monu_best = monuseg_runs["native_aug_refine"]
     return {
         "status": "reviewed",
         "page_title": PAGE_TITLE,
         "headline": {
-            "best_current_fg_iou": best_run["fg_iou"],
-            "best_current_dice": best_run["dice"],
-            "delta_best_vs_cfc_fg_iou": best_run["fg_iou"] - cfc["fg_iou"],
-            "delta_best_vs_cfc_dice": best_run["dice"] - cfc["dice"],
+            "glas_best_readout_fg_iou": glas_best["fg_iou"],
+            "glas_best_readout_dice": glas_best["dice"],
+            "glas_protocol_fg_iou": glas_protocol["fg_iou"],
+            "glas_protocol_dice": glas_protocol["dice"],
+            "delta_best_vs_cfc_fg_iou": glas_best["fg_iou"] - cfc["fg_iou"],
+            "delta_best_vs_cfc_dice": glas_best["dice"] - cfc["dice"],
             "delta_fpn2_d64_vs_all_scales_fg_iou": coarse_d64["fg_iou"] - all_scales["fg_iou"],
             "delta_fpn2_d64_vs_all_scales_dice": coarse_d64["dice"] - all_scales["dice"],
-            "gap_to_autosam_fg_iou": AUTOSAM_REPORTED_FG_IOU - best_run["fg_iou"],
-            "gap_to_autosam_dice": AUTOSAM_REPORTED_DICE - best_run["dice"],
+            "glas_gap_to_autosam_fg_iou": GLAS_AUTOSAM_REPORTED_FG_IOU - glas_protocol["fg_iou"],
+            "glas_gap_to_autosam_dice": GLAS_AUTOSAM_REPORTED_DICE - glas_protocol["dice"],
+            "monuseg_strict512_fg_iou": monu_strict["fg_iou"],
+            "monuseg_best_fg_iou": monu_best["fg_iou"],
+            "monuseg_delta_native_coarse_vs_strict_fg_iou": monu_native_coarse["fg_iou"] - monu_strict["fg_iou"],
+            "monuseg_delta_refine_vs_strict_fg_iou": monu_best["fg_iou"] - monu_strict["fg_iou"],
+            "monuseg_gap_to_autosam_fg_iou": MONUSEG_AUTOSAM_REPORTED_FG_IOU - monu_best["fg_iou"],
+            "monuseg_gap_to_autosam_dice": MONUSEG_AUTOSAM_REPORTED_DICE - monu_best["dice"],
         },
-        "runs": {run_id: {key: value for key, value in run.items() if key not in {"sample_lookup", "source_dir"}} for run_id, run in runs.items()},
+        "glas_runs": {run_id: {key: value for key, value in run.items() if key not in {"sample_lookup", "source_dir"}} for run_id, run in glas_runs.items()},
+        "monuseg_runs": {run_id: {key: value for key, value in run.items() if key not in {"sample_lookup", "source_dir"}} for run_id, run in monuseg_runs.items()},
         "autosam_reference": {
-            "fg_iou": AUTOSAM_REPORTED_FG_IOU,
-            "dice": AUTOSAM_REPORTED_DICE,
-            "source": f"{PHASE1_README}",
-            "reported_only": True,
+            "glas": {
+                "fg_iou": GLAS_AUTOSAM_REPORTED_FG_IOU,
+                "dice": GLAS_AUTOSAM_REPORTED_DICE,
+                "source": f"{PHASE1_README}",
+                "reported_only": True,
+            },
+            "monuseg": {
+                "fg_iou": MONUSEG_AUTOSAM_REPORTED_FG_IOU,
+                "dice": MONUSEG_AUTOSAM_REPORTED_DICE,
+                "source": str(TEXTURE_REPO_ROOT / "outputs" / "autosam_cross_dataset_phase1" / "README.md"),
+                "reported_only": True,
+            },
         },
-        "stories": story_blocks,
+        "stories": {
+            "glas": glas_story_blocks,
+            "monuseg": monuseg_story_blocks,
+        },
         "gallery": {
             "sample_count": gallery_payload["sample_count"],
             "story_count": gallery_payload["story_count"],
         },
         "notes": [
             "Training-free CFC on GlaS is materially weaker than the dense-supervised frozen-feature heads.",
-            "The best current frozen-feature row is fpn_2_only d128, not all_scales.",
+            "GlaS still favors coarse-only, but MoNuSeg now favors a slightly richer coarse-plus-mid residual readout.",
+            "On MoNuSeg, augmentation alone does not explain the jump; the architectural refinement does.",
             "AutoSAM values on this page are reported paper reference values, not reproduced runs in this repo.",
-            "A strict 224x224 protocol-matched rerun is still pending.",
         ],
     }
 
 
-def build_training_data(results_rows: list[dict], story_blocks: list[dict], gallery_payload: dict) -> dict:
+def build_training_data(results_rows: list[dict], glas_story_blocks: list[dict], monuseg_story_blocks: list[dict], gallery_payload: dict) -> dict:
     return {
         "page": {
             "title": PAGE_TITLE,
@@ -973,7 +1215,10 @@ def build_training_data(results_rows: list[dict], story_blocks: list[dict], gall
             "status": "reviewed",
         },
         "results_rows": results_rows,
-        "stories": story_blocks,
+        "stories": {
+            "glas": glas_story_blocks,
+            "monuseg": monuseg_story_blocks,
+        },
         "gallery": gallery_payload,
     }
 
@@ -993,7 +1238,7 @@ def build_links_payload(table_csv_path: str, plot_paths: dict[str, str]) -> dict
     }
 
 
-def build_manifest(story_blocks: list[dict], gallery_payload: dict) -> str:
+def build_manifest(total_story_count: int, gallery_payload: dict) -> str:
     return dedent(
         f"""\
         title: "{PAGE_TITLE}"
@@ -1002,13 +1247,14 @@ def build_manifest(story_blocks: list[dict], gallery_payload: dict) -> str:
           - "AutoSAM (reported reference)"
         dataset_ids:
           - "glas"
+          - "monuseg"
         date: "{PAGE_DATE}"
-        description: "Frozen SAM3 feature readout study on GlaS with current internal AutoSAM reference context."
+        description: "Frozen SAM3 readout study across GlaS and MoNuSeg with current internal AutoSAM reference context."
         status: "reviewed"
         assets:
-          story_block_count: {len(story_blocks)}
+          story_block_count: {total_story_count}
           gallery_preview_count: {gallery_payload['sample_count']}
-          plot_count: 4
+          plot_count: 5
         evaluation:
           primary_metrics:
             - "direct_foreground_iou"
@@ -1018,42 +1264,88 @@ def build_manifest(story_blocks: list[dict], gallery_payload: dict) -> str:
             - "eval_ari"
         caveats:
           - "AutoSAM values are reported paper reference values."
-          - "Strict 224x224 protocol-matched rerun is still pending."
+          - "MoNuSeg native refine results are not resize-matched to the paper's explicit 512x512 route."
         """
     )
 
 
-def render_findings_cards(runs: dict[str, dict]) -> str:
-    best = runs["fpn_2_only_d128"]
-    coarse_d64 = runs["fpn_2_only_d64"]
-    all_scales = runs["all_scales_d64"]
-    cfc = runs["cfc_baseline"]
+def render_findings_cards(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict]) -> str:
+    glas_best = glas_runs["fpn_2_only_d128"]
+    glas_protocol = glas_runs["fpn_2_only_d128_224_autosamaug"]
+    cfc = glas_runs["cfc_baseline"]
+    monu_refine = monuseg_runs["native_aug_refine"]
+    monu_strict = monuseg_runs["strict512_coarse"]
     return dedent(
         f"""\
         <div class="metric-grid compact-grid">
           <article class="metric">
-            <div class="k">Training-Free vs Supervised</div>
-            <div class="v delta-positive">{signed(best['fg_iou'] - cfc['fg_iou'])}</div>
-            <div class="mini-note">Best frozen head vs CFC baseline in foreground IoU.</div>
+            <div class="k">GlaS CFC vs Best Readout</div>
+            <div class="v delta-positive">{signed(glas_best['fg_iou'] - cfc['fg_iou'])}</div>
+            <div class="mini-note">Foreground IoU jump from training-free CFC to <code>fpn_2_only d128</code>.</div>
           </article>
           <article class="metric">
-            <div class="k">Best Current Frozen Run</div>
-            <div class="v">0.824312</div>
-            <div class="mini-note">Foreground IoU 0.824312 · Dice 0.899436.</div>
+            <div class="k">Closest Clean GlaS Endpoint</div>
+            <div class="v">{glas_protocol['fg_iou']:.6f}</div>
+            <div class="mini-note">Foreground IoU {glas_protocol['fg_iou']:.6f} · Dice {glas_protocol['dice']:.6f} under <code>224x224 + autosam_dense_v1</code>.</div>
           </article>
           <article class="metric">
-            <div class="k">Coarse-Only d64 vs all_scales d64</div>
-            <div class="v delta-positive">{signed(coarse_d64['fg_iou'] - all_scales['fg_iou'])}</div>
-            <div class="mini-note">The coarsest level alone already outruns all-scales at the default width.</div>
+            <div class="k">MoNuSeg Residual Branch Payoff</div>
+            <div class="v delta-positive">{signed(monu_refine['fg_iou'] - monu_strict['fg_iou'])}</div>
+            <div class="mini-note">Foreground IoU gain over the strict <code>512x512</code> coarse-only anchor with only <code>{format_params(monu_refine['trainable_parameter_count'] - monu_strict['trainable_parameter_count'])}</code> extra params.</div>
           </article>
           <article class="metric">
-            <div class="k">Gap to AutoSAM Reference</div>
-            <div class="v">{AUTOSAM_REPORTED_FG_IOU - best['fg_iou']:.4f}</div>
-            <div class="mini-note">Remaining foreground IoU gap to the cited paper value.</div>
+            <div class="k">MoNuSeg Gap to AutoSAM</div>
+            <div class="v">{MONUSEG_AUTOSAM_REPORTED_FG_IOU - monu_refine['fg_iou']:.4f}</div>
+            <div class="mini-note">Remaining foreground IoU gap from the best current MoNuSeg run to the cited paper value.</div>
           </article>
         </div>
         """
     ).strip()
+
+
+def render_cross_dataset_table(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict]) -> str:
+    glas_best = glas_runs["fpn_2_only_d128_224_autosamaug"]
+    monu_best = monuseg_runs["native_aug_refine"]
+    rows = [
+        (
+            "GlaS",
+            "fpn_2_only d128 @ 224 + autosam aug",
+            glas_best["fg_iou"],
+            glas_best["dice"],
+            GLAS_AUTOSAM_REPORTED_FG_IOU,
+            GLAS_AUTOSAM_REPORTED_DICE,
+            "Cleanest current endpoint; still a reported-reference comparison, not an AutoSAM reproduction.",
+        ),
+        (
+            "MoNuSeg",
+            "fpn_2+fpn_1 refine d128 @ native + autosam aug",
+            monu_best["fg_iou"],
+            monu_best["dice"],
+            MONUSEG_AUTOSAM_REPORTED_FG_IOU,
+            MONUSEG_AUTOSAM_REPORTED_DICE,
+            "Strongest current row is close to the paper reference, but it is native-resolution rather than the paper's explicit 512x512 route.",
+        ),
+    ]
+    rendered = []
+    for dataset, method, fg_iou, dice, ref_iou, ref_dice, note in rows:
+        rendered.append(
+            dedent(
+                f"""\
+                <tr>
+                  <td><strong>{dataset}</strong></td>
+                  <td>{method}</td>
+                  <td>{fg_iou:.6f}</td>
+                  <td>{dice:.6f}</td>
+                  <td>{ref_iou:.6f}</td>
+                  <td>{ref_dice:.6f}</td>
+                  <td>{ref_iou - fg_iou:.6f}</td>
+                  <td>{ref_dice - dice:.6f}</td>
+                  <td>{note}</td>
+                </tr>
+                """
+            ).strip()
+        )
+    return "\n".join(rendered)
 
 
 def render_results_table(rows: list[dict]) -> str:
@@ -1068,6 +1360,7 @@ def render_results_table(rows: list[dict]) -> str:
             dedent(
                 f"""\
                 <tr>
+                  <td><strong>{escape(str(row['dataset']))}</strong></td>
                   <td><strong>{escape(str(row['method']))}</strong></td>
                   <td>{escape(str(row['supervision']))}</td>
                   <td>{escape(str(row['frozen_backbone']))}</td>
@@ -1116,7 +1409,7 @@ def render_story_blocks(blocks: list[dict]) -> str:
                   <div class="story-head">
                     <span class="tag good">{escape(block['tag'])}</span>
                     <span class="pill">{escape(block['crop_name'])}</span>
-                    <span class="pill">Δ best vs CFC {signed(block['delta_best_vs_cfc'], 4)}</span>
+                    <span class="pill">{escape(block.get('delta_label', 'Δ'))} {signed(block['delta_best_vs_cfc'], 4)}</span>
                   </div>
                   <h3>{escape(block['title'])}</h3>
                   <p class="story-summary">{escape(block['summary'])}</p>
@@ -1178,17 +1471,54 @@ def render_replication_cards() -> str:
     ).strip()
 
 
+def render_monuseg_delta_cards(monuseg_runs: dict[str, dict]) -> str:
+    strict_run = monuseg_runs["strict512_coarse"]
+    native_coarse = monuseg_runs["native_aug_coarse"]
+    refine = monuseg_runs["native_aug_refine"]
+    return dedent(
+        f"""\
+        <div class="metric-grid compact-grid">
+          <article class="metric">
+            <div class="k">Native Coarse vs Strict 512</div>
+            <div class="v">{signed(native_coarse['fg_iou'] - strict_run['fg_iou'], 4)}</div>
+            <div class="mini-note">Foreground IoU delta from moving to native-resolution + AutoSAM-style augmentation without changing the head.</div>
+          </article>
+          <article class="metric">
+            <div class="k">Residual Refine vs Strict 512</div>
+            <div class="v delta-positive">{signed(refine['fg_iou'] - strict_run['fg_iou'], 4)}</div>
+            <div class="mini-note">Foreground IoU gain after adding the tiny <code>fpn_1</code> residual branch.</div>
+          </article>
+          <article class="metric">
+            <div class="k">Residual Refine vs Native Coarse</div>
+            <div class="v delta-positive">{signed(refine['fg_iou'] - native_coarse['fg_iou'], 4)}</div>
+            <div class="mini-note">Same training recipe, same backbone, different readout.</div>
+          </article>
+          <article class="metric">
+            <div class="k">MoNuSeg Gap to AutoSAM</div>
+            <div class="v">{MONUSEG_AUTOSAM_REPORTED_FG_IOU - refine['fg_iou']:.4f}</div>
+            <div class="mini-note">Remaining foreground IoU gap from the strongest current MoNuSeg run to the cited paper value.</div>
+          </article>
+        </div>
+        """
+    ).strip()
+
+
 def render_index_html(
-    runs: dict[str, dict],
+    glas_runs: dict[str, dict],
+    monuseg_runs: dict[str, dict],
     results_rows: list[dict],
-    story_blocks: list[dict],
+    glas_story_blocks: list[dict],
+    monuseg_story_blocks: list[dict],
     plot_paths: dict[str, str],
     table_csv_path: str,
 ) -> str:
-    best = runs["fpn_2_only_d128"]
-    cfc = runs["cfc_baseline"]
-    coarse_d64 = runs["fpn_2_only_d64"]
-    all_scales = runs["all_scales_d64"]
+    glas_best = glas_runs["fpn_2_only_d128"]
+    glas_protocol = glas_runs["fpn_2_only_d128_224_autosamaug"]
+    cfc = glas_runs["cfc_baseline"]
+    coarse_d64 = glas_runs["fpn_2_only_d64"]
+    all_scales = glas_runs["all_scales_d64"]
+    monu_strict = monuseg_runs["strict512_coarse"]
+    monu_refine = monuseg_runs["native_aug_refine"]
     return f"""<!DOCTYPE html>
 <html lang="en">
 
@@ -1370,6 +1700,7 @@ def render_index_html(
       <div style="margin-top: 18px;">
         <span class="tag good">reviewed</span>
         <span class="tag">glas</span>
+        <span class="tag">monuseg</span>
         <span class="tag">sam3</span>
         <span class="tag">autosam</span>
         <span class="tag">readout</span>
@@ -1382,13 +1713,13 @@ def render_index_html(
 
     <section class="executive-summary">
       <h2>Executive Synopsis</h2>
-      <p>GlaS is a useful stress test because weak training-free gland partitioning can mean either that frozen SAM3 lacks gland information or that the readout is poor. The current evidence points much more strongly to the readout bottleneck: even a tiny dense supervised head on frozen SAM3 features is already strong.</p>
-      <p>The strongest current result is unexpectedly <strong>coarse-only</strong>. The best frozen-feature run is <strong><code>fpn_2_only d128</code></strong> at <strong>fg IoU {best['fg_iou']:.6f}</strong> and <strong>Dice {best['dice']:.6f}</strong>, while the legacy <strong>all-scales d64</strong> head lands at <strong>fg IoU {all_scales['fg_iou']:.6f}</strong> and <strong>Dice {all_scales['dice']:.6f}</strong>.</p>
+      <p>GlaS still answers the original question cleanly: weak training-free CFC does <strong>not</strong> imply missing gland information in frozen SAM3. A tiny supervised head is already strong, and the GlaS scale story remains surprisingly coarse-dominant.</p>
+      <p>MoNuSeg adds the more important AutoSAM-comparison update. The new <strong><code>fpn_2 + fpn_1</code> residual-refinement</strong> readout reaches <strong>fg IoU {monu_refine['fg_iou']:.6f}</strong> and <strong>Dice {monu_refine['dice']:.6f}</strong>, leaving only a small gap to the cited MoNuSeg AutoSAM paper reference. The combined picture is now more precise: the frozen features are strong, but the best readout is dataset-dependent.</p>
     </section>
 
     <section class="section">
       <h2>Headline Findings</h2>
-      {render_findings_cards(runs)}
+      {render_findings_cards(glas_runs, monuseg_runs)}
     </section>
 
     <section class="section">
@@ -1396,17 +1727,18 @@ def render_index_html(
       <div class="callout-panel">
         <div>
           <span class="tag warn">protocol caveat</span>
-          <h3>Current Internal Comparison, Not Final AutoSAM Parity</h3>
-          <p class="interpretation-copy">This page is the current best internal comparison for the question “does weak training-free CFC on GlaS mean frozen SAM3 lacks gland signal?”. The answer so far is no: dense supervision on top of frozen SAM3 features is already strong. The remaining fairness gap is a strict <code>224x224</code> protocol-matched rerun, which is still pending.</p>
+          <h3>Serious Internal Comparison, Still Not a Reproduced AutoSAM Benchmark</h3>
+          <p class="interpretation-copy">AutoSAM values on this page are still reported paper references. The new evidence is valuable because it separates two different questions: whether frozen SAM3 features already carry the right signal, and whether the current readout family is expressive enough to use it well on each dataset.</p>
         </div>
         <div class="callout-grid">
-          <div><strong>Dataset</strong><span>GlaS</span></div>
-          <div><strong>Split</strong><span>train → test</span></div>
+          <div><strong>Datasets</strong><span>GlaS and MoNuSeg</span></div>
+          <div><strong>Splits</strong><span>GlaS train → test, MoNuSeg official 30 → 14 or native test</span></div>
           <div><strong>SAM backbone frozen</strong><span>yes</span></div>
-          <div><strong>Supervision</strong><span>dense binary gland masks</span></div>
+          <div><strong>Supervision</strong><span>dense binary gland or nucleus masks</span></div>
           <div><strong>Loss</strong><span>BCEWithLogits + Dice</span></div>
           <div><strong>AutoSAM values here</strong><span>reported paper references only</span></div>
-          <div><strong>Pending caveat</strong><span>strict 224x224 rerun</span></div>
+          <div><strong>GlaS closest clean endpoint</strong><span><code>224x224 + autosam_dense_v1</code> final checkpoint</span></div>
+          <div><strong>MoNuSeg strongest current run</strong><span>native-resolution <code>fpn_2 + fpn_1</code> residual refine</span></div>
         </div>
       </div>
     </section>
@@ -1434,22 +1766,64 @@ def render_index_html(
     </section>
 
     <section class="section">
-      <h2>Main Comparison</h2>
-      <p class="interpretation-copy">The ladder view below is the cleanest summary for a cold reviewer: weak training-free CFC, much stronger dense-supervised frozen-feature readout, and a best current frozen-feature run that sits meaningfully below but not absurdly far from the cited AutoSAM reference.</p>
+      <h2>GlaS Readout Story</h2>
+      <p class="interpretation-copy">The ladder below keeps the original GlaS question visible. Training-free CFC is weak, dense supervision changes the picture completely, and the cleanest current <code>224x224 + autosam_dense_v1</code> endpoint improves again over the earlier readout-study checkpoint.</p>
       <div class="chart-grid">
         <article class="chart-card">
           <img src="{plot_paths['supervision_ladder.svg']}" alt="Foreground metrics ladder from CFC to AutoSAM reference" data-zoom-src="{plot_paths['supervision_ladder.svg']}" />
         </article>
         <article class="note-card">
-          <h3>Current Readout Story</h3>
-          <p class="interpretation-copy">The jump from the training-free CFC baseline to the best frozen head is <strong>{signed(best['fg_iou'] - cfc['fg_iou'], 6)}</strong> in foreground IoU and <strong>{signed(best['dice'] - cfc['dice'], 6)}</strong> in Dice. That is too large to explain away as a minor evaluator mismatch.</p>
-          <p class="interpretation-copy" style="margin-top: 14px;">The remaining gap to the cited AutoSAM reference is <strong>{AUTOSAM_REPORTED_FG_IOU - best['fg_iou']:.6f}</strong> in foreground IoU and <strong>{AUTOSAM_REPORTED_DICE - best['dice']:.6f}</strong> in Dice. This is why the current page is worth keeping as a serious internal baseline, even before the pending 224x224 rerun.</p>
+          <h3>What GlaS Still Says</h3>
+          <p class="interpretation-copy">The jump from the training-free CFC baseline to the original best frozen head is <strong>{signed(glas_best['fg_iou'] - cfc['fg_iou'], 6)}</strong> in foreground IoU and <strong>{signed(glas_best['dice'] - cfc['dice'], 6)}</strong> in Dice. That is far too large to explain away as a minor evaluator mismatch.</p>
+          <p class="interpretation-copy" style="margin-top: 14px;">Using the cleaner <code>224x224 + autosam_dense_v1</code> endpoint, the remaining GlaS gap to the cited AutoSAM reference is <strong>{GLAS_AUTOSAM_REPORTED_FG_IOU - glas_protocol['fg_iou']:.6f}</strong> in foreground IoU and <strong>{GLAS_AUTOSAM_REPORTED_DICE - glas_protocol['dice']:.6f}</strong> in Dice.</p>
         </article>
       </div>
     </section>
 
     <section class="section">
-      <h2>Scale Ablations</h2>
+      <h2>MoNuSeg Extension</h2>
+      <p class="interpretation-copy">MoNuSeg is the more important AutoSAM-comparison update. The strict <code>512x512</code> coarse-only anchor is clean and useful, the new native coarse-only run is basically flat, and the real movement comes when the readout gets a tiny <code>fpn_1</code> residual refinement branch.</p>
+      <div class="chart-grid">
+        <article class="chart-card">
+          <img src="{plot_paths['monuseg_readout_story.svg']}" alt="MoNuSeg readout comparison against AutoSAM reference" data-zoom-src="{plot_paths['monuseg_readout_story.svg']}" />
+        </article>
+        <article class="note-card">
+          <h3>What Changed on MoNuSeg</h3>
+          <p class="interpretation-copy">The native coarse-only run changes little relative to the strict <code>512x512</code> anchor: it shifts foreground IoU by only <strong>{signed(monuseg_runs['native_aug_coarse']['fg_iou'] - monu_strict['fg_iou'], 6)}</strong> and Dice by <strong>{signed(monuseg_runs['native_aug_coarse']['dice'] - monu_strict['dice'], 6)}</strong>. The important move is architectural: the residual branch lifts foreground IoU by <strong>{signed(monu_refine['fg_iou'] - monu_strict['fg_iou'], 6)}</strong> and Dice by <strong>{signed(monu_refine['dice'] - monu_strict['dice'], 6)}</strong> over the strict anchor.</p>
+          <p class="interpretation-copy" style="margin-top: 14px;">That leaves only <strong>{MONUSEG_AUTOSAM_REPORTED_FG_IOU - monu_refine['fg_iou']:.6f}</strong> IoU and <strong>{MONUSEG_AUTOSAM_REPORTED_DICE - monu_refine['dice']:.6f}</strong> Dice to the cited paper reference. It is still not protocol-identical, but it is no longer a “frozen features are far away” story.</p>
+        </article>
+      </div>
+      <div style="margin-top: 20px;">
+        {render_monuseg_delta_cards(monuseg_runs)}
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Cross-Dataset Snapshot</h2>
+      <div class="table-wrap" style="margin-top: 16px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Current strongest frozen run</th>
+              <th>Fg IoU</th>
+              <th>Dice</th>
+              <th>AutoSAM IoU</th>
+              <th>AutoSAM Dice</th>
+              <th>IoU gap</th>
+              <th>Dice gap</th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            {render_cross_dataset_table(glas_runs, monuseg_runs)}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>GlaS Scale Ablations</h2>
       <div class="chart-grid">
         <article class="chart-card">
           <img src="{plot_paths['scale_ablation.svg']}" alt="Scale ablation at d64" data-zoom-src="{plot_paths['scale_ablation.svg']}" />
@@ -1458,7 +1832,7 @@ def render_index_html(
           <img src="{plot_paths['capacity_sweep.svg']}" alt="Coarse-only capacity sweep" data-zoom-src="{plot_paths['capacity_sweep.svg']}" />
         </article>
       </div>
-      <p class="qual-note">The key readout is qualitative as much as numeric: dropping from <code>all_scales d64</code> to <code>fpn_2_only d64</code> already improves the result while using fewer parameters, and extra width on top of the coarse-only branch helps again. That is why the page frames the current result as <strong>coarse-dominant</strong>, not just “bigger head wins”.</p>
+      <p class="qual-note">The GlaS readout is qualitative as much as numeric: dropping from <code>all_scales d64</code> to <code>fpn_2_only d64</code> already improves the result while using fewer parameters, and extra width on top of the coarse-only branch helps again. That is why the page still frames GlaS as <strong>coarse-dominant</strong>, not just “bigger head wins”.</p>
     </section>
 
     <section class="section">
@@ -1467,6 +1841,7 @@ def render_index_html(
         <table>
           <thead>
             <tr>
+              <th>Dataset</th>
               <th>Method</th>
               <th>Supervision</th>
               <th>Frozen backbone?</th>
@@ -1491,7 +1866,7 @@ def render_index_html(
 
     <section class="section">
       <h2>Replication Details</h2>
-      <p class="interpretation-copy">The commands below are the compact replication ladder from the method note. They are enough to smoke-test the path, reproduce the 40-epoch all-scales reference, and rerun the current best coarse-only width-128 result under the recorded defaults.</p>
+      <p class="interpretation-copy">The commands below are the compact replication ladder for the main GlaS and MoNuSeg comparison points used on this page. They are enough to smoke-test the path, reproduce the clean GlaS endpoint, reproduce the strict MoNuSeg anchor, and rerun the current best MoNuSeg refine variant.</p>
       <div style="margin-top: 20px;">
         {render_replication_cards()}
       </div>
@@ -1509,24 +1884,45 @@ def render_index_html(
   --no-save-visuals</code></pre>
         </article>
         <article class="code-panel">
-          <h3>Phase-2 Reference + Best Current Run</h3>
-          <pre><code># 40-epoch all-scales reference
-PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \\
-  --dataset-root datasets/GlaS \\
-  --device cuda \\
-  --variant all_scales \\
-  --num-epochs 40 \\
-  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_all_scales_test_e20_visuals
-
-# best current coarse-only d128
+          <h3>GlaS Clean Endpoint</h3>
+          <pre><code># GlaS 224x224 + autosam_dense_v1 final checkpoint
 PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-glas-frozen-sam-mask-head \\
   --dataset-root datasets/GlaS \\
   --device cuda \\
   --variant fpn_2_only \\
   --projection-dim 128 \\
   --decoder-dim 128 \\
+  --resize-height 224 \\
+  --resize-width 224 \\
+  --train-augmentation-policy autosam_dense_v1 \\
+  --eval-every-epochs 1 \\
+  --num-epochs 200 \\
+  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_fpn_2_only_d128_224_autosamaug_e200</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>MoNuSeg Anchor + Best Current Run</h3>
+          <pre><code># strict 512x512 anchor
+PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-monuseg-frozen-sam-mask-head \\
+  --dataset-name RationAI/MoNuSeg \\
+  --device cuda \\
+  --variant fpn_2_only \\
+  --projection-dim 128 \\
+  --decoder-dim 128 \\
+  --resize-height 512 \\
+  --resize-width 512 \\
   --num-epochs 40 \\
-  --output-dir outputs/glas_binary/frozen_sam_mask_head/train_fpn_2_only_d128_test_e40</code></pre>
+  --output-dir outputs/monuseg_binary/frozen_sam_mask_head/train_fpn_2_only_d128_512_test_e40
+
+# best current MoNuSeg refine run
+PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/python main.py train-monuseg-frozen-sam-mask-head \\
+  --dataset-name RationAI/MoNuSeg \\
+  --device cuda \\
+  --variant fpn_2_plus_fpn_1_refine \\
+  --projection-dim 128 \\
+  --decoder-dim 128 \\
+  --train-augmentation-policy autosam_dense_v1 \\
+  --num-epochs 20 \\
+  --output-dir outputs/monuseg_binary/frozen_sam_mask_head/train_fpn_2_plus_fpn_1_refine_d128_native_autosamaug_e20</code></pre>
         </article>
       </div>
       <div class="artifact-row">
@@ -1538,29 +1934,38 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
     <section class="section">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
         <div>
-          <h2>Qualitative Comparison</h2>
+          <h2>GlaS Qualitative Comparison</h2>
           <p class="interpretation-copy">Each row below uses the repo-native GlaS triptych panels, cropped back into explicit <strong>Input</strong>, <strong>GT</strong>, and method-specific prediction columns. That keeps the page faithful to the saved run artifacts instead of fabricating a new qualitative format.</p>
         </div>
-        <a class="btn" href="gallery.html">Open Lightweight Gallery →</a>
+        <a class="btn" href="gallery.html">Open GlaS Gallery →</a>
       </div>
       <div style="margin-top: 24px;">
-        {render_story_blocks(story_blocks)}
+        {render_story_blocks(glas_story_blocks)}
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>MoNuSeg Qualitative Comparison</h2>
+      <p class="interpretation-copy">The MoNuSeg rows below use the same triptych-cropping approach, but the columns are now <strong>Input | GT | strict 512x512 coarse | native + aug coarse | native + aug refine</strong>. This section exists because the MoNuSeg average is not just a small training tweak: the residual branch visibly changes the prediction behavior.</p>
+      <div style="margin-top: 24px;">
+        {render_story_blocks(monuseg_story_blocks)}
       </div>
     </section>
 
     <section class="section">
       <h2>Interpretation</h2>
-      <p class="interpretation-copy">The current evidence does <strong>not</strong> say that SAM3 is already AutoSAM or that the project is solved. It does say that weak training-free CFC on GlaS should not be read as evidence that frozen SAM3 lacks gland information. A tiny supervised head already closes most of the gap to the cited AutoSAM foreground numbers, and the strongest signal currently comes from the coarsest frozen SAM level.</p>
-      <p class="interpretation-copy" style="margin-top: 14px;">That makes the current lesson mostly about <strong>readout design</strong>, not feature absence. The frozen representation appears substantially more informative than the training-free clustering route suggested.</p>
+      <p class="interpretation-copy">The current evidence does <strong>not</strong> say that SAM3 is simply “better than AutoSAM” or that the problem is solved. It does say something narrower but important: weak training-free CFC on GlaS should not be read as evidence that frozen SAM3 lacks usable histology signal, and the new MoNuSeg runs make the same point from a different angle.</p>
+      <p class="interpretation-copy" style="margin-top: 14px;">Across both datasets, the frozen representation looks much stronger than the weakest readout made it appear. The best readout is not universal, though. GlaS still favors a coarse-only head, while MoNuSeg benefits substantially from adding a tiny mid-scale residual correction. That makes the current lesson mostly about <strong>readout design</strong>, not feature absence.</p>
     </section>
 
     <section class="section">
       <h2>Caveats / Next Step</h2>
       <ul class="bullet-list">
         <li>AutoSAM on this page is a <strong>reported paper reference</strong>, not a reproduced run from this repo.</li>
-        <li>The remaining fairness gap is the unresolved strict <code>224x224</code> train/eval setting; that rerun is still pending.</li>
+        <li>The GlaS page view now includes the clean <code>224x224 + autosam_dense_v1</code> endpoint, but the cited AutoSAM numbers are still external reported references rather than a local reproduction.</li>
+        <li>The strongest MoNuSeg run on this page is <strong>not</strong> resize-matched to the paper’s explicit <code>512x512</code> route; the strict <code>512x512</code> coarse-only anchor remains the clean apples-to-apples baseline.</li>
         <li><code>fpn_2_only</code> is labeled explicitly as <code>d64</code> or <code>d128</code> throughout this page so the default-width run is no longer ambiguous.</li>
-        <li>A targeted coarse+fine residual refinement probe remains a plausible next architecture experiment after the strict protocol-matching rerun.</li>
+        <li>The next high-value move is to run the <code>fpn_2 + fpn_1</code> residual readout under the strict MoNuSeg <code>512x512</code> route, rather than spending more effort on augmentation-only sweeps.</li>
       </ul>
       <div class="artifact-row">
         <a class="btn secondary" href="method_source.md">method_source.md</a>
@@ -1575,7 +1980,7 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
     </section>
 
     <footer>
-      <p>GlaS vs AutoSAM report | Rendered {PAGE_DATE}</p>
+      <p>GlaS + MoNuSeg vs AutoSAM report | Rendered {PAGE_DATE}</p>
     </footer>
   </div>
 
@@ -1597,7 +2002,7 @@ def render_gallery_html() -> str:
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{PAGE_TITLE} — Gallery</title>
+  <title>{PAGE_TITLE} — GlaS Gallery</title>
   <script>
     (() => {{
       const storageKey = 'research-site-theme';
@@ -1701,7 +2106,7 @@ def render_gallery_html() -> str:
 
     <header style="text-align: center; margin-bottom: 42px;">
       <div class="subtitle">Full Gallery</div>
-      <h1 class="title-gradient">GlaS vs AutoSAM — Lightweight Gallery</h1>
+      <h1 class="title-gradient">GlaS vs AutoSAM — GlaS Gallery</h1>
       <p style="color: var(--muted); margin-top: 16px; font-weight: 300; max-width: 860px; margin-inline: auto;">
         Each strip is <strong>Input | GT | CFC baseline | all_scales d64 | fpn_2_only d128</strong>. The source run panels are cropped into this comparison view directly from the saved experiment visuals.
       </p>
@@ -1957,29 +2362,35 @@ def render_gallery_html() -> str:
 """
 
 
-def render_summary_md(runs: dict[str, dict]) -> str:
-    best = runs["fpn_2_only_d128"]
-    cfc = runs["cfc_baseline"]
-    all_scales = runs["all_scales_d64"]
+def render_summary_md(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict]) -> str:
+    glas_best = glas_runs["fpn_2_only_d128"]
+    glas_protocol = glas_runs["fpn_2_only_d128_224_autosamaug"]
+    cfc = glas_runs["cfc_baseline"]
+    all_scales = glas_runs["all_scales_d64"]
+    monu_strict = monuseg_runs["strict512_coarse"]
+    monu_best = monuseg_runs["native_aug_refine"]
     return dedent(
         f"""\
         # {PAGE_TITLE}
 
         - Rendered: `{PAGE_DATE}`
-        - Question: does weak training-free GlaS CFC imply that frozen SAM3 lacks gland information, or is the readout the main bottleneck?
-        - Current answer: dense supervision on frozen SAM3 features is already strong, and the best current frozen-feature run is unexpectedly coarse-only.
+        - Question: across GlaS and MoNuSeg, do frozen SAM3 features already carry the right histology signal for an AutoSAM-style comparison, or is the main bottleneck the readout?
+        - Current answer: the frozen features look much stronger than the weakest readout suggested. GlaS still favors coarse-only, while MoNuSeg now improves sharply when a tiny mid-scale residual branch is added.
 
         ## Headline Numbers
 
         - Training-free CFC baseline: `fg_iou={cfc['fg_iou']:.6f}` `dice={cfc['dice']:.6f}` `eval_miou={cfc['eval_miou']:.6f}` `eval_ari={cfc['eval_ari']:.6f}`
         - Frozen mask head all_scales d64: `fg_iou={all_scales['fg_iou']:.6f}` `dice={all_scales['dice']:.6f}` `eval_miou={all_scales['eval_miou']:.6f}` `eval_ari={all_scales['eval_ari']:.6f}`
-        - Best current frozen-feature run (`fpn_2_only d128`): `fg_iou={best['fg_iou']:.6f}` `dice={best['dice']:.6f}` `eval_miou={best['eval_miou']:.6f}` `eval_ari={best['eval_ari']:.6f}`
-        - AutoSAM reported paper reference: `fg_iou={AUTOSAM_REPORTED_FG_IOU:.6f}` `dice={AUTOSAM_REPORTED_DICE:.6f}`
+        - Best GlaS readout-study run (`fpn_2_only d128`): `fg_iou={glas_best['fg_iou']:.6f}` `dice={glas_best['dice']:.6f}` `eval_miou={glas_best['eval_miou']:.6f}` `eval_ari={glas_best['eval_ari']:.6f}`
+        - Closest current clean GlaS endpoint (`fpn_2_only d128 @ 224 + autosam aug`): `fg_iou={glas_protocol['fg_iou']:.6f}` `dice={glas_protocol['dice']:.6f}`
+        - Strict MoNuSeg anchor (`fpn_2_only d128 @ 512x512`): `fg_iou={monu_strict['fg_iou']:.6f}` `dice={monu_strict['dice']:.6f}`
+        - Best current MoNuSeg run (`fpn_2 + fpn_1` residual refine): `fg_iou={monu_best['fg_iou']:.6f}` `dice={monu_best['dice']:.6f}` `eval_miou={monu_best['eval_miou']:.6f}` `eval_ari={monu_best['eval_ari']:.6f}`
+        - AutoSAM reported paper references: `GlaS fg_iou={GLAS_AUTOSAM_REPORTED_FG_IOU:.6f}` `dice={GLAS_AUTOSAM_REPORTED_DICE:.6f}` | `MoNuSeg fg_iou={MONUSEG_AUTOSAM_REPORTED_FG_IOU:.6f}` `dice={MONUSEG_AUTOSAM_REPORTED_DICE:.6f}`
 
         ## Caveats
 
         - AutoSAM values are reported paper references, not reproduced runs from this repo.
-        - A strict `224x224` protocol-matched rerun is still pending.
+        - The strongest MoNuSeg run on this page is native-resolution, so the strict `512x512` anchor remains the clean protocol reference.
         - The default-width coarse-only run is labeled explicitly as `fpn_2_only d64` on this page.
         """
     )
@@ -1991,29 +2402,32 @@ def main() -> None:
     require_file(PHASE2_README)
     method_readme = require_file(METHOD_README)
 
-    runs = {spec.run_id: load_run(spec) for spec in RUN_SPECS}
-    enforce_alignment(runs)
+    glas_runs = {spec.run_id: load_run(spec, GLAS_OUTPUT_ROOT) for spec in GLAS_RUN_SPECS}
+    monuseg_runs = {spec.run_id: load_run(spec, MONUSEG_OUTPUT_ROOT) for spec in MONUSEG_RUN_SPECS}
+    enforce_alignment(glas_runs, "cfc_baseline")
+    enforce_alignment(monuseg_runs, "strict512_coarse")
 
     if DEST_DIR.exists():
         shutil.rmtree(DEST_DIR)
     DEST_DIR.mkdir(parents=True, exist_ok=True)
 
-    story_blocks = build_story_blocks(runs)
-    gallery_payload = build_gallery_payload(runs, story_blocks)
-    results_rows = build_results_rows(runs)
-    plot_paths = write_plot_assets(runs)
+    glas_story_blocks = build_glas_story_blocks(glas_runs)
+    monuseg_story_blocks = build_monuseg_story_blocks(monuseg_runs)
+    gallery_payload = build_gallery_payload(glas_runs, glas_story_blocks)
+    results_rows = build_results_rows(glas_runs, monuseg_runs)
+    plot_paths = write_plot_assets(glas_runs, monuseg_runs)
     table_csv_path = write_table_csv(results_rows)
-    metrics_payload = build_metrics_payload(runs, story_blocks, gallery_payload)
-    training_data = build_training_data(results_rows, story_blocks, gallery_payload)
+    metrics_payload = build_metrics_payload(glas_runs, monuseg_runs, glas_story_blocks, monuseg_story_blocks, gallery_payload)
+    training_data = build_training_data(results_rows, glas_story_blocks, monuseg_story_blocks, gallery_payload)
     links_payload = build_links_payload(table_csv_path, plot_paths)
 
-    write_text(DEST_DIR / "index.html", render_index_html(runs, results_rows, story_blocks, plot_paths, table_csv_path))
+    write_text(DEST_DIR / "index.html", render_index_html(glas_runs, monuseg_runs, results_rows, glas_story_blocks, monuseg_story_blocks, plot_paths, table_csv_path))
     write_text(DEST_DIR / "gallery.html", render_gallery_html())
     write_text(DEST_DIR / "metrics.json", json.dumps(metrics_payload, indent=2))
     write_text(DEST_DIR / "training_data.json", json.dumps(training_data, indent=2))
     write_text(DEST_DIR / "links.json", json.dumps(links_payload, indent=2))
-    write_text(DEST_DIR / "summary.md", render_summary_md(runs))
-    write_text(DEST_DIR / "manifest.yaml", build_manifest(story_blocks, gallery_payload))
+    write_text(DEST_DIR / "summary.md", render_summary_md(glas_runs, monuseg_runs))
+    write_text(DEST_DIR / "manifest.yaml", build_manifest(len(glas_story_blocks) + len(monuseg_story_blocks), gallery_payload))
     write_text(DEST_DIR / "method_source.md", method_readme.read_text(encoding="utf-8"))
 
 
