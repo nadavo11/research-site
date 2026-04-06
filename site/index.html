@@ -97,10 +97,10 @@
         </article>
 
         <article class="card" data-exp-card data-domain="edge">
-          <p><span class="tag good">reviewed</span><span class="tag">glas</span><span class="tag">monuseg</span><span class="tag">sam3</span><span class="tag">autosam</span></p>
+          <p><span class="tag good">reviewed</span><span class="tag">glas</span><span class="tag">monuseg</span><span class="tag">sam3</span><span class="tag">autosam</span><span class="tag">few-shot</span></p>
           <h3>GlaS + MoNuSeg vs AutoSAM Readout Study</h3>
-          <p class="kv"><strong>Date:</strong> 2026-04-04</p>
-          <p class="kv"><strong>Finding:</strong> Frozen SAM3 + tiny supervised readouts now close most of the AutoSAM gap on both histology datasets: GlaS still favors coarse-only, while MoNuSeg improves sharply with a small <code>fpn_2 + fpn_1</code> residual branch.</p>
+          <p class="kv"><strong>Date:</strong> 2026-04-06</p>
+          <p class="kv"><strong>Finding:</strong> Frozen SAM3 + tiny supervised readouts still close most of the AutoSAM gap on both histology datasets, and the new few-shot sweeps show strong label efficiency: GlaS reaches 90% Dice by <code>2</code> shots, MoNuSeg by <code>4</code>.</p>
           <a class="btn secondary" href="experiments/glas-vs-autosam-frozen-sam3-readout-study/index.html">View Report</a>
         </article>
 

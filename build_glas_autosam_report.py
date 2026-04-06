@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import os
 import subprocess
 import shutil
@@ -21,6 +22,7 @@ ROOT = Path(__file__).resolve().parent
 TEXTURE_REPO_ROOT = ROOT.parent / "texture representations"
 GLAS_OUTPUT_ROOT = TEXTURE_REPO_ROOT / "outputs" / "glas_binary"
 MONUSEG_OUTPUT_ROOT = TEXTURE_REPO_ROOT / "outputs" / "monuseg_binary" / "frozen_sam_mask_head"
+FEW_SHOT_ROOT = ROOT / "experiments" / "autosam head to head" / "few shot sweep"
 DEST_DIR = ROOT / "site" / "experiments" / "glas-vs-autosam-frozen-sam3-readout-study"
 METHOD_README = ROOT / "experiments" / "autosam head to head" / "glas_supervised_frozen_sam_phase2" / "method" / "README.md"
 GRAPHVIZ_DOT_CANDIDATES = [
@@ -34,7 +36,8 @@ PAGE_DESCRIPTION = (
     "Across GlaS and MoNuSeg, the current evidence points much more strongly to the readout bottleneck than to missing "
     "frozen-feature signal. GlaS still shows that a tiny supervised head on frozen SAM3 features is already strong, while "
     "the new MoNuSeg runs show that a slightly richer coarse-plus-mid residual readout can get very close to the cited AutoSAM "
-    "foreground numbers. AutoSAM values on this page remain reported paper references, not reproduced runs."
+    "foreground numbers. The new few-shot sweeps reinforce the same picture: both datasets retain a surprising amount of "
+    "performance under sharply reduced supervision. AutoSAM values on this page remain reported paper references, not reproduced runs."
 )
 
 GLAS_AUTOSAM_REPORTED_FG_IOU = 0.8708
@@ -61,6 +64,10 @@ METRIC_COLORS = {
     "fg_iou": "#005f73",
     "dice": "#ca6702",
 }
+DATASET_COLORS = {
+    "GlaS": "#0a9396",
+    "MoNuSeg": "#bb3e03",
+}
 
 
 @dataclass(frozen=True)
@@ -73,6 +80,42 @@ class RunSpec:
     frozen_backbone: str
     learned_prompt_generator: str
     notes: str
+
+
+@dataclass(frozen=True)
+class FewShotSweepSpec:
+    dataset: str
+    section_label: str
+    variant_label: str
+    source_readme: Path
+    source_json: Path
+    full_train_size: int
+    knee_note: str
+    recommended_autosam_points: tuple[int, ...]
+
+
+FEW_SHOT_SWEEP_SPECS = [
+    FewShotSweepSpec(
+        dataset="GlaS",
+        section_label="GlaS few-shot sweep",
+        variant_label="fpn_2_only d128 @ native + autosam aug",
+        source_readme=FEW_SHOT_ROOT / "GlaS" / "ours" / "README.md",
+        source_json=FEW_SHOT_ROOT / "GlaS" / "ours" / "few_shot_aggregated.json",
+        full_train_size=85,
+        knee_note="First big jump at 2 shots; near-saturation around 16 shots.",
+        recommended_autosam_points=(1, 2, 16, 85),
+    ),
+    FewShotSweepSpec(
+        dataset="MoNuSeg",
+        section_label="MoNuSeg few-shot sweep",
+        variant_label="fpn_2 + fpn_1 refine d128 @ native + autosam aug",
+        source_readme=FEW_SHOT_ROOT / "MoNuSeg" / "ours" / "README.md",
+        source_json=FEW_SHOT_ROOT / "MoNuSeg" / "ours" / "few_shot_aggregated.json",
+        full_train_size=30,
+        knee_note="The knee is in the 4-8 shot range.",
+        recommended_autosam_points=(1, 4, 8, 30),
+    ),
+]
 
 
 GLAS_RUN_SPECS = [
@@ -331,6 +374,18 @@ def format_params(value: int | str | None) -> str:
     return f"{value:,}"
 
 
+def fmt_pct(value: float | None, digits: int = 1) -> str:
+    return "n/a" if value is None else f"{value * 100:.{digits}f}%"
+
+
+def fmt_pm(mean: float | None, std: float | None, digits: int = 3) -> str:
+    if mean is None:
+        return "n/a"
+    if std is None:
+        return f"{mean:.{digits}f}"
+    return f"{mean:.{digits}f}±{std:.{digits}f}"
+
+
 def write_webp(image: Image.Image, dest_path: Path, *, width: int | None = None, quality: int = 82) -> None:
     dest_path.parent.mkdir(parents=True, exist_ok=True)
     image = image.convert("RGB")
@@ -481,6 +536,191 @@ def render_capacity_chart(*, title: str, subtitle: str, points: list[dict], all_
         )
 
     lines.append("</svg>")
+    return "\n".join(lines)
+
+
+
+def render_few_shot_absolute_chart(*, title: str, subtitle: str, sweeps: dict[str, dict]) -> str:
+    width = 1180
+    height = 560
+    header_top = 88
+    outer_left = 28
+    outer_right = 28
+    outer_bottom = 34
+    panel_gap = 26
+    panel_y = 92
+    panel_h = height - panel_y - outer_bottom
+    panel_w = (width - outer_left - outer_right - panel_gap) / 2
+    values = []
+    for sweep in sweeps.values():
+        for row in sweep["rows"]:
+            values.extend([float(row["direct_foreground_iou_mean"]), float(row["direct_foreground_dice_mean"])])
+    y_min = max(0.35, math.floor((min(values) - 0.03) * 10) / 10)
+    y_max = min(0.95, math.ceil((max(values) + 0.03) * 10) / 10)
+    if y_max - y_min < 0.35:
+        y_min = max(0.30, y_max - 0.35)
+
+    lines = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(title)}">',
+        '<rect width="100%" height="100%" fill="#ffffff" rx="24" />',
+        f'<text x="28" y="40" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700" fill="#122033">{escape(title)}</text>',
+        f'<text x="28" y="64" font-family="Space Grotesk, sans-serif" font-size="13" fill="#4c5d73">{escape(subtitle)}</text>',
+        f'<rect x="{width - 230}" y="24" width="14" height="14" rx="4" fill="{METRIC_COLORS["fg_iou"]}" />',
+        f'<text x="{width - 208}" y="36" font-family="Space Grotesk, sans-serif" font-size="12" fill="#122033">Foreground IoU</text>',
+        f'<rect x="{width - 112}" y="24" width="14" height="14" rx="4" fill="{METRIC_COLORS["dice"]}" />',
+        f'<text x="{width - 90}" y="36" font-family="Space Grotesk, sans-serif" font-size="12" fill="#122033">Dice</text>',
+    ]
+
+    for index, dataset in enumerate(["GlaS", "MoNuSeg"]):
+        sweep = sweeps[dataset]
+        x0 = outer_left + index * (panel_w + panel_gap)
+        lines.append(f'<rect x="{x0:.1f}" y="{panel_y}" width="{panel_w:.1f}" height="{panel_h}" rx="20" fill="#fbfcfe" stroke="#d9e3ee" stroke-width="1.2" />')
+        lines.append(f'<text x="{x0 + 18:.1f}" y="{panel_y + 26}" font-family="Outfit, sans-serif" font-size="18" font-weight="700" fill="#122033">{escape(dataset)}</text>')
+        lines.append(f'<text x="{x0 + 18:.1f}" y="{panel_y + 46}" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">{escape(sweep["variant_label"])}</text>')
+        lines.append(f'<text x="{x0 + panel_w - 18:.1f}" y="{panel_y + 26}" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">full = {sweep["full_train_size"]} training images</text>')
+        lines.append(f'<text x="{x0 + panel_w - 18:.1f}" y="{panel_y + 44}" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">95% Dice at {sweep["first95_row"]["shot_count"]} shots</text>')
+
+        left = x0 + 52
+        right = x0 + panel_w - 18
+        top = panel_y + 66
+        bottom = panel_y + panel_h - 44
+        chart_w = right - left
+        chart_h = bottom - top
+        shots = [int(row["shot_count"]) for row in sweep["rows"]]
+        log_min = math.log2(min(shots))
+        log_max = math.log2(max(shots))
+
+        def x_for(shot: int) -> float:
+            if log_max == log_min:
+                return left + chart_w / 2
+            return left + chart_w * ((math.log2(shot) - log_min) / (log_max - log_min))
+
+        def y_for(value: float) -> float:
+            return top + chart_h * (1.0 - (value - y_min) / (y_max - y_min))
+
+        tick = math.floor(y_min * 10) / 10
+        while tick <= y_max + 1e-6:
+            y = y_for(tick)
+            lines.append(f'<line x1="{left:.1f}" y1="{y:.1f}" x2="{right:.1f}" y2="{y:.1f}" stroke="#e6edf5" stroke-width="1" />')
+            lines.append(f'<text x="{left - 10:.1f}" y="{y + 4:.1f}" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="10.5" fill="#4c5d73">{tick:.2f}</text>')
+            tick += 0.1
+
+        x95 = x_for(int(sweep["first95_row"]["shot_count"]))
+        lines.append(f'<line x1="{x95:.1f}" y1="{top:.1f}" x2="{x95:.1f}" y2="{bottom:.1f}" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6 6" />')
+
+        for row in sweep["rows"]:
+            x = x_for(int(row["shot_count"]))
+            lines.append(f'<line x1="{x:.1f}" y1="{bottom:.1f}" x2="{x:.1f}" y2="{bottom + 6:.1f}" stroke="#8fa1b5" stroke-width="1" />')
+            lines.append(f'<text x="{x:.1f}" y="{bottom + 22:.1f}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10.5" fill="#4c5d73">{int(row["shot_count"])}</text>')
+
+        for metric_key, std_key, color in [
+            ("direct_foreground_iou_mean", "direct_foreground_iou_std", METRIC_COLORS["fg_iou"]),
+            ("direct_foreground_dice_mean", "direct_foreground_dice_std", METRIC_COLORS["dice"]),
+        ]:
+            coords = " ".join(
+                f'{x_for(int(row["shot_count"])):.1f},{y_for(float(row[metric_key])):.1f}' for row in sweep["rows"]
+            )
+            lines.append(f'<polyline points="{coords}" fill="none" stroke="{color}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />')
+            for row in sweep["rows"]:
+                x = x_for(int(row["shot_count"]))
+                mean = float(row[metric_key])
+                std = float(row[std_key])
+                y = y_for(mean)
+                if std > 0:
+                    y_lo = y_for(max(y_min, mean - std))
+                    y_hi = y_for(min(y_max, mean + std))
+                    lines.append(f'<line x1="{x:.1f}" y1="{y_lo:.1f}" x2="{x:.1f}" y2="{y_hi:.1f}" stroke="{color}" stroke-width="1.4" opacity="0.6" />')
+                    lines.append(f'<line x1="{x - 4:.1f}" y1="{y_lo:.1f}" x2="{x + 4:.1f}" y2="{y_lo:.1f}" stroke="{color}" stroke-width="1.4" opacity="0.6" />')
+                    lines.append(f'<line x1="{x - 4:.1f}" y1="{y_hi:.1f}" x2="{x + 4:.1f}" y2="{y_hi:.1f}" stroke="{color}" stroke-width="1.4" opacity="0.6" />')
+                lines.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5" fill="{color}" stroke="#ffffff" stroke-width="2" />')
+
+    lines.append('</svg>')
+    return "\n".join(lines)
+
+
+
+def render_few_shot_retention_chart(*, title: str, subtitle: str, sweeps: dict[str, dict]) -> str:
+    width = 1160
+    height = 470
+    top = 88
+    left = 76
+    right = 32
+    bottom = 78
+    chart_w = width - left - right
+    chart_h = height - top - bottom
+    y_min = 70.0
+    y_max = 103.0
+
+    def x_for(percent_full: float) -> float:
+        return left + chart_w * (percent_full / 100.0)
+
+    def y_for(retained_pct: float) -> float:
+        return top + chart_h * (1.0 - (retained_pct - y_min) / (y_max - y_min))
+
+    lines = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(title)}">',
+        '<rect width="100%" height="100%" fill="#ffffff" rx="24" />',
+        f'<text x="28" y="40" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="700" fill="#122033">{escape(title)}</text>',
+        f'<text x="28" y="64" font-family="Space Grotesk, sans-serif" font-size="13" fill="#4c5d73">{escape(subtitle)}</text>',
+    ]
+
+    for tick in [70, 80, 90, 95, 100]:
+        y = y_for(float(tick))
+        dash = '6 6' if tick in {90, 95} else None
+        dash_attr = f' stroke-dasharray="{dash}"' if dash else ''
+        stroke = '#d9e3ee' if tick not in {90, 95} else '#cbd5e1'
+        lines.append(f'<line x1="{left}" y1="{y:.1f}" x2="{width - right}" y2="{y:.1f}" stroke="{stroke}" stroke-width="1.2"{dash_attr} />')
+        lines.append(f'<text x="{left - 10}" y="{y + 4:.1f}" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">{tick}%</text>')
+
+    for tick in [0, 10, 20, 40, 60, 80, 100]:
+        x = x_for(float(tick))
+        lines.append(f'<line x1="{x:.1f}" y1="{top:.1f}" x2="{x:.1f}" y2="{height - bottom:.1f}" stroke="#eef3f8" stroke-width="1" />')
+        lines.append(f'<text x="{x:.1f}" y="{height - bottom + 22:.1f}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">{tick}%</text>')
+
+    lines.append(f'<text x="{left + chart_w / 2:.1f}" y="{height - 16}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#4c5d73">Labeled training images as % of each dataset&amp;apos;s full train split</text>')
+
+    legend_x = width - 240
+    for offset, dataset in enumerate(["GlaS", "MoNuSeg"]):
+        color = DATASET_COLORS[dataset]
+        y = 28 + offset * 18
+        lines.append(f'<rect x="{legend_x}" y="{y - 10}" width="14" height="14" rx="4" fill="{color}" />')
+        lines.append(f'<text x="{legend_x + 22}" y="{y + 1}" font-family="Space Grotesk, sans-serif" font-size="12" fill="#122033">{dataset}</text>')
+
+    for dataset in ["GlaS", "MoNuSeg"]:
+        sweep = sweeps[dataset]
+        color = DATASET_COLORS[dataset]
+        coords = []
+        point_lookup = {}
+        for row in sweep["rows"]:
+            shot = int(row["shot_count"])
+            pct_full = 100.0 * shot / sweep["full_train_size"]
+            retained_pct = 100.0 * float(row["direct_foreground_dice_retained_vs_full"])
+            x = x_for(pct_full)
+            y = y_for(retained_pct)
+            coords.append(f'{x:.1f},{y:.1f}')
+            point_lookup[shot] = (x, y, retained_pct)
+        lines.append(f'<polyline points="{" ".join(coords)}" fill="none" stroke="{color}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />')
+        for shot, (x, y, retained_pct) in point_lookup.items():
+            lines.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{color}" stroke="#ffffff" stroke-width="2" />')
+        annotation_shots = [1, int(sweep["first90_row"]["shot_count"]), int(sweep["first95_row"]["shot_count"]), sweep["full_train_size"]]
+        seen = set()
+        for shot in annotation_shots:
+            if shot in seen or shot not in point_lookup:
+                continue
+            seen.add(shot)
+            x, y, retained_pct = point_lookup[shot]
+            if shot == 1:
+                label = f'1 shot · {retained_pct:.1f}%'
+            elif shot == sweep["full_train_size"]:
+                label = f'full {shot}'
+            elif shot == int(sweep["first90_row"]["shot_count"]):
+                label = f'90% @ {shot}'
+            else:
+                label = f'95% @ {shot}'
+            dy = -14 if dataset == "GlaS" else 18
+            lines.append(f'<text x="{x:.1f}" y="{y + dy:.1f}" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10.5" font-weight="700" fill="{color}">{escape(label)}</text>')
+
+    lines.append('</svg>')
     return "\n".join(lines)
 
 
@@ -753,6 +993,41 @@ def enforce_alignment(runs: dict[str, dict], baseline_run_id: str) -> None:
             raise RuntimeError(f"Sample mismatch for {run_id}: {diff} mismatched crop ids relative to {baseline_run_id}")
 
 
+
+def load_few_shot_sweep(spec: FewShotSweepSpec) -> dict:
+    require_file(spec.source_readme)
+    rows = json.loads(require_file(spec.source_json).read_text(encoding="utf-8"))
+    if not isinstance(rows, list) or not rows:
+        raise RuntimeError(f"Few-shot sweep must be a non-empty list: {spec.source_json}")
+    rows = sorted(rows, key=lambda row: int(row["shot_count"]))
+    full_row = rows[-1]
+    if int(full_row["shot_count"]) != spec.full_train_size:
+        raise RuntimeError(
+            f"Unexpected full shot count for {spec.dataset}: expected {spec.full_train_size}, got {full_row['shot_count']}"
+        )
+    one_shot = rows[0]
+    first90 = next((row for row in rows if float(row["direct_foreground_dice_retained_vs_full"]) >= 0.90), None)
+    first95 = next((row for row in rows if float(row["direct_foreground_dice_retained_vs_full"]) >= 0.95), None)
+    best_subfull_candidates = [row for row in rows if int(row["shot_count"]) < spec.full_train_size]
+    best_subfull = max(best_subfull_candidates, key=lambda row: float(row["direct_foreground_dice_mean"])) if best_subfull_candidates else full_row
+    return {
+        "dataset": spec.dataset,
+        "section_label": spec.section_label,
+        "variant_label": spec.variant_label,
+        "source_readme": str(spec.source_readme),
+        "source_json": str(spec.source_json),
+        "full_train_size": spec.full_train_size,
+        "knee_note": spec.knee_note,
+        "recommended_autosam_points": list(spec.recommended_autosam_points),
+        "rows": rows,
+        "full_row": full_row,
+        "one_shot_row": one_shot,
+        "first90_row": first90,
+        "first95_row": first95,
+        "best_subfull_row": best_subfull,
+    }
+
+
 def crop_triptych_panel(source_path: Path, panel_index: int) -> Image.Image:
     with Image.open(source_path) as image:
         image = image.convert("RGB")
@@ -1009,7 +1284,114 @@ def write_table_csv(results_rows: list[dict]) -> str:
     return table_path.relative_to(DEST_DIR).as_posix()
 
 
-def write_plot_assets(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict]) -> dict[str, str]:
+
+def build_few_shot_table_rows(few_shot_sweeps: dict[str, dict]) -> tuple[list[dict], list[dict]]:
+    summary_rows = []
+    detail_rows = []
+    for dataset in ["GlaS", "MoNuSeg"]:
+        sweep = few_shot_sweeps[dataset]
+        full_row = sweep["full_row"]
+        one_row = sweep["one_shot_row"]
+        first90 = sweep["first90_row"]
+        first95 = sweep["first95_row"]
+        best_subfull = sweep["best_subfull_row"]
+        summary_rows.append(
+            {
+                "dataset": dataset,
+                "fixed_variant": sweep["variant_label"],
+                "full_train_size": sweep["full_train_size"],
+                "one_shot_fg_iou": one_row["direct_foreground_iou_mean"],
+                "one_shot_dice": one_row["direct_foreground_dice_mean"],
+                "first_90_dice_shots": None if first90 is None else int(first90["shot_count"]),
+                "first_95_dice_shots": None if first95 is None else int(first95["shot_count"]),
+                "best_subfull_shot": int(best_subfull["shot_count"]),
+                "best_subfull_dice": best_subfull["direct_foreground_dice_mean"],
+                "best_subfull_minus_full_dice": best_subfull["direct_foreground_dice_mean"] - full_row["direct_foreground_dice_mean"],
+                "recommended_autosam_points": ", ".join(str(point) for point in sweep["recommended_autosam_points"]),
+                "knee_note": sweep["knee_note"],
+            }
+        )
+        for row in sweep["rows"]:
+            detail_rows.append(
+                {
+                    "dataset": dataset,
+                    "shots": int(row["shot_count"]),
+                    "runs": int(row["num_runs"]),
+                    "fg_iou_mean": row["direct_foreground_iou_mean"],
+                    "fg_iou_std": row["direct_foreground_iou_std"],
+                    "dice_mean": row["direct_foreground_dice_mean"],
+                    "dice_std": row["direct_foreground_dice_std"],
+                    "eval_miou_mean": row["eval_miou_mean"],
+                    "eval_miou_std": row["eval_miou_std"],
+                    "eval_ari_mean": row["eval_ari_mean"],
+                    "eval_ari_std": row["eval_ari_std"],
+                    "dice_retained_vs_full": row["direct_foreground_dice_retained_vs_full"],
+                    "best_seed_by_dice": row["best_seed_by_dice"],
+                    "worst_seed_by_dice": row["worst_seed_by_dice"],
+                }
+            )
+    return summary_rows, detail_rows
+
+
+def write_few_shot_tables(few_shot_sweeps: dict[str, dict]) -> dict[str, object]:
+    summary_rows, detail_rows = build_few_shot_table_rows(few_shot_sweeps)
+    summary_path = DEST_DIR / "assets" / "tables" / "few_shot_milestones.csv"
+    detail_path = DEST_DIR / "assets" / "tables" / "few_shot_aggregated.csv"
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with summary_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "dataset",
+                "fixed_variant",
+                "full_train_size",
+                "one_shot_fg_iou",
+                "one_shot_dice",
+                "first_90_dice_shots",
+                "first_95_dice_shots",
+                "best_subfull_shot",
+                "best_subfull_dice",
+                "best_subfull_minus_full_dice",
+                "recommended_autosam_points",
+                "knee_note",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(summary_rows)
+
+    with detail_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "dataset",
+                "shots",
+                "runs",
+                "fg_iou_mean",
+                "fg_iou_std",
+                "dice_mean",
+                "dice_std",
+                "eval_miou_mean",
+                "eval_miou_std",
+                "eval_ari_mean",
+                "eval_ari_std",
+                "dice_retained_vs_full",
+                "best_seed_by_dice",
+                "worst_seed_by_dice",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(detail_rows)
+
+    return {
+        "summary_path": summary_path.relative_to(DEST_DIR).as_posix(),
+        "detail_path": detail_path.relative_to(DEST_DIR).as_posix(),
+        "summary_rows": summary_rows,
+        "detail_rows": detail_rows,
+    }
+
+
+def write_plot_assets(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict], few_shot_sweeps: dict[str, dict]) -> dict[str, str]:
     glas_groups = [
         {
             "label": "CFC baseline",
@@ -1132,15 +1514,26 @@ def write_plot_assets(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict])
             points=capacity_points,
             all_scales_reference=glas_runs["all_scales_d64"],
         ),
+        "few_shot_absolute.svg": render_few_shot_absolute_chart(
+            title="Few-Shot Direct Foreground Curves",
+            subtitle="Absolute foreground IoU and Dice across nested shot counts. The point is data-efficiency triage, not final model selection.",
+            sweeps=few_shot_sweeps,
+        ),
+        "few_shot_retention.svg": render_few_shot_retention_chart(
+            title="Few-Shot Dice Retention vs Full-Data Reference",
+            subtitle="Both datasets retain most of their full-data Dice surprisingly early, which is why matched few-shot AutoSAM reruns now look worth doing.",
+            sweeps=few_shot_sweeps,
+        ),
     }
     for file_name, content in plots.items():
         write_text(DEST_DIR / "assets" / "plots" / file_name, content)
     return {name: f"assets/plots/{name}" for name in plots}
 
-
 def build_metrics_payload(
     glas_runs: dict[str, dict],
     monuseg_runs: dict[str, dict],
+    few_shot_sweeps: dict[str, dict],
+    few_shot_tables: dict[str, object],
     glas_story_blocks: list[dict],
     monuseg_story_blocks: list[dict],
     gallery_payload: dict,
@@ -1153,6 +1546,8 @@ def build_metrics_payload(
     monu_strict = monuseg_runs["strict512_coarse"]
     monu_native_coarse = monuseg_runs["native_aug_coarse"]
     monu_best = monuseg_runs["native_aug_refine"]
+    glas_sweep = few_shot_sweeps["GlaS"]
+    monu_sweep = few_shot_sweeps["MoNuSeg"]
     return {
         "status": "reviewed",
         "page_title": PAGE_TITLE,
@@ -1173,9 +1568,31 @@ def build_metrics_payload(
             "monuseg_delta_refine_vs_strict_fg_iou": monu_best["fg_iou"] - monu_strict["fg_iou"],
             "monuseg_gap_to_autosam_fg_iou": MONUSEG_AUTOSAM_REPORTED_FG_IOU - monu_best["fg_iou"],
             "monuseg_gap_to_autosam_dice": MONUSEG_AUTOSAM_REPORTED_DICE - monu_best["dice"],
+            "glas_few_shot_90pct_dice": glas_sweep["first90_row"]["shot_count"],
+            "glas_few_shot_95pct_dice": glas_sweep["first95_row"]["shot_count"],
+            "monuseg_few_shot_90pct_dice": monu_sweep["first90_row"]["shot_count"],
+            "monuseg_few_shot_95pct_dice": monu_sweep["first95_row"]["shot_count"],
         },
         "glas_runs": {run_id: {key: value for key, value in run.items() if key not in {"sample_lookup", "source_dir"}} for run_id, run in glas_runs.items()},
         "monuseg_runs": {run_id: {key: value for key, value in run.items() if key not in {"sample_lookup", "source_dir"}} for run_id, run in monuseg_runs.items()},
+        "few_shot": {
+            dataset: {
+                "variant_label": sweep["variant_label"],
+                "full_train_size": sweep["full_train_size"],
+                "knee_note": sweep["knee_note"],
+                "recommended_autosam_points": sweep["recommended_autosam_points"],
+                "one_shot": sweep["one_shot_row"],
+                "first90": sweep["first90_row"],
+                "first95": sweep["first95_row"],
+                "best_subfull": sweep["best_subfull_row"],
+                "rows": sweep["rows"],
+            }
+            for dataset, sweep in few_shot_sweeps.items()
+        },
+        "few_shot_tables": {
+            "summary_rows": few_shot_tables["summary_rows"],
+            "detail_rows": few_shot_tables["detail_rows"],
+        },
         "autosam_reference": {
             "glas": {
                 "fg_iou": GLAS_AUTOSAM_REPORTED_FG_IOU,
@@ -1202,12 +1619,19 @@ def build_metrics_payload(
             "Training-free CFC on GlaS is materially weaker than the dense-supervised frozen-feature heads.",
             "GlaS still favors coarse-only, but MoNuSeg now favors a slightly richer coarse-plus-mid residual readout.",
             "On MoNuSeg, augmentation alone does not explain the jump; the architectural refinement does.",
+            "The few-shot curves stay strong enough that matched few-shot AutoSAM reruns now look scientifically worthwhile.",
             "AutoSAM values on this page are reported paper reference values, not reproduced runs in this repo.",
         ],
     }
 
-
-def build_training_data(results_rows: list[dict], glas_story_blocks: list[dict], monuseg_story_blocks: list[dict], gallery_payload: dict) -> dict:
+def build_training_data(
+    results_rows: list[dict],
+    few_shot_sweeps: dict[str, dict],
+    few_shot_tables: dict[str, object],
+    glas_story_blocks: list[dict],
+    monuseg_story_blocks: list[dict],
+    gallery_payload: dict,
+) -> dict:
     return {
         "page": {
             "title": PAGE_TITLE,
@@ -1215,6 +1639,21 @@ def build_training_data(results_rows: list[dict], glas_story_blocks: list[dict],
             "status": "reviewed",
         },
         "results_rows": results_rows,
+        "few_shot": {
+            dataset: {
+                "variant_label": sweep["variant_label"],
+                "full_train_size": sweep["full_train_size"],
+                "rows": sweep["rows"],
+                "first90_row": sweep["first90_row"],
+                "first95_row": sweep["first95_row"],
+                "recommended_autosam_points": sweep["recommended_autosam_points"],
+            }
+            for dataset, sweep in few_shot_sweeps.items()
+        },
+        "few_shot_tables": {
+            "summary_rows": few_shot_tables["summary_rows"],
+            "detail_rows": few_shot_tables["detail_rows"],
+        },
         "stories": {
             "glas": glas_story_blocks,
             "monuseg": monuseg_story_blocks,
@@ -1222,8 +1661,7 @@ def build_training_data(results_rows: list[dict], glas_story_blocks: list[dict],
         "gallery": gallery_payload,
     }
 
-
-def build_links_payload(table_csv_path: str, plot_paths: dict[str, str]) -> dict:
+def build_links_payload(table_csv_path: str, plot_paths: dict[str, str], few_shot_tables: dict[str, object]) -> dict:
     return {
         "page": "index.html",
         "gallery": "gallery.html",
@@ -1234,9 +1672,10 @@ def build_links_payload(table_csv_path: str, plot_paths: dict[str, str]) -> dict
         "method_architecture_dot": plot_paths["method_architecture.dot"],
         "manifest": "manifest.yaml",
         "results_table_csv": table_csv_path,
+        "few_shot_milestones_csv": few_shot_tables["summary_path"],
+        "few_shot_aggregated_csv": few_shot_tables["detail_path"],
         "plots": plot_paths,
     }
-
 
 def build_manifest(total_story_count: int, gallery_payload: dict) -> str:
     return dedent(
@@ -1249,12 +1688,12 @@ def build_manifest(total_story_count: int, gallery_payload: dict) -> str:
           - "glas"
           - "monuseg"
         date: "{PAGE_DATE}"
-        description: "Frozen SAM3 readout study across GlaS and MoNuSeg with current internal AutoSAM reference context."
+        description: "Frozen SAM3 readout study across GlaS and MoNuSeg with current internal AutoSAM reference context, including nested few-shot sweeps."
         status: "reviewed"
         assets:
           story_block_count: {total_story_count}
           gallery_preview_count: {gallery_payload['sample_count']}
-          plot_count: 5
+          plot_count: 7
         evaluation:
           primary_metrics:
             - "direct_foreground_iou"
@@ -1265,9 +1704,9 @@ def build_manifest(total_story_count: int, gallery_payload: dict) -> str:
         caveats:
           - "AutoSAM values are reported paper reference values."
           - "MoNuSeg native refine results are not resize-matched to the paper's explicit 512x512 route."
+          - "Few-shot sweeps keep the test split fixed and are intended for triage rather than paper-final model selection."
         """
     )
-
 
 def render_findings_cards(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict]) -> str:
     glas_best = glas_runs["fpn_2_only_d128"]
@@ -1503,9 +1942,113 @@ def render_monuseg_delta_cards(monuseg_runs: dict[str, dict]) -> str:
     ).strip()
 
 
+
+def render_few_shot_recipe_cards(few_shot_sweeps: dict[str, dict]) -> str:
+    glas = few_shot_sweeps["GlaS"]
+    monu = few_shot_sweeps["MoNuSeg"]
+    return dedent(
+        f"""\
+        <div class="card-grid compact-grid">
+          <article class="card">
+            <h3>What This Sweep Is Doing</h3>
+            <p class="interpretation-copy">We keep the backbone and head recipe fixed, then shrink only the labeled training subset with nested manifests. The test route stays fixed. This is a data-efficiency triage section for deciding whether matched few-shot AutoSAM reruns are worth the cost.</p>
+            <p class="mini-note">It is useful for scientific direction, but it is not a paper-final model-selection protocol by itself.</p>
+          </article>
+          <article class="card">
+            <h3>GlaS Sweep Contract</h3>
+            <p class="interpretation-copy"><code>{glas['variant_label']}</code> with <code>autosam_dense_v1</code>, native resolution, <code>20</code> epochs, and frozen <code>facebook/sam3</code> features. Full training size is <strong>{glas['full_train_size']}</strong>.</p>
+            <p class="mini-note">Recommended same-shot AutoSAM points: <code>{', '.join(str(point) for point in glas['recommended_autosam_points'])}</code>.</p>
+          </article>
+          <article class="card">
+            <h3>MoNuSeg Sweep Contract</h3>
+            <p class="interpretation-copy"><code>{monu['variant_label']}</code> with <code>autosam_dense_v1</code>, native resolution, <code>20</code> epochs, and frozen <code>facebook/sam3</code> features. Full training size is <strong>{monu['full_train_size']}</strong>.</p>
+            <p class="mini-note">Recommended same-shot AutoSAM points: <code>{', '.join(str(point) for point in monu['recommended_autosam_points'])}</code>.</p>
+          </article>
+        </div>
+        """
+    ).strip()
+
+
+def render_few_shot_cards(few_shot_sweeps: dict[str, dict]) -> str:
+    glas = few_shot_sweeps["GlaS"]
+    monu = few_shot_sweeps["MoNuSeg"]
+    return dedent(
+        f"""\
+        <div class="metric-grid compact-grid">
+          <article class="metric">
+            <div class="k">GlaS 1-Shot Retention</div>
+            <div class="v">{fmt_pct(glas['one_shot_row']['direct_foreground_dice_retained_vs_full'])}</div>
+            <div class="mini-note">Dice {glas['one_shot_row']['direct_foreground_dice_mean']:.4f} at a single training image.</div>
+          </article>
+          <article class="metric">
+            <div class="k">GlaS 95% Dice Milestone</div>
+            <div class="v">{glas['first95_row']['shot_count']}</div>
+            <div class="mini-note">First shot count reaching at least 95% of full-data Dice.</div>
+          </article>
+          <article class="metric">
+            <div class="k">MoNuSeg 1-Shot Retention</div>
+            <div class="v">{fmt_pct(monu['one_shot_row']['direct_foreground_dice_retained_vs_full'])}</div>
+            <div class="mini-note">Dice {monu['one_shot_row']['direct_foreground_dice_mean']:.4f} at a single training image.</div>
+          </article>
+          <article class="metric">
+            <div class="k">MoNuSeg 95% Dice Milestone</div>
+            <div class="v">{monu['first95_row']['shot_count']}</div>
+            <div class="mini-note">First shot count reaching at least 95% of full-data Dice.</div>
+          </article>
+        </div>
+        """
+    ).strip()
+
+
+def render_few_shot_summary_table(summary_rows: list[dict]) -> str:
+    rendered = []
+    for row in summary_rows:
+        rendered.append(
+            dedent(
+                f"""\
+                <tr>
+                  <td><strong>{escape(row['dataset'])}</strong></td>
+                  <td><code>{escape(row['fixed_variant'])}</code></td>
+                  <td>{row['full_train_size']}</td>
+                  <td>{row['one_shot_fg_iou']:.4f} / {row['one_shot_dice']:.4f}</td>
+                  <td>{row['first_90_dice_shots']}</td>
+                  <td>{row['first_95_dice_shots']}</td>
+                  <td>{row['best_subfull_shot']} shots · Dice {row['best_subfull_dice']:.4f}</td>
+                  <td>{escape(row['knee_note'])}</td>
+                </tr>
+                """
+            ).strip()
+        )
+    return "\n".join(rendered)
+
+
+def render_few_shot_detail_table(detail_rows: list[dict]) -> str:
+    rendered = []
+    for row in detail_rows:
+        rendered.append(
+            dedent(
+                f"""\
+                <tr>
+                  <td><strong>{escape(row['dataset'])}</strong></td>
+                  <td>{row['shots']}</td>
+                  <td>{row['runs']}</td>
+                  <td>{fmt_pm(row['fg_iou_mean'], row['fg_iou_std'], 3)}</td>
+                  <td>{fmt_pm(row['dice_mean'], row['dice_std'], 3)}</td>
+                  <td>{fmt_pm(row['eval_miou_mean'], row['eval_miou_std'], 3)}</td>
+                  <td>{fmt_pm(row['eval_ari_mean'], row['eval_ari_std'], 3)}</td>
+                  <td>{fmt_pct(row['dice_retained_vs_full'])}</td>
+                </tr>
+                """
+            ).strip()
+        )
+    return "\n".join(rendered)
+
+
 def render_index_html(
     glas_runs: dict[str, dict],
     monuseg_runs: dict[str, dict],
+    few_shot_sweeps: dict[str, dict],
+    few_shot_tables: dict[str, object],
     results_rows: list[dict],
     glas_story_blocks: list[dict],
     monuseg_story_blocks: list[dict],
@@ -1519,6 +2062,8 @@ def render_index_html(
     all_scales = glas_runs["all_scales_d64"]
     monu_strict = monuseg_runs["strict512_coarse"]
     monu_refine = monuseg_runs["native_aug_refine"]
+    glas_sweep = few_shot_sweeps["GlaS"]
+    monu_sweep = few_shot_sweeps["MoNuSeg"]
     return f"""<!DOCTYPE html>
 <html lang="en">
 
@@ -1704,6 +2249,7 @@ def render_index_html(
         <span class="tag">sam3</span>
         <span class="tag">autosam</span>
         <span class="tag">readout</span>
+        <span class="tag">few-shot</span>
       </div>
       <div style="margin-top: 18px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
         <a class="btn secondary" href="../../index.html">← Back to Dashboard</a>
@@ -1715,6 +2261,7 @@ def render_index_html(
       <h2>Executive Synopsis</h2>
       <p>GlaS still answers the original question cleanly: weak training-free CFC does <strong>not</strong> imply missing gland information in frozen SAM3. A tiny supervised head is already strong, and the GlaS scale story remains surprisingly coarse-dominant.</p>
       <p>MoNuSeg adds the more important AutoSAM-comparison update. The new <strong><code>fpn_2 + fpn_1</code> residual-refinement</strong> readout reaches <strong>fg IoU {monu_refine['fg_iou']:.6f}</strong> and <strong>Dice {monu_refine['dice']:.6f}</strong>, leaving only a small gap to the cited MoNuSeg AutoSAM paper reference. The combined picture is now more precise: the frozen features are strong, but the best readout is dataset-dependent.</p>
+      <p>The new few-shot sweeps make the same point from a label-efficiency angle. Both datasets retain most of their full-data Dice surprisingly early, so a matched few-shot AutoSAM comparison now looks like a serious next experiment rather than a speculative side quest.</p>
     </section>
 
     <section class="section">
@@ -1819,6 +2366,79 @@ def render_index_html(
             {render_cross_dataset_table(glas_runs, monuseg_runs)}
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Few-Shot Sweep</h2>
+      <p class="interpretation-copy">This section asks a different question from the main AutoSAM head-to-head: if the current frozen-feature baselines are already strong, how quickly do they degrade when labeled training images disappear? We keep the test route fixed and only shrink the nested training subset. That makes this a clean data-efficiency triage section rather than a final paper protocol.</p>
+      <div style="margin-top: 20px;">
+        {render_few_shot_recipe_cards(few_shot_sweeps)}
+      </div>
+      <div style="margin-top: 20px;">
+        {render_few_shot_cards(few_shot_sweeps)}
+      </div>
+      <div class="chart-grid">
+        <article class="chart-card">
+          <img src="{plot_paths['few_shot_absolute.svg']}" alt="Few-shot direct foreground curves" data-zoom-src="{plot_paths['few_shot_absolute.svg']}" />
+        </article>
+        <article class="note-card">
+          <h3>What The Absolute Curves Say</h3>
+          <p class="interpretation-copy">Neither dataset collapses in the 1-shot regime. GlaS still averages <strong>Dice {glas_sweep['one_shot_row']['direct_foreground_dice_mean']:.4f}</strong> at 1 shot and reaches <strong>{glas_sweep['first95_row']['shot_count']} shots</strong> before crossing 95% of its full-data Dice. MoNuSeg is harsher at 1 shot, but it still holds <strong>Dice {monu_sweep['one_shot_row']['direct_foreground_dice_mean']:.4f}</strong> and reaches 95% by just <strong>{monu_sweep['first95_row']['shot_count']} shots</strong>.</p>
+          <p class="interpretation-copy" style="margin-top: 14px;">The non-monotonic tail at <code>64 vs 85</code> on GlaS and <code>24 vs 30</code> on MoNuSeg is small and expected under tiny full-train splits. The important signal is the early retention, not the exact ordering of the last two points.</p>
+        </article>
+      </div>
+      <div class="chart-grid">
+        <article class="chart-card">
+          <img src="{plot_paths['few_shot_retention.svg']}" alt="Few-shot Dice retention curves" data-zoom-src="{plot_paths['few_shot_retention.svg']}" />
+        </article>
+        <article class="note-card">
+          <h3>Why This Matters For AutoSAM</h3>
+          <p class="interpretation-copy">These are the strongest internal reasons to run matched few-shot AutoSAM baselines. The frozen-feature lines retain over 90% of their full-data Dice by <strong>{glas_sweep['first90_row']['shot_count']} shots</strong> on GlaS and <strong>{monu_sweep['first90_row']['shot_count']} shots</strong> on MoNuSeg. They reach 95% by <strong>{glas_sweep['first95_row']['shot_count']}</strong> and <strong>{monu_sweep['first95_row']['shot_count']}</strong> shots respectively.</p>
+          <p class="interpretation-copy" style="margin-top: 14px;">That does not mean AutoSAM would follow the same curve. It means the current frozen-feature baselines are data-efficient enough that a same-shot comparison would now be informative instead of being dismissed as obviously undertrained.</p>
+        </article>
+      </div>
+      <div class="table-wrap" style="margin-top: 24px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Fixed variant</th>
+              <th>Full train size</th>
+              <th>1-shot fg IoU / Dice</th>
+              <th>90% Dice at</th>
+              <th>95% Dice at</th>
+              <th>Best sub-full point</th>
+              <th>Reading</th>
+            </tr>
+          </thead>
+          <tbody>
+            {render_few_shot_summary_table(few_shot_tables['summary_rows'])}
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap" style="margin-top: 20px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Shots</th>
+              <th>Runs</th>
+              <th>Fg IoU mean±std</th>
+              <th>Dice mean±std</th>
+              <th>eval mIoU mean±std</th>
+              <th>eval ARI mean±std</th>
+              <th>Dice retained vs full</th>
+            </tr>
+          </thead>
+          <tbody>
+            {render_few_shot_detail_table(few_shot_tables['detail_rows'])}
+          </tbody>
+        </table>
+      </div>
+      <div class="artifact-row">
+        <a class="btn secondary" href="{few_shot_tables['summary_path']}">Open Few-Shot Milestones CSV</a>
+        <a class="btn secondary" href="{few_shot_tables['detail_path']}">Open Few-Shot Curve CSV</a>
       </div>
     </section>
 
@@ -1966,6 +2586,7 @@ PYTHONNOUSERSITE=1 PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python ./.venv/bin/pyt
         <li>The strongest MoNuSeg run on this page is <strong>not</strong> resize-matched to the paper’s explicit <code>512x512</code> route; the strict <code>512x512</code> coarse-only anchor remains the clean apples-to-apples baseline.</li>
         <li><code>fpn_2_only</code> is labeled explicitly as <code>d64</code> or <code>d128</code> throughout this page so the default-width run is no longer ambiguous.</li>
         <li>The next high-value move is to run the <code>fpn_2 + fpn_1</code> residual readout under the strict MoNuSeg <code>512x512</code> route, rather than spending more effort on augmentation-only sweeps.</li>
+        <li>The few-shot curves on this page keep the test split fixed and are meant for triage; they justify same-shot AutoSAM reruns, but they are not a final paper protocol by themselves.</li>
       </ul>
       <div class="artifact-row">
         <a class="btn secondary" href="method_source.md">method_source.md</a>
@@ -2362,13 +2983,15 @@ def render_gallery_html() -> str:
 """
 
 
-def render_summary_md(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict]) -> str:
+def render_summary_md(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict], few_shot_sweeps: dict[str, dict]) -> str:
     glas_best = glas_runs["fpn_2_only_d128"]
     glas_protocol = glas_runs["fpn_2_only_d128_224_autosamaug"]
     cfc = glas_runs["cfc_baseline"]
     all_scales = glas_runs["all_scales_d64"]
     monu_strict = monuseg_runs["strict512_coarse"]
     monu_best = monuseg_runs["native_aug_refine"]
+    glas_sweep = few_shot_sweeps["GlaS"]
+    monu_sweep = few_shot_sweeps["MoNuSeg"]
     return dedent(
         f"""\
         # {PAGE_TITLE}
@@ -2376,6 +2999,7 @@ def render_summary_md(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict])
         - Rendered: `{PAGE_DATE}`
         - Question: across GlaS and MoNuSeg, do frozen SAM3 features already carry the right histology signal for an AutoSAM-style comparison, or is the main bottleneck the readout?
         - Current answer: the frozen features look much stronger than the weakest readout suggested. GlaS still favors coarse-only, while MoNuSeg now improves sharply when a tiny mid-scale residual branch is added.
+        - Few-shot answer: both datasets retain most of their full-data Dice surprisingly early, which makes same-shot AutoSAM reruns look worth doing.
 
         ## Headline Numbers
 
@@ -2385,12 +3009,15 @@ def render_summary_md(glas_runs: dict[str, dict], monuseg_runs: dict[str, dict])
         - Closest current clean GlaS endpoint (`fpn_2_only d128 @ 224 + autosam aug`): `fg_iou={glas_protocol['fg_iou']:.6f}` `dice={glas_protocol['dice']:.6f}`
         - Strict MoNuSeg anchor (`fpn_2_only d128 @ 512x512`): `fg_iou={monu_strict['fg_iou']:.6f}` `dice={monu_strict['dice']:.6f}`
         - Best current MoNuSeg run (`fpn_2 + fpn_1` residual refine): `fg_iou={monu_best['fg_iou']:.6f}` `dice={monu_best['dice']:.6f}` `eval_miou={monu_best['eval_miou']:.6f}` `eval_ari={monu_best['eval_ari']:.6f}`
+        - Few-shot milestones: `GlaS 90% Dice at {glas_sweep['first90_row']['shot_count']} shots, 95% at {glas_sweep['first95_row']['shot_count']}` | `MoNuSeg 90% Dice at {monu_sweep['first90_row']['shot_count']} shots, 95% at {monu_sweep['first95_row']['shot_count']}`
+        - 1-shot Dice: `GlaS {glas_sweep['one_shot_row']['direct_foreground_dice_mean']:.6f}` | `MoNuSeg {monu_sweep['one_shot_row']['direct_foreground_dice_mean']:.6f}`
         - AutoSAM reported paper references: `GlaS fg_iou={GLAS_AUTOSAM_REPORTED_FG_IOU:.6f}` `dice={GLAS_AUTOSAM_REPORTED_DICE:.6f}` | `MoNuSeg fg_iou={MONUSEG_AUTOSAM_REPORTED_FG_IOU:.6f}` `dice={MONUSEG_AUTOSAM_REPORTED_DICE:.6f}`
 
         ## Caveats
 
         - AutoSAM values are reported paper references, not reproduced runs from this repo.
         - The strongest MoNuSeg run on this page is native-resolution, so the strict `512x512` anchor remains the clean protocol reference.
+        - The few-shot sweeps keep the test split fixed and are meant for triage rather than paper-final model selection.
         - The default-width coarse-only run is labeled explicitly as `fpn_2_only d64` on this page.
         """
     )
@@ -2404,6 +3031,7 @@ def main() -> None:
 
     glas_runs = {spec.run_id: load_run(spec, GLAS_OUTPUT_ROOT) for spec in GLAS_RUN_SPECS}
     monuseg_runs = {spec.run_id: load_run(spec, MONUSEG_OUTPUT_ROOT) for spec in MONUSEG_RUN_SPECS}
+    few_shot_sweeps = {spec.dataset: load_few_shot_sweep(spec) for spec in FEW_SHOT_SWEEP_SPECS}
     enforce_alignment(glas_runs, "cfc_baseline")
     enforce_alignment(monuseg_runs, "strict512_coarse")
 
@@ -2415,18 +3043,32 @@ def main() -> None:
     monuseg_story_blocks = build_monuseg_story_blocks(monuseg_runs)
     gallery_payload = build_gallery_payload(glas_runs, glas_story_blocks)
     results_rows = build_results_rows(glas_runs, monuseg_runs)
-    plot_paths = write_plot_assets(glas_runs, monuseg_runs)
+    few_shot_tables = write_few_shot_tables(few_shot_sweeps)
+    plot_paths = write_plot_assets(glas_runs, monuseg_runs, few_shot_sweeps)
     table_csv_path = write_table_csv(results_rows)
-    metrics_payload = build_metrics_payload(glas_runs, monuseg_runs, glas_story_blocks, monuseg_story_blocks, gallery_payload)
-    training_data = build_training_data(results_rows, glas_story_blocks, monuseg_story_blocks, gallery_payload)
-    links_payload = build_links_payload(table_csv_path, plot_paths)
+    metrics_payload = build_metrics_payload(glas_runs, monuseg_runs, few_shot_sweeps, few_shot_tables, glas_story_blocks, monuseg_story_blocks, gallery_payload)
+    training_data = build_training_data(results_rows, few_shot_sweeps, few_shot_tables, glas_story_blocks, monuseg_story_blocks, gallery_payload)
+    links_payload = build_links_payload(table_csv_path, plot_paths, few_shot_tables)
 
-    write_text(DEST_DIR / "index.html", render_index_html(glas_runs, monuseg_runs, results_rows, glas_story_blocks, monuseg_story_blocks, plot_paths, table_csv_path))
+    write_text(
+        DEST_DIR / "index.html",
+        render_index_html(
+            glas_runs,
+            monuseg_runs,
+            few_shot_sweeps,
+            few_shot_tables,
+            results_rows,
+            glas_story_blocks,
+            monuseg_story_blocks,
+            plot_paths,
+            table_csv_path,
+        ),
+    )
     write_text(DEST_DIR / "gallery.html", render_gallery_html())
     write_text(DEST_DIR / "metrics.json", json.dumps(metrics_payload, indent=2))
     write_text(DEST_DIR / "training_data.json", json.dumps(training_data, indent=2))
     write_text(DEST_DIR / "links.json", json.dumps(links_payload, indent=2))
-    write_text(DEST_DIR / "summary.md", render_summary_md(glas_runs, monuseg_runs))
+    write_text(DEST_DIR / "summary.md", render_summary_md(glas_runs, monuseg_runs, few_shot_sweeps))
     write_text(DEST_DIR / "manifest.yaml", build_manifest(len(glas_story_blocks) + len(monuseg_story_blocks), gallery_payload))
     write_text(DEST_DIR / "method_source.md", method_readme.read_text(encoding="utf-8"))
 
