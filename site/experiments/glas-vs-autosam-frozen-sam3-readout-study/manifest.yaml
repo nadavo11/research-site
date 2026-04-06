@@ -5,13 +5,13 @@ model_ids:
 dataset_ids:
   - "glas"
   - "monuseg"
-date: "2026-04-04"
-description: "Frozen SAM3 readout study across GlaS and MoNuSeg with current internal AutoSAM reference context."
+date: "2026-04-06"
+description: "Frozen SAM3 readout study across GlaS and MoNuSeg with current internal AutoSAM reference context, including nested few-shot sweeps."
 status: "reviewed"
 assets:
   story_block_count: 9
   gallery_preview_count: 80
-  plot_count: 5
+  plot_count: 7
 evaluation:
   primary_metrics:
     - "direct_foreground_iou"
@@ -22,3 +22,4 @@ evaluation:
 caveats:
   - "AutoSAM values are reported paper reference values."
   - "MoNuSeg native refine results are not resize-matched to the paper's explicit 512x512 route."
+  - "Few-shot sweeps keep the test split fixed and are intended for triage rather than paper-final model selection."

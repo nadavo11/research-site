@@ -1,0 +1,3 @@
+dataset,fixed_variant,full_train_size,one_shot_fg_iou,one_shot_dice,first_90_dice_shots,first_95_dice_shots,best_subfull_shot,best_subfull_dice,best_subfull_minus_full_dice,recommended_autosam_points,knee_note
+GlaS,fpn_2_only d128 @ native + autosam aug,85,0.5909248253393868,0.716039807833106,2,16,64,0.8985203602063755,0.005021696885678106,"1, 2, 16, 85",First big jump at 2 shots; near-saturation around 16 shots.
+MoNuSeg,fpn_2 + fpn_1 refine d128 @ native + autosam aug,30,0.45336427855465017,0.6196530617578584,4,8,24,0.8188871993723533,0.005061785089171655,"1, 4, 8, 30",The knee is in the 4-8 shot range.
